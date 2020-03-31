@@ -1,6 +1,6 @@
 ﻿namespace AzureMapsControl.Configuration
 {
-    public class AzureMapConfiguration
+    public class AzureMapsConfiguration
     {
         public string SubscriptionKey { get; set; }
 

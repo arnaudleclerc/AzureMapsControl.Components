@@ -1,0 +1,28 @@
+﻿namespace AzureMapsControl.Atlas
+{
+    /**
+     * Represent a pixel coordinate or offset.
+     */
+    public sealed class Pixel
+    {
+        /// <summary>
+        /// The horizontal pixel offset
+        /// </summary>
+        public double X { get; set; }
+        /// <summary>
+        /// The vertical pixel offset
+        /// </summary>
+        public double Y { get; set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="x">The horizontal pixel offset</param>
+        /// <param name="y">The vertical pixel offset</param>
+        public Pixel(double x, double y)
+        {
+            X = x;
+            Y = y;
+        }
+    }
+}
