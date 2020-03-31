@@ -35,7 +35,8 @@ window.azureMapsControl = {
     },
 
     setOptions: function (mapId,
-        cameraOptions) {
+        cameraOptions,
+        styleOptions) {
 
         const mapEntry = this._maps.find(currentValue => {
             return currentValue.id === mapId;
@@ -62,5 +63,6 @@ window.azureMapsControl = {
         }
 
         mapEntry.map.setCamera(options);
+        mapEntry.map.setStyle(styleOptions);
     }
 };

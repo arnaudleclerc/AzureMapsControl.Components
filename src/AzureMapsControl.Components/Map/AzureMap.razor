@@ -10,7 +10,7 @@
 @inject Microsoft.JSInterop.IJSRuntime JSRuntime
 @inject MapEventService MapEventService
 
-<div id="@MapId"></div>
+<div id="@Id"></div>
 
 @code {
 
@@ -18,6 +18,13 @@
     private const string MethodSetOptions = "setOptions";
 
     private MapEventInvokeHelper _mapEventInvokeHelper;
+
+    /// <summary>
+    /// If true the map will automatically resize whenever the window's size changes. Otherwise map.resize() must be called.
+    /// Default true.
+    /// </summary>
+    [Parameter]
+    public bool AutoResize { get; set; } = true;
 
     /// <summary>
     /// The bearing of the map (rotation).
@@ -76,6 +83,24 @@
     public bool EnableAccessibility { get; set; } = true;
 
     /// <summary>
+    /// The language of the map labels.
+    /// </summary>
+    [Parameter]
+    public string Language { get; set; }
+
+    /// <summary>
+    /// Sets the lighting options of the map.
+    /// </summary>
+    [Parameter]
+    public LightOptions Light { get; set; }
+
+    /// <summary>
+    /// Id affected to the div hosting the map
+    /// </summary>
+    [Parameter]
+    public string Id { get; set; }
+
+    /// <summary>
     /// A bounding box in which to constrain the viewable map area to. Users won't be able to pan the center of the map outside of this bounding box. Set maxBounds to null or undefined to remove maxBounds
     /// </summary>
     [Parameter]
@@ -112,6 +137,12 @@
     public int? Pitch { get; set; }
 
     /// <summary>
+    /// If true, the map's canvas can be exported to a PNG using map.getCanvas().toDataURL().
+    /// </summary>
+    [Parameter]
+    public bool PreserveDrawingBuffer { get; set; }
+
+    /// <summary>
     /// A boolean that specifies if vector and raster tiles should be reloaded when they expire (based on expires header).
     /// This is useful for data sets that update frequently. When set to false, each tile will be loaded once, when needed, and not reloaded when they expire.
     /// default: true
@@ -120,16 +151,52 @@
     public bool RefreshExpiredTiles { get; set; } = true;
 
     /// <summary>
+    /// Specifies if multiple copies of the world should be rendered when zoomed out. Default true
+    /// </summary>
+    [Parameter]
+    public bool RenderWorldCopies { get; set; } = true;
+
+    /// <summary>
+    /// Specifies if buildings will be rendered with their models. If false all buildings will be rendered as just their footprints
+    /// </summary>
+    [Parameter]
+    public bool ShowBuildingModels { get; set; }
+
+    /// <summary>
+    /// Specifies if the feedback link should be displayed on the map or not. Default true
+    /// </summary>
+    [Parameter]
+    public bool ShowFeedbackLink { get; set; } = true;
+
+    /// <summary>
+    /// Specifies if the Microsoft logo should be hidden or not. If set to true a Microsoft copyright string will be added to the map. Default true
+    /// </summary>
+    [Parameter]
+    public bool ShowLogo { get; set; } = true;
+
+    /// <summary>
+    /// Specifies if the map should render an outline around each tile and the tile ID. These tile boundaries are useful for debugging. The uncompressed file size of the first vector source is drawn in the top left corner of each tile, next to the tile ID
+    /// </summary>
+    [Parameter]
+    public bool ShowTilesBoundaries { get; set; }
+
+    /// <summary>
+    /// The name of the style to use when rendering the map
+    /// </summary>
+    [Parameter]
+    public string Style { get; set; }
+
+    /// <summary>
+    /// Specifies which set of geopolitically disputed borders and labels are displayed on the map. The View parameter (also referred to as “user region parameter”) is a 2-letter ISO-3166 Country Code that will show the correct maps for that country/region. Country/Regions that are not on the View list or if unspecified will default to the “Unified” View
+    /// </summary>
+    [Parameter]
+    public string View { get; set; }
+
+    /// <summary>
     /// The zoom level of the map view
     /// </summary>
     [Parameter]
     public int? Zoom { get; set; }
-
-    /// <summary>
-    /// Id affected to the div hosting the map
-    /// </summary>
-    [Parameter]
-    public string MapId { get; set; }
 
     protected override void OnInitialized()
     {
@@ -142,7 +209,7 @@
         if (firstRender)
         {
             await JSRuntime.InvokeVoidAsync(MethodAddMap.ToAzureMapsControlNamespace(),
-                MapId,
+                Id,
                 Configuration.Value.SubscriptionKey,
                 new ServiceOptions
                 {
@@ -160,7 +227,7 @@
         if (mapEvent.Type == "ready")
         {
             JSRuntime.InvokeVoidAsync(MethodSetOptions.ToAzureMapsControlNamespace(),
-                MapId,
+                Id,
                 new CameraOptions
                 {
                     Bearing = (int?)Bearing,
@@ -176,9 +243,22 @@
                     Padding = Bounds != null ? Padding : null,
                     Center = Bounds == null ? Center : null,
                     Zoom = Bounds == null ? Zoom : null
+                },
+                new StyleOptions {
+                    AutoResize = AutoResize,
+                    Language = Language,
+                    Light = Light,
+                    PreserveDrawingBuffer = PreserveDrawingBuffer,
+                    RenderWorldCopies = RenderWorldCopies,
+                    ShowBuildingModels = ShowBuildingModels,
+                    ShowFeedbackLink = ShowFeedbackLink,
+                    ShowLogo = ShowLogo,
+                    ShowTileBoundaries = ShowTilesBoundaries,
+                    Style = Style,
+                    View = View
                 });
         }
-        mapEvent.MapId = MapId;
+        mapEvent.MapId = Id;
         MapEventService.DispatchEvent(mapEvent);
     }
 }
