@@ -14,6 +14,8 @@
         /// </summary>
         public double Y { get; set; }
 
+        public Pixel() { }
+
         /// <summary>
         /// Constructor
         /// </summary>

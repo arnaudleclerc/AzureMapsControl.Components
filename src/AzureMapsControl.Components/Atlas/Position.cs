@@ -17,6 +17,8 @@
         /// </summary>
         public double Longitude { get; set; }
 
+        public Position() { }
+
         /// <summary>
         /// Constructor
         /// </summary>

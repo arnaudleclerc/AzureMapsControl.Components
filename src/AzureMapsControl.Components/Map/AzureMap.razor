@@ -40,6 +40,12 @@
     public BoundingBox Bounds { get; set; }
 
     /// <summary>
+    /// Whether the Shift + left click and drag will draw a zoom box. default true
+    /// </summary>
+    [Parameter]
+    public bool BoxZoomInteraction { get; set; } = true;
+
+    /// <summary>
     /// The type of animation.
     /// "jump" is an immediate change.
     /// "ease" is a gradual change of the camera's settings.
@@ -62,12 +68,30 @@
     public Pixel CenterOffset { get; set; }
 
     /// <summary>
+    /// Whether double left click will zoom the map inwards. Default true
+    /// </summary>
+    [Parameter]
+    public bool DblclickZoomInteraction { get; set; } = true;
+
+    /// <summary>
     /// Disable telemetry collection
     /// This option may only be set when initializing the map.
     /// default: false
     /// </summary>
     [Parameter]
     public bool DisableTelemetry { get; set; }
+
+    /// <summary>
+    /// Whether left click and drag will pan the map. default true
+    /// </summary>
+    [Parameter]
+    public bool DragPanInteraction { get; set; } = true;
+
+    /// <summary>
+    /// Whether right click and drag will rotate and pitch the map. default true
+    /// </summary>
+    [Parameter]
+    public bool DragRotateInteraction { get; set; } = true;
 
     /// <summary>
     /// The duration of the animation in milliseconds.
@@ -81,6 +105,18 @@
     /// </summary>
     [Parameter]
     public bool EnableAccessibility { get; set; } = true;
+
+    /// <summary>
+    /// Whether the map is interactive or static. If false, all user interaction is disabled. If true, only selected user interactions will enabled. default true
+    /// </summary>
+    [Parameter]
+    public bool Interactive { get; set; } = true;
+
+    /// <summary>
+    /// Whether the keyboard interactions are enabled. Default true
+    /// </summary>
+    [Parameter]
+    public bool KeyboardInteraction { get; set; } = true;
 
     /// <summary>
     /// The language of the map labels.
@@ -157,6 +193,12 @@
     public bool RenderWorldCopies { get; set; } = true;
 
     /// <summary>
+    /// Whether the map should zoom on scroll input. default true
+    /// </summary>
+    [Parameter]
+    public bool ScrollZoomInteraction { get; set; } = true;
+
+    /// <summary>
     /// Specifies if buildings will be rendered with their models. If false all buildings will be rendered as just their footprints
     /// </summary>
     [Parameter]
@@ -187,10 +229,22 @@
     public string Style { get; set; }
 
     /// <summary>
+    /// Whether touch interactions are enabled for touch devices. default true
+    /// </summary>
+    [Parameter]
+    public bool TouchInteraction { get; set; }
+
+    /// <summary>
     /// Specifies which set of geopolitically disputed borders and labels are displayed on the map. The View parameter (also referred to as “user region parameter”) is a 2-letter ISO-3166 Country Code that will show the correct maps for that country/region. Country/Regions that are not on the View list or if unspecified will default to the “Unified” View
     /// </summary>
     [Parameter]
     public string View { get; set; }
+
+    /// <summary>
+    /// Sets the zoom rate of the mouse wheel default 1/450
+    /// </summary>
+    [Parameter]
+    public double WheelZoomRate { get; set; }
 
     /// <summary>
     /// The zoom level of the map view
@@ -222,8 +276,9 @@
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    private void MapEventReceived(MapEventArgs mapEvent)
+    private void MapEventReceived(MapJsEventArgs mapEvent)
     {
+        Console.WriteLine($"Received {mapEvent.Type}");
         if (mapEvent.Type == "ready")
         {
             JSRuntime.InvokeVoidAsync(MethodSetOptions.ToAzureMapsControlNamespace(),
@@ -244,7 +299,8 @@
                     Center = Bounds == null ? Center : null,
                     Zoom = Bounds == null ? Zoom : null
                 },
-                new StyleOptions {
+                new StyleOptions
+                {
                     AutoResize = AutoResize,
                     Language = Language,
                     Light = Light,
@@ -256,6 +312,17 @@
                     ShowTileBoundaries = ShowTilesBoundaries,
                     Style = Style,
                     View = View
+                },
+                new UserInteractionOptions {
+                    BoxZoomInteraction = BoxZoomInteraction,
+                    DblclickZoomInteraction = DblclickZoomInteraction,
+                    DragPanInteraction = DragPanInteraction,
+                    DragRotateInteraction = DragRotateInteraction,
+                    Interactive = Interactive,
+                    KeyboardInteraction = KeyboardInteraction,
+                    ScrollZoomInteraction = ScrollZoomInteraction,
+                    TouchInteraction = TouchInteraction,
+                    WheelZoomRate = WheelZoomRate
                 });
         }
         mapEvent.MapId = Id;

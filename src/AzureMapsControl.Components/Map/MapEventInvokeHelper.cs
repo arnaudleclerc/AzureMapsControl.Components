@@ -5,11 +5,11 @@
 
     internal class MapEventInvokeHelper
     {
-        private readonly Action<MapEventArgs> _action;
+        private readonly Action<MapJsEventArgs> _action;
 
-        public MapEventInvokeHelper(Action<MapEventArgs> action) => _action = action;
+        public MapEventInvokeHelper(Action<MapJsEventArgs> action) => _action = action;
 
         [JSInvokable]
-        public void NotifyMapEvent(MapEventArgs mapEvent) => _action.Invoke(mapEvent);
+        public void NotifyMapEvent(MapJsEventArgs mapEvent) => _action.Invoke(mapEvent);
     }
 }

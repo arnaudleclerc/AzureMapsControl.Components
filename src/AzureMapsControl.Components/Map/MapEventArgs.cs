@@ -2,7 +2,13 @@
 {
     public class MapEventArgs
     {
-        public string MapId { get; set; }
-        public string Type { get; set; }
+        public string MapId { get; }
+        public string Type { get; }
+
+        internal MapEventArgs(MapJsEventArgs eventArgs)
+        {
+            MapId = eventArgs.MapId;
+            Type = eventArgs.Type;
+        }
     }
 }
