@@ -252,6 +252,9 @@
     [Parameter]
     public int? Zoom { get; set; }
 
+    [Parameter]
+    public MapEventActivationFlags EventActivationFlags { get; set; }
+
     protected override void OnInitialized()
     {
         _mapEventInvokeHelper = new MapEventInvokeHelper(MapEventReceived);
@@ -271,6 +274,7 @@
                     EnableAccessibility = EnableAccessibility,
                     RefreshExpiredTiles = RefreshExpiredTiles
                 },
+                (EventActivationFlags ?? MapEventActivationFlags.All).EnabledEvents,
                 DotNetObjectReference.Create(_mapEventInvokeHelper));
         }
         await base.OnAfterRenderAsync(firstRender);
@@ -313,7 +317,8 @@
                     Style = Style,
                     View = View
                 },
-                new UserInteractionOptions {
+                new UserInteractionOptions
+                {
                     BoxZoomInteraction = BoxZoomInteraction,
                     DblclickZoomInteraction = DblclickZoomInteraction,
                     DragPanInteraction = DragPanInteraction,

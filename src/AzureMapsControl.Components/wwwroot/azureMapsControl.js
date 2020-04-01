@@ -58,6 +58,7 @@ window.azureMapsControl = {
     addMap: function (mapId,
         subscriptionKey,
         serviceOptions,
+        enabledEvents,
         mapEventHelper) {
         const map = new atlas.Map(mapId, {
             authOptions: {
@@ -69,86 +70,118 @@ window.azureMapsControl = {
             refreshExpiredTiles: serviceOptions.refreshExpiredTiles
         });
 
-        map.events.add('error', event => {
-            mapEventHelper.invokeMethodAsync('NotifyMapEvent', this._toMapEvent(event.type, mapId, {
-                error: event.error.stack
-            }));
-        });
-
-        map.events.addOnce('ready', event => {
-            this._maps.push({
-                id: mapId,
-                map: map
+        if (enabledEvents.find(eventType => {
+            return eventType === 'error';
+        })) {
+            map.events.add('error', event => {
+                mapEventHelper.invokeMethodAsync('NotifyMapEvent', this._toMapEvent(event.type, mapId, {
+                    error: event.error.stack
+                }));
             });
+        }
 
-            mapEventHelper.invokeMethodAsync('NotifyMapEvent', this._toMapEvent(event.type, mapId));
+        if (enabledEvents.find(value => {
+            return value === 'ready';
+        })) {
+            map.events.addOnce('ready', event => {
+                this._maps.push({
+                    id: mapId,
+                    map: map
+                });
 
-            this._mapEvents.forEach(value => {
-                map.events.add(value, () => {
-                    mapEventHelper.invokeMethodAsync('NotifyMapEvent', this._toMapEvent(value, mapId));
+                mapEventHelper.invokeMethodAsync('NotifyMapEvent', this._toMapEvent(event.type, mapId));
+
+                this._mapEvents.forEach(value => {
+                    if (enabledEvents.find(eventType => {
+                        return value === eventType;
+                    })) {
+                        map.events.add(value, () => {
+                            mapEventHelper.invokeMethodAsync('NotifyMapEvent', this._toMapEvent(value, mapId));
+                        });
+                    }
+                });
+
+                this._mapMouseEvents.forEach(value => {
+                    if (enabledEvents.find(eventType => {
+                        return value === eventType;
+                    })) {
+                        map.events.add(value, event => {
+                            mapEventHelper.invokeMethodAsync('NotifyMapEvent', this._toMapEvent(value, mapId, {
+                                layerId: event.layerId,
+                                shapes: event.shapes,
+                                pixel: Array.isArray(event.pixel) ? {
+                                    x: event.pixel[0],
+                                    y: event.pixel[1]
+                                } : event.pixel,
+                                position: Array.isArray(event.position) ? {
+                                    longitude: event.position[0],
+                                    latitude: event.position[1]
+                                } : event.position
+                            }));
+                        });
+                    }
+                });
+
+                this._mapDataEvents.forEach(value => {
+                    if (enabledEvents.find(eventType => {
+                        return value === eventType;
+                    })) {
+                        map.events.add(value, event => {
+                            mapEventHelper.invokeMethodAsync('NotifyMapEvent', this._toMapEvent(value, mapId, {
+                                dataType: event.dataType,
+                                isSourceLoaded: event.isSourceLoaded,
+                                source: event.source ? {
+                                    id: event.source.getId()
+                                } : null,
+                                sourceDataType: event.sourceDataType,
+                                tile: event.tile
+                            }));
+                        });
+                    }
+                });
+
+                this._mapLayerEvents.forEach(value => {
+                    if (enabledEvents.find(eventType => {
+                        return value === eventType;
+                    })) {
+                        map.events.add(value, event => {
+                            mapEventHelper.invokeMethodAsync('NotifyMapEvent', this._toMapEvent(value, mapId, {
+                                id: event.getId()
+                            }));
+                        });
+                    }
+                });
+
+                this._mapStringEvents.forEach(value => {
+                    if (enabledEvents.find(eventType => {
+                        return value === eventType;
+                    })) {
+                        map.events.add(value, event => {
+                            mapEventHelper.invokeMethodAsync('NotifyMapEvent', this._toMapEvent(value, mapId, {
+                                message: event
+                            }));
+                        });
+                    }
+                });
+
+                this._mapTouchEvents.forEach(value => {
+                    if (enabledEvents.find(eventType => {
+                        return value === eventType;
+                    })) {
+                        map.events.add(value, event => {
+                            mapEventHelper.invokeMethodAsync('NotifyMapEvent', this._toMapEvent(value, map, {
+                                layerId: event.layerId,
+                                pixel: event.pixel,
+                                pixels: event.pixels,
+                                position: event.position,
+                                positions: event.positions,
+                                shapes: event.shapes ? event.shapes.toJson() : null
+                            }));
+                        });
+                    }
                 });
             });
-
-            this._mapMouseEvents.forEach(value => {
-                map.events.add(value, event => {
-                    mapEventHelper.invokeMethodAsync('NotifyMapEvent', this._toMapEvent(value, mapId, {
-                        layerId: event.layerId,
-                        shapes: event.shapes,
-                        pixel: Array.isArray(event.pixel) ? {
-                            x: event.pixel[0],
-                            y: event.pixel[1]
-                        } : event.pixel,
-                        position: Array.isArray(event.position) ? {
-                            longitude: event.position[0],
-                            latitude: event.position[1]
-                        } : event.position
-                    }));
-                });
-            });
-
-            this._mapDataEvents.forEach(value => {
-                map.events.add(value, event => {
-                    mapEventHelper.invokeMethodAsync('NotifyMapEvent', this._toMapEvent(value, mapId, {
-                        dataType: event.dataType,
-                        isSourceLoaded: event.isSourceLoaded,
-                        source: event.source ? {
-                            id: event.source.getId()
-                        } : null,
-                        sourceDataType: event.sourceDataType,
-                        tile: event.tile
-                    }));
-                });
-            });
-
-            this._mapLayerEvents.forEach(value => {
-                map.events.add(value, event => {
-                    mapEventHelper.invokeMethodAsync('NotifyMapEvent', this._toMapEvent(value, mapId, {
-                        id: event.getId()
-                    }));
-                });
-            });
-
-            this._mapStringEvents.forEach(value => {
-                map.events.add(value, event => {
-                    mapEventHelper.invokeMethodAsync('NotifyMapEvent', this._toMapEvent(value, mapId, {
-                        message: event
-                    }));
-                });
-            });
-
-            this._mapTouchEvents.forEach(value => {
-                map.events.add(value, event => {
-                    mapEventHelper.invokeMethodAsync('NotifyMapEvent', this._toMapEvent(value, map, {
-                        layerId: event.layerId,
-                        pixel: event.pixel,
-                        pixels: event.pixels,
-                        position: event.position,
-                        positions: event.positions,
-                        shapes: event.shapes ? event.shapes.toJson() : null
-                    }));
-                });
-            });
-        });
+        }
 
     },
 

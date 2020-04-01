@@ -6,4 +6,11 @@
           Zoom="10"
           Style="grayscale_dark"
           ShowLogo="false"
-          ShowFeedbackLink="false"></AzureMap>
+          ShowFeedbackLink="false"
+          EventActivationFlags="MapEventActivationFlags
+                                .All
+                                .Disable(MapEventType.Drag, 
+                                    MapEventType.Idle,
+                                    MapEventType.MouseMove,
+                                    MapEventType.Render)">
+</AzureMap>
