@@ -10,7 +10,7 @@
     public static class Extensions
     {
         /// <summary>
-        /// Register the configuration and services to use the AzureMapsControl components
+        /// Register the configuration to use the AzureMapsControl components
         /// </summary>
         /// <param name="services">Current list of services</param>
         /// <param name="configure">Configuration</param>
@@ -22,8 +22,7 @@
                 .Configure(configure)
                 .Validate(configuration => configuration.Validate());
 
-            return services
-                .AddSingleton<MapEventService>();
+            return services;
         }
 
         /// <summary>
