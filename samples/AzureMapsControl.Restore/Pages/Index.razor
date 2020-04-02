@@ -1,0 +1,13 @@
+﻿@page "/"
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          Center="new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534)"
+          Zoom="10"
+          Style="grayscale_dark"
+          ShowLogo="false"
+          ShowFeedbackLink="false"
+          OnReady="@(async (e) => { Console.WriteLine(e.Type); })"
+          EventActivationFlags="MapEventActivationFlags
+                                .None
+                                .Enable(MapEventType.Ready)"/>
