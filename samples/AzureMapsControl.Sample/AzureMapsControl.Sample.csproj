@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\AzureMapsControl.Components\AzureMapsControl.csproj" />
+    <ProjectReference Include="..\..\src\AzureMapsControl.Components\AzureMapsControl.Components.csproj" />
   </ItemGroup>
 
 </Project>

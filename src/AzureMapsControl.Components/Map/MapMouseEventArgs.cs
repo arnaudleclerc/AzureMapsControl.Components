@@ -1,7 +1,7 @@
-﻿namespace AzureMapsControl.Map
+﻿namespace AzureMapsControl.Components.Map
 {
     using System.Collections.Generic;
-    using AzureMapsControl.Atlas;
+    using AzureMapsControl.Components.Atlas;
 
     public class MapMouseEventArgs : MapEventArgs
     {

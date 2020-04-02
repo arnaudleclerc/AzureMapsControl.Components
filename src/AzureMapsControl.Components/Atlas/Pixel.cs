@@ -1,4 +1,4 @@
-﻿namespace AzureMapsControl.Atlas
+﻿namespace AzureMapsControl.Components.Atlas
 {
     /**
      * Represent a pixel coordinate or offset.

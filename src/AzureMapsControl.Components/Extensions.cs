@@ -1,10 +1,10 @@
-﻿namespace AzureMapsControl
+﻿namespace AzureMapsControl.Components
 {
     using System;
 
-    using AzureMapsControl.Configuration;
-    using AzureMapsControl.Constants;
-    using AzureMapsControl.Map;
+    using AzureMapsControl.Components.Configuration;
+    using AzureMapsControl.Components.Constants;
+
     using Microsoft.Extensions.DependencyInjection;
 
     public static class Extensions

@@ -1,4 +1,4 @@
-﻿namespace AzureMapsControl.Atlas
+﻿namespace AzureMapsControl.Components.Atlas
 {
     public abstract class Geometry
     {

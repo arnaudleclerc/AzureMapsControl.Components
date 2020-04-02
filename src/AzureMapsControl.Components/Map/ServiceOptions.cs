@@ -1,4 +1,4 @@
-﻿namespace AzureMapsControl.Map
+﻿namespace AzureMapsControl.Components.Map
 {
     /// <summary>
     /// Global properties used in all atlas service requests.

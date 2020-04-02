@@ -1,6 +1,6 @@
-﻿namespace AzureMapsControl.Map
+﻿namespace AzureMapsControl.Components.Map
 {
-    using AzureMapsControl.Atlas;
+    using AzureMapsControl.Components.Atlas;
 
     /// <summary>
     /// Event object returned by the maps when a data event occurs.

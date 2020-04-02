@@ -1,4 +1,4 @@
-﻿namespace AzureMapsControl.Map
+﻿namespace AzureMapsControl.Components.Map
 {
     /// <summary>
     /// Bearing of the map (rotation)

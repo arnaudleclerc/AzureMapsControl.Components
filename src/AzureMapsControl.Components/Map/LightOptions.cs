@@ -1,4 +1,4 @@
-﻿namespace AzureMapsControl.Map
+﻿namespace AzureMapsControl.Components.Map
 {
     /// <summary>
     /// The options for the map's lighting.

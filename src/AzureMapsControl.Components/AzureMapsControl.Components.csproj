@@ -3,6 +3,12 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <RazorLangVersion>3.0</RazorLangVersion>
+    <Authors>Arnaud Leclerc</Authors>
+    <Company />
+    <RepositoryUrl>https://github.com/arnaudleclerc/AzureMapsControl.Components</RepositoryUrl>
+    <RepositoryType>GIT</RepositoryType>
+    <PackageTags>azure-maps azure-maps-control razor razor-components</PackageTags>
+    <Description>Azure Maps Control Razor Components</Description>
   </PropertyGroup>
 
 

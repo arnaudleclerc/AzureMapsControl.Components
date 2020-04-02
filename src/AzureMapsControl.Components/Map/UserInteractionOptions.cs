@@ -1,4 +1,4 @@
-﻿namespace AzureMapsControl.Map
+﻿namespace AzureMapsControl.Components.Map
 {
     internal class UserInteractionOptions
     {

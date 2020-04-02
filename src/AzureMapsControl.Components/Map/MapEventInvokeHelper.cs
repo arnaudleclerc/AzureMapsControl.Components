@@ -1,4 +1,4 @@
-﻿namespace AzureMapsControl.Map
+﻿namespace AzureMapsControl.Components.Map
 {
     using System;
     using Microsoft.JSInterop;

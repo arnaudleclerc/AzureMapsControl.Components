@@ -1,6 +1,6 @@
-﻿namespace AzureMapsControl.Map
+﻿namespace AzureMapsControl.Components.Map
 {
-    using AzureMapsControl.Atlas;
+    using AzureMapsControl.Components.Atlas;
 
     internal class CameraOptions
     {

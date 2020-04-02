@@ -1,4 +1,4 @@
-﻿namespace AzureMapsControl.Configuration
+﻿namespace AzureMapsControl.Components.Configuration
 {
     public class AzureMapsConfiguration
     {

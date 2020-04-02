@@ -1,4 +1,4 @@
-﻿namespace AzureMapsControl.Constants
+﻿namespace AzureMapsControl.Components.Constants
 {
     internal static class JsConstants
     {

@@ -1,4 +1,4 @@
-﻿namespace AzureMapsControl.Atlas
+﻿namespace AzureMapsControl.Components.Atlas
 {
     /// <summary>
     /// Tile object returned by the map when a source data event occurs.
