@@ -260,6 +260,12 @@
     public MapEventActivationFlags EventActivationFlags { get; set; }
 
     /// <summary>
+    /// Defines the controls to add to the map when it is ready
+    /// </summary>
+    [Parameter]
+    public IEnumerable<Control> Controls { get; set; }
+
+    /// <summary>
     /// Fired when a "box zoom" interaction ends.
     /// </summary>
     [Parameter]
@@ -538,7 +544,7 @@
 
     protected override void OnInitialized()
     {
-        _mapEventInvokeHelper = new MapEventInvokeHelper(MapEventReceived);
+        _mapEventInvokeHelper = new MapEventInvokeHelper(MapEventReceivedAsync);
         _map = new Map(Id, AddControlsAsync);
         base.OnInitialized();
     }
@@ -562,13 +568,13 @@
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    private void MapEventReceived(MapJsEventArgs mapEvent)
+    private async Task MapEventReceivedAsync(MapJsEventArgs mapEvent)
     {
         if (mapEvent.MapId == Id)
         {
             if (mapEvent.Type == "ready")
             {
-                JSRuntime.InvokeVoidAsync(MethodSetOptions.ToAzureMapsControlNamespace(),
+                await JSRuntime.InvokeVoidAsync(MethodSetOptions.ToAzureMapsControlNamespace(),
                     Id,
                     new CameraOptions
                     {
@@ -612,8 +618,10 @@
                         TouchInteraction = TouchInteraction,
                         WheelZoomRate = WheelZoomRate
                     });
+
+                await AddControlsAsync(Controls);
             }
-            DispatchEventAsync(mapEvent).Wait();
+            await DispatchEventAsync(mapEvent);
         }
     }
 

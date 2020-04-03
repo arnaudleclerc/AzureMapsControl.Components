@@ -108,7 +108,7 @@ window.azureMapsControl = {
             return eventType === 'error';
         })) {
             map.events.add('error', event => {
-                mapEventHelper.invokeMethodAsync('NotifyMapEvent', this._toMapEvent(event.type, mapId, {
+                mapEventHelper.invokeMethodAsync('NotifyMapEventAsync', this._toMapEvent(event.type, mapId, {
                     error: event.error.stack
                 }));
             });
@@ -123,14 +123,14 @@ window.azureMapsControl = {
                     map: map
                 });
 
-                mapEventHelper.invokeMethodAsync('NotifyMapEvent', this._toMapEvent(event.type, mapId));
+                mapEventHelper.invokeMethodAsync('NotifyMapEventAsync', this._toMapEvent(event.type, mapId));
 
                 this._mapEvents.forEach(value => {
                     if (enabledEvents.find(eventType => {
                         return value === eventType;
                     })) {
                         map.events.add(value, () => {
-                            mapEventHelper.invokeMethodAsync('NotifyMapEvent', this._toMapEvent(value, mapId));
+                            mapEventHelper.invokeMethodAsync('NotifyMapEventAsync', this._toMapEvent(value, mapId));
                         });
                     }
                 });
@@ -140,7 +140,7 @@ window.azureMapsControl = {
                         return value === eventType;
                     })) {
                         map.events.add(value, event => {
-                            mapEventHelper.invokeMethodAsync('NotifyMapEvent', this._toMapEvent(value, mapId, {
+                            mapEventHelper.invokeMethodAsync('NotifyMapEventAsync', this._toMapEvent(value, mapId, {
                                 layerId: event.layerId,
                                 shapes: event.shapes,
                                 pixel: Array.isArray(event.pixel) ? {
@@ -161,7 +161,7 @@ window.azureMapsControl = {
                         return value === eventType;
                     })) {
                         map.events.add(value, event => {
-                            mapEventHelper.invokeMethodAsync('NotifyMapEvent', this._toMapEvent(value, mapId, {
+                            mapEventHelper.invokeMethodAsync('NotifyMapEventAsync', this._toMapEvent(value, mapId, {
                                 dataType: event.dataType,
                                 isSourceLoaded: event.isSourceLoaded,
                                 source: event.source ? {
@@ -179,7 +179,7 @@ window.azureMapsControl = {
                         return value === eventType;
                     })) {
                         map.events.add(value, event => {
-                            mapEventHelper.invokeMethodAsync('NotifyMapEvent', this._toMapEvent(value, mapId, {
+                            mapEventHelper.invokeMethodAsync('NotifyMapEventAsync', this._toMapEvent(value, mapId, {
                                 id: event.getId()
                             }));
                         });
@@ -191,7 +191,7 @@ window.azureMapsControl = {
                         return value === eventType;
                     })) {
                         map.events.add(value, event => {
-                            mapEventHelper.invokeMethodAsync('NotifyMapEvent', this._toMapEvent(value, mapId, {
+                            mapEventHelper.invokeMethodAsync('NotifyMapEventAsync', this._toMapEvent(value, mapId, {
                                 message: event
                             }));
                         });
@@ -203,7 +203,7 @@ window.azureMapsControl = {
                         return value === eventType;
                     })) {
                         map.events.add(value, event => {
-                            mapEventHelper.invokeMethodAsync('NotifyMapEvent', this._toMapEvent(value, map, {
+                            mapEventHelper.invokeMethodAsync('NotifyMapEventAsync', this._toMapEvent(value, map, {
                                 layerId: event.layerId,
                                 pixel: event.pixel,
                                 pixels: event.pixels,
@@ -243,7 +243,9 @@ window.azureMapsControl = {
             options.offset = cameraOptions.offset;
             options.padding = cameraOptions.padding;
         } else {
-            options.center = [cameraOptions.center.longitude, cameraOptions.center.latitude];
+            if (cameraOptions.center) {
+                options.center = [cameraOptions.center.longitude, cameraOptions.center.latitude];
+            }
             options.zoom = cameraOptions.zoom;
         }
 

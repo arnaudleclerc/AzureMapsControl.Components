@@ -1,15 +1,17 @@
 ﻿namespace AzureMapsControl.Components.Map
 {
     using System;
+    using System.Threading.Tasks;
+
     using Microsoft.JSInterop;
 
     internal class MapEventInvokeHelper
     {
-        private readonly Action<MapJsEventArgs> _action;
+        private readonly Func<MapJsEventArgs, Task> _action;
 
-        public MapEventInvokeHelper(Action<MapJsEventArgs> action) => _action = action;
+        public MapEventInvokeHelper(Func<MapJsEventArgs, Task> action) => _action = action;
 
         [JSInvokable]
-        public void NotifyMapEvent(MapJsEventArgs mapEvent) => _action.Invoke(mapEvent);
+        public async Task NotifyMapEventAsync(MapJsEventArgs mapEvent) => await _action.Invoke(mapEvent);
     }
 }

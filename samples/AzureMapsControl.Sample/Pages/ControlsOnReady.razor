@@ -1,4 +1,4 @@
-﻿@page "/Controls"
+﻿@page "/ControlsOnReady"
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
@@ -8,10 +8,19 @@
                                     MapEventType.Idle,
                                     MapEventType.MouseMove,
                                     MapEventType.Render)"
-          Controls="new []
-          {
-                        new Components.Atlas.Control(AzureMapsControl.Components.Atlas.ControlType.Zoom, AzureMapsControl.Components.Atlas.ControlPosition.TopLeft),
+          OnReady="OnMapReady" />
+
+@code  {
+
+    public async Task OnMapReady(MapEventArgs eventArgs)
+    {
+        await eventArgs.Map.AddControlsAsync
+        (
+            new Components.Atlas.Control(AzureMapsControl.Components.Atlas.ControlType.Zoom, AzureMapsControl.Components.Atlas.ControlPosition.TopLeft),
             new Components.Atlas.Control(AzureMapsControl.Components.Atlas.ControlType.Pitch, AzureMapsControl.Components.Atlas.ControlPosition.TopRight),
             new Components.Atlas.Control(AzureMapsControl.Components.Atlas.ControlType.Compass, AzureMapsControl.Components.Atlas.ControlPosition.BottomLeft),
             new Components.Atlas.Control(AzureMapsControl.Components.Atlas.ControlType.Style, AzureMapsControl.Components.Atlas.ControlPosition.BottomRight)
-          }" />
+        );
+    }
+
+}
