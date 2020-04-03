@@ -22,7 +22,7 @@
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
-            services.AddServerSideBlazor();
+            services.AddServerSideBlazor(options => options.DetailedErrors = true);
             services.AddAzureMapsControl(configuration => configuration.SubscriptionKey = Configuration["AzureMaps:SubscriptionKey"]);
         }
 
@@ -45,8 +45,7 @@
 
             app.UseRouting();
 
-            app.UseEndpoints(endpoints =>
-            {
+            app.UseEndpoints(endpoints => {
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });

@@ -13,7 +13,7 @@
         public IEnumerable<Position> Positions { get; }
         public IEnumerable<Feature> Shapes { get; }
 
-        internal MapTouchEventArgs(MapJsEventArgs eventArgs) : base(eventArgs)
+        internal MapTouchEventArgs(Map map, MapJsEventArgs eventArgs) : base(map, eventArgs.Type)
         {
             LayerId = eventArgs.LayerId;
             Pixel = eventArgs.Pixel;

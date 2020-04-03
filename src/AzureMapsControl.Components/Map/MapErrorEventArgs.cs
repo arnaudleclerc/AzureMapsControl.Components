@@ -4,6 +4,6 @@
     {
         public string Error { get; }
 
-        internal MapErrorEventArgs(MapJsEventArgs eventArgs) : base(eventArgs) => Error = eventArgs.Error;
+        internal MapErrorEventArgs(Atlas.Map map, MapJsEventArgs eventArgs) : base(map, eventArgs.Type) => Error = eventArgs.Error;
     }
 }

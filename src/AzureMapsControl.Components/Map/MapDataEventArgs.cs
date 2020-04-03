@@ -31,7 +31,7 @@
         /// </summary>
         public Tile Tile { get; }
 
-        internal MapDataEventArgs(MapJsEventArgs eventArgs) : base(eventArgs)
+        internal MapDataEventArgs(Map map, MapJsEventArgs eventArgs) : base(map, eventArgs.Type)
         {
             DataType = eventArgs.DataType;
             IsSourceLoaded = eventArgs.IsSourceLoaded;

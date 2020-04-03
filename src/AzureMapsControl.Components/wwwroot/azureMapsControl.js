@@ -55,6 +55,39 @@ window.azureMapsControl = {
         'touchend',
         'touchstart'
     ],
+    addControls: function (mapId,
+        controlOptions) {
+        if (controlOptions && controlOptions.length > 0) {
+            const mapEntry = this._maps.find(currentValue => {
+                return currentValue.id === mapId;
+            });
+
+            controlOptions.forEach(controlOption => {
+                switch (controlOption.type) {
+                    case "compass":
+                        mapEntry.map.controls.add(new atlas.control.CompassControl(), {
+                            position: controlOption.position
+                        });
+                        break;
+                    case "pitch":
+                        mapEntry.map.controls.add(new atlas.control.PitchControl(), {
+                            position: controlOption.position
+                        });
+                        break;
+                    case "style":
+                        mapEntry.map.controls.add(new atlas.control.StyleControl(), {
+                            position: controlOption.position
+                        });
+                        break;
+                    case "zoom":
+                        mapEntry.map.controls.add(new atlas.control.ZoomControl(), {
+                            position: controlOption.position
+                        });
+                        break;
+                }
+            });
+        }
+    },
     addMap: function (mapId,
         subscriptionKey,
         serviceOptions,
@@ -184,7 +217,6 @@ window.azureMapsControl = {
         }
 
     },
-
     setOptions: function (mapId,
         cameraOptions,
         styleOptions,
@@ -218,7 +250,6 @@ window.azureMapsControl = {
         mapEntry.map.setStyle(styleOptions);
         mapEntry.map.setUserInteraction(userInteractionOptions);
     },
-
     _toMapEvent: function (type, mapId, properties) {
         const result = properties || {};
         result.mapId = mapId;

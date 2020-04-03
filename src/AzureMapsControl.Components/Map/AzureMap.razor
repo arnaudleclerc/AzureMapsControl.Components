@@ -14,8 +14,10 @@
 @code {
 
     private const string MethodAddMap = "addMap";
+    private const string MethodAddControl = "addControls";
     private const string MethodSetOptions = "setOptions";
 
+    private Map _map;
     private MapEventInvokeHelper _mapEventInvokeHelper;
 
     /// <summary>
@@ -262,130 +264,131 @@
 
     [Parameter]
     public EventCallback<MapMouseEventArgs> OnClick { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapDataEventArgs> OnData { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapMouseEventArgs> OnDblClick { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapEventArgs> OnDrag { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapEventArgs> OnDragEnd { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapEventArgs> OnDragStart { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapErrorEventArgs> OnError { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapEventArgs> OnIdle { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapLayerEventArgs> OnLayerAdded { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapLayerEventArgs> OnLayerRemoved { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapMouseEventArgs> OnMouseDown { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapMouseEventArgs> OnMouseMove { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapMouseEventArgs> OnMouseOut { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapMouseEventArgs> OnMouseOver { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapMouseEventArgs> OnMouseUp { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapEventArgs> OnMove { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapEventArgs> OnMoveEnd { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapEventArgs> OnMoveStart { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapEventArgs> OnPitch { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapEventArgs> OnPitchEnd { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapEventArgs> OnPitchStart { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapEventArgs> OnReady { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapEventArgs> OnRender { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapEventArgs> OnResize { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapEventArgs> OnRotate { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapEventArgs> OnRotateEnd { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapEventArgs> OnRotateStart { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapDataEventArgs> OnSourceAdded { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapDataEventArgs> OnSourceData { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapDataEventArgs> OnSourceRemoved { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapDataEventArgs> OnStyleData { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapMessageEventArgs> OnStyleImageMissing { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapEventArgs> OnTokenAcquired { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapTouchEventArgs> OnTouchCancel { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapTouchEventArgs> OnTouchEnd { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapTouchEventArgs> OnTouchMove { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapTouchEventArgs> OnTouchStart { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapEventArgs> OnWheel { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapEventArgs> OnZoom { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapEventArgs> OnZoomEnd { get; set; }
-    
+
     [Parameter]
     public EventCallback<MapEventArgs> OnZoomStart { get; set; }
-    
+
     protected override void OnInitialized()
     {
         _mapEventInvokeHelper = new MapEventInvokeHelper(MapEventReceived);
+        _map = new Map(Id, AddControlsAsync);
         base.OnInitialized();
     }
 
@@ -463,138 +466,152 @@
         }
     }
 
+    private async Task AddControlsAsync(IEnumerable<Control> controls)
+    {
+        if (controls != null && controls.Any(control => control != null))
+        {
+            await JSRuntime.InvokeVoidAsync(MethodAddControl.ToAzureMapsControlNamespace(),
+                Id,
+                controls.Where(control => control != null).Select(control => new ControlOptions
+                {
+                    Type = control.Type.ToString(),
+                    Position = control.Position.ToString()
+                }));
+        }
+    }
+
     private async Task DispatchEventAsync(MapJsEventArgs mapEvent)
     {
         switch (mapEvent.Type)
         {
             case "boxzoomend":
-                await OnBoxZoomEnd.InvokeAsync(new MapEventArgs(mapEvent));
+                await OnBoxZoomEnd.InvokeAsync(new MapEventArgs(_map, mapEvent.Type));
                 break;
             case "boxzoomstart":
-                await OnBoxZoomStart.InvokeAsync(new MapEventArgs(mapEvent));
+                await OnBoxZoomStart.InvokeAsync(new MapEventArgs(_map, mapEvent.Type));
                 break;
             case "click":
-                await OnClick.InvokeAsync(new MapMouseEventArgs(mapEvent));
+                await OnClick.InvokeAsync(new MapMouseEventArgs(_map, mapEvent));
                 break;
             case "data":
-                await OnData.InvokeAsync(new MapDataEventArgs(mapEvent));
+                await OnData.InvokeAsync(new MapDataEventArgs(_map, mapEvent));
                 break;
             case "dblclick":
-                await OnDblClick.InvokeAsync(new MapMouseEventArgs(mapEvent));
+                await OnDblClick.InvokeAsync(new MapMouseEventArgs(_map, mapEvent));
                 break;
             case "drag":
-                await OnDrag.InvokeAsync(new MapEventArgs(mapEvent));
+                await OnDrag.InvokeAsync(new MapEventArgs(_map, mapEvent.Type));
                 break;
             case "dragend":
-                await OnDragEnd.InvokeAsync(new MapEventArgs(mapEvent));
+                await OnDragEnd.InvokeAsync(new MapEventArgs(_map, mapEvent.Type));
                 break;
             case "dragstart":
-                await OnDragStart.InvokeAsync(new MapEventArgs(mapEvent));
+                await OnDragStart.InvokeAsync(new MapEventArgs(_map, mapEvent.Type));
                 break;
             case "error":
-                await OnError.InvokeAsync(new MapErrorEventArgs(mapEvent));
+                await OnError.InvokeAsync(new MapErrorEventArgs(_map, mapEvent));
                 break;
             case "idle":
-                await OnIdle.InvokeAsync(new MapEventArgs(mapEvent));
+                await OnIdle.InvokeAsync(new MapEventArgs(_map, mapEvent.Type));
                 break;
             case "layeradded":
-                await OnLayerAdded.InvokeAsync(new MapLayerEventArgs(mapEvent));
+                await OnLayerAdded.InvokeAsync(new MapLayerEventArgs(_map, mapEvent));
                 break;
             case "layerremoved":
-                await OnLayerRemoved.InvokeAsync(new MapLayerEventArgs(mapEvent));
+                await OnLayerRemoved.InvokeAsync(new MapLayerEventArgs(_map, mapEvent));
                 break;
             case "mousedown":
-                await OnMouseDown.InvokeAsync(new MapMouseEventArgs(mapEvent));
+                await OnMouseDown.InvokeAsync(new MapMouseEventArgs(_map, mapEvent));
                 break;
             case "mousemove":
-                await OnMouseMove.InvokeAsync(new MapMouseEventArgs(mapEvent));
+                await OnMouseMove.InvokeAsync(new MapMouseEventArgs(_map, mapEvent));
                 break;
             case "mouseout":
-                await OnMouseOut.InvokeAsync(new MapMouseEventArgs(mapEvent));
+                await OnMouseOut.InvokeAsync(new MapMouseEventArgs(_map, mapEvent));
                 break;
             case "mouseover":
-                await OnMouseOver.InvokeAsync(new MapMouseEventArgs(mapEvent));
+                await OnMouseOver.InvokeAsync(new MapMouseEventArgs(_map, mapEvent));
                 break;
             case "mouseup":
-                await OnMouseUp.InvokeAsync(new MapMouseEventArgs(mapEvent));
+                await OnMouseUp.InvokeAsync(new MapMouseEventArgs(_map, mapEvent));
                 break;
             case "move":
-                await OnMove.InvokeAsync(new MapEventArgs(mapEvent));
+                await OnMove.InvokeAsync(new MapEventArgs(_map, mapEvent.Type));
                 break;
             case "moveend":
-                await OnMoveEnd.InvokeAsync(new MapEventArgs(mapEvent));
+                await OnMoveEnd.InvokeAsync(new MapEventArgs(_map, mapEvent.Type));
                 break;
             case "movestart":
-                await OnMoveStart.InvokeAsync(new MapEventArgs(mapEvent));
+                await OnMoveStart.InvokeAsync(new MapEventArgs(_map, mapEvent.Type));
                 break;
             case "pitch":
-                await OnPitch.InvokeAsync(new MapEventArgs(mapEvent));
+                await OnPitch.InvokeAsync(new MapEventArgs(_map, mapEvent.Type));
                 break;
             case "pitchend":
-                await OnPitchEnd.InvokeAsync(new MapEventArgs(mapEvent));
+                await OnPitchEnd.InvokeAsync(new MapEventArgs(_map, mapEvent.Type));
                 break;
             case "pitchstart":
-                await OnPitchStart.InvokeAsync(new MapEventArgs(mapEvent));
+                await OnPitchStart.InvokeAsync(new MapEventArgs(_map, mapEvent.Type));
                 break;
             case "ready":
-                await OnReady.InvokeAsync(new MapEventArgs(mapEvent));
+                await OnReady.InvokeAsync(new MapEventArgs(_map, mapEvent.Type));
                 break;
             case "render":
-                await OnRender.InvokeAsync(new MapEventArgs(mapEvent));
+                await OnRender.InvokeAsync(new MapEventArgs(_map, mapEvent.Type));
                 break;
             case "resize":
-                await OnResize.InvokeAsync(new MapEventArgs(mapEvent));
+                await OnResize.InvokeAsync(new MapEventArgs(_map, mapEvent.Type));
                 break;
             case "rotate":
-                await OnRotate.InvokeAsync(new MapEventArgs(mapEvent));
+                await OnRotate.InvokeAsync(new MapEventArgs(_map, mapEvent.Type));
                 break;
             case "rotateend":
-                await OnRotateEnd.InvokeAsync(new MapEventArgs(mapEvent));
+                await OnRotateEnd.InvokeAsync(new MapEventArgs(_map, mapEvent.Type));
                 break;
             case "rotatestart":
-                await OnRotateStart.InvokeAsync(new MapEventArgs(mapEvent));
+                await OnRotateStart.InvokeAsync(new MapEventArgs(_map, mapEvent.Type));
                 break;
             case "sourceadded":
-                await OnSourceAdded.InvokeAsync(new MapDataEventArgs(mapEvent));
+                await OnSourceAdded.InvokeAsync(new MapDataEventArgs(_map, mapEvent));
                 break;
             case "sourcedate":
-                await OnSourceData.InvokeAsync(new MapDataEventArgs(mapEvent));
+                await OnSourceData.InvokeAsync(new MapDataEventArgs(_map, mapEvent));
                 break;
             case "sourceremoved":
-                await OnSourceRemoved.InvokeAsync(new MapDataEventArgs(mapEvent));
+                await OnSourceRemoved.InvokeAsync(new MapDataEventArgs(_map, mapEvent));
                 break;
             case "styledata":
-                await OnStyleData.InvokeAsync(new MapDataEventArgs(mapEvent));
+                await OnStyleData.InvokeAsync(new MapDataEventArgs(_map, mapEvent));
                 break;
             case "styleimagemissing":
-                await OnStyleImageMissing.InvokeAsync(new MapMessageEventArgs(mapEvent));
+                await OnStyleImageMissing.InvokeAsync(new MapMessageEventArgs(_map, mapEvent));
                 break;
             case "tokenacquired":
-                await OnTokenAcquired.InvokeAsync(new MapEventArgs(mapEvent));
+                await OnTokenAcquired.InvokeAsync(new MapEventArgs(_map, mapEvent.Type));
                 break;
             case "touchcancel":
-                await OnTouchCancel.InvokeAsync(new MapTouchEventArgs(mapEvent));
+                await OnTouchCancel.InvokeAsync(new MapTouchEventArgs(_map, mapEvent));
                 break;
             case "touchend":
-                await OnTouchEnd.InvokeAsync(new MapTouchEventArgs(mapEvent));
+                await OnTouchEnd.InvokeAsync(new MapTouchEventArgs(_map, mapEvent));
                 break;
             case "touchmove":
-                await OnTouchMove.InvokeAsync(new MapTouchEventArgs(mapEvent));
+                await OnTouchMove.InvokeAsync(new MapTouchEventArgs(_map, mapEvent));
                 break;
             case "touchstart":
-                await OnTouchStart.InvokeAsync(new MapTouchEventArgs(mapEvent));
+                await OnTouchStart.InvokeAsync(new MapTouchEventArgs(_map, mapEvent));
                 break;
             case "wheel":
-                await OnWheel.InvokeAsync(new MapEventArgs(mapEvent));
+                await OnWheel.InvokeAsync(new MapEventArgs(_map, mapEvent.Type));
                 break;
             case "zoom":
-                await OnZoom.InvokeAsync(new MapEventArgs(mapEvent));
+                await OnZoom.InvokeAsync(new MapEventArgs(_map, mapEvent.Type));
                 break;
             case "zoomend":
-                await OnZoomEnd.InvokeAsync(new MapEventArgs(mapEvent));
+                await OnZoomEnd.InvokeAsync(new MapEventArgs(_map, mapEvent.Type));
                 break;
             case "zoomstart":
-                await OnZoomStart.InvokeAsync(new MapEventArgs(mapEvent));
+                await OnZoomStart.InvokeAsync(new MapEventArgs(_map, mapEvent.Type));
                 break;
         }
     }

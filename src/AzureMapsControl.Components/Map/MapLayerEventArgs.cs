@@ -4,6 +4,6 @@
     {
         public string Id { get; set; }
 
-        internal MapLayerEventArgs(MapJsEventArgs eventArgs) : base(eventArgs) => Id = eventArgs.Id;
+        internal MapLayerEventArgs(Atlas.Map map, MapJsEventArgs eventArgs) : base(map, eventArgs.Type) => Id = eventArgs.Id;
     }
 }
