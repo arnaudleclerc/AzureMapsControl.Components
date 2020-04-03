@@ -1,12 +1,13 @@
 ﻿namespace AzureMapsControl.Components.Map
 {
-    public sealed class MapEventType
-    {
-        private readonly string _type;
+    using AzureMapsControl.Components.Events;
 
+    public sealed class MapEventType : AtlasEventType
+    {
         public static MapEventType BoxZoomEnd = new MapEventType("boxzoomend");
         public static MapEventType BoxZoomStart = new MapEventType("boxzoomstart");
         public static MapEventType Click = new MapEventType("click");
+        public static MapEventType ContextMenu = new MapEventType("contextmenu");
         public static MapEventType Data = new MapEventType("data");
         public static MapEventType DblClick = new MapEventType("dblclick");
         public static MapEventType Drag = new MapEventType("drag");
@@ -16,6 +17,7 @@
         public static MapEventType Idle = new MapEventType("idle");
         public static MapEventType LayerAdded = new MapEventType("layeradded");
         public static MapEventType LayerRemoved = new MapEventType("layerremoved");
+        public static MapEventType Load = new MapEventType("load");
         public static MapEventType MouseDown = new MapEventType("mousedown");
         public static MapEventType MouseMove = new MapEventType("mousemove");
         public static MapEventType MouseOut = new MapEventType("mouseout");
@@ -48,8 +50,6 @@
         public static MapEventType ZoomEnd = new MapEventType("zoomend");
         public static MapEventType ZoomStart = new MapEventType("zoomstart");
 
-        private MapEventType(string type) => _type = type;
-
-        public override string ToString() => _type;
+        private MapEventType(string type) : base(type) { }
     }
 }

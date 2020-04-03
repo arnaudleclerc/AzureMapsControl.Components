@@ -59,35 +59,60 @@ window.azureMapsControl = {
     addControls: function (mapId,
         controlOptions) {
         if (controlOptions && controlOptions.length > 0) {
-            const mapEntry = this._maps.find(currentValue => {
-                return currentValue.id === mapId;
-            });
+            const map = this._findMap(mapId);
 
             controlOptions.forEach(controlOption => {
                 switch (controlOption.type) {
                     case "compass":
-                        mapEntry.map.controls.add(new atlas.control.CompassControl(), {
+                        map.controls.add(new atlas.control.CompassControl(), {
                             position: controlOption.position
                         });
                         break;
                     case "pitch":
-                        mapEntry.map.controls.add(new atlas.control.PitchControl(), {
+                        map.controls.add(new atlas.control.PitchControl(), {
                             position: controlOption.position
                         });
                         break;
                     case "style":
-                        mapEntry.map.controls.add(new atlas.control.StyleControl(), {
+                        map.controls.add(new atlas.control.StyleControl(), {
                             position: controlOption.position
                         });
                         break;
                     case "zoom":
-                        mapEntry.map.controls.add(new atlas.control.ZoomControl(), {
+                        map.controls.add(new atlas.control.ZoomControl(), {
                             position: controlOption.position
                         });
                         break;
                 }
             });
         }
+    },
+    addHtmlMarkers: function (mapId,
+        htmlMarkerCreateOptions) {
+        const map = this._findMap(mapId);
+
+        htmlMarkerCreateOptions.forEach(htmlMarkerCreateOption => {
+            const marker = new atlas.HtmlMarker({
+                anchor: htmlMarkerCreateOption.options.anchor,
+                color: htmlMarkerCreateOption.options.color,
+                draggable: htmlMarkerCreateOption.options.draggable,
+                htmlContent: htmlMarkerCreateOption.options.htmlContent,
+                pixelOffset: htmlMarkerCreateOption.options.pixelOffset,
+                position: [htmlMarkerCreateOption.options.position.longitude, htmlMarkerCreateOption.options.position.latitude],
+                secondaryColor: htmlMarkerCreateOption.options.secondaryColor,
+                text: htmlMarkerCreateOption.options.text,
+                visible: htmlMarkerCreateOption.options.visible
+            });
+            if (htmlMarkerCreateOption.events) {
+                htmlMarkerCreateOption.events.forEach(htmlMarkerEvent => {
+                    map.events.add(htmlMarkerEvent, marker, event => {
+                        console.log(event);
+                        //Trigger here the html marker events
+                    });
+                });
+            }
+            map.markers.add(marker);
+        });
     },
     addMap: function (mapId,
         subscriptionKey,
@@ -223,9 +248,7 @@ window.azureMapsControl = {
         styleOptions,
         userInteractionOptions) {
 
-        const mapEntry = this._maps.find(currentValue => {
-            return currentValue.id === mapId;
-        });
+        const map = this._findMap(mapId);
 
         const options = {
             bearing: cameraOptions.bearing,
@@ -249,9 +272,14 @@ window.azureMapsControl = {
             options.zoom = cameraOptions.zoom;
         }
 
-        mapEntry.map.setCamera(options);
-        mapEntry.map.setStyle(styleOptions);
-        mapEntry.map.setUserInteraction(userInteractionOptions);
+        map.setCamera(options);
+        map.setStyle(styleOptions);
+        map.setUserInteraction(userInteractionOptions);
+    },
+    _findMap: function (mapId) {
+        return this._maps.find(currentValue => {
+            return currentValue.id === mapId;
+        }).map;
     },
     _toMapEvent: function (type, mapId, properties) {
         const result = properties || {};

@@ -15,6 +15,7 @@
 
     private const string MethodAddMap = "addMap";
     private const string MethodAddControl = "addControls";
+    private const string MethodAddHtmlMarkers = "addHtmlMarkers";
     private const string MethodSetOptions = "setOptions";
 
     private Map _map;
@@ -264,6 +265,12 @@
     /// </summary>
     [Parameter]
     public IEnumerable<Control> Controls { get; set; }
+
+    /// <summary>
+    /// HtmlMarkers to add to the map when it is ready
+    /// </summary>
+    [Parameter]
+    public IEnumerable<AzureMapsControl.Components.Markers.HtmlMarker> HtmlMarkers { get; set; }
 
     /// <summary>
     /// Fired when a "box zoom" interaction ends.
@@ -545,7 +552,7 @@
     protected override void OnInitialized()
     {
         _mapEventInvokeHelper = new MapEventInvokeHelper(MapEventReceivedAsync);
-        _map = new Map(Id, AddControlsAsync);
+        _map = new Map(Id, AddControlsAsync, AddHtmlMarkersAsync);
         base.OnInitialized();
     }
 
@@ -620,6 +627,7 @@
                     });
 
                 await AddControlsAsync(Controls);
+                await AddHtmlMarkersAsync(HtmlMarkers);
             }
             await DispatchEventAsync(mapEvent);
         }
@@ -635,6 +643,20 @@
                 {
                     Type = control.Type.ToString(),
                     Position = control.Position.ToString()
+                }));
+        }
+    }
+
+    private async Task AddHtmlMarkersAsync(IEnumerable<AzureMapsControl.Components.Markers.HtmlMarker> htmlMarkers)
+    {
+        if (htmlMarkers != null && htmlMarkers.Any(marker => marker != null))
+        {
+            await JSRuntime.InvokeVoidAsync(MethodAddHtmlMarkers.ToAzureMapsControlNamespace(),
+                Id,
+                htmlMarkers.Where(marker => marker != null).Select(marker => new AzureMapsControl.Components.Markers.HtmlMarkerCreationOptions
+                {
+                    Events = marker.EventActivationFlags?.EnabledEvents,
+                    Options = marker.Options
                 }));
         }
     }
