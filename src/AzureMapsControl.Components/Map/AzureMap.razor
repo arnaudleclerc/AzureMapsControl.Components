@@ -253,135 +253,286 @@
     [Parameter]
     public int? Zoom { get; set; }
 
+    /// <summary>
+    /// Defines the events which needs to be activated
+    /// </summary>
     [Parameter]
     public MapEventActivationFlags EventActivationFlags { get; set; }
 
+    /// <summary>
+    /// Fired when a "box zoom" interaction ends.
+    /// </summary>
     [Parameter]
     public EventCallback<MapEventArgs> OnBoxZoomEnd { get; set; }
 
+    /// <summary>
+    /// Fired when a "box zoom" interaction starts.
+    /// </summary>
     [Parameter]
     public EventCallback<MapEventArgs> OnBoxZoomStart { get; set; }
 
+    /// <summary>
+    /// Fired when a pointing device is pressed and released at the same point on the map.
+    /// </summary>
     [Parameter]
     public EventCallback<MapMouseEventArgs> OnClick { get; set; }
 
+    /// <summary>
+    /// Fired when the right button of the mouse is clicked.
+    /// </summary>
+    [Parameter]
+    public EventCallback<MapMouseEventArgs> OnContextMenu { get; set; }
+
+    /// <summary>
+    /// Fired when any map data loads or changes.
+    /// </summary>
     [Parameter]
     public EventCallback<MapDataEventArgs> OnData { get; set; }
 
+    /// <summary>
+    /// Fired when a pointing device is clicked twice at the same point on the map.
+    /// </summary>
     [Parameter]
     public EventCallback<MapMouseEventArgs> OnDblClick { get; set; }
 
+    /// <summary>
+    /// Fired repeatedly during a "drag to pan" interaction on the map, popup, or HTML marker.
+    /// </summary>
     [Parameter]
     public EventCallback<MapEventArgs> OnDrag { get; set; }
 
+    /// <summary>
+    /// Fired when a "drag to pan" interaction ends on the map, popup, or HTML marker.
+    /// </summary>
     [Parameter]
     public EventCallback<MapEventArgs> OnDragEnd { get; set; }
 
+    /// <summary>
+    /// Fired when a "drag to pan" interaction starts on the map, popup, or HTML marker.
+    /// </summary>
     [Parameter]
     public EventCallback<MapEventArgs> OnDragStart { get; set; }
 
+    /// <summary>
+    /// Fired when an error occurs.
+    /// </summary>
     [Parameter]
     public EventCallback<MapErrorEventArgs> OnError { get; set; }
 
+    /// <summary>
+    /// Fired after the last frame rendered before the map enters an "idle" state:
+    /// No camera transitions are in progress.
+    /// All currently requested tiles have loaded.
+    /// All fade/transition animations have completed.
+    /// </summary>
     [Parameter]
     public EventCallback<MapEventArgs> OnIdle { get; set; }
 
+    /// <summary>
+    /// Fired after a layer has been added to the map
+    /// </summary>
     [Parameter]
     public EventCallback<MapLayerEventArgs> OnLayerAdded { get; set; }
 
+    /// <summary>
+    /// Fired after a layer has been removed from the map
+    /// </summary>
     [Parameter]
     public EventCallback<MapLayerEventArgs> OnLayerRemoved { get; set; }
 
+    /// <summary>
+    /// Fired immediately after all necessary resources have been downloaded and the first visually complete rendering of the map has occurred.
+    /// </summary>
+    [Parameter]
+    public EventCallback<MapEventArgs> OnLoad { get; set; }
+
+    /// <summary>
+    /// Fired when a pointing device is pressed within the map or when on top of an element.
+    /// </summary>
     [Parameter]
     public EventCallback<MapMouseEventArgs> OnMouseDown { get; set; }
 
+    /// <summary>
+    /// Fired when a pointing device is moved within the map or an element.
+    /// </summary>
     [Parameter]
     public EventCallback<MapMouseEventArgs> OnMouseMove { get; set; }
 
+    /// <summary>
+    /// Fired when a point device leaves the map's canvas our leaves an element.
+    /// </summary>
     [Parameter]
     public EventCallback<MapMouseEventArgs> OnMouseOut { get; set; }
 
+    /// <summary>
+    /// Fired when a pointing device is moved over the map or an element.
+    /// </summary>
     [Parameter]
     public EventCallback<MapMouseEventArgs> OnMouseOver { get; set; }
 
+    /// <summary>
+    /// Fired when a pointing device is released within the map or when on top of an element.
+    /// </summary>
     [Parameter]
     public EventCallback<MapMouseEventArgs> OnMouseUp { get; set; }
 
+    /// <summary>
+    /// Fired repeatedly during an animated transition from one view to another, as the result of either user interaction or methods.
+    /// </summary>
     [Parameter]
     public EventCallback<MapEventArgs> OnMove { get; set; }
 
+    /// <summary>
+    /// Fired just after the map completes a transition from one view to another, as the result of either user interaction or methods.
+    /// </summary>
     [Parameter]
     public EventCallback<MapEventArgs> OnMoveEnd { get; set; }
 
+    /// <summary>
+    /// Fired just before the map begins a transition from one view to another, as the result of either user interaction or methods.
+    /// </summary>
     [Parameter]
     public EventCallback<MapEventArgs> OnMoveStart { get; set; }
 
+    /// <summary>
+    /// Fired whenever the map's pitch (tilt) changes as the result of either user interaction or methods.
+    /// </summary>
     [Parameter]
     public EventCallback<MapEventArgs> OnPitch { get; set; }
 
+    /// <summary>
+    /// Fired immediately after the map's pitch (tilt) finishes changing as the result of either user interaction or methods.
+    /// </summary>
     [Parameter]
     public EventCallback<MapEventArgs> OnPitchEnd { get; set; }
 
+    /// <summary>
+    /// Fired whenever the map's pitch (tilt) begins a change as the result of either user interaction or methods.
+    /// </summary>
     [Parameter]
     public EventCallback<MapEventArgs> OnPitchStart { get; set; }
 
+    /// <summary>
+    /// Fired when the minimum required map resources are loaded before the map is ready to be programmatically interacted with.
+    /// </summary>
     [Parameter]
     public EventCallback<MapEventArgs> OnReady { get; set; }
 
+    /// <summary>
+    /// Fired whenever the map is drawn to the screen, as the result of:
+    /// A change to the map's position, zoom, pitch, or bearing.
+    /// A change to the map's style.
+    /// A change to a DataSource source.
+    /// The loading of a vector tile, GeoJSON file, glyph, or sprite.
+    /// </summary>
     [Parameter]
     public EventCallback<MapEventArgs> OnRender { get; set; }
 
+    /// <summary>
+    /// Fired immediately after the map has been resized.
+    /// </summary>
     [Parameter]
     public EventCallback<MapEventArgs> OnResize { get; set; }
 
+    /// <summary>
+    /// Fired repeatedly during a "drag to rotate" interaction.
+    /// </summary>
     [Parameter]
     public EventCallback<MapEventArgs> OnRotate { get; set; }
 
+    /// <summary>
+    /// Fired when a "drag to rotate" interaction ends.
+    /// </summary>
     [Parameter]
     public EventCallback<MapEventArgs> OnRotateEnd { get; set; }
 
+    /// <summary>
+    /// Fired when a "drag to rotate" interaction starts.
+    /// </summary>
     [Parameter]
     public EventCallback<MapEventArgs> OnRotateStart { get; set; }
 
+    /// <summary>
+    /// Fired when a DataSource or VectorTileSource is added to the map.
+    /// </summary>
     [Parameter]
     public EventCallback<MapDataEventArgs> OnSourceAdded { get; set; }
 
+    /// <summary>
+    /// Fired when one of the map's sources loads or changes, including if a tile belonging to a source loads or changes.
+    /// </summary>
     [Parameter]
     public EventCallback<MapDataEventArgs> OnSourceData { get; set; }
 
+    /// <summary>
+    /// Fired when a DataSource or VectorTileSource is removed from the map.
+    /// </summary>
     [Parameter]
     public EventCallback<MapDataEventArgs> OnSourceRemoved { get; set; }
 
+    /// <summary>
+    /// Fired when the map's style loads or changes.
+    /// </summary>
     [Parameter]
     public EventCallback<MapDataEventArgs> OnStyleData { get; set; }
 
+    /// <summary>
+    /// Fired when a layer tries to load an image from the image sprite that doesn't exist
+    /// </summary>
     [Parameter]
     public EventCallback<MapMessageEventArgs> OnStyleImageMissing { get; set; }
 
+    /// <summary>
+    /// Fired when an AAD access token is obtained.
+    /// </summary>
     [Parameter]
     public EventCallback<MapEventArgs> OnTokenAcquired { get; set; }
 
+    /// <summary>
+    /// Fired when a touchcancel event occurs within the map.
+    /// </summary>
     [Parameter]
     public EventCallback<MapTouchEventArgs> OnTouchCancel { get; set; }
 
+    /// <summary>
+    /// Fired when a touchend event occurs within the map.
+    /// </summary>
     [Parameter]
     public EventCallback<MapTouchEventArgs> OnTouchEnd { get; set; }
 
+    /// <summary>
+    /// Fired when a touchmove event occurs within the map.
+    /// </summary>
     [Parameter]
     public EventCallback<MapTouchEventArgs> OnTouchMove { get; set; }
 
+    /// <summary>
+    /// Fired when a touchstart event occurs within the map.
+    /// </summary>
     [Parameter]
     public EventCallback<MapTouchEventArgs> OnTouchStart { get; set; }
 
+    /// <summary>
+    /// Fired when a mouse wheel event occurs within the map.
+    /// </summary>
     [Parameter]
     public EventCallback<MapEventArgs> OnWheel { get; set; }
 
+    /// <summary>
+    /// Fired repeatedly during an animated transition from one zoom level to another, as the result of either user interaction or methods.
+    /// </summary>
     [Parameter]
     public EventCallback<MapEventArgs> OnZoom { get; set; }
 
+    /// <summary>
+    /// Fired just after the map completes a transition from one zoom level to another, as the result of either user interaction or methods.
+    /// </summary>
     [Parameter]
     public EventCallback<MapEventArgs> OnZoomEnd { get; set; }
 
+    /// <summary>
+    /// Fired just before the map begins a transition from one zoom level to another, as the result of either user interaction or methods.
+    /// </summary>
     [Parameter]
     public EventCallback<MapEventArgs> OnZoomStart { get; set; }
 
@@ -493,6 +644,9 @@
             case "click":
                 await OnClick.InvokeAsync(new MapMouseEventArgs(_map, mapEvent));
                 break;
+            case "contextmenu":
+                await OnContextMenu.InvokeAsync(new MapMouseEventArgs(_map, mapEvent));
+                break;
             case "data":
                 await OnData.InvokeAsync(new MapDataEventArgs(_map, mapEvent));
                 break;
@@ -519,6 +673,9 @@
                 break;
             case "layerremoved":
                 await OnLayerRemoved.InvokeAsync(new MapLayerEventArgs(_map, mapEvent));
+                break;
+            case "load":
+                await OnLoad.InvokeAsync(new MapEventArgs(_map, mapEvent.Type));
                 break;
             case "mousedown":
                 await OnMouseDown.InvokeAsync(new MapMouseEventArgs(_map, mapEvent));

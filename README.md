@@ -171,7 +171,6 @@ The following events are implemented :
 | `layerremoved` | `OnLayerRemoved` | Fired after a layer has been removed from the map |
 | `load` | `OnLoad` | Fired immediately after all necessary resources have been downloaded and the first visually complete rendering of the map has occurred.
 | `mousedown` | `OnMouseDown` | Fired when a pointing device is pressed within the map or when on top of an element. |
-| `mouseleave` | `OnMouseLeave` | Fired when a pointing device is moved out the map or an element. |
 | `mousemove` | `OnMouseMove` | Fired when a pointing device is moved within the map or an element. |
 | `mouseout` | `OnMouseOut` | Fired when a point device leaves the map's canvas our leaves an element. |
 | `mouseover` | `OnMouseOver` | Fired when a pointing device is moved over the map or an element. |
@@ -182,15 +181,14 @@ The following events are implemented :
 | `pitch` | `OnPitch` | Fired whenever the map's pitch (tilt) changes as the result of either user interaction or methods. |
 | `pitchend` | `OnPitchEnd` | Fired immediately after the map's pitch (tilt) finishes changing as the result of either user interaction or methods. |
 | `pitchstart` | `OnPitchStart` | Fired whenever the map's pitch (tilt) begins a change as the result of either user interaction or methods. |
-| `render` | `OnRender` | <p>Fired whenever the map is drawn to the screen, as the result of:<ul><li>A change to the map's position, zoom, pitch, or bearing.</li><li>A change to the map's style.</li><li>A change to a `DataSource` source.</li><li>The loading of a vector tile, GeoJSON file, glyph, or sprite.</li></ul></p> |
 | `ready` | `OnReady` | Fired when the minimum required map resources are loaded before the map is ready to be programmatically interacted with. |
-| `render` | `OnRender` | Fired whenever the map is drawn to the screen, as the result of: |
+| `render` | `OnRender` | <p>Fired whenever the map is drawn to the screen, as the result of:<ul><li>A change to the map's position, zoom, pitch, or bearing.</li><li>A change to the map's style.</li><li>A change to a `DataSource` source.</li><li>The loading of a vector tile, GeoJSON file, glyph, or sprite.</li></ul></p> |
 | `resize` | `OnResize` | Fired immediately after the map has been resized. |
 | `rotate` | `OnRotate` | Fired repeatedly during a "drag to rotate" interaction. |
 | `rotateend` | `OnRotateEnd` | Fired when a "drag to rotate" interaction ends. |
 | `rotatestart` | `OnRotateStart` | Fired when a "drag to rotate" interaction starts. |
-| `sourcedata` | `OnSourceData` | Fired when one of the map's sources loads or changes, including if a tile belonging to a source loads or changes. |
 | `sourceadded` | `OnSourceAdded` | Fired when a DataSource or VectorTileSource is added to the map. |
+| `sourcedata` | `OnSourceData` | Fired when one of the map's sources loads or changes, including if a tile belonging to a source loads or changes. |
 | `sourceremoved` | `OnSourceRemoved` | Fired when a DataSource or VectorTileSource is removed from the map. |
 | `styledata` | `OnStyleData` | Fired when the map's style loads or changes. |
 | `styleimagemissing` | `OnStyleImageMissing` | Fired when a layer tries to load an image from the image sprite that doesn't exist |

@@ -8,6 +8,7 @@ window.azureMapsControl = {
         'dragend',
         'dragstart',
         'idle',
+        'load',
         'move',
         'moveend',
         'movestart',
