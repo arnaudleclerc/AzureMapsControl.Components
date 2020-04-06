@@ -362,3 +362,5 @@ They can also be added programmatically using the `AddHtmlMarkersAsync` method a
 ```
 
 More information concerning the HtmlMarkers can be found on the [Azure Maps Documentation](https://docs.microsoft.com/en-us/azure/azure-maps/map-add-custom-html).
+
+![HTML Marker](./assets/htmlmarker.png) 
