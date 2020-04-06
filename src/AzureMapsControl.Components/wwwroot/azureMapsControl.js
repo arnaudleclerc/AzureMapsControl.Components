@@ -247,6 +247,11 @@ window.azureMapsControl = {
         }
 
     },
+    removeHtmlMarkers: function (mapId,
+        markerIds) {
+        const map = this._findMap(mapId);
+        map.markers.remove(map.markers.getMarkers().find(marker => markerIds.indexOf(marker.amc.id) > -1));
+    },
     setOptions: function (mapId,
         cameraOptions,
         styleOptions,

@@ -512,3 +512,41 @@ The following updates an `HtmlMarker` by changing its color when the mouse goes 
     }
 }
 ```
+
+### Remove HtmlMarkers
+
+The `Map` also gives you the possibility to remove `HtmlMarkers` using the `RemoveHtmlMarkersAsync` method. The following example adds an `HtmlMarker` to the `Map` and removes the previously added one.
+
+```
+@page "/HtmlMarkersRemove"
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          EventActivationFlags="MapEventActivationFlags
+                                .None
+                                .Enable(MapEventType.Ready, MapEventType.Click)"
+          OnClick="OnMapClick" />
+
+@code  {
+
+    private AzureMapsControl.Components.Markers.HtmlMarker _marker;
+
+    public async Task OnMapClick(MapMouseEventArgs args)
+    {
+        if(_marker != null)
+        {
+            await args.Map.RemoveHtmlMarkersAsync(_marker);
+        }
+
+        _marker = new AzureMapsControl.Components.Markers.HtmlMarker(
+            new Components.Markers.HtmlMarkerOptions
+            {
+                Position = args.Position
+            }, AzureMapsControl.Components.Markers.HtmlMarkerEventActivationFlags.None);
+        await args.Map.AddHtmlMarkersAsync
+        (
+            _marker
+        );
+    }
+}
+```

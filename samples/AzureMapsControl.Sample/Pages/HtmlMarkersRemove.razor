@@ -1,0 +1,31 @@
+﻿@page "/HtmlMarkersRemove"
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          EventActivationFlags="MapEventActivationFlags
+                                .None
+                                .Enable(MapEventType.Ready, MapEventType.Click)"
+          OnClick="OnMapClick" />
+
+@code  {
+
+    private AzureMapsControl.Components.Markers.HtmlMarker _marker;
+
+    public async Task OnMapClick(MapMouseEventArgs args)
+    {
+        if(_marker != null)
+        {
+            await args.Map.RemoveHtmlMarkersAsync(_marker);
+        }
+
+        _marker = new AzureMapsControl.Components.Markers.HtmlMarker(
+            new Components.Markers.HtmlMarkerOptions
+            {
+                Position = args.Position
+            }, AzureMapsControl.Components.Markers.HtmlMarkerEventActivationFlags.None);
+        await args.Map.AddHtmlMarkersAsync
+        (
+            _marker
+        );
+    }
+}

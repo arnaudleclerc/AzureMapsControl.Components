@@ -16,6 +16,7 @@
         private readonly Func<IEnumerable<Control>, Task> _addControlsCallback;
         private readonly Func<IEnumerable<HtmlMarker>, Task> _addHtmlMarkersCallback;
         private readonly Func<IEnumerable<HtmlMarkerUpdate>, Task> _updateHtmlMarkersCallback;
+        private readonly Func<IEnumerable<HtmlMarker>, Task> _removeHtmlMarkersCallback;
 
         private Control[] _controls;
         private HtmlMarker[] _htmlMarkers;
@@ -40,12 +41,14 @@
         internal Map(string id,
             Func<IEnumerable<Control>, Task> addControlsCallback,
             Func<IEnumerable<HtmlMarker>, Task> addHtmlMarkersCallback,
-            Func<IEnumerable<HtmlMarkerUpdate>, Task> updateHtmlMarkersCallback)
+            Func<IEnumerable<HtmlMarkerUpdate>, Task> updateHtmlMarkersCallback,
+            Func<IEnumerable<HtmlMarker>, Task> removeHtmlMarkersCallback)
         {
             Id = id;
             _addControlsCallback = addControlsCallback;
             _addHtmlMarkersCallback = addHtmlMarkersCallback;
             _updateHtmlMarkersCallback = updateHtmlMarkersCallback;
+            _removeHtmlMarkersCallback = removeHtmlMarkersCallback;
         }
 
         /// <summary>
@@ -103,5 +106,33 @@
         /// <param name="updates">HtmlMarkers to update</param>
         /// <returns></returns>
         public async Task UpdateHtmlMarkersAsync(IEnumerable<HtmlMarkerUpdate> updates) => await _updateHtmlMarkersCallback.Invoke(updates);
+
+        /// <summary>
+        /// Remove HtmlMarkers from the map
+        /// </summary>
+        /// <param name="markers">HtmlMarkers to remove</param>
+        /// <returns></returns>
+        public async Task RemoveHtmlMarkersAsync(params HtmlMarker[] markers)
+        {
+            if(_htmlMarkers != null && markers != null)
+            {
+                _htmlMarkers = _htmlMarkers.Where(marker => markers.Any(m => m != null && m.Id != marker.Id)).ToArray();
+                await _removeHtmlMarkersCallback.Invoke(markers);
+            }
+        }
+
+        /// <summary>
+        /// Remove HtmlMarkers from the map
+        /// </summary>
+        /// <param name="markers">HtmlMarkers to remove</param>
+        /// <returns></returns>
+        public async Task RemoveHtmlMarkersAsync(IEnumerable<HtmlMarker> markers)
+        {
+            if (_htmlMarkers != null && markers != null)
+            {
+                _htmlMarkers = _htmlMarkers.Where(marker => markers.Any(m => m != null && m.Id != marker.Id)).ToArray();
+                await _removeHtmlMarkersCallback.Invoke(markers);
+            }
+        }
     }
 }
