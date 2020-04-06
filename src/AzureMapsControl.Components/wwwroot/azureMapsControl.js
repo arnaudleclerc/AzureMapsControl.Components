@@ -1,5 +1,4 @@
 window.azureMapsControl = {
-
     _maps: [],
     _mapEvents: [
         'boxzoomend',
@@ -88,7 +87,8 @@ window.azureMapsControl = {
         }
     },
     addHtmlMarkers: function (mapId,
-        htmlMarkerCreateOptions) {
+        htmlMarkerCreateOptions,
+        eventHelper) {
         const map = this._findMap(mapId);
 
         htmlMarkerCreateOptions.forEach(htmlMarkerCreateOption => {
@@ -103,11 +103,15 @@ window.azureMapsControl = {
                 text: htmlMarkerCreateOption.options.text,
                 visible: htmlMarkerCreateOption.options.visible
             });
+            marker.amc = {
+                id: htmlMarkerCreateOption.id
+            };
             if (htmlMarkerCreateOption.events) {
                 htmlMarkerCreateOption.events.forEach(htmlMarkerEvent => {
                     map.events.add(htmlMarkerEvent, marker, event => {
-                        console.log(event);
-                        //Trigger here the html marker events
+                        eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(event.type, mapId, {
+                            markerId: marker.amc.id
+                        }));
                     });
                 });
             }
@@ -118,7 +122,7 @@ window.azureMapsControl = {
         subscriptionKey,
         serviceOptions,
         enabledEvents,
-        mapEventHelper) {
+        eventHelper) {
         const map = new atlas.Map(mapId, {
             authOptions: {
                 authType: 'subscriptionKey',
@@ -133,7 +137,7 @@ window.azureMapsControl = {
             return eventType === 'error';
         })) {
             map.events.add('error', event => {
-                mapEventHelper.invokeMethodAsync('NotifyMapEventAsync', this._toMapEvent(event.type, mapId, {
+                eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(event.type, mapId, {
                     error: event.error.stack
                 }));
             });
@@ -148,14 +152,14 @@ window.azureMapsControl = {
                     map: map
                 });
 
-                mapEventHelper.invokeMethodAsync('NotifyMapEventAsync', this._toMapEvent(event.type, mapId));
+                eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(event.type, mapId));
 
                 this._mapEvents.forEach(value => {
                     if (enabledEvents.find(eventType => {
                         return value === eventType;
                     })) {
                         map.events.add(value, () => {
-                            mapEventHelper.invokeMethodAsync('NotifyMapEventAsync', this._toMapEvent(value, mapId));
+                            eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(value, mapId));
                         });
                     }
                 });
@@ -165,7 +169,7 @@ window.azureMapsControl = {
                         return value === eventType;
                     })) {
                         map.events.add(value, event => {
-                            mapEventHelper.invokeMethodAsync('NotifyMapEventAsync', this._toMapEvent(value, mapId, {
+                            eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(value, mapId, {
                                 layerId: event.layerId,
                                 shapes: event.shapes,
                                 pixel: Array.isArray(event.pixel) ? {
@@ -186,7 +190,7 @@ window.azureMapsControl = {
                         return value === eventType;
                     })) {
                         map.events.add(value, event => {
-                            mapEventHelper.invokeMethodAsync('NotifyMapEventAsync', this._toMapEvent(value, mapId, {
+                            eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(value, mapId, {
                                 dataType: event.dataType,
                                 isSourceLoaded: event.isSourceLoaded,
                                 source: event.source ? {
@@ -204,7 +208,7 @@ window.azureMapsControl = {
                         return value === eventType;
                     })) {
                         map.events.add(value, event => {
-                            mapEventHelper.invokeMethodAsync('NotifyMapEventAsync', this._toMapEvent(value, mapId, {
+                            eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(value, mapId, {
                                 id: event.getId()
                             }));
                         });
@@ -216,7 +220,7 @@ window.azureMapsControl = {
                         return value === eventType;
                     })) {
                         map.events.add(value, event => {
-                            mapEventHelper.invokeMethodAsync('NotifyMapEventAsync', this._toMapEvent(value, mapId, {
+                            eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(value, mapId, {
                                 message: event
                             }));
                         });
@@ -228,7 +232,7 @@ window.azureMapsControl = {
                         return value === eventType;
                     })) {
                         map.events.add(value, event => {
-                            mapEventHelper.invokeMethodAsync('NotifyMapEventAsync', this._toMapEvent(value, map, {
+                            eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(value, map, {
                                 layerId: event.layerId,
                                 pixel: event.pixel,
                                 pixels: event.pixels,

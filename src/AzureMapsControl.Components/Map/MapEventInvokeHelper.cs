@@ -3,15 +3,12 @@
     using System;
     using System.Threading.Tasks;
 
-    using Microsoft.JSInterop;
+    using AzureMapsControl.Components.Events;
 
-    internal class MapEventInvokeHelper
+    internal class MapEventInvokeHelper : EventInvokeHelper<MapJsEventArgs>
     {
-        private readonly Func<MapJsEventArgs, Task> _action;
-
-        public MapEventInvokeHelper(Func<MapJsEventArgs, Task> action) => _action = action;
-
-        [JSInvokable]
-        public async Task NotifyMapEventAsync(MapJsEventArgs mapEvent) => await _action.Invoke(mapEvent);
+        public MapEventInvokeHelper(Func<MapJsEventArgs, Task> callback) : base(callback)
+        {
+        }
     }
 }

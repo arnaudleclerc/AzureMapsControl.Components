@@ -20,6 +20,7 @@
 
     private Map _map;
     private MapEventInvokeHelper _mapEventInvokeHelper;
+    private HtmlMarkerInvokeHelper _htmlMarkerInvokeHelper;
 
     /// <summary>
     /// If true the map will automatically resize whenever the window's size changes. Otherwise map.resize() must be called.
@@ -552,6 +553,7 @@
     protected override void OnInitialized()
     {
         _mapEventInvokeHelper = new MapEventInvokeHelper(MapEventReceivedAsync);
+        _htmlMarkerInvokeHelper = new HtmlMarkerInvokeHelper(HtmlMarkerEventReceivedAsync);
         _map = new Map(Id, AddControlsAsync, AddHtmlMarkersAsync);
         base.OnInitialized();
     }
@@ -573,6 +575,20 @@
                 DotNetObjectReference.Create(_mapEventInvokeHelper));
         }
         await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task HtmlMarkerEventReceivedAsync(AzureMapsControl.Components.Markers.HtmlMarkerJsEventArgs htmlMarkerEvent)
+    {
+        if(htmlMarkerEvent.MapId == Id && HtmlMarkers != null)
+        {
+            var htmlMarker = HtmlMarkers.First(marker => marker.Id == htmlMarkerEvent.MarkerId);
+            if(htmlMarker != null)
+            {
+                await Task.Run(() => {
+                    htmlMarker.DispatchEvent(_map, htmlMarkerEvent.Type);
+                });
+            }
+        }
     }
 
     private async Task MapEventReceivedAsync(MapJsEventArgs mapEvent)
@@ -629,17 +645,19 @@
                 await AddControlsAsync(Controls);
                 await AddHtmlMarkersAsync(HtmlMarkers);
             }
-            await DispatchEventAsync(mapEvent);
+            await DispatchMapEventAsync(mapEvent);
         }
     }
 
     private async Task AddControlsAsync(IEnumerable<Control> controls)
     {
-        if (controls != null && controls.Any(control => control != null))
+        var newControls = controls?.Where(control => control != null);
+        if (newControls != null && newControls.Any())
         {
+            Controls = (Controls ?? new Control[0]).Concat(newControls);
             await JSRuntime.InvokeVoidAsync(MethodAddControl.ToAzureMapsControlNamespace(),
                 Id,
-                controls.Where(control => control != null).Select(control => new ControlOptions
+                newControls.Select(control => new ControlOptions
                 {
                     Type = control.Type.ToString(),
                     Position = control.Position.ToString()
@@ -649,19 +667,23 @@
 
     private async Task AddHtmlMarkersAsync(IEnumerable<AzureMapsControl.Components.Markers.HtmlMarker> htmlMarkers)
     {
-        if (htmlMarkers != null && htmlMarkers.Any(marker => marker != null))
+        var newHtmlMarkers = htmlMarkers?.Where(marker => marker != null);
+        if (newHtmlMarkers != null && newHtmlMarkers.Any())
         {
+            HtmlMarkers = (HtmlMarkers ?? new AzureMapsControl.Components.Markers.HtmlMarker[0]).Concat(newHtmlMarkers);
             await JSRuntime.InvokeVoidAsync(MethodAddHtmlMarkers.ToAzureMapsControlNamespace(),
                 Id,
-                htmlMarkers.Where(marker => marker != null).Select(marker => new AzureMapsControl.Components.Markers.HtmlMarkerCreationOptions
+                newHtmlMarkers.Where(marker => marker != null).Select(marker => new AzureMapsControl.Components.Markers.HtmlMarkerCreationOptions
                 {
+                    Id = marker.Id,
                     Events = marker.EventActivationFlags?.EnabledEvents,
                     Options = marker.Options
-                }));
+                }),
+                DotNetObjectReference.Create(_htmlMarkerInvokeHelper));
         }
     }
 
-    private async Task DispatchEventAsync(MapJsEventArgs mapEvent)
+    private async Task DispatchMapEventAsync(MapJsEventArgs mapEvent)
     {
         switch (mapEvent.Type)
         {
