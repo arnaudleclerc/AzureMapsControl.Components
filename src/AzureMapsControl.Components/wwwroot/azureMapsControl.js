@@ -87,27 +87,27 @@ window.azureMapsControl = {
         }
     },
     addHtmlMarkers: function (mapId,
-        htmlMarkerCreateOptions,
+        htmlMarkerOptions,
         eventHelper) {
         const map = this._findMap(mapId);
 
-        htmlMarkerCreateOptions.forEach(htmlMarkerCreateOption => {
+        htmlMarkerOptions.forEach(htmlMarkerOption => {
             const marker = new atlas.HtmlMarker({
-                anchor: htmlMarkerCreateOption.options.anchor,
-                color: htmlMarkerCreateOption.options.color,
-                draggable: htmlMarkerCreateOption.options.draggable,
-                htmlContent: htmlMarkerCreateOption.options.htmlContent,
-                pixelOffset: htmlMarkerCreateOption.options.pixelOffset,
-                position: [htmlMarkerCreateOption.options.position.longitude, htmlMarkerCreateOption.options.position.latitude],
-                secondaryColor: htmlMarkerCreateOption.options.secondaryColor,
-                text: htmlMarkerCreateOption.options.text,
-                visible: htmlMarkerCreateOption.options.visible
+                anchor: htmlMarkerOption.options.anchor,
+                color: htmlMarkerOption.options.color,
+                draggable: htmlMarkerOption.options.draggable,
+                htmlContent: htmlMarkerOption.options.htmlContent,
+                pixelOffset: htmlMarkerOption.options.pixelOffset,
+                position: [htmlMarkerOption.options.position.longitude, htmlMarkerOption.options.position.latitude],
+                secondaryColor: htmlMarkerOption.options.secondaryColor,
+                text: htmlMarkerOption.options.text,
+                visible: htmlMarkerOption.options.visible
             });
             marker.amc = {
-                id: htmlMarkerCreateOption.id
+                id: htmlMarkerOption.id
             };
-            if (htmlMarkerCreateOption.events) {
-                htmlMarkerCreateOption.events.forEach(htmlMarkerEvent => {
+            if (htmlMarkerOption.events) {
+                htmlMarkerOption.events.forEach(htmlMarkerEvent => {
                     map.events.add(htmlMarkerEvent, marker, event => {
                         eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(event.type, mapId, {
                             markerId: marker.amc.id
@@ -279,6 +279,41 @@ window.azureMapsControl = {
         map.setCamera(options);
         map.setStyle(styleOptions);
         map.setUserInteraction(userInteractionOptions);
+    },
+    updateHtmlMarkers: function (mapId,
+        htmlMarkerOptions) {
+        const map = this._findMap(mapId);
+
+        htmlMarkerOptions.forEach(htmlMarkerOption => {
+
+            const options = {};
+            if (htmlMarkerOption.options.anchor) {
+                options.anchor = htmlMarkerOption.options.anchor;
+            }
+            if (htmlMarkerOption.options.color) {
+                options.color = htmlMarkerOption.options.color;
+            }
+            if (htmlMarkerOption.options.draggable) {
+                options.draggable = htmlMarkerOption.options.draggable;
+            }
+            if (htmlMarkerOption.options.htmlContent) {
+                options.htmlContent = htmlMarkerOption.options.htmlContent;
+            }
+            if (htmlMarkerOption.options.position) {
+                options.position = [htmlMarkerOption.options.position.longitude, htmlMarkerOption.options.position.latitude];
+            }
+            if (htmlMarkerOption.options.secondaryColor) {
+                options.secondaryColor = htmlMarkerOption.options.secondaryColor;
+            }
+            if (htmlMarkerOption.options.text) {
+                options.text = htmlMarkerOption.options.text;
+            }
+            if (htmlMarkerOption.options.visible) {
+                options.visible = htmlMarkerOption.options.visible;
+            }
+
+            map.markers.getMarkers().find(marker => marker.amc.id === htmlMarkerOption.id).setOptions(options);
+        });
     },
     _findMap: function (mapId) {
         return this._maps.find(currentValue => {

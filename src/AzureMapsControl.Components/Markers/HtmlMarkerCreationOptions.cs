@@ -2,10 +2,8 @@
 {
     using System.Collections.Generic;
 
-    internal class HtmlMarkerCreationOptions
+    internal class HtmlMarkerCreationOptions : HtmlMarkerUpdateOptions
     {
-        public string Id { get; set; }
         public IEnumerable<string> Events { get; set; }
-        public HtmlMarkerOptions Options { get; set; }
     }
 }

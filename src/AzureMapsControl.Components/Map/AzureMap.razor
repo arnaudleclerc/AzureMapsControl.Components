@@ -17,6 +17,7 @@
     private const string MethodAddControl = "addControls";
     private const string MethodAddHtmlMarkers = "addHtmlMarkers";
     private const string MethodSetOptions = "setOptions";
+    private const string MethodUpdateHtmlMarkers = "updateHtmlMarkers";
 
     private Map _map;
     private MapEventInvokeHelper _mapEventInvokeHelper;
@@ -554,7 +555,11 @@
     {
         _mapEventInvokeHelper = new MapEventInvokeHelper(MapEventReceivedAsync);
         _htmlMarkerInvokeHelper = new HtmlMarkerInvokeHelper(HtmlMarkerEventReceivedAsync);
-        _map = new Map(Id, AddControlsAsync, AddHtmlMarkersAsync);
+        _map = new Map(Id, AddControlsAsync, AddHtmlMarkersAsync, UpdateHtmlMarkersAsync)
+        {
+            Controls = Controls,
+            HtmlMarkers = HtmlMarkers
+        };
         base.OnInitialized();
     }
 
@@ -579,12 +584,13 @@
 
     private async Task HtmlMarkerEventReceivedAsync(AzureMapsControl.Components.Markers.HtmlMarkerJsEventArgs htmlMarkerEvent)
     {
-        if(htmlMarkerEvent.MapId == Id && HtmlMarkers != null)
+        if (htmlMarkerEvent.MapId == Id && _map.HtmlMarkers != null)
         {
-            var htmlMarker = HtmlMarkers.First(marker => marker.Id == htmlMarkerEvent.MarkerId);
-            if(htmlMarker != null)
+            var htmlMarker = _map.HtmlMarkers.First(marker => marker.Id == htmlMarkerEvent.MarkerId);
+            if (htmlMarker != null)
             {
-                await Task.Run(() => {
+                await Task.Run(() =>
+                {
                     htmlMarker.DispatchEvent(_map, htmlMarkerEvent.Type);
                 });
             }
@@ -654,7 +660,6 @@
         var newControls = controls?.Where(control => control != null);
         if (newControls != null && newControls.Any())
         {
-            Controls = (Controls ?? new Control[0]).Concat(newControls);
             await JSRuntime.InvokeVoidAsync(MethodAddControl.ToAzureMapsControlNamespace(),
                 Id,
                 newControls.Select(control => new ControlOptions
@@ -670,16 +675,30 @@
         var newHtmlMarkers = htmlMarkers?.Where(marker => marker != null);
         if (newHtmlMarkers != null && newHtmlMarkers.Any())
         {
-            HtmlMarkers = (HtmlMarkers ?? new AzureMapsControl.Components.Markers.HtmlMarker[0]).Concat(newHtmlMarkers);
             await JSRuntime.InvokeVoidAsync(MethodAddHtmlMarkers.ToAzureMapsControlNamespace(),
                 Id,
-                newHtmlMarkers.Where(marker => marker != null).Select(marker => new AzureMapsControl.Components.Markers.HtmlMarkerCreationOptions
+                newHtmlMarkers.Select(marker => new AzureMapsControl.Components.Markers.HtmlMarkerCreationOptions
                 {
                     Id = marker.Id,
                     Events = marker.EventActivationFlags?.EnabledEvents,
                     Options = marker.Options
                 }),
                 DotNetObjectReference.Create(_htmlMarkerInvokeHelper));
+        }
+    }
+
+    private async Task UpdateHtmlMarkersAsync(IEnumerable<AzureMapsControl.Components.Markers.HtmlMarkerUpdate> updates)
+    {
+        var htmlMarkersToUpdate = updates?.Where(htmlMarker => htmlMarker?.Marker != null && htmlMarker.Options != null);
+        if (htmlMarkersToUpdate != null && htmlMarkersToUpdate.Any())
+        {
+            await JSRuntime.InvokeVoidAsync(MethodUpdateHtmlMarkers.ToAzureMapsControlNamespace(),
+                Id,
+                htmlMarkersToUpdate.Select(update => new AzureMapsControl.Components.Markers.HtmlMarkerCreationOptions
+                {
+                    Id = update.Marker.Id,
+                    Options = update.Options
+                }));
         }
     }
 

@@ -15,29 +15,37 @@
     {
         private readonly Func<IEnumerable<Control>, Task> _addControlsCallback;
         private readonly Func<IEnumerable<HtmlMarker>, Task> _addHtmlMarkersCallback;
+        private readonly Func<IEnumerable<HtmlMarkerUpdate>, Task> _updateHtmlMarkersCallback;
+
+        private Control[] _controls;
+        private HtmlMarker[] _htmlMarkers;
 
         /// <summary>
         /// ID of the map
         /// </summary>
         public string Id { get; }
 
-        /// <summary>
-        /// Controls added to the map
-        /// </summary>
-        public IEnumerable<Control> Controls { get; private set; }
+        internal IEnumerable<Control> Controls
+        {
+            get => _controls;
+            set => _controls = value?.ToArray();
+        }
 
-        /// <summary>
-        /// HtmlMarkers added to the map
-        /// </summary>
-        public IEnumerable<HtmlMarker> HtmlMarkers { get; private set; }
+        internal IEnumerable<HtmlMarker> HtmlMarkers
+        {
+            get => _htmlMarkers;
+            set => _htmlMarkers = value?.ToArray();
+        }
 
         internal Map(string id,
             Func<IEnumerable<Control>, Task> addControlsCallback,
-            Func<IEnumerable<HtmlMarker>, Task> addHtmlMarkersCallback)
+            Func<IEnumerable<HtmlMarker>, Task> addHtmlMarkersCallback,
+            Func<IEnumerable<HtmlMarkerUpdate>, Task> updateHtmlMarkersCallback)
         {
             Id = id;
             _addControlsCallback = addControlsCallback;
             _addHtmlMarkersCallback = addHtmlMarkersCallback;
+            _updateHtmlMarkersCallback = updateHtmlMarkersCallback;
         }
 
         /// <summary>
@@ -46,8 +54,8 @@
         /// <param name="controls">Controls to add to the map</param>
         public async Task AddControlsAsync(params Control[] controls)
         {
-            Controls = controls?.Where(control => control != null);
-            await _addControlsCallback.Invoke(Controls);
+            _controls = controls?.Where(control => control != null).ToArray();
+            await _addControlsCallback.Invoke(_controls);
         }
 
         /// <summary>
@@ -56,8 +64,8 @@
         /// <param name="controls">Controls to add to the map</param>
         public async Task AddControlsAsync(IEnumerable<Control> controls)
         {
-            Controls = controls?.Where(control => control != null);
-            await _addControlsCallback.Invoke(Controls);
+            _controls = controls?.Where(control => control != null).ToArray();
+            await _addControlsCallback.Invoke(_controls);
         }
 
         /// <summary>
@@ -67,8 +75,8 @@
         /// <returns></returns>
         public async Task AddHtmlMarkersAsync(params HtmlMarker[] markers)
         {
-            HtmlMarkers = (HtmlMarkers ?? new HtmlMarker[markers.Length]).Concat(markers?.Where(marker => marker != null));
-            await _addHtmlMarkersCallback.Invoke(HtmlMarkers);
+            _htmlMarkers = (_htmlMarkers ?? new HtmlMarker[0]).Concat(markers?.Where(marker => marker != null)).ToArray();
+            await _addHtmlMarkersCallback.Invoke(_htmlMarkers);
         }
 
         /// <summary>
@@ -78,9 +86,22 @@
         /// <returns></returns>
         public async Task AddHtmlMarkersAsync(IEnumerable<HtmlMarker> markers)
         {
-            HtmlMarkers = (HtmlMarkers ?? new HtmlMarker[markers.Count()]).Concat(markers?.Where(marker => marker != null));
-            await _addHtmlMarkersCallback.Invoke(HtmlMarkers);
+            _htmlMarkers = (_htmlMarkers ?? new HtmlMarker[0]).Concat(markers?.Where(marker => marker != null)).ToArray();
+            await _addHtmlMarkersCallback.Invoke(_htmlMarkers);
         }
 
+        /// <summary>
+        /// Update HtmlMarkers on the map
+        /// </summary>
+        /// <param name="updates">HtmlMarkers to update</param>
+        /// <returns></returns>
+        public async Task UpdateHtmlMarkersAsync(params HtmlMarkerUpdate[] updates) => await _updateHtmlMarkersCallback.Invoke(updates);
+
+        /// <summary>
+        /// Update HtmlMarkers on the map
+        /// </summary>
+        /// <param name="updates">HtmlMarkers to update</param>
+        /// <returns></returns>
+        public async Task UpdateHtmlMarkersAsync(IEnumerable<HtmlMarkerUpdate> updates) => await _updateHtmlMarkersCallback.Invoke(updates);
     }
 }

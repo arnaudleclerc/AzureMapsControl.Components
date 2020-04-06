@@ -12,18 +12,16 @@
     public sealed class HtmlMarker
     {
         internal string Id { get; }
-        internal HtmlMarkerOptions Options { get; }
+
+        /// <summary>
+        /// Options of the marker
+        /// </summary>
+        public HtmlMarkerOptions Options { get; }
 
         /// <summary>
         /// Events to activate on the marker
         /// </summary>
         public HtmlMarkerEventActivationFlags EventActivationFlags { get; set; }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="options">Options of the HtmlMarker</param>
-        public HtmlMarker(HtmlMarkerOptions options) : this(options, HtmlMarkerEventActivationFlags.All) { }
 
         /// <summary>
         /// Fired when a pointing device is pressed and released at the same point on the marker.
@@ -104,6 +102,12 @@
         /// Fired when a pointing device is released within the HTML Marker or when on top of an element.
         /// </summary>
         public event HtmlMarkerEvent OnMouseUp;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="options">Options of the HtmlMarker</param>
+        public HtmlMarker(HtmlMarkerOptions options) : this(options, HtmlMarkerEventActivationFlags.All) { }
 
         /// <summary>
         /// Constructor
