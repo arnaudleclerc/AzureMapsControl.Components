@@ -310,3 +310,55 @@ There is two ways to add the controls to the map :
 ```
 
 ![Controls](./assets/controls.png) 
+
+## HTML Markers
+
+HTML Markers can be added directly on the map using the `HtmlMarkers` property on the `AzureMap` component.
+
+```
+@page "/HtmlMarkers"
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          EventActivationFlags="MapEventActivationFlags
+                                .None
+                                .Enable(MapEventType.Ready)"
+          HtmlMarkers="new [] {
+                           new AzureMapsControl.Components.Markers.HtmlMarker(
+                               new Components.Markers.HtmlMarkerOptions
+                               {
+                                   Position = new Components.Atlas.Position(0, 0),
+                                   Draggable = true
+                               })
+                       }" />
+```
+
+They can also be added programmatically using the `AddHtmlMarkersAsync` method available on the Map. The following example adds a marker to the map once it's `ready` event has been triggered.
+
+```
+@page "/HtmlMarkersOnReady"
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          EventActivationFlags="MapEventActivationFlags
+                                .None
+                                .Enable(MapEventType.Ready)"
+          OnReady="OnMapReady"/>
+
+@code  {
+    public async Task OnMapReady(MapEventArgs events)
+    {
+        await events.Map.AddHtmlMarkersAsync
+        (
+            new AzureMapsControl.Components.Markers.HtmlMarker(
+            new Components.Markers.HtmlMarkerOptions
+            {
+                Position = new Components.Atlas.Position(0, 0),
+                Draggable = true
+            })
+        );
+    }
+}
+```
+
+More information concerning the HtmlMarkers can be found on the [Azure Maps Documentation](https://docs.microsoft.com/en-us/azure/azure-maps/map-add-custom-html).

@@ -3,17 +3,13 @@
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
           EventActivationFlags="MapEventActivationFlags
-                                .All
-                                .Disable(MapEventType.Drag,
-                                    MapEventType.Idle,
-                                    MapEventType.MouseMove,
-                                    MapEventType.Render)"
+                                .None
+                                .Enable(MapEventType.Ready)"
           HtmlMarkers="new [] {
                            new AzureMapsControl.Components.Markers.HtmlMarker(
                                new Components.Markers.HtmlMarkerOptions
                                {
                                    Position = new Components.Atlas.Position(0, 0),
                                    Draggable = true
-                               },
-                               AzureMapsControl.Components.Markers.HtmlMarkerEventActivationFlags.None)
+                               })
                        }" />
