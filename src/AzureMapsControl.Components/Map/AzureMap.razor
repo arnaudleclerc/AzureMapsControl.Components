@@ -276,6 +276,12 @@
     public IEnumerable<AzureMapsControl.Components.Markers.HtmlMarker> HtmlMarkers { get; set; }
 
     /// <summary>
+    /// Options to display traffic on the map
+    /// </summary>
+    [Parameter]
+    public AzureMapsControl.Components.Traffic.TrafficOptions TrafficOptions { get; set; }
+
+    /// <summary>
     /// Fired when a "box zoom" interaction ends.
     /// </summary>
     [Parameter]
@@ -647,7 +653,13 @@
                         ScrollZoomInteraction = ScrollZoomInteraction,
                         TouchInteraction = TouchInteraction,
                         WheelZoomRate = WheelZoomRate
-                    });
+                    },
+                    TrafficOptions != null ? new AzureMapsControl.Components.Traffic.TrafficJsOptions
+                    {
+                        Flow = (TrafficOptions.Flow ?? AzureMapsControl.Components.Traffic.TrafficFlow.None).ToString(),
+                        Incidents = TrafficOptions.Incidents
+                    } : null
+                    );
 
                 await AddControlsAsync(Controls);
                 await AddHtmlMarkersAsync(HtmlMarkers);
@@ -691,7 +703,7 @@
     private async Task RemoveHtmlMarkersAsync(IEnumerable<AzureMapsControl.Components.Markers.HtmlMarker> htmlMarkers)
     {
         var htmlMarkersToRemove = htmlMarkers?.Where(marker => marker != null && Guid.TryParse(marker.Id, out _));
-        if(htmlMarkersToRemove.Any())
+        if (htmlMarkersToRemove.Any())
         {
             await JSRuntime.InvokeVoidAsync(MethodRemoveHtmlMarkers.ToAzureMapsControlNamespace(), Id, htmlMarkersToRemove.Select(marker => marker.Id));
         }

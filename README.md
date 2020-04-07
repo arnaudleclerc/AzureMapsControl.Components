@@ -550,3 +550,22 @@ The `Map` also gives you the possibility to remove `HtmlMarkers` using the `Remo
     }
 }
 ```
+
+## Traffic
+
+Traffic information can be added to the map by providing the `TrafficOptions` parameter on the `AzureMap` component. 
+
+```
+@page "/Traffic"
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          EventActivationFlags="MapEventActivationFlags
+                                .None
+                                .Enable(MapEventType.Ready)"
+          TrafficOptions="new Components.Traffic.TrafficOptions { Incidents = true, Flow = AzureMapsControl.Components.Traffic.TrafficFlow.Relative }"
+          Center="new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534)"
+          Zoom="10"/>
+```
+
+![Traffic](./assets/traffic.png)

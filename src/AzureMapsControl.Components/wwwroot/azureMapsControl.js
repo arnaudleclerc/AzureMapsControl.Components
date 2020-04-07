@@ -255,7 +255,10 @@ window.azureMapsControl = {
     setOptions: function (mapId,
         cameraOptions,
         styleOptions,
-        userInteractionOptions) {
+        userInteractionOptions,
+        trafficOptions) {
+
+        console.log(trafficOptions);
 
         const map = this._findMap(mapId);
 
@@ -284,6 +287,10 @@ window.azureMapsControl = {
         map.setCamera(options);
         map.setStyle(styleOptions);
         map.setUserInteraction(userInteractionOptions);
+
+        if (trafficOptions) {
+            map.setTraffic(trafficOptions);
+        }
     },
     updateHtmlMarkers: function (mapId,
         htmlMarkerOptions) {
