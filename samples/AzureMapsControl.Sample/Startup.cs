@@ -23,7 +23,16 @@
         {
             services.AddRazorPages();
             services.AddServerSideBlazor(options => options.DetailedErrors = true);
-            services.AddAzureMapsControl(configuration => configuration.SubscriptionKey = Configuration["AzureMaps:SubscriptionKey"]);
+
+            //This code uses a subscription key authentication
+            //services.AddAzureMapsControl(configuration => configuration.SubscriptionKey = Configuration["AzureMaps:SubscriptionKey"]);
+
+            //This code uses an AAD authentication
+            services.AddAzureMapsControl(configuration => {
+                configuration.AadAppId = Configuration["AzureMaps:AadAppId"];
+                configuration.AadTenant = Configuration["AzureMaps:AadTenant"];
+                configuration.ClientId = Configuration["AzureMaps:ClientId"];
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

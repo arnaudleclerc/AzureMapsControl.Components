@@ -119,15 +119,34 @@ window.azureMapsControl = {
         });
     },
     addMap: function (mapId,
+        authType,
+        aadAppId,
+        aadTenant,
+        clientId,
         subscriptionKey,
         serviceOptions,
         enabledEvents,
         eventHelper) {
-        const map = new atlas.Map(mapId, {
-            authOptions: {
-                authType: 'subscriptionKey',
+
+        if (authType === 'aad') {
+            atlas.setAuthenticationOptions({
+                authType: authType,
+                aadAppId: aadAppId,
+                aadTenant: aadTenant,
+                clientId: clientId
+            });
+        } else if (authType === 'subscriptionKey') {
+            atlas.setAuthenticationOptions({
+                authType: authType,
                 subscriptionKey: subscriptionKey
-            },
+            });
+        } else {
+            atlas.setAuthenticationOptions({
+                authType: authType
+            });
+        }
+
+        const map = new atlas.Map(mapId, {
             disableTelemetry: serviceOptions.disableTelemetry,
             enableAccessibility: serviceOptions.enableAccessibility,
             refreshExpiredTiles: serviceOptions.refreshExpiredTiles

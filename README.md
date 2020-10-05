@@ -55,64 +55,34 @@ You will need to add the atlas script and css files as well as the script genera
 
 ## Register the Components
 
-You will need to pass the authentication information of your `AzureMaps` instance to the library. For now, only the `SubscriptionKey` authentication mode is supported.
+You will need to pass the authentication information of your `AzureMaps` instance to the library. `SubscriptionKey` and `Aad` authentication are supported. You will need to call the `AddAzureMapsControl` method on `ConfigureServices` to do so : 
 
 ```
-namespace AzureMapsControl.Restore
-{
-    using AzureMapsControl.Components;
-
-    using Microsoft.AspNetCore.Builder;
-    using Microsoft.AspNetCore.Hosting;
-    using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Hosting;
-
-    public class Startup
+    // This method gets called by the runtime. Use this method to add services to the container.
+    // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+    public void ConfigureServices(IServiceCollection services)
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        services.AddRazorPages();
+        services.AddServerSideBlazor();
+        services.AddAzureMapsControl(configuration => configuration.SubscriptionKey = "Your Subscription Key");
+    }
+```
 
-        public IConfiguration Configuration { get; }
+To authenticate with AAD : 
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        public void ConfigureServices(IServiceCollection services)
+```
+public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
-            services.AddServerSideBlazor();
-            services.AddAzureMapsControl(configuration => configuration.SubscriptionKey = Configuration["AzureMaps:SubscriptionKey"]);
-        }
+            services.AddServerSideBlazor(options => options.DetailedErrors = true);
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
-
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
-            app.UseRouting();
-
-            app.UseEndpoints(endpoints => {
-                endpoints.MapBlazorHub();
-                endpoints.MapFallbackToPage("/_Host");
+            //This code uses an AAD authentication
+            services.AddAzureMapsControl(configuration => {
+                configuration.AadAppId = "Your Aad App Id";
+                configuration.AadTenant = "Your Aad Tenant";
+                configuration.ClientId = "Your Client Id";
             });
         }
-    }
-}
-
 ```
 
 ## Map
