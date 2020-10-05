@@ -576,6 +576,10 @@
         {
             await JSRuntime.InvokeVoidAsync(MethodAddMap.ToAzureMapsControlNamespace(),
                 Id,
+                Configuration.Value.AuthType,
+                Configuration.Value.AadAppId,
+                Configuration.Value.AadTenant,
+                Configuration.Value.ClientId,
                 Configuration.Value.SubscriptionKey,
                 new ServiceOptions
                 {

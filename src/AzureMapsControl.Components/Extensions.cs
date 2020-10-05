@@ -19,8 +19,7 @@
         {
             services
                 .AddOptions<AzureMapsConfiguration>()
-                .Configure(configure)
-                .Validate(configuration => configuration.Validate());
+                .Configure(configure);
 
             return services;
         }
