@@ -303,7 +303,7 @@ HTML Markers can be added directly on the map using the `HtmlMarkers` property o
                        }" />
 ```
 
-They can also be added programmatically using the `AddHtmlMarkersAsync` method available on the Map. The following example adds a marker to the map once it's `ready` event has been triggered.
+They can also be added programmatically using the `AddHtmlMarkersAsync` method available on the Map. The following example adds a marker to the map once its `ready` event has been triggered.
 
 ```
 @page "/HtmlMarkersOnReady"
@@ -539,3 +539,33 @@ Traffic information can be added to the map by providing the `TrafficOptions` pa
 ```
 
 ![Traffic](./assets/traffic.png)
+
+## Drawing Toolbar
+
+A Drawing toolbar can be added to the map by providing the `DrawingToolbarOptions` parameter on the `AzureMap` component.
+
+```
+@page "/DrawingToolbar"
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          EventActivationFlags="MapEventActivationFlags
+                                .All
+                                .Disable(MapEventType.Drag,
+                                    MapEventType.Idle,
+                                    MapEventType.MouseMove,
+                                    MapEventType.Render)"
+          DrawingToolbarOptions="new Components.Drawing.DrawingToolbarOptions
+                                 {
+                                     Buttons = new []
+                                     {
+                                         AzureMapsControl.Components.Drawing.DrawingButton.DrawCircle,
+                                         AzureMapsControl.Components.Drawing.DrawingButton.DrawLine
+                                     },
+                                     Position = Components.Atlas.ControlPosition.TopRight,
+                                     Style = AzureMapsControl.Components.Drawing.DrawingToolbarStyle.Dark
+                                 }"
+          />
+```
+
+![Drawing Toolbar](./assets/drawingtoolbar.png)

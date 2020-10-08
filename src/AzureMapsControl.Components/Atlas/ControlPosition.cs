@@ -10,27 +10,27 @@
         /// <summary>
         /// Places the control in the bottom left of the map.
         /// </summary>
-        public static ControlPosition BottomLeft = new ControlPosition("bottom-left");
+        public static readonly ControlPosition BottomLeft = new ControlPosition("bottom-left");
 
         /// <summary>
         /// Places the control in the bottom right of the map.
         /// </summary>
-        public static ControlPosition BottomRight = new ControlPosition("bottom-right");
+        public static readonly ControlPosition BottomRight = new ControlPosition("bottom-right");
 
         /// <summary>
         /// The control will place itself in its default location.
         /// </summary>
-        public static ControlPosition NonFixed = new ControlPosition("non-fixed");
+        public static readonly ControlPosition NonFixed = new ControlPosition("non-fixed");
 
         /// <summary>
         /// Places the control in the top left of the map.
         /// </summary>
-        public static ControlPosition TopLeft = new ControlPosition("top-left");
+        public static readonly ControlPosition TopLeft = new ControlPosition("top-left");
 
         /// <summary>
         /// Places the control in the top right of the map.
         /// </summary>
-        public static ControlPosition TopRight = new ControlPosition("top-right");
+        public static readonly ControlPosition TopRight = new ControlPosition("top-right");
 
         private ControlPosition(string position) => _position = position;
 

@@ -6,8 +6,8 @@
 
     public sealed class HtmlMarkerEventActivationFlags : EventActivationFlags<HtmlMarkerEventType, HtmlMarkerEventActivationFlags>
     {
-        public static HtmlMarkerEventActivationFlags All = new HtmlMarkerEventActivationFlags(true);
-        public static HtmlMarkerEventActivationFlags None = new HtmlMarkerEventActivationFlags(false);
+        public static readonly HtmlMarkerEventActivationFlags All = new HtmlMarkerEventActivationFlags(true);
+        public static readonly HtmlMarkerEventActivationFlags None = new HtmlMarkerEventActivationFlags(false);
 
         private HtmlMarkerEventActivationFlags(bool defaultFlag) :
             base

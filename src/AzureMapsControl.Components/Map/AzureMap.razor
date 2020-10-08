@@ -19,6 +19,7 @@
     private const string MethodSetOptions = "setOptions";
     private const string MethodRemoveHtmlMarkers = "removeHtmlMarkers";
     private const string MethodUpdateHtmlMarkers = "updateHtmlMarkers";
+    private const string MethodAddDrawingToolbar = "addDrawingToolbar";
 
     private Map _map;
     private MapEventInvokeHelper _mapEventInvokeHelper;
@@ -280,6 +281,12 @@
     /// </summary>
     [Parameter]
     public AzureMapsControl.Components.Traffic.TrafficOptions TrafficOptions { get; set; }
+
+    /// <summary>
+    /// Options to display a drawing toolbar on the map
+    /// </summary>
+    [Parameter]
+    public AzureMapsControl.Components.Drawing.DrawingToolbarOptions DrawingToolbarOptions { get; set; }
 
     /// <summary>
     /// Fired when a "box zoom" interaction ends.
@@ -667,6 +674,7 @@
 
                 await AddControlsAsync(Controls);
                 await AddHtmlMarkersAsync(HtmlMarkers);
+                await AddDrawingToolbarAsync(DrawingToolbarOptions);
             }
             await DispatchMapEventAsync(mapEvent);
         }
@@ -684,6 +692,30 @@
                     Type = control.Type.ToString(),
                     Position = control.Position.ToString()
                 }));
+        }
+    }
+
+    private async Task AddDrawingToolbarAsync(AzureMapsControl.Components.Drawing.DrawingToolbarOptions drawingToolbarOptions)
+    {
+        if(drawingToolbarOptions != null)
+        {
+            await JSRuntime.InvokeVoidAsync(MethodAddDrawingToolbar.ToAzureMapsControlNamespace(),
+                Id,
+                new AzureMapsControl.Components.Drawing.DrawingToolbarCreationOptions
+                {
+                    Buttons = drawingToolbarOptions.Buttons?.Select(button => button.ToString()).ToArray(),
+                    ContainerId = drawingToolbarOptions.ContainerId,
+                    DragHandleStyle = drawingToolbarOptions.DragHandleStyle,
+                    FreehandInterval = drawingToolbarOptions.FreehandInterval,
+                    InteractionType = drawingToolbarOptions.InteractionType.ToString(),
+                    Mode = drawingToolbarOptions.Mode.ToString(),
+                    NumColumns = drawingToolbarOptions.NumColumns,
+                    Position = drawingToolbarOptions.Position.ToString(),
+                    SecondaryDragHandleStyle = drawingToolbarOptions.SecondaryDragHandleStyle,
+                    ShapeDraggingEnabled = drawingToolbarOptions.ShapesDraggingEnabled,
+                    Style = drawingToolbarOptions.Style.ToString(),
+                    Visible = drawingToolbarOptions.Visible
+                });
         }
     }
 

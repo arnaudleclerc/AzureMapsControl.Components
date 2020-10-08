@@ -1,4 +1,6 @@
 window.azureMapsControl = {
+    _drawingManager: null,
+    _toolbar: null,
     _maps: [],
     _mapEvents: [
         'boxzoomend',
@@ -85,6 +87,57 @@ window.azureMapsControl = {
                 }
             });
         }
+    },
+    addDrawingToolbar: function (mapId,
+        drawingToolbarOptions) {
+        const map = this._findMap(mapId);
+
+        this._toolbar = new atlas.control.DrawingToolbar({
+            buttons: drawingToolbarOptions.buttons,
+            containerId: drawingToolbarOptions.containerId,
+            numColumns: drawingToolbarOptions.numColumns,
+            position: drawingToolbarOptions.position,
+            style: drawingToolbarOptions.style,
+            visible: drawingToolbarOptions.visible
+        });
+
+        const drawingManagerOptions = {
+            freehandInterval: drawingToolbarOptions.freehandInterval,
+            interactionType: drawingToolbarOptions.interactionType,
+            mode: drawingToolbarOptions.mode,
+            shapeDraggingEnabled: drawingToolbarOptions.shapeDraggingEnabled,
+            toolbar: this._toolbar
+        };
+
+        if (drawingToolbarOptions.dragHandleStyle) {
+            drawingManagerOptions.dragHandleStyle = new atlas.HtmlMarker({
+                anchor: drawingToolbarOptions.dragHandleStyle.anchor,
+                color: drawingToolbarOptions.dragHandleStyle.color,
+                draggable: drawingToolbarOptions.dragHandleStyle.draggable,
+                htmlContent: drawingToolbarOptions.dragHandleStyle.htmlContent,
+                pixelOffset: drawingToolbarOptions.dragHandleStyle.pixelOffset,
+                position: [drawingToolbarOptions.dragHandleStyle.position.longitude, drawingToolbarOptions.dragHandleStyle.position.latitude],
+                secondaryColor: drawingToolbarOptions.dragHandleStyle.secondaryColor,
+                text: drawingToolbarOptions.dragHandleStyle.text,
+                visible: drawingToolbarOptions.dragHandleStyle.visible
+            });
+        }
+
+        if (drawingToolbarOptions.secondaryDragHandleStyle) {
+            drawingManagerOptions.secondaryDragHandleStyle = new atlas.HtmlMarker({
+                anchor: drawingToolbarOptions.secondaryDragHandleStyle.anchor,
+                color: drawingToolbarOptions.secondaryDragHandleStyle.color,
+                draggable: drawingToolbarOptions.secondaryDragHandleStyle.draggable,
+                htmlContent: drawingToolbarOptions.secondaryDragHandleStyle.htmlContent,
+                pixelOffset: drawingToolbarOptions.secondaryDragHandleStyle.pixelOffset,
+                position: [drawingToolbarOptions.secondaryDragHandleStyle.position.longitude, drawingToolbarOptions.secondaryDragHandleStyle.position.latitude],
+                secondaryColor: drawingToolbarOptions.secondaryDragHandleStyle.secondaryColor,
+                text: drawingToolbarOptions.secondaryDragHandleStyle.text,
+                visible: drawingToolbarOptions.secondaryDragHandleStyle.visible
+            });
+        }
+
+        this._drawingManager = new atlas.drawing.DrawingManager(map, drawingManagerOptions);
     },
     addHtmlMarkers: function (mapId,
         htmlMarkerOptions,
@@ -276,8 +329,6 @@ window.azureMapsControl = {
         styleOptions,
         userInteractionOptions,
         trafficOptions) {
-
-        console.log(trafficOptions);
 
         const map = this._findMap(mapId);
 
