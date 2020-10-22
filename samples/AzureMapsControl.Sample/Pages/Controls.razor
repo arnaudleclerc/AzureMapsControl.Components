@@ -2,12 +2,6 @@
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
-          EventActivationFlags="MapEventActivationFlags
-                                .All
-                                .Disable(MapEventType.Drag,
-                                    MapEventType.Idle,
-                                    MapEventType.MouseMove,
-                                    MapEventType.Render)"
           Controls="new []
           {
                         new Components.Atlas.Control(AzureMapsControl.Components.Atlas.ControlType.Zoom, AzureMapsControl.Components.Atlas.ControlPosition.TopLeft),

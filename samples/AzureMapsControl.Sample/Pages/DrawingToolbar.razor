@@ -1,14 +1,7 @@
 ﻿@page "/DrawingToolbar"
 
 @using AzureMapsControl.Components.Map
-<AzureMap Id="map"
-          EventActivationFlags="MapEventActivationFlags
-                                .All
-                                .Disable(MapEventType.Drag,
-                                    MapEventType.Idle,
-                                    MapEventType.MouseMove,
-                                    MapEventType.Render)"
-          DrawingToolbarOptions="new Components.Drawing.DrawingToolbarOptions
+<AzureMap Id="map" DrawingToolbarOptions="new Components.Drawing.DrawingToolbarOptions
                                  {
                                      Buttons = new []
                                      {

@@ -1,7 +1,7 @@
 window.azureMapsControl = {
     _drawingManager: null,
     _toolbar: null,
-    _maps: [],
+    _map: null,
     _mapEvents: [
         'boxzoomend',
         'boxzoomstart',
@@ -57,30 +57,27 @@ window.azureMapsControl = {
         'touchend',
         'touchstart'
     ],
-    addControls: function (mapId,
-        controlOptions) {
+    addControls: function (controlOptions) {
         if (controlOptions && controlOptions.length > 0) {
-            const map = this._findMap(mapId);
-
             controlOptions.forEach(controlOption => {
                 switch (controlOption.type) {
                     case "compass":
-                        map.controls.add(new atlas.control.CompassControl(), {
+                        this._map.controls.add(new atlas.control.CompassControl(), {
                             position: controlOption.position
                         });
                         break;
                     case "pitch":
-                        map.controls.add(new atlas.control.PitchControl(), {
+                        this._map.controls.add(new atlas.control.PitchControl(), {
                             position: controlOption.position
                         });
                         break;
                     case "style":
-                        map.controls.add(new atlas.control.StyleControl(), {
+                        this._map.controls.add(new atlas.control.StyleControl(), {
                             position: controlOption.position
                         });
                         break;
                     case "zoom":
-                        map.controls.add(new atlas.control.ZoomControl(), {
+                        this._map.controls.add(new atlas.control.ZoomControl(), {
                             position: controlOption.position
                         });
                         break;
@@ -88,9 +85,7 @@ window.azureMapsControl = {
             });
         }
     },
-    addDrawingToolbar: function (mapId,
-        drawingToolbarOptions) {
-        const map = this._findMap(mapId);
+    addDrawingToolbar: function (drawingToolbarOptions) {
 
         this._toolbar = new atlas.control.DrawingToolbar({
             buttons: drawingToolbarOptions.buttons,
@@ -137,12 +132,10 @@ window.azureMapsControl = {
             });
         }
 
-        this._drawingManager = new atlas.drawing.DrawingManager(map, drawingManagerOptions);
+        this._drawingManager = new atlas.drawing.DrawingManager(this._map, drawingManagerOptions);
     },
-    addHtmlMarkers: function (mapId,
-        htmlMarkerOptions,
+    addHtmlMarkers: function (htmlMarkerOptions,
         eventHelper) {
-        const map = this._findMap(mapId);
 
         htmlMarkerOptions.forEach(htmlMarkerOption => {
             const marker = new atlas.HtmlMarker({
@@ -161,14 +154,14 @@ window.azureMapsControl = {
             };
             if (htmlMarkerOption.events) {
                 htmlMarkerOption.events.forEach(htmlMarkerEvent => {
-                    map.events.add(htmlMarkerEvent, marker, event => {
-                        eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(event.type, mapId, {
+                    this._map.events.add(htmlMarkerEvent, marker, event => {
+                        eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(event.type, {
                             markerId: marker.amc.id
                         }));
                     });
                 });
             }
-            map.markers.add(marker);
+            this._map.markers.add(marker);
         });
     },
     addMap: function (mapId,
@@ -209,128 +202,117 @@ window.azureMapsControl = {
             return eventType === 'error';
         })) {
             map.events.add('error', event => {
-                eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(event.type, mapId, {
+                eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(event.type, {
                     error: event.error.stack
                 }));
             });
         }
 
-        if (enabledEvents.find(value => {
-            return value === 'ready';
-        })) {
-            map.events.addOnce('ready', event => {
-                this._maps.push({
-                    id: mapId,
-                    map: map
-                });
+        map.events.addOnce('ready', event => {
+            this._map = map;
 
-                eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(event.type, mapId));
+            eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(event.type));
 
-                this._mapEvents.forEach(value => {
-                    if (enabledEvents.find(eventType => {
-                        return value === eventType;
-                    })) {
-                        map.events.add(value, () => {
-                            eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(value, mapId));
-                        });
-                    }
-                });
-
-                this._mapMouseEvents.forEach(value => {
-                    if (enabledEvents.find(eventType => {
-                        return value === eventType;
-                    })) {
-                        map.events.add(value, event => {
-                            eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(value, mapId, {
-                                layerId: event.layerId,
-                                shapes: event.shapes,
-                                pixel: Array.isArray(event.pixel) ? {
-                                    x: event.pixel[0],
-                                    y: event.pixel[1]
-                                } : event.pixel,
-                                position: Array.isArray(event.position) ? {
-                                    longitude: event.position[0],
-                                    latitude: event.position[1]
-                                } : event.position
-                            }));
-                        });
-                    }
-                });
-
-                this._mapDataEvents.forEach(value => {
-                    if (enabledEvents.find(eventType => {
-                        return value === eventType;
-                    })) {
-                        map.events.add(value, event => {
-                            eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(value, mapId, {
-                                dataType: event.dataType,
-                                isSourceLoaded: event.isSourceLoaded,
-                                source: event.source ? {
-                                    id: event.source.getId()
-                                } : null,
-                                sourceDataType: event.sourceDataType,
-                                tile: event.tile
-                            }));
-                        });
-                    }
-                });
-
-                this._mapLayerEvents.forEach(value => {
-                    if (enabledEvents.find(eventType => {
-                        return value === eventType;
-                    })) {
-                        map.events.add(value, event => {
-                            eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(value, mapId, {
-                                id: event.getId()
-                            }));
-                        });
-                    }
-                });
-
-                this._mapStringEvents.forEach(value => {
-                    if (enabledEvents.find(eventType => {
-                        return value === eventType;
-                    })) {
-                        map.events.add(value, event => {
-                            eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(value, mapId, {
-                                message: event
-                            }));
-                        });
-                    }
-                });
-
-                this._mapTouchEvents.forEach(value => {
-                    if (enabledEvents.find(eventType => {
-                        return value === eventType;
-                    })) {
-                        map.events.add(value, event => {
-                            eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(value, map, {
-                                layerId: event.layerId,
-                                pixel: event.pixel,
-                                pixels: event.pixels,
-                                position: event.position,
-                                positions: event.positions,
-                                shapes: event.shapes ? event.shapes.toJson() : null
-                            }));
-                        });
-                    }
-                });
+            this._mapEvents.forEach(value => {
+                if (enabledEvents.find(eventType => {
+                    return value === eventType;
+                })) {
+                    map.events.add(value, () => {
+                        eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(value));
+                    });
+                }
             });
-        }
+
+            this._mapMouseEvents.forEach(value => {
+                if (enabledEvents.find(eventType => {
+                    return value === eventType;
+                })) {
+                    map.events.add(value, event => {
+                        eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(value, {
+                            layerId: event.layerId,
+                            shapes: event.shapes,
+                            pixel: Array.isArray(event.pixel) ? {
+                                x: event.pixel[0],
+                                y: event.pixel[1]
+                            } : event.pixel,
+                            position: Array.isArray(event.position) ? {
+                                longitude: event.position[0],
+                                latitude: event.position[1]
+                            } : event.position
+                        }));
+                    });
+                }
+            });
+
+            this._mapDataEvents.forEach(value => {
+                if (enabledEvents.find(eventType => {
+                    return value === eventType;
+                })) {
+                    map.events.add(value, event => {
+                        eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(value, {
+                            dataType: event.dataType,
+                            isSourceLoaded: event.isSourceLoaded,
+                            source: event.source ? {
+                                id: event.source.getId()
+                            } : null,
+                            sourceDataType: event.sourceDataType,
+                            tile: event.tile
+                        }));
+                    });
+                }
+            });
+
+            this._mapLayerEvents.forEach(value => {
+                if (enabledEvents.find(eventType => {
+                    return value === eventType;
+                })) {
+                    map.events.add(value, event => {
+                        eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(value, {
+                            id: event.getId()
+                        }));
+                    });
+                }
+            });
+
+            this._mapStringEvents.forEach(value => {
+                if (enabledEvents.find(eventType => {
+                    return value === eventType;
+                })) {
+                    map.events.add(value, event => {
+                        eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(value, {
+                            message: event
+                        }));
+                    });
+                }
+            });
+
+            this._mapTouchEvents.forEach(value => {
+                if (enabledEvents.find(eventType => {
+                    return value === eventType;
+                })) {
+                    map.events.add(value, event => {
+                        eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(value, {
+                            layerId: event.layerId,
+                            pixel: event.pixel,
+                            pixels: event.pixels,
+                            position: event.position,
+                            positions: event.positions,
+                            shapes: event.shapes ? event.shapes.toJson() : null
+                        }));
+                    });
+                }
+            });
+        });
+
 
     },
-    removeHtmlMarkers: function (mapId,
-        markerIds) {
-        const map = this._findMap(mapId);
-        map.markers.remove(map.markers.getMarkers().find(marker => markerIds.indexOf(marker.amc.id) > -1));
+    removeHtmlMarkers: function (markerIds) {
+        this._map.markers.remove(this._map.markers.getMarkers().find(marker => markerIds.indexOf(marker.amc.id) > -1));
     },
-    setOptions: function (mapId,
-        cameraOptions,
+    setOptions: function (cameraOptions,
         styleOptions,
         userInteractionOptions,
         trafficOptions) {
-
-        const map = this._findMap(mapId);
 
         const options = {
             bearing: cameraOptions.bearing,
@@ -354,18 +336,15 @@ window.azureMapsControl = {
             options.zoom = cameraOptions.zoom;
         }
 
-        map.setCamera(options);
-        map.setStyle(styleOptions);
-        map.setUserInteraction(userInteractionOptions);
+        this._map.setCamera(options);
+        this._map.setStyle(styleOptions);
+        this._map.setUserInteraction(userInteractionOptions);
 
         if (trafficOptions) {
-            map.setTraffic(trafficOptions);
+            this._map.setTraffic(trafficOptions);
         }
     },
-    updateHtmlMarkers: function (mapId,
-        htmlMarkerOptions) {
-        const map = this._findMap(mapId);
-
+    updateHtmlMarkers: function (htmlMarkerOptions) {
         htmlMarkerOptions.forEach(htmlMarkerOption => {
 
             const options = {};
@@ -394,17 +373,11 @@ window.azureMapsControl = {
                 options.visible = htmlMarkerOption.options.visible;
             }
 
-            map.markers.getMarkers().find(marker => marker.amc.id === htmlMarkerOption.id).setOptions(options);
+            this._map.markers.getMarkers().find(marker => marker.amc.id === htmlMarkerOption.id).setOptions(options);
         });
     },
-    _findMap: function (mapId) {
-        return this._maps.find(currentValue => {
-            return currentValue.id === mapId;
-        }).map;
-    },
-    _toMapEvent: function (type, mapId, properties) {
+    _toMapEvent: function (type, properties) {
         const result = properties || {};
-        result.mapId = mapId;
         result.type = type;
         return result;
     }

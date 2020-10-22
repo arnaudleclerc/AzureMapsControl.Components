@@ -8,7 +8,6 @@
     {
         public string Error { get; set; }
 
-        public string MapId { get; set; }
         public string Type { get; set; }
 
         public string LayerId { get; set; }

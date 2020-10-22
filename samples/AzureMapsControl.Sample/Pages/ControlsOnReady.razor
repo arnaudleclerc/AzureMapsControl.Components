@@ -3,11 +3,8 @@
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
           EventActivationFlags="MapEventActivationFlags
-                                .All
-                                .Disable(MapEventType.Drag,
-                                    MapEventType.Idle,
-                                    MapEventType.MouseMove,
-                                    MapEventType.Render)"
+                                .None
+                                .Enable(MapEventType.Ready)"
           OnReady="OnMapReady" />
 
 @code  {
