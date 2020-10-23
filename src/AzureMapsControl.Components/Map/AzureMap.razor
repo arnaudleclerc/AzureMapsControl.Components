@@ -20,6 +20,7 @@
     private const string MethodRemoveHtmlMarkers = "removeHtmlMarkers";
     private const string MethodUpdateHtmlMarkers = "updateHtmlMarkers";
     private const string MethodAddDrawingToolbar = "addDrawingToolbar";
+    private const string MethodUpdateDrawingToolbar = "updateDrawingToolbar";
 
     private Map _map;
     private MapEventInvokeHelper _mapEventInvokeHelper;
@@ -268,13 +269,13 @@
     /// Defines the controls to add to the map when it is ready
     /// </summary>
     [Parameter]
-    public IEnumerable<Control> Controls { get; set; }
+    public IReadOnlyCollection<Control> Controls { get; set; }
 
     /// <summary>
     /// HtmlMarkers to add to the map when it is ready
     /// </summary>
     [Parameter]
-    public IEnumerable<AzureMapsControl.Components.Markers.HtmlMarker> HtmlMarkers { get; set; }
+    public IReadOnlyCollection<AzureMapsControl.Components.Markers.HtmlMarker> HtmlMarkers { get; set; }
 
     /// <summary>
     /// Options to display traffic on the map
@@ -569,12 +570,13 @@
     {
         _mapEventInvokeHelper = new MapEventInvokeHelper(MapEventReceivedAsync);
         _htmlMarkerInvokeHelper = new HtmlMarkerInvokeHelper(HtmlMarkerEventReceivedAsync);
-        _map = new Map(Id, 
-            AddControlsAsync, 
-            AddHtmlMarkersAsync, 
-            UpdateHtmlMarkersAsync, 
+        _map = new Map(Id,
+            AddControlsAsync,
+            AddHtmlMarkersAsync,
+            UpdateHtmlMarkersAsync,
             RemoveHtmlMarkersAsync,
-            AddDrawingToolbarAsync)
+            AddDrawingToolbarAsync,
+            UpdateDrawingToolbarAsync)
         {
             Controls = Controls,
             HtmlMarkers = HtmlMarkers,
@@ -717,6 +719,20 @@
                     Visible = drawingToolbarOptions.Visible
                 });
         }
+    }
+
+    private async Task UpdateDrawingToolbarAsync(AzureMapsControl.Components.Drawing.DrawingToolbarUpdateOptions drawingToolbarOptions)
+    {
+        await JSRuntime.InvokeVoidAsync(MethodUpdateDrawingToolbar.ToAzureMapsControlNamespace(),
+            new AzureMapsControl.Components.Drawing.DrawingToolbarCreationOptions
+            {
+                Buttons = drawingToolbarOptions.Buttons?.Select(button => button.ToString()).ToArray(),
+                ContainerId = drawingToolbarOptions.ContainerId,
+                NumColumns = drawingToolbarOptions.NumColumns,
+                Position = drawingToolbarOptions.Position.ToString(),
+                Style = drawingToolbarOptions.Style.ToString(),
+                Visible = drawingToolbarOptions.Visible
+            });
     }
 
     private async Task AddHtmlMarkersAsync(IEnumerable<AzureMapsControl.Components.Markers.HtmlMarker> htmlMarkers)

@@ -19,6 +19,7 @@
         private readonly Func<IEnumerable<HtmlMarkerUpdate>, Task> _updateHtmlMarkersCallback;
         private readonly Func<IEnumerable<HtmlMarker>, Task> _removeHtmlMarkersCallback;
         private readonly Func<DrawingToolbarOptions, Task> _addDrawingToolbarCallback;
+        private readonly Func<DrawingToolbarUpdateOptions, Task> _updateDrawingToolbarCallback;
 
         private Control[] _controls;
         private HtmlMarker[] _htmlMarkers;
@@ -29,22 +30,22 @@
         /// </summary>
         public string Id { get; }
 
-        internal IEnumerable<Control> Controls
+        public IReadOnlyCollection<Control> Controls
         {
             get => _controls;
-            set => _controls = value?.ToArray();
+            internal set => _controls = value?.ToArray();
         }
 
-        internal IEnumerable<HtmlMarker> HtmlMarkers
+        public IReadOnlyCollection<HtmlMarker> HtmlMarkers
         {
             get => _htmlMarkers;
-            set => _htmlMarkers = value?.ToArray();
+            internal set => _htmlMarkers = value?.ToArray();
         }
 
-        internal DrawingToolbarOptions DrawingToolbarOptions
+        public DrawingToolbarOptions DrawingToolbarOptions
         {
             get => _drawingToolbarOptions;
-            set => _drawingToolbarOptions = value;
+            internal set => _drawingToolbarOptions = value;
         }
 
         internal Map(string id,
@@ -52,7 +53,8 @@
             Func<IEnumerable<HtmlMarker>, Task> addHtmlMarkersCallback,
             Func<IEnumerable<HtmlMarkerUpdate>, Task> updateHtmlMarkersCallback,
             Func<IEnumerable<HtmlMarker>, Task> removeHtmlMarkersCallback,
-            Func<DrawingToolbarOptions, Task> addDrawingToolbarAsync)
+            Func<DrawingToolbarOptions, Task> addDrawingToolbarAsync,
+            Func<DrawingToolbarUpdateOptions, Task> updateDrawingToolbarAsync)
         {
             Id = id;
             _addControlsCallback = addControlsCallback;
@@ -60,6 +62,7 @@
             _updateHtmlMarkersCallback = updateHtmlMarkersCallback;
             _removeHtmlMarkersCallback = removeHtmlMarkersCallback;
             _addDrawingToolbarCallback = addDrawingToolbarAsync;
+            _updateDrawingToolbarCallback = updateDrawingToolbarAsync;
         }
 
         /// <summary>
@@ -155,6 +158,22 @@
         {
             _drawingToolbarOptions = drawingToolbarOptions;
             await _addDrawingToolbarCallback.Invoke(drawingToolbarOptions);
+        }
+
+        /// <summary>
+        /// Update the drawing toolbar with the given options
+        /// </summary>
+        /// <param name="drawingToolbarUpdateOptions">Options to update the drawing toolbar</param>
+        /// <returns></returns>
+        public async Task UpdateDrawingToolbarAsync(DrawingToolbarUpdateOptions drawingToolbarUpdateOptions)
+        {
+            _drawingToolbarOptions.Buttons = drawingToolbarUpdateOptions.Buttons;
+            _drawingToolbarOptions.ContainerId = drawingToolbarUpdateOptions.ContainerId;
+            _drawingToolbarOptions.NumColumns = drawingToolbarUpdateOptions.NumColumns;
+            _drawingToolbarOptions.Position = drawingToolbarUpdateOptions.Position;
+            _drawingToolbarOptions.Style = drawingToolbarUpdateOptions.Style;
+            _drawingToolbarOptions.Visible = drawingToolbarUpdateOptions.Visible;
+            await _updateDrawingToolbarCallback.Invoke(drawingToolbarUpdateOptions);
         }
     }
 }

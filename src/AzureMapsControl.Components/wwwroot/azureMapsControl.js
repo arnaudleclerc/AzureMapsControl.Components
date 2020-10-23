@@ -134,6 +134,16 @@ window.azureMapsControl = {
 
         this._drawingManager = new atlas.drawing.DrawingManager(this._map, drawingManagerOptions);
     },
+    updateDrawingToolbar: function (drawingToolbarOptions) {
+        this._toolbar.setOptions({
+            buttons: drawingToolbarOptions.buttons,
+            containerId: drawingToolbarOptions.containerId,
+            numColumns: drawingToolbarOptions.numColumns,
+            position: drawingToolbarOptions.position,
+            style: drawingToolbarOptions.style,
+            visible: drawingToolbarOptions.visible
+        });
+    },
     addHtmlMarkers: function (htmlMarkerOptions,
         eventHelper) {
 
