@@ -569,10 +569,16 @@
     {
         _mapEventInvokeHelper = new MapEventInvokeHelper(MapEventReceivedAsync);
         _htmlMarkerInvokeHelper = new HtmlMarkerInvokeHelper(HtmlMarkerEventReceivedAsync);
-        _map = new Map(Id, AddControlsAsync, AddHtmlMarkersAsync, UpdateHtmlMarkersAsync, RemoveHtmlMarkersAsync)
+        _map = new Map(Id, 
+            AddControlsAsync, 
+            AddHtmlMarkersAsync, 
+            UpdateHtmlMarkersAsync, 
+            RemoveHtmlMarkersAsync,
+            AddDrawingToolbarAsync)
         {
             Controls = Controls,
-            HtmlMarkers = HtmlMarkers
+            HtmlMarkers = HtmlMarkers,
+            DrawingToolbarOptions = DrawingToolbarOptions
         };
         base.OnInitialized();
     }

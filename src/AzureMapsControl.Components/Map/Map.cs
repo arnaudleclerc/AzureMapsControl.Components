@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Atlas;
+    using AzureMapsControl.Components.Drawing;
     using AzureMapsControl.Components.Markers;
 
     /// <summary>
@@ -17,9 +18,11 @@
         private readonly Func<IEnumerable<HtmlMarker>, Task> _addHtmlMarkersCallback;
         private readonly Func<IEnumerable<HtmlMarkerUpdate>, Task> _updateHtmlMarkersCallback;
         private readonly Func<IEnumerable<HtmlMarker>, Task> _removeHtmlMarkersCallback;
+        private readonly Func<DrawingToolbarOptions, Task> _addDrawingToolbarCallback;
 
         private Control[] _controls;
         private HtmlMarker[] _htmlMarkers;
+        private DrawingToolbarOptions _drawingToolbarOptions;
 
         /// <summary>
         /// ID of the map
@@ -38,17 +41,25 @@
             set => _htmlMarkers = value?.ToArray();
         }
 
+        internal DrawingToolbarOptions DrawingToolbarOptions
+        {
+            get => _drawingToolbarOptions;
+            set => _drawingToolbarOptions = value;
+        }
+
         internal Map(string id,
             Func<IEnumerable<Control>, Task> addControlsCallback,
             Func<IEnumerable<HtmlMarker>, Task> addHtmlMarkersCallback,
             Func<IEnumerable<HtmlMarkerUpdate>, Task> updateHtmlMarkersCallback,
-            Func<IEnumerable<HtmlMarker>, Task> removeHtmlMarkersCallback)
+            Func<IEnumerable<HtmlMarker>, Task> removeHtmlMarkersCallback,
+            Func<DrawingToolbarOptions, Task> addDrawingToolbarAsync)
         {
             Id = id;
             _addControlsCallback = addControlsCallback;
             _addHtmlMarkersCallback = addHtmlMarkersCallback;
             _updateHtmlMarkersCallback = updateHtmlMarkersCallback;
             _removeHtmlMarkersCallback = removeHtmlMarkersCallback;
+            _addDrawingToolbarCallback = addDrawingToolbarAsync;
         }
 
         /// <summary>
@@ -133,6 +144,17 @@
                 _htmlMarkers = _htmlMarkers.Where(marker => markers.Any(m => m != null && m.Id != marker.Id)).ToArray();
                 await _removeHtmlMarkersCallback.Invoke(markers);
             }
+        }
+
+        /// <summary>
+        /// Add a drawing toolbar to the map
+        /// </summary>
+        /// <param name="drawingToolbarOptions">Options of the toolbar to create</param>
+        /// <returns></returns>
+        public async Task AddDrawingToolbarAsync(DrawingToolbarOptions drawingToolbarOptions)
+        {
+            _drawingToolbarOptions = drawingToolbarOptions;
+            await _addDrawingToolbarCallback.Invoke(drawingToolbarOptions);
         }
     }
 }
