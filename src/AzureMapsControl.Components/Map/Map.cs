@@ -23,7 +23,6 @@
 
         private Control[] _controls;
         private HtmlMarker[] _htmlMarkers;
-        private DrawingToolbarOptions _drawingToolbarOptions;
 
         /// <summary>
         /// ID of the map
@@ -42,11 +41,7 @@
             internal set => _htmlMarkers = value?.ToArray();
         }
 
-        public DrawingToolbarOptions DrawingToolbarOptions
-        {
-            get => _drawingToolbarOptions;
-            internal set => _drawingToolbarOptions = value;
-        }
+        public DrawingToolbarOptions DrawingToolbarOptions { get; internal set; }
 
         internal Map(string id,
             Func<IEnumerable<Control>, Task> addControlsCallback,
@@ -156,7 +151,7 @@
         /// <returns></returns>
         public async Task AddDrawingToolbarAsync(DrawingToolbarOptions drawingToolbarOptions)
         {
-            _drawingToolbarOptions = drawingToolbarOptions;
+            DrawingToolbarOptions = drawingToolbarOptions;
             await _addDrawingToolbarCallback.Invoke(drawingToolbarOptions);
         }
 
@@ -167,12 +162,12 @@
         /// <returns></returns>
         public async Task UpdateDrawingToolbarAsync(DrawingToolbarUpdateOptions drawingToolbarUpdateOptions)
         {
-            _drawingToolbarOptions.Buttons = drawingToolbarUpdateOptions.Buttons;
-            _drawingToolbarOptions.ContainerId = drawingToolbarUpdateOptions.ContainerId;
-            _drawingToolbarOptions.NumColumns = drawingToolbarUpdateOptions.NumColumns;
-            _drawingToolbarOptions.Position = drawingToolbarUpdateOptions.Position;
-            _drawingToolbarOptions.Style = drawingToolbarUpdateOptions.Style;
-            _drawingToolbarOptions.Visible = drawingToolbarUpdateOptions.Visible;
+            DrawingToolbarOptions.Buttons = drawingToolbarUpdateOptions.Buttons;
+            DrawingToolbarOptions.ContainerId = drawingToolbarUpdateOptions.ContainerId;
+            DrawingToolbarOptions.NumColumns = drawingToolbarUpdateOptions.NumColumns;
+            DrawingToolbarOptions.Position = drawingToolbarUpdateOptions.Position;
+            DrawingToolbarOptions.Style = drawingToolbarUpdateOptions.Style;
+            DrawingToolbarOptions.Visible = drawingToolbarUpdateOptions.Visible;
             await _updateDrawingToolbarCallback.Invoke(drawingToolbarUpdateOptions);
         }
     }

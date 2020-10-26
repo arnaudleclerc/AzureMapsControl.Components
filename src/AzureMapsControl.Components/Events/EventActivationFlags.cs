@@ -6,9 +6,9 @@
     public abstract class EventActivationFlags<T>
         where T : AtlasEventType
     {
-        protected EventActivationFlags(Dictionary<T, bool> eventFlags) => EventsFlags = eventFlags;
+        protected EventActivationFlags(IDictionary<T, bool> eventFlags) => EventsFlags = eventFlags;
 
-        protected readonly Dictionary<T, bool> EventsFlags;
+        protected readonly IDictionary<T, bool> EventsFlags;
     }
 
     public abstract class EventActivationFlags<T, U>
@@ -16,7 +16,7 @@
         where T : AtlasEventType
         where U : EventActivationFlags<T, U>
     {
-        protected EventActivationFlags(Dictionary<T, bool> eventFlags): base(eventFlags) { }
+        protected EventActivationFlags(IDictionary<T, bool> eventFlags): base(eventFlags) { }
 
         internal IEnumerable<string> EnabledEvents => EventsFlags?.Where(kvp => kvp.Value).Select(kvp => kvp.Key.ToString());
 

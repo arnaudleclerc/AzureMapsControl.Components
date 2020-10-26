@@ -1,5 +1,7 @@
 ﻿namespace AzureMapsControl.Components.Drawing
 {
+    using System.Collections.Generic;
+
     using AzureMapsControl.Components.Markers;
 
     internal sealed class DrawingToolbarCreationOptions
@@ -17,6 +19,6 @@
         public string Mode { get; set; }
         public HtmlMarkerOptions SecondaryDragHandleStyle { get; set; }
         public bool ShapeDraggingEnabled { get; set; }
-
+        public IEnumerable<string> Events { get; set; }
     }
 }

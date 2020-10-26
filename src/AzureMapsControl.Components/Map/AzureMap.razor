@@ -24,7 +24,8 @@
 
     private Map _map;
     private MapEventInvokeHelper _mapEventInvokeHelper;
-    private HtmlMarkerInvokeHelper _htmlMarkerInvokeHelper;
+    private HtmlMarkerInvokeHelper _htmlMarkerEventInvokeHelper;
+    private AzureMapsControl.Components.Drawing.DrawingToolbarEventInvokeHelper _drawingToolbarEventInvokeHelper;
 
     /// <summary>
     /// If true the map will automatically resize whenever the window's size changes. Otherwise map.resize() must be called.
@@ -566,10 +567,41 @@
     [Parameter]
     public EventCallback<MapEventArgs> OnZoomStart { get; set; }
 
+    /// <summary>
+    /// Fired when the drawing mode has changed on the drawing toolbar
+    /// </summary>
+    [Parameter]
+    public EventCallback<AzureMapsControl.Components.Drawing.DrawingToolbarModeEventArgs> OnDrawingModeChanged { get; set; }
+
+    /// <summary>
+    /// Fired when a drawing has started
+    /// </summary>
+    [Parameter]
+    public EventCallback<MapEventArgs> OnDrawingStarted { get; set; }
+
+    /// <summary>
+    /// Fired repeatedly when a drawing is changing
+    /// </summary>
+    [Parameter]
+    public EventCallback<AzureMapsControl.Components.Drawing.DrawingToolbarEventArgs> OnDrawingChanging { get; set; }
+
+    /// <summary>
+    /// Fired when a drawing has changed
+    /// </summary>
+    [Parameter]
+    public EventCallback<AzureMapsControl.Components.Drawing.DrawingToolbarEventArgs> OnDrawingChanged { get; set; }
+
+    /// <summary>
+    /// Fires when a drawing is completed
+    /// </summary>
+    [Parameter]
+    public EventCallback<AzureMapsControl.Components.Drawing.DrawingToolbarEventArgs> OnDrawingComplete { get; set; }
+
     protected override void OnInitialized()
     {
         _mapEventInvokeHelper = new MapEventInvokeHelper(MapEventReceivedAsync);
-        _htmlMarkerInvokeHelper = new HtmlMarkerInvokeHelper(HtmlMarkerEventReceivedAsync);
+        _htmlMarkerEventInvokeHelper = new HtmlMarkerInvokeHelper(HtmlMarkerEventReceivedAsync);
+        _drawingToolbarEventInvokeHelper = new Drawing.DrawingToolbarEventInvokeHelper(DrawingToolbarEventReceivedAsync);
         _map = new Map(Id,
             AddControlsAsync,
             AddHtmlMarkersAsync,
@@ -620,6 +652,32 @@
                     htmlMarker.DispatchEvent(_map, htmlMarkerEvent.Type);
                 });
             }
+        }
+    }
+
+    private async Task DrawingToolbarEventReceivedAsync(AzureMapsControl.Components.Drawing.DrawingToolbarJsEventArgs drawingToolbarEvent)
+    {
+        switch (drawingToolbarEvent.Type)
+        {
+            case "drawingchanged":
+                await OnDrawingChanged.InvokeAsync(new Drawing.DrawingToolbarEventArgs(_map, drawingToolbarEvent));
+                break;
+
+            case "drawingchanging":
+                await OnDrawingChanging.InvokeAsync(new Drawing.DrawingToolbarEventArgs(_map, drawingToolbarEvent));
+                break;
+
+            case "drawingcomplete":
+                await OnDrawingComplete.InvokeAsync(new Drawing.DrawingToolbarEventArgs(_map, drawingToolbarEvent));
+                break;
+
+            case "drawingmodechanged":
+                await OnDrawingModeChanged.InvokeAsync(new Drawing.DrawingToolbarModeEventArgs(_map, drawingToolbarEvent));
+                break;
+
+            case "drawingstarted":
+                await OnDrawingStarted.InvokeAsync(new MapEventArgs(_map, drawingToolbarEvent.Type));
+                break;
         }
     }
 
@@ -684,17 +742,18 @@
         await DispatchMapEventAsync(mapEvent);
     }
 
-    private async Task AddControlsAsync(IEnumerable<Control> controls)
+    private async Task AddControlsAsync(IEnumerable<Control>
+    controls)
     {
         var newControls = controls?.Where(control => control != null);
         if (newControls != null && newControls.Any())
         {
             await JSRuntime.InvokeVoidAsync(MethodAddControl.ToAzureMapsControlNamespace(),
-                newControls.Select(control => new ControlOptions
-                {
-                    Type = control.Type.ToString(),
-                    Position = control.Position.ToString()
-                }));
+            newControls.Select(control => new ControlOptions
+            {
+                Type = control.Type.ToString(),
+                Position = control.Position.ToString()
+            }));
         }
     }
 
@@ -703,55 +762,59 @@
         if (drawingToolbarOptions != null)
         {
             await JSRuntime.InvokeVoidAsync(MethodAddDrawingToolbar.ToAzureMapsControlNamespace(),
-                new AzureMapsControl.Components.Drawing.DrawingToolbarCreationOptions
-                {
-                    Buttons = drawingToolbarOptions.Buttons?.Select(button => button.ToString()).ToArray(),
-                    ContainerId = drawingToolbarOptions.ContainerId,
-                    DragHandleStyle = drawingToolbarOptions.DragHandleStyle,
-                    FreehandInterval = drawingToolbarOptions.FreehandInterval,
-                    InteractionType = drawingToolbarOptions.InteractionType.ToString(),
-                    Mode = drawingToolbarOptions.Mode.ToString(),
-                    NumColumns = drawingToolbarOptions.NumColumns,
-                    Position = drawingToolbarOptions.Position.ToString(),
-                    SecondaryDragHandleStyle = drawingToolbarOptions.SecondaryDragHandleStyle,
-                    ShapeDraggingEnabled = drawingToolbarOptions.ShapesDraggingEnabled,
-                    Style = drawingToolbarOptions.Style.ToString(),
-                    Visible = drawingToolbarOptions.Visible
-                });
+            new AzureMapsControl.Components.Drawing.DrawingToolbarCreationOptions
+            {
+                Buttons = drawingToolbarOptions.Buttons?.Select(button => button.ToString()).ToArray(),
+                ContainerId = drawingToolbarOptions.ContainerId,
+                DragHandleStyle = drawingToolbarOptions.DragHandleStyle,
+                FreehandInterval = drawingToolbarOptions.FreehandInterval,
+                InteractionType = drawingToolbarOptions.InteractionType.ToString(),
+                Mode = drawingToolbarOptions.Mode.ToString(),
+                NumColumns = drawingToolbarOptions.NumColumns,
+                Position = drawingToolbarOptions.Position.ToString(),
+                SecondaryDragHandleStyle = drawingToolbarOptions.SecondaryDragHandleStyle,
+                ShapeDraggingEnabled = drawingToolbarOptions.ShapesDraggingEnabled,
+                Style = drawingToolbarOptions.Style.ToString(),
+                Visible = drawingToolbarOptions.Visible,
+                Events = drawingToolbarOptions.Events?.EnabledEvents
+            },
+            DotNetObjectReference.Create(_drawingToolbarEventInvokeHelper));
         }
     }
 
     private async Task UpdateDrawingToolbarAsync(AzureMapsControl.Components.Drawing.DrawingToolbarUpdateOptions drawingToolbarOptions)
     {
         await JSRuntime.InvokeVoidAsync(MethodUpdateDrawingToolbar.ToAzureMapsControlNamespace(),
-            new AzureMapsControl.Components.Drawing.DrawingToolbarCreationOptions
-            {
-                Buttons = drawingToolbarOptions.Buttons?.Select(button => button.ToString()).ToArray(),
-                ContainerId = drawingToolbarOptions.ContainerId,
-                NumColumns = drawingToolbarOptions.NumColumns,
-                Position = drawingToolbarOptions.Position.ToString(),
-                Style = drawingToolbarOptions.Style.ToString(),
-                Visible = drawingToolbarOptions.Visible
-            });
+        new AzureMapsControl.Components.Drawing.DrawingToolbarCreationOptions
+        {
+            Buttons = drawingToolbarOptions.Buttons?.Select(button => button.ToString()).ToArray(),
+            ContainerId = drawingToolbarOptions.ContainerId,
+            NumColumns = drawingToolbarOptions.NumColumns,
+            Position = drawingToolbarOptions.Position.ToString(),
+            Style = drawingToolbarOptions.Style.ToString(),
+            Visible = drawingToolbarOptions.Visible
+        });
     }
 
-    private async Task AddHtmlMarkersAsync(IEnumerable<AzureMapsControl.Components.Markers.HtmlMarker> htmlMarkers)
+    private async Task AddHtmlMarkersAsync(IEnumerable<AzureMapsControl.Components.Markers.HtmlMarker>
+        htmlMarkers)
     {
         var newHtmlMarkers = htmlMarkers?.Where(marker => marker != null);
         if (newHtmlMarkers != null && newHtmlMarkers.Any())
         {
             await JSRuntime.InvokeVoidAsync(MethodAddHtmlMarkers.ToAzureMapsControlNamespace(),
-                newHtmlMarkers.Select(marker => new AzureMapsControl.Components.Markers.HtmlMarkerCreationOptions
-                {
-                    Id = marker.Id,
-                    Events = marker.EventActivationFlags?.EnabledEvents,
-                    Options = marker.Options
-                }),
-                DotNetObjectReference.Create(_htmlMarkerInvokeHelper));
+            newHtmlMarkers.Select(marker => new AzureMapsControl.Components.Markers.HtmlMarkerCreationOptions
+            {
+                Id = marker.Id,
+                Events = marker.EventActivationFlags?.EnabledEvents,
+                Options = marker.Options
+            }),
+            DotNetObjectReference.Create(_htmlMarkerEventInvokeHelper));
         }
     }
 
-    private async Task RemoveHtmlMarkersAsync(IEnumerable<AzureMapsControl.Components.Markers.HtmlMarker> htmlMarkers)
+    private async Task RemoveHtmlMarkersAsync(IEnumerable<AzureMapsControl.Components.Markers.HtmlMarker>
+        htmlMarkers)
     {
         var htmlMarkersToRemove = htmlMarkers?.Where(marker => marker != null && Guid.TryParse(marker.Id, out _));
         if (htmlMarkersToRemove.Any())
@@ -760,25 +823,26 @@
         }
     }
 
-    private async Task UpdateHtmlMarkersAsync(IEnumerable<AzureMapsControl.Components.Markers.HtmlMarkerUpdate> updates)
+    private async Task UpdateHtmlMarkersAsync(IEnumerable<AzureMapsControl.Components.Markers.HtmlMarkerUpdate>
+        updates)
     {
         var htmlMarkersToUpdate = updates?.Where(htmlMarker => htmlMarker?.Marker != null && htmlMarker.Options != null);
         if (htmlMarkersToUpdate != null && htmlMarkersToUpdate.Any())
         {
             await JSRuntime.InvokeVoidAsync(MethodUpdateHtmlMarkers.ToAzureMapsControlNamespace(),
-                htmlMarkersToUpdate.Select(update => new AzureMapsControl.Components.Markers.HtmlMarkerCreationOptions
-                {
-                    Id = update.Marker.Id,
-                    Options = update.Options
-                }));
+            htmlMarkersToUpdate.Select(update => new AzureMapsControl.Components.Markers.HtmlMarkerCreationOptions
+            {
+                Id = update.Marker.Id,
+                Options = update.Options
+            }));
         }
     }
 
     private async Task DispatchMapEventAsync(MapJsEventArgs mapEvent)
     {
         if (EventActivationFlags != null
-            && EventActivationFlags.EnabledEvents != null
-            && EventActivationFlags.EnabledEvents.Contains(mapEvent.Type))
+        && EventActivationFlags.EnabledEvents != null
+        && EventActivationFlags.EnabledEvents.Contains(mapEvent.Type))
         {
             switch (mapEvent.Type)
             {

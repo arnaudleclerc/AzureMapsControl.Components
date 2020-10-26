@@ -9,6 +9,15 @@
                                          AzureMapsControl.Components.Drawing.DrawingButton.DrawLine
                                      },
                                      Position = Components.Atlas.ControlPosition.TopRight,
-                                     Style = AzureMapsControl.Components.Drawing.DrawingToolbarStyle.Dark
+                                     Style = AzureMapsControl.Components.Drawing.DrawingToolbarStyle.Dark,
+                                     Events = AzureMapsControl.Components.Drawing.DrawingToolbarEventActivationFlags.All
                                  }"
+          OnDrawingModeChanged="OnDrawingModeChanged"
           />
+
+@code {
+    public async Task OnDrawingModeChanged(AzureMapsControl.Components.Drawing.DrawingToolbarModeEventArgs eventArgs)
+    {
+        Console.WriteLine(eventArgs.NewMode);
+    }
+}

@@ -85,7 +85,8 @@ window.azureMapsControl = {
             });
         }
     },
-    addDrawingToolbar: function (drawingToolbarOptions) {
+    addDrawingToolbar: function (drawingToolbarOptions,
+        eventHelper) {
 
         this._toolbar = new atlas.control.DrawingToolbar({
             buttons: drawingToolbarOptions.buttons,
@@ -133,6 +134,24 @@ window.azureMapsControl = {
         }
 
         this._drawingManager = new atlas.drawing.DrawingManager(this._map, drawingManagerOptions);
+
+        if (drawingToolbarOptions.events) {
+            drawingToolbarOptions.events.forEach(drawingToolbarEvent => {
+                this._map.events.add(drawingToolbarEvent, this._drawingManager, e => {
+                    if (drawingToolbarEvent === 'drawingmodechanged') {
+                        eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(drawingToolbarEvent, {
+                            newMode: e
+                        }));
+                    } else if (drawingToolbarEvent === 'drawingstarted') {
+                        eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(drawingToolbarEvent));
+                    } else {
+                        eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(drawingToolbarEvent, {
+                            data: e.data
+                        }));
+                    }
+                });
+            });
+        }
     },
     updateDrawingToolbar: function (drawingToolbarOptions) {
         this._toolbar.setOptions({

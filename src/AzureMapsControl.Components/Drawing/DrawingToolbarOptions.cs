@@ -37,5 +37,9 @@
         /// </summary>
         public bool ShapesDraggingEnabled { get; set; } = true;
 
+        /// <summary>
+        /// Specifies the events triggered by the drawing toolbar
+        /// </summary>
+        public DrawingToolbarEventActivationFlags Events { get; set; }
     }
 }
