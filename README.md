@@ -569,3 +569,31 @@ A Drawing toolbar can be added to the map by providing the `DrawingToolbarOption
 ```
 
 ![Drawing Toolbar](./assets/drawingtoolbar.png)
+
+## Layers
+
+### Tile Layer
+
+A Tile layer can be added after the `MapReady` event has been triggered by calling the `AddTileLayerAsync` method and giving the desired options.
+
+```
+@page "/TileLayerOnReady"
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          Center="new Components.Atlas.Position(-99.47, 40.75)"
+          Zoom="4"
+          EventActivationFlags="MapEventActivationFlags
+                                .None
+                                .Enable(MapEventType.Ready)"
+          OnReady="OnMapReady" />
+
+@code  {
+    public async Task OnMapReady(MapEventArgs events)
+    {
+        await events.Map.AddTileLayerAsync(new Components.Layers.TileLayerOptions("https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-900913/{z}/{x}/{y}.png"));
+    }
+}
+```
+
+![Tile Layer](./assets/tilelayer.png)
