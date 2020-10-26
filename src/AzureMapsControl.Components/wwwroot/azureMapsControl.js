@@ -405,6 +405,14 @@ window.azureMapsControl = {
             this._map.markers.getMarkers().find(marker => marker.amc.id === htmlMarkerOption.id).setOptions(options);
         });
     },
+    addTileLayer: function (id,
+        before,
+        tileLayerOptions) {
+        this._map.layers.add(
+            new atlas.layer.TileLayer(tileLayerOptions, id),
+            before
+        );
+    },
     _toMapEvent: function (type, properties) {
         const result = properties || {};
         result.type = type;

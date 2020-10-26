@@ -21,6 +21,7 @@
     private const string MethodUpdateHtmlMarkers = "updateHtmlMarkers";
     private const string MethodAddDrawingToolbar = "addDrawingToolbar";
     private const string MethodUpdateDrawingToolbar = "updateDrawingToolbar";
+    private const string MethodAddTileLayer = "addTileLayer";
 
     private Map _map;
     private MapEventInvokeHelper _mapEventInvokeHelper;
@@ -608,7 +609,8 @@
             UpdateHtmlMarkersAsync,
             RemoveHtmlMarkersAsync,
             AddDrawingToolbarAsync,
-            UpdateDrawingToolbarAsync)
+            UpdateDrawingToolbarAsync,
+            AddLayerAsync)
         {
             Controls = Controls,
             HtmlMarkers = HtmlMarkers,
@@ -742,8 +744,7 @@
         await DispatchMapEventAsync(mapEvent);
     }
 
-    private async Task AddControlsAsync(IEnumerable<Control>
-    controls)
+    private async Task AddControlsAsync(IEnumerable<Control> controls)
     {
         var newControls = controls?.Where(control => control != null);
         if (newControls != null && newControls.Any())
@@ -835,6 +836,19 @@
                 Id = update.Marker.Id,
                 Options = update.Options
             }));
+        }
+    }
+
+    private async Task AddLayerAsync(string id, string before, AzureMapsControl.Components.Layers.LayerType layerType, AzureMapsControl.Components.Layers.LayerOptions layerOptions)
+    {
+        switch(layerType)
+        {
+            case Layers.LayerType.TileLayer:
+                await JSRuntime.InvokeVoidAsync(MethodAddTileLayer.ToAzureMapsControlNamespace(),
+                    id,
+                    before,
+                    layerOptions);
+                break;
         }
     }
 

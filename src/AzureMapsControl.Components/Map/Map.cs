@@ -7,6 +7,7 @@
 
     using AzureMapsControl.Components.Atlas;
     using AzureMapsControl.Components.Drawing;
+    using AzureMapsControl.Components.Layers;
     using AzureMapsControl.Components.Markers;
 
     /// <summary>
@@ -20,28 +21,22 @@
         private readonly Func<IEnumerable<HtmlMarker>, Task> _removeHtmlMarkersCallback;
         private readonly Func<DrawingToolbarOptions, Task> _addDrawingToolbarCallback;
         private readonly Func<DrawingToolbarUpdateOptions, Task> _updateDrawingToolbarCallback;
+        private readonly Func<string, string, LayerType, LayerOptions, Task> _addLayerCallback;
 
-        private Control[] _controls;
-        private HtmlMarker[] _htmlMarkers;
+        private readonly Dictionary<string, Layer> _layers;
 
         /// <summary>
         /// ID of the map
         /// </summary>
         public string Id { get; }
 
-        public IReadOnlyCollection<Control> Controls
-        {
-            get => _controls;
-            internal set => _controls = value?.ToArray();
-        }
+        public IReadOnlyCollection<Control> Controls { get; internal set; }
 
-        public IReadOnlyCollection<HtmlMarker> HtmlMarkers
-        {
-            get => _htmlMarkers;
-            internal set => _htmlMarkers = value?.ToArray();
-        }
+        public IReadOnlyCollection<HtmlMarker> HtmlMarkers { get; internal set; }
 
         public DrawingToolbarOptions DrawingToolbarOptions { get; internal set; }
+
+        public IReadOnlyDictionary<string, Layer> Layers => _layers;
 
         internal Map(string id,
             Func<IEnumerable<Control>, Task> addControlsCallback,
@@ -49,7 +44,8 @@
             Func<IEnumerable<HtmlMarkerUpdate>, Task> updateHtmlMarkersCallback,
             Func<IEnumerable<HtmlMarker>, Task> removeHtmlMarkersCallback,
             Func<DrawingToolbarOptions, Task> addDrawingToolbarAsync,
-            Func<DrawingToolbarUpdateOptions, Task> updateDrawingToolbarAsync)
+            Func<DrawingToolbarUpdateOptions, Task> updateDrawingToolbarAsync,
+            Func<string, string, LayerType, LayerOptions, Task> addLayerCallback)
         {
             Id = id;
             _addControlsCallback = addControlsCallback;
@@ -58,6 +54,8 @@
             _removeHtmlMarkersCallback = removeHtmlMarkersCallback;
             _addDrawingToolbarCallback = addDrawingToolbarAsync;
             _updateDrawingToolbarCallback = updateDrawingToolbarAsync;
+            _addLayerCallback = addLayerCallback;
+            _layers = new Dictionary<string, Layer>();
         }
 
         /// <summary>
@@ -66,8 +64,8 @@
         /// <param name="controls">Controls to add to the map</param>
         public async Task AddControlsAsync(params Control[] controls)
         {
-            _controls = controls?.Where(control => control != null).ToArray();
-            await _addControlsCallback.Invoke(_controls);
+            Controls = controls?.Where(control => control != null).ToArray();
+            await _addControlsCallback.Invoke(Controls);
         }
 
         /// <summary>
@@ -76,8 +74,8 @@
         /// <param name="controls">Controls to add to the map</param>
         public async Task AddControlsAsync(IEnumerable<Control> controls)
         {
-            _controls = controls?.Where(control => control != null).ToArray();
-            await _addControlsCallback.Invoke(_controls);
+            Controls = controls?.Where(control => control != null).ToArray();
+            await _addControlsCallback.Invoke(Controls);
         }
 
         /// <summary>
@@ -87,8 +85,8 @@
         /// <returns></returns>
         public async Task AddHtmlMarkersAsync(params HtmlMarker[] markers)
         {
-            _htmlMarkers = (_htmlMarkers ?? new HtmlMarker[0]).Concat(markers?.Where(marker => marker != null)).ToArray();
-            await _addHtmlMarkersCallback.Invoke(_htmlMarkers);
+            HtmlMarkers = (HtmlMarkers ?? new HtmlMarker[0]).Concat(markers?.Where(marker => marker != null)).ToArray();
+            await _addHtmlMarkersCallback.Invoke(HtmlMarkers);
         }
 
         /// <summary>
@@ -98,8 +96,8 @@
         /// <returns></returns>
         public async Task AddHtmlMarkersAsync(IEnumerable<HtmlMarker> markers)
         {
-            _htmlMarkers = (_htmlMarkers ?? new HtmlMarker[0]).Concat(markers?.Where(marker => marker != null)).ToArray();
-            await _addHtmlMarkersCallback.Invoke(_htmlMarkers);
+            HtmlMarkers = (HtmlMarkers ?? new HtmlMarker[0]).Concat(markers?.Where(marker => marker != null)).ToArray();
+            await _addHtmlMarkersCallback.Invoke(HtmlMarkers);
         }
 
         /// <summary>
@@ -123,9 +121,9 @@
         /// <returns></returns>
         public async Task RemoveHtmlMarkersAsync(params HtmlMarker[] markers)
         {
-            if(_htmlMarkers != null && markers != null)
+            if (HtmlMarkers != null && markers != null)
             {
-                _htmlMarkers = _htmlMarkers.Where(marker => markers.Any(m => m != null && m.Id != marker.Id)).ToArray();
+                HtmlMarkers = HtmlMarkers.Where(marker => markers.Any(m => m != null && m.Id != marker.Id)).ToArray();
                 await _removeHtmlMarkersCallback.Invoke(markers);
             }
         }
@@ -137,9 +135,9 @@
         /// <returns></returns>
         public async Task RemoveHtmlMarkersAsync(IEnumerable<HtmlMarker> markers)
         {
-            if (_htmlMarkers != null && markers != null)
+            if (HtmlMarkers != null && markers != null)
             {
-                _htmlMarkers = _htmlMarkers.Where(marker => markers.Any(m => m != null && m.Id != marker.Id)).ToArray();
+                HtmlMarkers = HtmlMarkers.Where(marker => markers.Any(m => m != null && m.Id != marker.Id)).ToArray();
                 await _removeHtmlMarkersCallback.Invoke(markers);
             }
         }
@@ -169,6 +167,16 @@
             DrawingToolbarOptions.Style = drawingToolbarUpdateOptions.Style;
             DrawingToolbarOptions.Visible = drawingToolbarUpdateOptions.Visible;
             await _updateDrawingToolbarCallback.Invoke(drawingToolbarUpdateOptions);
+        }
+
+        public async Task AddTileLayerAsync(TileLayerOptions options) => await AddTileLayerAsync(Guid.NewGuid().ToString(), options);
+
+        public async Task AddTileLayerAsync(string id, TileLayerOptions options)
+        {
+            _layers.Add(id, new TileLayer(id) {
+                Options = options
+            });
+            await _addLayerCallback.Invoke(id, null, LayerType.TileLayer, options);
         }
     }
 }
