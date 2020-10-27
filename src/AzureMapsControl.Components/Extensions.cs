@@ -4,11 +4,22 @@
 
     using AzureMapsControl.Components.Configuration;
     using AzureMapsControl.Components.Constants;
+    using AzureMapsControl.Components.Map;
 
     using Microsoft.Extensions.DependencyInjection;
 
     public static class Extensions
     {
+        internal const string MethodAddMap = "addMap";
+        internal const string MethodAddControl = "addControls";
+        internal const string MethodAddHtmlMarkers = "addHtmlMarkers";
+        internal const string MethodSetOptions = "setOptions";
+        internal const string MethodRemoveHtmlMarkers = "removeHtmlMarkers";
+        internal const string MethodUpdateHtmlMarkers = "updateHtmlMarkers";
+        internal const string MethodAddDrawingToolbar = "addDrawingToolbar";
+        internal const string MethodUpdateDrawingToolbar = "updateDrawingToolbar";
+        internal const string MethodAddTileLayer = "addTileLayer";
+
         /// <summary>
         /// Register the configuration to use the AzureMapsControl components
         /// </summary>
@@ -18,6 +29,7 @@
         public static IServiceCollection AddAzureMapsControl(this IServiceCollection services, Action<AzureMapsConfiguration> configure)
         {
             services
+                .AddSingleton<MapService>()
                 .AddOptions<AzureMapsConfiguration>()
                 .Configure(configure);
 
