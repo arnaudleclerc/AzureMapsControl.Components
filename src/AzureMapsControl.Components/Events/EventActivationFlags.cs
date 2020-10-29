@@ -3,7 +3,12 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public abstract class EventActivationFlags<T>
+    public abstract class EventActivationFlags
+    {
+        internal abstract IEnumerable<string> EnabledEvents { get; }
+    }
+
+    public abstract class EventActivationFlags<T> : EventActivationFlags
         where T : AtlasEventType
     {
         protected EventActivationFlags(IDictionary<T, bool> eventFlags) => EventsFlags = eventFlags;
@@ -16,9 +21,9 @@
         where T : AtlasEventType
         where U : EventActivationFlags<T, U>
     {
-        protected EventActivationFlags(IDictionary<T, bool> eventFlags): base(eventFlags) { }
+        protected EventActivationFlags(IDictionary<T, bool> eventFlags) : base(eventFlags) { }
 
-        internal IEnumerable<string> EnabledEvents => EventsFlags?.Where(kvp => kvp.Value).Select(kvp => kvp.Key.ToString());
+        internal override IEnumerable<string> EnabledEvents => EventsFlags?.Where(kvp => kvp.Value).Select(kvp => kvp.Key.ToString());
 
         public U Enable(params T[] eventTypes)
         {

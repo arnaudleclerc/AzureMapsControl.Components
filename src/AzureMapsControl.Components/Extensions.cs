@@ -18,7 +18,7 @@
         internal const string MethodUpdateHtmlMarkers = "updateHtmlMarkers";
         internal const string MethodAddDrawingToolbar = "addDrawingToolbar";
         internal const string MethodUpdateDrawingToolbar = "updateDrawingToolbar";
-        internal const string MethodAddTileLayer = "addTileLayer";
+        internal const string MethodAddLayer = "addLayer";
 
         /// <summary>
         /// Register the configuration to use the AzureMapsControl components

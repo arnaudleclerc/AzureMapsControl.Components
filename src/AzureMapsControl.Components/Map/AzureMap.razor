@@ -17,6 +17,7 @@
     private MapEventInvokeHelper _mapEventInvokeHelper;
     private HtmlMarkerInvokeHelper _htmlMarkerEventInvokeHelper;
     private AzureMapsControl.Components.Drawing.DrawingToolbarEventInvokeHelper _drawingToolbarEventInvokeHelper;
+    private AzureMapsControl.Components.Layers.LayerEventInvokeHelper _layerEventInvokeHelper;
 
     /// <summary>
     /// If true the map will automatically resize whenever the window's size changes. Otherwise map.resize() must be called.
@@ -593,6 +594,7 @@
         _mapEventInvokeHelper = new MapEventInvokeHelper(MapEventReceivedAsync);
         _htmlMarkerEventInvokeHelper = new HtmlMarkerInvokeHelper(HtmlMarkerEventReceivedAsync);
         _drawingToolbarEventInvokeHelper = new Drawing.DrawingToolbarEventInvokeHelper(DrawingToolbarEventReceivedAsync);
+        _layerEventInvokeHelper = new Layers.LayerEventInvokeHelper(LayerEventReceivedAsync);
         base.OnInitialized();
     }
 
@@ -721,17 +723,29 @@
                 AddDrawingToolbarAsync,
                 UpdateDrawingToolbarAsync,
                 AddLayerAsync)
-                {
-                    Controls = Controls,
-                    HtmlMarkers = HtmlMarkers,
-                    DrawingToolbarOptions = DrawingToolbarOptions
-                });
+            {
+                Controls = Controls,
+                HtmlMarkers = HtmlMarkers,
+                DrawingToolbarOptions = DrawingToolbarOptions
+            });
 
             await AddControlsAsync(Controls);
             await AddHtmlMarkersAsync(HtmlMarkers);
             await AddDrawingToolbarAsync(DrawingToolbarOptions);
         }
         await DispatchMapEventAsync(mapEvent);
+    }
+
+    private async Task LayerEventReceivedAsync(MapJsEventArgs eventArgs)
+    {
+        var layer = MapService.Map.Layers.FirstOrDefault(l => l.Id == eventArgs.LayerId);
+        if(layer != null)
+        {
+            await Task.Run(() =>
+            {
+               layer.DispatchEvent(MapService.Map, eventArgs); 
+            });
+        }
     }
 
     private async Task AddControlsAsync(IEnumerable<Control> controls)
@@ -829,17 +843,15 @@
         }
     }
 
-    private async Task AddLayerAsync(string id, string before, AzureMapsControl.Components.Layers.LayerType layerType, AzureMapsControl.Components.Layers.LayerOptions layerOptions)
+    private async Task AddLayerAsync(AzureMapsControl.Components.Layers.Layer layer, string before)
     {
-        switch (layerType)
-        {
-            case Layers.LayerType.TileLayer:
-                await JSRuntime.InvokeVoidAsync(Extensions.MethodAddTileLayer.ToAzureMapsControlNamespace(),
-                    id,
-                    before,
-                    layerOptions);
-                break;
-        }
+        await JSRuntime.InvokeVoidAsync(Extensions.MethodAddLayer.ToAzureMapsControlNamespace(),
+            layer.Id,
+            before,
+            layer.Type.ToString(),
+            layer.GetLayerOptions(),
+            layer.GetEnabledEvents(),
+            DotNetObjectReference.Create(_layerEventInvokeHelper));
     }
 
     private async Task DispatchMapEventAsync(MapJsEventArgs mapEvent)

@@ -5,7 +5,7 @@
 
     using AzureMapsControl.Components.Events;
 
-    internal class MapEventInvokeHelper : EventInvokeHelper<MapJsEventArgs>
+    internal sealed class MapEventInvokeHelper : EventInvokeHelper<MapJsEventArgs>
     {
         public MapEventInvokeHelper(Func<MapJsEventArgs, Task> callback) : base(callback)
         {

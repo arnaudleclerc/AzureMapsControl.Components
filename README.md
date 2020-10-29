@@ -574,7 +574,9 @@ A Drawing toolbar can be added to the map by providing the `DrawingToolbarOption
 
 ### Tile Layer
 
-A Tile layer can be added after the `MapReady` event has been triggered by calling the `AddTileLayerAsync` method and giving the desired options.
+A Tile layer can be added after the `MapReady` event has been triggered by calling the `AddLayerAsync` method and providing the desired layer. `Options` can be attached to the `TileLayer`.
+
+Events can also be activated using the `EventActivationFlags` property on the `TileLayer`.
 
 ```
 @page "/TileLayerOnReady"
@@ -591,7 +593,18 @@ A Tile layer can be added after the `MapReady` event has been triggered by calli
 @code  {
     public async Task OnMapReady(MapEventArgs events)
     {
-        await events.Map.AddTileLayerAsync(new Components.Layers.TileLayerOptions("https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-900913/{z}/{x}/{y}.png"));
+        var layer = new AzureMapsControl.Components.Layers.TileLayer
+        {
+            Options = new Components.Layers.TileLayerOptions("https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-900913/{z}/{x}/{y}.png"),
+            EventActivationFlags = AzureMapsControl.Components.Layers.TileLayerEventActivationFlags.None.Enable(AzureMapsControl.Components.Layers.TileLayerEventType.LayerAdded)
+        };
+
+        layer.OnLayerAdded += e =>
+        {
+            Console.WriteLine("Layer added");
+        };
+
+        await events.Map.AddLayerAsync(layer);
     }
 }
 ```

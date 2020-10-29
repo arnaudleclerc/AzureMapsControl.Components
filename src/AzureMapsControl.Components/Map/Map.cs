@@ -7,7 +7,6 @@
 
     using AzureMapsControl.Components.Atlas;
     using AzureMapsControl.Components.Drawing;
-    using AzureMapsControl.Components.Events;
     using AzureMapsControl.Components.Layers;
     using AzureMapsControl.Components.Markers;
 
@@ -22,7 +21,7 @@
         private readonly Func<IEnumerable<HtmlMarker>, Task> _removeHtmlMarkersCallback;
         private readonly Func<DrawingToolbarOptions, Task> _addDrawingToolbarCallback;
         private readonly Func<DrawingToolbarUpdateOptions, Task> _updateDrawingToolbarCallback;
-        private readonly Func<string, string, LayerType, LayerOptions, Task> _addLayerCallback;
+        private readonly Func<Layer, string, Task> _addLayerCallback;
 
         private readonly List<Layer> _layers;
 
@@ -46,7 +45,7 @@
             Func<IEnumerable<HtmlMarker>, Task> removeHtmlMarkersCallback,
             Func<DrawingToolbarOptions, Task> addDrawingToolbarAsync,
             Func<DrawingToolbarUpdateOptions, Task> updateDrawingToolbarAsync,
-            Func<string, string, LayerType, LayerOptions, Task> addLayerCallback)
+            Func<Layer, string, Task> addLayerCallback)
         {
             Id = id;
             _addControlsCallback = addControlsCallback;
@@ -187,13 +186,13 @@
         /// <returns></returns>
         public async Task AddLayerAsync<T>(T layer, string before) where T : Layer
         {
-            if(_layers.Any(l => l.Id == layer.Id))
+            if (_layers.Any(l => l.Id == layer.Id))
             {
                 throw new ArgumentException("A layer with the given ID has already been added");
             }
 
             _layers.Add(layer);
-            await _addLayerCallback.Invoke(layer.Id, before, LayerType.TileLayer, layer.GetLayerOptions());
+            await _addLayerCallback.Invoke(layer, before);
         }
 
     }

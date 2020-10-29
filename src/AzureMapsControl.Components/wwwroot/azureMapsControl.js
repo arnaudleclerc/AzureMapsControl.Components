@@ -332,11 +332,6 @@ window.azureMapsControl = {
                 }
             });
         });
-
-
-    },
-    removeHtmlMarkers: function (markerIds) {
-        this._map.markers.remove(this._map.markers.getMarkers().find(marker => markerIds.indexOf(marker.amc.id) > -1));
     },
     setOptions: function (cameraOptions,
         styleOptions,
@@ -373,6 +368,9 @@ window.azureMapsControl = {
             this._map.setTraffic(trafficOptions);
         }
     },
+    removeHtmlMarkers: function (markerIds) {
+        this._map.markers.remove(this._map.markers.getMarkers().find(marker => markerIds.indexOf(marker.amc.id) > -1));
+    },
     updateHtmlMarkers: function (htmlMarkerOptions) {
         htmlMarkerOptions.forEach(htmlMarkerOption => {
 
@@ -405,13 +403,40 @@ window.azureMapsControl = {
             this._map.markers.getMarkers().find(marker => marker.amc.id === htmlMarkerOption.id).setOptions(options);
         });
     },
-    addTileLayer: function (id,
+    addLayer: function (id,
         before,
-        tileLayerOptions) {
-        this._map.layers.add(
-            new atlas.layer.TileLayer(tileLayerOptions, id),
-            before
-        );
+        layerType,
+        layerOptions,
+        enabledEvents,
+        eventHelper) {
+        let layer;
+        switch (layerType) {
+            case 'tileLayer':
+                layer = new atlas.layer.TileLayer(layerOptions, id);
+                break;
+        }
+        if (layer) {
+            enabledEvents.forEach(layerEvent => {
+                this._addLayerEvent(layerEvent, layer, eventHelper);
+            });
+
+            this._map.layers.add(
+                layer,
+                before
+            );
+        }
+    },
+    _addLayerEvent: function (key, layer, eventHelper) {
+        this._map.events.add(key, layer, e => {
+            eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(key, {
+                layerId: layer.id,
+                pixel: e.pixel,
+                pixels: e.pixels,
+                position: e.position,
+                positions: e.positions,
+                shapes: e.shapes
+            }));
+        });
     },
     _toMapEvent: function (type, properties) {
         const result = properties || {};
