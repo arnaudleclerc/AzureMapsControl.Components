@@ -7,6 +7,7 @@
 
     using AzureMapsControl.Components.Atlas;
     using AzureMapsControl.Components.Drawing;
+    using AzureMapsControl.Components.Events;
     using AzureMapsControl.Components.Layers;
     using AzureMapsControl.Components.Markers;
 
@@ -23,7 +24,7 @@
         private readonly Func<DrawingToolbarUpdateOptions, Task> _updateDrawingToolbarCallback;
         private readonly Func<string, string, LayerType, LayerOptions, Task> _addLayerCallback;
 
-        private readonly Dictionary<string, Layer> _layers;
+        private readonly List<Layer> _layers;
 
         /// <summary>
         /// ID of the map
@@ -36,7 +37,7 @@
 
         public DrawingToolbarOptions DrawingToolbarOptions { get; internal set; }
 
-        public IReadOnlyDictionary<string, Layer> Layers => _layers;
+        public IReadOnlyCollection<Layer> Layers => _layers;
 
         internal Map(string id,
             Func<IEnumerable<Control>, Task> addControlsCallback,
@@ -55,7 +56,7 @@
             _addDrawingToolbarCallback = addDrawingToolbarAsync;
             _updateDrawingToolbarCallback = updateDrawingToolbarAsync;
             _addLayerCallback = addLayerCallback;
-            _layers = new Dictionary<string, Layer>();
+            _layers = new List<Layer>();
         }
 
         /// <summary>
@@ -169,14 +170,31 @@
             await _updateDrawingToolbarCallback.Invoke(drawingToolbarUpdateOptions);
         }
 
-        public async Task AddTileLayerAsync(TileLayerOptions options) => await AddTileLayerAsync(Guid.NewGuid().ToString(), options);
+        /// <summary>
+        /// Add a layer to the map
+        /// </summary>
+        /// <typeparam name="T">Type of layer to add</typeparam>
+        /// <param name="layer">Layer to add to the map</param>
+        /// <returns></returns>
+        public async Task AddLayerAsync<T>(T layer) where T : Layer => await AddLayerAsync(layer, null);
 
-        public async Task AddTileLayerAsync(string id, TileLayerOptions options)
+        /// <summary>
+        /// Add a layer to the map
+        /// </summary>
+        /// <typeparam name="T">Type of layer to add</typeparam>
+        /// <param name="layer">Layer to add</param>
+        /// <param name="before">ID of the layer before which the new layer will be added</param>
+        /// <returns></returns>
+        public async Task AddLayerAsync<T>(T layer, string before) where T : Layer
         {
-            _layers.Add(id, new TileLayer(id) {
-                Options = options
-            });
-            await _addLayerCallback.Invoke(id, null, LayerType.TileLayer, options);
+            if(_layers.Any(l => l.Id == layer.Id))
+            {
+                throw new ArgumentException("A layer with the given ID has already been added");
+            }
+
+            _layers.Add(layer);
+            await _addLayerCallback.Invoke(layer.Id, before, LayerType.TileLayer, layer.GetLayerOptions());
         }
+
     }
 }

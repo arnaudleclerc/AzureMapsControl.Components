@@ -1,15 +1,13 @@
 ﻿namespace AzureMapsControl.Components.Layers
 {
+    using System;
+
     /// <summary>
     /// Renders raster tiled images on top of the map tiles.
     /// </summary>
-    public sealed class TileLayer : Layer
+    public sealed class TileLayer : Layer<TileLayerOptions, TileLayerEventType>
     {
-        /// <summary>
-        /// Options used when rendering raster tiled images in a TileLayer.
-        /// </summary>
-        public TileLayerOptions Options { get; internal set; }
-
-        internal TileLayer(string id) : base(id, LayerType.TileLayer) { }
+        public TileLayer(): this(Guid.NewGuid().ToString()) { }
+        public TileLayer(string id) : base(id, LayerType.TileLayer) { }
     }
 }

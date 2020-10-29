@@ -12,6 +12,8 @@
 @code  {
     public async Task OnMapReady(MapEventArgs events)
     {
-        await events.Map.AddTileLayerAsync(new Components.Layers.TileLayerOptions("https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-900913/{z}/{x}/{y}.png"));
+        await events.Map.AddLayerAsync(new AzureMapsControl.Components.Layers.TileLayer {
+            Options = new Components.Layers.TileLayerOptions("https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-900913/{z}/{x}/{y}.png")
+        });
     }
 }
