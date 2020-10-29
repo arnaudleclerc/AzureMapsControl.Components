@@ -4,7 +4,7 @@
 
     using AzureMapsControl.Components.Map;
 
-    public delegate void HtmlMarkerEvent(MapEventArgs eventArgs);
+    public delegate void HtmlMarkerEvent(HtmlMarkerEventArgs eventArgs);
 
     /// <summary>
     /// HTML Marker which can be added directly to the map
@@ -126,67 +126,67 @@
             switch(type)
             {
                 case "click":
-                    OnClick?.Invoke(new MapEventArgs(map, type));
+                    OnClick?.Invoke(new HtmlMarkerEventArgs(map, type, this));
                     break;
 
                 case "contextmenu":
-                    OnContextMenu?.Invoke(new MapEventArgs(map, type));
+                    OnContextMenu?.Invoke(new HtmlMarkerEventArgs(map, type, this));
                     break;
 
                 case "dblclick":
-                    OnDblClick?.Invoke(new MapEventArgs(map, type));
+                    OnDblClick?.Invoke(new HtmlMarkerEventArgs(map, type, this));
                     break;
 
                 case "drag":
-                    OnDrag?.Invoke(new MapEventArgs(map, type));
+                    OnDrag?.Invoke(new HtmlMarkerEventArgs(map, type, this));
                     break;
 
                 case "dragend":
-                    OnDragEnd?.Invoke(new MapEventArgs(map, type));
+                    OnDragEnd?.Invoke(new HtmlMarkerEventArgs(map, type, this));
                     break;
 
                 case "dragstart":
-                    OnDragStart?.Invoke(new MapEventArgs(map, type));
+                    OnDragStart?.Invoke(new HtmlMarkerEventArgs(map, type, this));
                     break;
 
                 case "keydown":
-                    OnKeyDown?.Invoke(new MapEventArgs(map, type));
+                    OnKeyDown?.Invoke(new HtmlMarkerEventArgs(map, type, this));
                     break;
 
                 case "keypress":
-                    OnKeyPress?.Invoke(new MapEventArgs(map, type));
+                    OnKeyPress?.Invoke(new HtmlMarkerEventArgs(map, type, this));
                     break;
 
                 case "keyup":
-                    OnKeyUp?.Invoke(new MapEventArgs(map, type));
+                    OnKeyUp?.Invoke(new HtmlMarkerEventArgs(map, type, this));
                     break;
 
                 case "mousedown":
-                    OnMouseDown?.Invoke(new MapEventArgs(map, type));
+                    OnMouseDown?.Invoke(new HtmlMarkerEventArgs(map, type, this));
                     break;
 
                 case "mouseenter":
-                    OnMouseEnter?.Invoke(new MapEventArgs(map, type));
+                    OnMouseEnter?.Invoke(new HtmlMarkerEventArgs(map, type, this));
                     break;
 
                 case "mouseleave":
-                    OnMouseLeave?.Invoke(new MapEventArgs(map, type));
+                    OnMouseLeave?.Invoke(new HtmlMarkerEventArgs(map, type, this));
                     break;
 
                 case "mousemove":
-                    OnMouseMove?.Invoke(new MapEventArgs(map, type));
+                    OnMouseMove?.Invoke(new HtmlMarkerEventArgs(map, type, this));
                     break;
 
                 case "mouseout":
-                    OnMouseOut?.Invoke(new MapEventArgs(map, type));
+                    OnMouseOut?.Invoke(new HtmlMarkerEventArgs(map, type, this));
                     break;
 
                 case "mouseover":
-                    OnMouseOver?.Invoke(new MapEventArgs(map, type));
+                    OnMouseOver?.Invoke(new HtmlMarkerEventArgs(map, type, this));
                     break;
 
                 case "mouseup":
-                    OnMouseUp?.Invoke(new MapEventArgs(map, type));
+                    OnMouseUp?.Invoke(new HtmlMarkerEventArgs(map, type, this));
                     break;
             }
         }
