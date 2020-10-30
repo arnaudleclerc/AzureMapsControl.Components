@@ -850,7 +850,7 @@
             layer.Id,
             before,
             layer.Type.ToString(),
-            layer.GetLayerOptions(),
+            layer.GetLayerOptions().GenerateJsOptions(),
             layer.GetEnabledEvents(),
             DotNetObjectReference.Create(_layerEventInvokeHelper));
     }

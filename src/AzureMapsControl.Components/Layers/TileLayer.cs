@@ -7,7 +7,7 @@
     /// </summary>
     public sealed class TileLayer : Layer<TileLayerOptions, TileLayerEventActivationFlags>
     {
-        public TileLayer(): this(Guid.NewGuid().ToString()) { }
-        public TileLayer(string id) : base(id, LayerType.TileLayer) { }
+        public TileLayer() : this(Guid.NewGuid().ToString()) { }
+        public TileLayer(string id) : base(id, LayerType.TileLayer) => EventActivationFlags = TileLayerEventActivationFlags.None;
     }
 }

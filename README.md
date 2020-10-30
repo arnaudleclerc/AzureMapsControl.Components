@@ -572,11 +572,7 @@ A Drawing toolbar can be added to the map by providing the `DrawingToolbarOption
 
 ## Layers
 
-### Tile Layer
-
-A Tile layer can be added after the `MapReady` event has been triggered by calling the `AddLayerAsync` method and providing the desired layer. `Options` can be attached to the `TileLayer`.
-
-Events can also be activated using the `EventActivationFlags` property on the `TileLayer`.
+Layers can be added to the map after the `MapReady` event has been triggered by calling the `AddLayerAsync` method and providing the desired layer with its `Options` and `EventsActivationFlags`. The following example describes the process with a `TileLayer`.
 
 ```
 @page "/TileLayerOnReady"
@@ -610,3 +606,58 @@ Events can also be activated using the `EventActivationFlags` property on the `T
 ```
 
 ![Tile Layer](./assets/tilelayer.png)
+
+Layers can be removed by calling the `RemoveLayersAsync` method on the `Map` and providing the list of layers to remove or their ids. 
+
+```
+@page "/LayerRemove"
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          Center="new Components.Atlas.Position(-99.47, 40.75)"
+          Zoom="4"
+          EventActivationFlags="MapEventActivationFlags
+                                .None
+                                .Enable(MapEventType.Ready)"
+          OnReady="OnMapReady" />
+
+@code  {
+    public async Task OnMapReady(MapEventArgs events)
+    {
+        var layer = new AzureMapsControl.Components.Layers.TileLayer
+        {
+            Options = new Components.Layers.TileLayerOptions("https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-900913/{z}/{x}/{y}.png"),
+            EventActivationFlags = AzureMapsControl.Components.Layers.TileLayerEventActivationFlags.None.Enable(AzureMapsControl.Components.Layers.TileLayerEventType.LayerAdded, AzureMapsControl.Components.Layers.TileLayerEventType.LayerRemoved)
+        };
+
+        layer.OnLayerAdded += e =>
+        {
+            Console.WriteLine("Layer added");
+        };
+
+        layer.OnLayerRemoved += e =>
+        {
+            Console.WriteLine("Layer removed");
+        };
+
+        await events.Map.AddLayerAsync(layer);
+
+        System.Threading.Thread.Sleep(10000);
+
+        await events.Map.RemoveLayersAsync(layer);
+    }
+}
+```
+
+The following table shows the implementation status for each type of layer
+
+| Type of layer | Status |
+| -- | -- |
+| BubbleLayer | To do |
+| HeatmapLayer | To do |
+| **ImageLayer** | **Done** |
+| LineLayer | To do |
+| PolygonExtrusionLayer | To do |
+| PolygonLayer | To do |
+| SymbolLayer | To do |
+| **TileLayer** | **Done** |

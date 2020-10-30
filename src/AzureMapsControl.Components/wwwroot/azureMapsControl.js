@@ -414,6 +414,10 @@ window.azureMapsControl = {
             case 'tileLayer':
                 layer = new atlas.layer.TileLayer(layerOptions, id);
                 break;
+
+            case 'imageLayer':
+                layer = new atlas.layer.ImageLayer(layerOptions, id);
+                break;
         }
         if (layer) {
             enabledEvents.forEach(layerEvent => {

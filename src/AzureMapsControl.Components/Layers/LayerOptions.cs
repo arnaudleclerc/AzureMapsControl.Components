@@ -21,5 +21,7 @@
         /// Specifies if the layer is visible or not.
         /// </summary>
         public bool? Visible { get; set; }
+
+        internal virtual object GenerateJsOptions() => this;
     }
 }
