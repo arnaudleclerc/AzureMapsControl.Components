@@ -15,7 +15,7 @@
         var layer = new AzureMapsControl.Components.Layers.TileLayer
         {
             Options = new Components.Layers.TileLayerOptions("https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-900913/{z}/{x}/{y}.png"),
-            EventActivationFlags = AzureMapsControl.Components.Layers.TileLayerEventActivationFlags.None.Enable(AzureMapsControl.Components.Layers.TileLayerEventType.LayerAdded, AzureMapsControl.Components.Layers.TileLayerEventType.LayerRemoved)
+            EventActivationFlags = AzureMapsControl.Components.Layers.LayerEventActivationFlags.None.Enable(AzureMapsControl.Components.Layers.LayerEventType.LayerAdded, AzureMapsControl.Components.Layers.LayerEventType.LayerRemoved)
         };
 
         layer.OnLayerAdded += e =>

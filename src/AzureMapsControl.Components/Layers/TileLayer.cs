@@ -5,9 +5,9 @@
     /// <summary>
     /// Renders raster tiled images on top of the map tiles.
     /// </summary>
-    public sealed class TileLayer : Layer<TileLayerOptions, TileLayerEventActivationFlags>
+    public sealed class TileLayer : Layer<TileLayerOptions>
     {
         public TileLayer() : this(Guid.NewGuid().ToString()) { }
-        public TileLayer(string id) : base(id, LayerType.TileLayer) => EventActivationFlags = TileLayerEventActivationFlags.None;
+        public TileLayer(string id) : base(id, LayerType.TileLayer) { }
     }
 }

@@ -853,7 +853,7 @@
             before,
             layer.Type.ToString(),
             layer.GetLayerOptions().GenerateJsOptions(),
-            layer.GetEnabledEvents(),
+            layer.EventActivationFlags.EnabledEvents,
             DotNetObjectReference.Create(_layerEventInvokeHelper));
     }
 

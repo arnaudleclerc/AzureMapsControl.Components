@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
 
-    using AzureMapsControl.Components.Events;
     using AzureMapsControl.Components.Map;
 
     public delegate void LayerMouseEvent(MapMouseEventArgs eventArgs);
@@ -13,6 +12,8 @@
     public abstract class Layer
     {
         public string Id { get; }
+        public LayerEventActivationFlags EventActivationFlags { get; set; }
+
         internal LayerType Type { get; private set; }
 
         public event LayerMouseEvent OnClick;
@@ -37,10 +38,10 @@
         {
             Id = string.IsNullOrWhiteSpace(id) ? Guid.NewGuid().ToString() : id;
             Type = type;
+            EventActivationFlags = LayerEventActivationFlags.None;
         }
 
         internal abstract LayerOptions GetLayerOptions();
-        internal abstract IEnumerable<string> GetEnabledEvents();
 
         internal void DispatchEvent(Map map, MapJsEventArgs eventArgs)
         {
@@ -118,20 +119,7 @@
     }
 
     public abstract class Layer<T> : Layer
-        where T : EventActivationFlags
-    {
-        public T EventActivationFlags { get; set; }
-        internal Layer(string id, LayerType type) : base(id, type)
-        {
-        }
-
-        internal override IEnumerable<string> GetEnabledEvents() => EventActivationFlags.EnabledEvents;
-
-    }
-
-    public abstract class Layer<T, U> : Layer<U>
         where T : LayerOptions
-        where U : EventActivationFlags
     {
         public T Options { get; set; }
 
