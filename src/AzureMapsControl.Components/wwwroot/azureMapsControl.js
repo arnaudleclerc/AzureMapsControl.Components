@@ -433,6 +433,12 @@ window.azureMapsControl = {
     removeLayers: function (ids) {
         this._map.layers.remove(ids);
     },
+    addDataSource: function (id, options) {
+        this._map.sources.add(new atlas.source.DataSource(id, options));
+    },
+    dataSource_importDataFromUrl(id, url) {
+        this._map.sources.getById(id).importDataFromUrl(url);
+    },
     _addLayerEvent: function (key, layer, eventHelper) {
         this._map.events.add(key, layer, e => {
             eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(key, {

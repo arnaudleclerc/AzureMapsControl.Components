@@ -20,6 +20,8 @@
         internal const string MethodUpdateDrawingToolbar = "updateDrawingToolbar";
         internal const string MethodAddLayer = "addLayer";
         internal const string MethodRemoveLayers = "removeLayers";
+        internal const string MethodAddDataSource = "addDataSource";
+        internal const string MethodDataSourceImportDataFromUrl = "dataSource_importDataFromUrl";
 
         /// <summary>
         /// Register the configuration to use the AzureMapsControl components

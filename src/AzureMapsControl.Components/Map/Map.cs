@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Atlas;
+    using AzureMapsControl.Components.Data;
     using AzureMapsControl.Components.Drawing;
     using AzureMapsControl.Components.Layers;
     using AzureMapsControl.Components.Markers;
@@ -22,9 +23,12 @@
         private readonly Func<DrawingToolbarOptions, Task> _addDrawingToolbarCallback;
         private readonly Func<DrawingToolbarUpdateOptions, Task> _updateDrawingToolbarCallback;
         private readonly Func<Layer, string, Task> _addLayerCallback;
-        private readonly Func<IEnumerable<string>, Task> _removeLayersAsync;
+        private readonly Func<IEnumerable<string>, Task> _removeLayersCallback;
+        private readonly Func<DataSource, Task> _addDataSourceCallback;
+        private readonly Func<string, string, Task> _dataSource_ImportDataFromUrlCallback;
 
         private readonly List<Layer> _layers;
+        private readonly List<DataSource> _dataSources;
 
         /// <summary>
         /// ID of the map
@@ -39,25 +43,31 @@
 
         public IReadOnlyCollection<Layer> Layers => _layers;
 
+        public IReadOnlyCollection<DataSource> DataSources => _dataSources;
+
         internal Map(string id,
             Func<IEnumerable<Control>, Task> addControlsCallback,
             Func<IEnumerable<HtmlMarker>, Task> addHtmlMarkersCallback,
             Func<IEnumerable<HtmlMarkerUpdate>, Task> updateHtmlMarkersCallback,
             Func<IEnumerable<HtmlMarker>, Task> removeHtmlMarkersCallback,
-            Func<DrawingToolbarOptions, Task> addDrawingToolbarAsync,
-            Func<DrawingToolbarUpdateOptions, Task> updateDrawingToolbarAsync,
+            Func<DrawingToolbarOptions, Task> addDrawingToolbarCallback,
+            Func<DrawingToolbarUpdateOptions, Task> updateDrawingToolbarCallback,
             Func<Layer, string, Task> addLayerCallback,
-            Func<IEnumerable<string>, Task> removeLayersAsync)
+            Func<IEnumerable<string>, Task> removeLayersCallback,
+            Func<DataSource, Task> addDataSourceCallback,
+            Func<string, string, Task> dataSource_ImportDataFromUrlCallback)
         {
             Id = id;
             _addControlsCallback = addControlsCallback;
             _addHtmlMarkersCallback = addHtmlMarkersCallback;
             _updateHtmlMarkersCallback = updateHtmlMarkersCallback;
             _removeHtmlMarkersCallback = removeHtmlMarkersCallback;
-            _addDrawingToolbarCallback = addDrawingToolbarAsync;
-            _updateDrawingToolbarCallback = updateDrawingToolbarAsync;
+            _addDrawingToolbarCallback = addDrawingToolbarCallback;
+            _updateDrawingToolbarCallback = updateDrawingToolbarCallback;
             _addLayerCallback = addLayerCallback;
-            _removeLayersAsync = removeLayersAsync;
+            _removeLayersCallback = removeLayersCallback;
+            _addDataSourceCallback = addDataSourceCallback;
+            _dataSource_ImportDataFromUrlCallback = dataSource_ImportDataFromUrlCallback;
             _layers = new List<Layer>();
         }
 
@@ -213,11 +223,50 @@
         public async Task<IEnumerable<Layer>> RemoveLayersAsync(params string[] layerIds)
         {
             var layers = _layers.Where(l => layerIds.Contains(l.Id));
-            if(layers.Any())
+            if (layers.Any())
             {
-                await _removeLayersAsync(layers.Select(l => l.Id));
+                await _removeLayersCallback.Invoke(layers.Select(l => l.Id));
+                _layers.RemoveAll(l => layerIds.Contains(l.Id));
             }
             return layers;
+        }
+
+        /// <summary>
+        /// Add a data source to the map
+        /// </summary>
+        /// <param name="dataSource">Data source to add</param>
+        /// <returns></returns>
+        public async Task AddDataSourceAsync(DataSource dataSource)
+        {
+            if (_dataSources.Any(ds => ds.Id == dataSource.Id))
+            {
+                throw new ArgumentException("A data source with the given ID has already been added");
+            }
+
+            _dataSources.Add(dataSource);
+            await _addDataSourceCallback(dataSource);
+        }
+
+        /// <summary>
+        /// Imports data from an URL into a data source
+        /// </summary>
+        /// <param name="dataSource">Data source on which the data will be imported</param>
+        /// <param name="url">Url to import the data from</param>
+        /// <returns></returns>
+        public async Task ImportDataFromUrlForDataSourceAsync(DataSource dataSource, string url) => await ImportDataFromUrlForDataSourceAsync(dataSource.Id, url);
+
+        /// <summary>
+        /// Imports data from an URL into a data source
+        /// </summary>
+        /// <param name="dataSourceId">ID of the data source on which the data will be imported</param>
+        /// <param name="url">Url to import the data from</param>
+        /// <returns></returns>
+        public async Task ImportDataFromUrlForDataSourceAsync(string dataSourceId, string url)
+        {
+            if(_dataSources.Any(ds => ds.Id == dataSourceId))
+            {
+                await _dataSource_ImportDataFromUrlCallback.Invoke(dataSourceId, url);
+            }
         }
 
     }
