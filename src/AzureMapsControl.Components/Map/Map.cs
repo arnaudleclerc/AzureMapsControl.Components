@@ -22,6 +22,7 @@
         private readonly Func<DrawingToolbarOptions, Task> _addDrawingToolbarCallback;
         private readonly Func<DrawingToolbarUpdateOptions, Task> _updateDrawingToolbarCallback;
         private readonly Func<Layer, string, Task> _addLayerCallback;
+        private readonly Func<IEnumerable<string>, Task> _removeLayersAsync;
 
         private readonly List<Layer> _layers;
 
@@ -45,7 +46,8 @@
             Func<IEnumerable<HtmlMarker>, Task> removeHtmlMarkersCallback,
             Func<DrawingToolbarOptions, Task> addDrawingToolbarAsync,
             Func<DrawingToolbarUpdateOptions, Task> updateDrawingToolbarAsync,
-            Func<Layer, string, Task> addLayerCallback)
+            Func<Layer, string, Task> addLayerCallback,
+            Func<IEnumerable<string>, Task> removeLayersAsync)
         {
             Id = id;
             _addControlsCallback = addControlsCallback;
@@ -55,6 +57,7 @@
             _addDrawingToolbarCallback = addDrawingToolbarAsync;
             _updateDrawingToolbarCallback = updateDrawingToolbarAsync;
             _addLayerCallback = addLayerCallback;
+            _removeLayersAsync = removeLayersAsync;
             _layers = new List<Layer>();
         }
 
@@ -193,6 +196,28 @@
 
             _layers.Add(layer);
             await _addLayerCallback.Invoke(layer, before);
+        }
+
+        /// <summary>
+        /// Remove layers from the map
+        /// </summary>
+        /// <param name="layers">Layers to remove</param>
+        /// <returns>Layers removed from the map</returns>
+        public async Task<IEnumerable<Layer>> RemoveLayersAsync(params Layer[] layers) => await RemoveLayersAsync(layers?.Select(l => l.Id).ToArray());
+
+        /// <summary>
+        /// Remove layers from the map
+        /// </summary>
+        /// <param name="layerIds">ID of the layers to remove</param>
+        /// <returns>Layers removed from the map</returns>
+        public async Task<IEnumerable<Layer>> RemoveLayersAsync(params string[] layerIds)
+        {
+            var layers = _layers.Where(l => layerIds.Contains(l.Id));
+            if(layers.Any())
+            {
+                await _removeLayersAsync(layers.Select(l => l.Id));
+            }
+            return layers;
         }
 
     }

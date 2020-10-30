@@ -722,7 +722,8 @@
                 RemoveHtmlMarkersAsync,
                 AddDrawingToolbarAsync,
                 UpdateDrawingToolbarAsync,
-                AddLayerAsync)
+                AddLayerAsync,
+                RemoveLayersAsync)
             {
                 Controls = Controls,
                 HtmlMarkers = HtmlMarkers,
@@ -739,11 +740,11 @@
     private async Task LayerEventReceivedAsync(MapJsEventArgs eventArgs)
     {
         var layer = MapService.Map.Layers.FirstOrDefault(l => l.Id == eventArgs.LayerId);
-        if(layer != null)
+        if (layer != null)
         {
             await Task.Run(() =>
             {
-               layer.DispatchEvent(MapService.Map, eventArgs); 
+                layer.DispatchEvent(MapService.Map, eventArgs);
             });
         }
     }
@@ -853,6 +854,9 @@
             layer.GetEnabledEvents(),
             DotNetObjectReference.Create(_layerEventInvokeHelper));
     }
+
+    private async Task RemoveLayersAsync(IEnumerable<string> layerIds) =>
+        await JSRuntime.InvokeVoidAsync(Extensions.MethodRemoveLayers.ToAzureMapsControlNamespace(), layerIds);
 
     private async Task DispatchMapEventAsync(MapJsEventArgs mapEvent)
     {
