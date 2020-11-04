@@ -2,9 +2,17 @@
 {
     using System.Collections.Generic;
 
-    public class LineString : Geometry
+    public sealed class LineString : Geometry
     {
         public IEnumerable<Position> Coordinates { get; set; }
         public BoundingBox BBox { get; set; }
+
+        public LineString() { }
+
+        public LineString(IEnumerable<Position> coordinates) => Coordinates = coordinates;
+
+        public LineString(IEnumerable<Position> coordinates, BoundingBox bbox): this(coordinates) => BBox = bbox;
+
+        internal override string GetGeometryType() => "LineString";
     }
 }

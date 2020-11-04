@@ -22,6 +22,7 @@
         internal const string MethodRemoveLayers = "removeLayers";
         internal const string MethodAddDataSource = "addDataSource";
         internal const string MethodDataSourceImportDataFromUrl = "dataSource_importDataFromUrl";
+        internal const string MethodDataSourceAdd = "dataSource_add";
 
         /// <summary>
         /// Register the configuration to use the AzureMapsControl components

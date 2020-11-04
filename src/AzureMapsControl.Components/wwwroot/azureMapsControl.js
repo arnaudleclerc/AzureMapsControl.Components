@@ -436,6 +436,9 @@ window.azureMapsControl = {
     addDataSource: function (id, options) {
         this._map.sources.add(new atlas.source.DataSource(id, options));
     },
+    dataSource_add(id, geometries) {
+        this._map.sources.getById(id).add(geometries);
+    },
     dataSource_importDataFromUrl(id, url) {
         this._map.sources.getById(id).importDataFromUrl(url);
     },

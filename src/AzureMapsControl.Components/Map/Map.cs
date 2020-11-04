@@ -25,7 +25,6 @@
         private readonly Func<Layer, string, Task> _addLayerCallback;
         private readonly Func<IEnumerable<string>, Task> _removeLayersCallback;
         private readonly Func<DataSource, Task> _addDataSourceCallback;
-        private readonly Func<string, string, Task> _dataSource_ImportDataFromUrlCallback;
 
         private readonly List<Layer> _layers;
         private readonly List<DataSource> _dataSources;
@@ -54,8 +53,7 @@
             Func<DrawingToolbarUpdateOptions, Task> updateDrawingToolbarCallback,
             Func<Layer, string, Task> addLayerCallback,
             Func<IEnumerable<string>, Task> removeLayersCallback,
-            Func<DataSource, Task> addDataSourceCallback,
-            Func<string, string, Task> dataSource_ImportDataFromUrlCallback)
+            Func<DataSource, Task> addDataSourceCallback)
         {
             Id = id;
             _addControlsCallback = addControlsCallback;
@@ -67,7 +65,6 @@
             _addLayerCallback = addLayerCallback;
             _removeLayersCallback = removeLayersCallback;
             _addDataSourceCallback = addDataSourceCallback;
-            _dataSource_ImportDataFromUrlCallback = dataSource_ImportDataFromUrlCallback;
             _layers = new List<Layer>();
         }
 
@@ -245,28 +242,6 @@
 
             _dataSources.Add(dataSource);
             await _addDataSourceCallback(dataSource);
-        }
-
-        /// <summary>
-        /// Imports data from an URL into a data source
-        /// </summary>
-        /// <param name="dataSource">Data source on which the data will be imported</param>
-        /// <param name="url">Url to import the data from</param>
-        /// <returns></returns>
-        public async Task ImportDataFromUrlForDataSourceAsync(DataSource dataSource, string url) => await ImportDataFromUrlForDataSourceAsync(dataSource.Id, url);
-
-        /// <summary>
-        /// Imports data from an URL into a data source
-        /// </summary>
-        /// <param name="dataSourceId">ID of the data source on which the data will be imported</param>
-        /// <param name="url">Url to import the data from</param>
-        /// <returns></returns>
-        public async Task ImportDataFromUrlForDataSourceAsync(string dataSourceId, string url)
-        {
-            if(_dataSources.Any(ds => ds.Id == dataSourceId))
-            {
-                await _dataSource_ImportDataFromUrlCallback.Invoke(dataSourceId, url);
-            }
         }
 
     }

@@ -2,9 +2,22 @@
 {
     using System.Collections.Generic;
 
-    public class MultiPolygon : Geometry
+    public sealed class MultiPolygon : Geometry
     {
-        public IEnumerable<IEnumerable<IEnumerable<Position>>> Coordinates { get; set; }
-        public BoundingBox BBox { get; set; }
+        public IEnumerable<IEnumerable<IEnumerable<Position>>> Coordinates
+        {
+            get; set;
+        }
+        public BoundingBox BBox
+        {
+            get; set;
+        }
+        public MultiPolygon()
+        {
+        }
+        public MultiPolygon(IEnumerable<IEnumerable<IEnumerable<Position>>> coordinates) => Coordinates = coordinates;
+        public MultiPolygon(IEnumerable<IEnumerable<IEnumerable<Position>>> coordinates, BoundingBox bbox) : this(coordinates) => BBox = bbox;
+
+        internal override string GetGeometryType() => "MutliPolygon";
     }
 }

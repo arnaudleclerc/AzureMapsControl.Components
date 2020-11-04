@@ -724,8 +724,7 @@
                 UpdateDrawingToolbarAsync,
                 AddLayerAsync,
                 RemoveLayersAsync,
-                AddDataSourceAsync,
-                DataSource_ImportDataFromUrlAsync)
+                AddDataSourceAsync)
             {
                 Controls = Controls,
                 HtmlMarkers = HtmlMarkers,
@@ -860,11 +859,18 @@
     private async Task RemoveLayersAsync(IEnumerable<string> layerIds) =>
         await JSRuntime.InvokeVoidAsync(Extensions.MethodRemoveLayers.ToAzureMapsControlNamespace(), layerIds);
 
-    private async Task AddDataSourceAsync(AzureMapsControl.Components.Data.DataSource dataSource) =>
+    private async Task AddDataSourceAsync(AzureMapsControl.Components.Data.DataSource dataSource)
+    {
         await JSRuntime.InvokeVoidAsync(Extensions.MethodAddDataSource.ToAzureMapsControlNamespace(), dataSource.Id, dataSource.Options);
+        dataSource.ImportDataFromUrlCallback = DataSource_ImportDataFromUrlAsync;
+        dataSource.AddCallback = DataSource_AddAsync;
+    }
 
     private async Task DataSource_ImportDataFromUrlAsync(string id, string url)
         => await JSRuntime.InvokeVoidAsync(Extensions.MethodDataSourceImportDataFromUrl.ToAzureMapsControlNamespace(), id, url);
+
+    private async Task DataSource_AddAsync(string id, IEnumerable<Geometry> geometries) => 
+        await JSRuntime.InvokeVoidAsync(Extensions.MethodDataSourceAdd.ToAzureMapsControlNamespace(), id, geometries);
 
     private async Task DispatchMapEventAsync(MapJsEventArgs mapEvent)
     {
