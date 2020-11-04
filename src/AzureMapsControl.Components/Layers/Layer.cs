@@ -1,7 +1,6 @@
 ﻿namespace AzureMapsControl.Components.Layers
 {
     using System;
-    using System.Collections.Generic;
 
     using AzureMapsControl.Components.Map;
 

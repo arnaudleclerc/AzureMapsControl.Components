@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Atlas;
@@ -29,9 +30,11 @@
 
         public DataSource(string id) => Id = id;
 
+        public async Task AddAsync(IEnumerable<Geometry> geometries) => await AddAsync(geometries.ToArray());
+
         public async Task AddAsync(params Geometry[] geometries)
         {
-            if(_geometries == null)
+            if (_geometries == null)
             {
                 _geometries = new List<Geometry>();
             }

@@ -66,6 +66,7 @@
             _removeLayersCallback = removeLayersCallback;
             _addDataSourceCallback = addDataSourceCallback;
             _layers = new List<Layer>();
+            _dataSources = new List<DataSource>();
         }
 
         /// <summary>

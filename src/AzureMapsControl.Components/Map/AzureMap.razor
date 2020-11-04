@@ -869,8 +869,44 @@
     private async Task DataSource_ImportDataFromUrlAsync(string id, string url)
         => await JSRuntime.InvokeVoidAsync(Extensions.MethodDataSourceImportDataFromUrl.ToAzureMapsControlNamespace(), id, url);
 
-    private async Task DataSource_AddAsync(string id, IEnumerable<Geometry> geometries) => 
-        await JSRuntime.InvokeVoidAsync(Extensions.MethodDataSourceAdd.ToAzureMapsControlNamespace(), id, geometries);
+    private async Task DataSource_AddAsync(string id, IEnumerable<Geometry> geometries)
+    {
+        var lineStrings = geometries.OfType<LineString>();
+        if (lineStrings.Any())
+        {
+            await JSRuntime.InvokeVoidAsync(Extensions.MethodDataSourceAdd.ToAzureMapsControlNamespace(), id, lineStrings);
+        }
+
+        var multiLineStrings = geometries.OfType<MultiLineString>();
+        if (multiLineStrings.Any())
+        {
+            await JSRuntime.InvokeVoidAsync(Extensions.MethodDataSourceAdd.ToAzureMapsControlNamespace(), id, multiLineStrings);
+        }
+
+        var multiPoints = geometries.OfType<MultiPoint>();
+        if (multiPoints.Any())
+        {
+            await JSRuntime.InvokeVoidAsync(Extensions.MethodDataSourceAdd.ToAzureMapsControlNamespace(), id, multiPoints);
+        }
+
+        var multiPolygons = geometries.OfType<MultiPolygon>();
+        if (multiPolygons.Any())
+        {
+            await JSRuntime.InvokeVoidAsync(Extensions.MethodDataSourceAdd.ToAzureMapsControlNamespace(), id, multiPolygons);
+        }
+
+        var points = geometries.OfType<Point>();
+        if (points.Any())
+        {
+            await JSRuntime.InvokeVoidAsync(Extensions.MethodDataSourceAdd.ToAzureMapsControlNamespace(), id, points);
+        }
+
+        var polygons = geometries.OfType<Polygon>();
+        if (polygons.Any())
+        {
+            await JSRuntime.InvokeVoidAsync(Extensions.MethodDataSourceAdd.ToAzureMapsControlNamespace(), id, polygons);
+        }
+    }
 
     private async Task DispatchMapEventAsync(MapJsEventArgs mapEvent)
     {

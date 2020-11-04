@@ -418,6 +418,10 @@ window.azureMapsControl = {
             case 'imageLayer':
                 layer = new atlas.layer.ImageLayer(layerOptions, id);
                 break;
+
+            case 'bubbleLayer':
+                layer = new atlas.layer.BubbleLayer(this._map.sources.getById(layerOptions.source), id, layerOptions);
+                break;
         }
         if (layer) {
             enabledEvents.forEach(layerEvent => {
@@ -437,7 +441,35 @@ window.azureMapsControl = {
         this._map.sources.add(new atlas.source.DataSource(id, options));
     },
     dataSource_add(id, geometries) {
-        this._map.sources.getById(id).add(geometries);
+        const shapes = [];
+        for (const geometry of geometries) {
+            switch (geometry.type) {
+                case 'Point':
+                    shapes.push(new atlas.Shape(new atlas.data.Point(new atlas.data.Position(geometry.coordinates.longitude, geometry.coordinates.latitude, geometry.coordinates.elevation))));
+                    break;
+                //TODO : Those ones need to be fixed and tested
+                //case 'LineString':
+                //    shapes.push(new atlas.Shape(new atlas.data.LineString(geometry.coordinates.map(c => new atlas.data.Position(c.longitude, c.latitude, c.elevation)), new atlas.data.BoundingBox(new atlas.data.Position(geometry.bbox.south, geometry.bbox.west), new atlas.data.Position(geometry.bbox.north, geometry.bbox.east)))));
+                //    break;
+
+                //case 'Polygon':
+                //    shapes.push(new atlas.Shape(new atlas.data.Polygon(geometry.coordinates, geometry.bbox)));
+                //    break;
+
+                //case 'MultiPoint':
+                //    shapes.push(new atlas.Shape(new atlas.data.MultiPoint(geometry.coordinates, geometry.bbox)));
+                //    break;
+
+                //case 'MultiLineString':
+                //    shapes.push(new atlas.Shape(new atlas.data.MultiLineString(geometry.coordinates, geometry.bbox)));
+                //    break;
+
+                //case 'MultiPolygon':
+                //    shapes.push(new atlas.Shape(new atlas.data.MultiPolygon(geometry.coordinates, geometry.bbox)));
+                //    break;
+            }
+        }
+        this._map.sources.getById(id).add(shapes);
     },
     dataSource_importDataFromUrl(id, url) {
         this._map.sources.getById(id).importDataFromUrl(url);

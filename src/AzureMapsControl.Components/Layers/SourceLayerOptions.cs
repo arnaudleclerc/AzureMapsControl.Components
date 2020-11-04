@@ -1,11 +1,14 @@
 ﻿namespace AzureMapsControl.Components.Layers
 {
     /// <summary>
-    /// Options used when rendering Point objects in a HeatMapLayer.
+    /// A base class which all source layer options inherit from
     /// </summary>
-    public sealed class HeatmapLayerOptions
+    public abstract class SourceLayerOptions : LayerOptions
     {
-
+        /// <summary>
+        /// ID of the datasource which the layer will render.
+        /// </summary>
+        public string Source { get; set; }
 
         /// <summary>
         /// Required when the source of the layer is a VectorTileSource.

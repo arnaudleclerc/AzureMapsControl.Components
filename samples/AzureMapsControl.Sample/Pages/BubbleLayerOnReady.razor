@@ -1,0 +1,41 @@
+﻿@page "/BubbleLayerOnReady"
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          Zoom="2"
+          EventActivationFlags="MapEventActivationFlags
+                                .None
+                                .Enable(MapEventType.Ready)"
+          OnReady="OnMapReady" />
+
+@code  {
+    public async Task OnMapReady(MapEventArgs events)
+    {
+        const string dataSourceId = "bubbleDataSource";
+        var dataSource = new AzureMapsControl.Components.Data.DataSource(dataSourceId);
+        await events.Map.AddDataSourceAsync(dataSource);
+
+
+        var geometries = new List<AzureMapsControl.Components.Atlas.Geometry>();
+        for (var i = 0; i < 10; i++)
+        {
+            geometries.Add(new AzureMapsControl.Components.Atlas.Point(new Components.Atlas.Position(i * 5, i * 5)));
+        }
+
+        await dataSource.AddAsync(geometries);
+
+        var layer = new AzureMapsControl.Components.Layers.BubbleLayer
+        {
+            Options = new Components.Layers.BubbleLayerOptions
+            {
+                Color = "white",
+                Radius = 5,
+                StrokeColor = "#4288f7",
+                StrokeWidth = 6,
+                Source = dataSourceId
+            }
+        };
+
+        await events.Map.AddLayerAsync(layer);
+    }
+}
