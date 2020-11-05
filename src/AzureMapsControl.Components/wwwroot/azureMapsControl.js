@@ -426,6 +426,10 @@ window.azureMapsControl = {
             case 'heatmapLayer':
                 layer = new atlas.layer.HeatMapLayer(this._map.sources.getById(layerOptions.source), id, layerOptions);
                 break;
+
+            case 'lineLayer':
+                layer = new atlas.layer.LineLayer(this._map.sources.getById(layerOptions.source), id, layerOptions);
+                break;
         }
         if (layer) {
             enabledEvents.forEach(layerEvent => {
@@ -449,13 +453,24 @@ window.azureMapsControl = {
         for (const geometry of geometries) {
             switch (geometry.type) {
                 case 'Point':
-                    shapes.push(new atlas.Shape(new atlas.data.Point(new atlas.data.Position(geometry.coordinates.longitude, geometry.coordinates.latitude, geometry.coordinates.elevation))));
+                    shapes.push(new atlas.data.Point(new atlas.data.Position(geometry.coordinates.longitude, geometry.coordinates.latitude, geometry.coordinates.elevation)));
                     break;
-                //TODO : Those ones need to be fixed and tested
-                //case 'LineString':
-                //    shapes.push(new atlas.Shape(new atlas.data.LineString(geometry.coordinates.map(c => new atlas.data.Position(c.longitude, c.latitude, c.elevation)), new atlas.data.BoundingBox(new atlas.data.Position(geometry.bbox.south, geometry.bbox.west), new atlas.data.Position(geometry.bbox.north, geometry.bbox.east)))));
-                //    break;
 
+                case 'LineString':
+                    shapes.push(
+                        new atlas.data.LineString(
+                            geometry.coordinates.map(
+                                c => new atlas.data.Position(c.longitude, c.latitude, c.elevation)
+                            ),
+                            geometry.bbox ? new atlas.data.BoundingBox(
+                                new atlas.data.Position(geometry.bbox.south, geometry.bbox.west)
+                                , new atlas.data.Position(geometry.bbox.north, geometry.bbox.east)
+                            ) : null
+                        )
+                    );
+                    break;
+
+                //TODO : Those ones need to be fixed and tested
                 //case 'Polygon':
                 //    shapes.push(new atlas.Shape(new atlas.data.Polygon(geometry.coordinates, geometry.bbox)));
                 //    break;

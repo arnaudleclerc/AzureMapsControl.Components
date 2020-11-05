@@ -1,5 +1,10 @@
 ﻿namespace AzureMapsControl.Components.Atlas
 {
+    using System;
+    using System.Text.Json;
+    using System.Text.Json.Serialization;
+
+    [JsonConverter(typeof(PitchAlignmentJsonConverter))]
     public sealed class PitchAlignment
     {
         private readonly string _type;
@@ -27,5 +32,12 @@
 
             return ViewPort.ToString() == type ? ViewPort : null;
         }
+    }
+
+    internal class PitchAlignmentJsonConverter : JsonConverter<PitchAlignment>
+    {
+        public override PitchAlignment Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => PitchAlignment.FromString(reader.GetString());
+
+        public override void Write(Utf8JsonWriter writer, PitchAlignment value, JsonSerializerOptions options) => writer.WriteStringValue(value.ToString());
     }
 }

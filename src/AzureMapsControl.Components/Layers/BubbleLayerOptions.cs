@@ -38,12 +38,10 @@
         /// </summary>
         public ExpressionOrNumber StrokeWidth { get; set; }
 
-        internal string PitchAlignment { get => PitchAlignmentType.ToString(); set => PitchAlignmentType = Atlas.PitchAlignment.FromString(value); }
-
         /// <summary>
         /// Specifies the orientation of circle when map is pitched.
         /// </summary>
-        public PitchAlignment PitchAlignmentType { get; set; }
+        public PitchAlignment PitchAlignment { get; set; }
 
         /// <summary>
         /// The radius of the circle symbols in pixels.

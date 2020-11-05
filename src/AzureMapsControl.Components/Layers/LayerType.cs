@@ -7,6 +7,7 @@
         internal static LayerType BubbleLayer = new LayerType("bubbleLayer");
         internal static LayerType HeatmapLayer = new LayerType("heatmapLayer");
         internal static LayerType ImageLayer = new LayerType("imageLayer");
+        internal static LayerType LineLayer = new LayerType("lineLayer");
         internal static LayerType TileLayer = new LayerType("tileLayer");
 
         private LayerType(string type) => _type = type;
