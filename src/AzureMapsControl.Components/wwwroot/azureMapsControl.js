@@ -470,6 +470,22 @@ window.azureMapsControl = {
                     );
                     break;
 
+                case 'Polygon':
+                    shapes.push(
+                        new atlas.data.Polygon(
+                            geometry.coordinates.map(
+                                c => c.map(
+                                    p => new atlas.data.Position(p.longitude, p.latitude, p.elevation)
+                                )
+                            ),
+                            geometry.bbox ? new atlas.data.BoundingBox(
+                                new atlas.data.Position(geometry.bbox.south, geometry.bbox.west)
+                                , new atlas.data.Position(geometry.bbox.north, geometry.bbox.east)
+                            ) : null
+                        )
+                    );
+                    break;
+
                 //TODO : Those ones need to be fixed and tested
                 //case 'Polygon':
                 //    shapes.push(new atlas.Shape(new atlas.data.Polygon(geometry.coordinates, geometry.bbox)));
