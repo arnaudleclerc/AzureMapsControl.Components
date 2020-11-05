@@ -486,14 +486,19 @@ window.azureMapsControl = {
                     );
                     break;
 
-                //TODO : Those ones need to be fixed and tested
-                //case 'Polygon':
-                //    shapes.push(new atlas.Shape(new atlas.data.Polygon(geometry.coordinates, geometry.bbox)));
-                //    break;
-
-                //case 'MultiPoint':
-                //    shapes.push(new atlas.Shape(new atlas.data.MultiPoint(geometry.coordinates, geometry.bbox)));
-                //    break;
+                case 'MultiPoint':
+                    shapes.push(
+                        new atlas.data.MultiPoint(
+                            geometry.coordinates.map(
+                                c => new atlas.data.Position(c.longitude, c.latitude, c.elevation)
+                            ),
+                            geometry.bbox ? new atlas.data.BoundingBox(
+                                new atlas.data.Position(geometry.bbox.south, geometry.bbox.west)
+                                , new atlas.data.Position(geometry.bbox.north, geometry.bbox.east)
+                            ) : null
+                        )
+                    );
+                    break;
 
                 //case 'MultiLineString':
                 //    shapes.push(new atlas.Shape(new atlas.data.MultiLineString(geometry.coordinates, geometry.bbox)));
