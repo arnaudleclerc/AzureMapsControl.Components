@@ -516,9 +516,23 @@ window.azureMapsControl = {
                     );
                     break;
 
-                //case 'MultiPolygon':
-                //    shapes.push(new atlas.Shape(new atlas.data.MultiPolygon(geometry.coordinates, geometry.bbox)));
-                //    break;
+                case 'MultiPolygon':
+                    shapes.push(
+                        new atlas.data.Polygon(
+                            geometry.coordinates.map(
+                                c => c.map(
+                                    r => r.map(
+                                        p => new atlas.data.Position(p.longitude, p.latitude, p.elevation)
+                                    )
+                                )
+                            ),
+                            geometry.bbox ? new atlas.data.BoundingBox(
+                                new atlas.data.Position(geometry.bbox.south, geometry.bbox.west)
+                                , new atlas.data.Position(geometry.bbox.north, geometry.bbox.east)
+                            ) : null
+                        )
+                    );
+                    break;
             }
         }
         this._map.sources.getById(id).add(shapes);
