@@ -422,6 +422,10 @@ window.azureMapsControl = {
             case 'bubbleLayer':
                 layer = new atlas.layer.BubbleLayer(this._map.sources.getById(layerOptions.source), id, layerOptions);
                 break;
+
+            case 'heatmapLayer':
+                layer = new atlas.layer.HeatMapLayer(this._map.sources.getById(layerOptions.source), id, layerOptions);
+                break;
         }
         if (layer) {
             enabledEvents.forEach(layerEvent => {

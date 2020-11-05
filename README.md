@@ -654,7 +654,7 @@ The following table shows the implementation status for each type of layer
 | Type of layer | Status |
 | -- | -- |
 | **BubbleLayer** | **Done** |
-| HeatmapLayer | To do |
+| **HeatmapLayer** | **Done** |
 | **ImageLayer** | **Done** |
 | LineLayer | To do |
 | PolygonExtrusionLayer | To do |
