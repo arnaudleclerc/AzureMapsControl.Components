@@ -28,10 +28,10 @@
         {
             Options = new Components.Layers.BubbleLayerOptions
             {
-                Color = "white",
-                Radius = 5,
-                StrokeColor = "#4288f7",
-                StrokeWidth = 6,
+                Color = new Components.Atlas.ExpressionOrString("white"),
+                Radius = new Components.Atlas.ExpressionOrNumber(5),
+                StrokeColor = new Components.Atlas.ExpressionOrString("#4288f7"),
+                StrokeWidth = new Components.Atlas.ExpressionOrNumber(6),
                 Source = dataSourceId
             }
         };
