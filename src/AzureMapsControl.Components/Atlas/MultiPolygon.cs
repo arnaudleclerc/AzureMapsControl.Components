@@ -18,6 +18,6 @@
         public MultiPolygon(IEnumerable<IEnumerable<IEnumerable<Position>>> coordinates) => Coordinates = coordinates;
         public MultiPolygon(IEnumerable<IEnumerable<IEnumerable<Position>>> coordinates, BoundingBox bbox) : this(coordinates) => BBox = bbox;
 
-        internal override string GetGeometryType() => "MutliPolygon";
+        internal override string GetGeometryType() => "MultiPolygon";
     }
 }

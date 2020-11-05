@@ -500,9 +500,21 @@ window.azureMapsControl = {
                     );
                     break;
 
-                //case 'MultiLineString':
-                //    shapes.push(new atlas.Shape(new atlas.data.MultiLineString(geometry.coordinates, geometry.bbox)));
-                //    break;
+                case 'MultiLineString':
+                    shapes.push(
+                        new atlas.data.MultiLineString(
+                            geometry.coordinates.map(
+                                c => c.map(
+                                    p => new atlas.data.Position(p.longitude, p.latitude, p.elevation)
+                                )
+                            ),
+                            geometry.bbox ? new atlas.data.BoundingBox(
+                                new atlas.data.Position(geometry.bbox.south, geometry.bbox.west)
+                                , new atlas.data.Position(geometry.bbox.north, geometry.bbox.east)
+                            ) : null
+                        )
+                    );
+                    break;
 
                 //case 'MultiPolygon':
                 //    shapes.push(new atlas.Shape(new atlas.data.MultiPolygon(geometry.coordinates, geometry.bbox)));

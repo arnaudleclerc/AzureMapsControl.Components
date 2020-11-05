@@ -13,6 +13,6 @@
 
         public MultiPoint(IEnumerable<Position> coordinates, BoundingBox bbox): this(coordinates) => Bbox = bbox;
 
-        internal override string GetGeometryType() => "MutliPoint";
+        internal override string GetGeometryType() => "MultiPoint";
     }
 }

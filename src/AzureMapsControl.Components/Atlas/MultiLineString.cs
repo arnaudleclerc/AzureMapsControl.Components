@@ -20,6 +20,6 @@
 
         public MultiLineString(IEnumerable<IEnumerable<Position>> coordinates, BoundingBox bbox): this(coordinates) => BBox = bbox;
 
-        internal override string GetGeometryType() => "MutliLineString";
+        internal override string GetGeometryType() => "MultiLineString";
     }
 }
