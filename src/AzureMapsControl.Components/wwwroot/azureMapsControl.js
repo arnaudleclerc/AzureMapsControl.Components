@@ -430,6 +430,10 @@ window.azureMapsControl = {
             case 'lineLayer':
                 layer = new atlas.layer.LineLayer(this._map.sources.getById(layerOptions.source), id, layerOptions);
                 break;
+
+            case 'polygonExtrusionLayer':
+                layer = new atlas.layer.PolygonExtrusionLayer(this._map.sources.getById(layerOptions.source), id, layerOptions);
+                break;
         }
         if (layer) {
             enabledEvents.forEach(layerEvent => {
