@@ -12,6 +12,7 @@ steps:
     command: custom
     arguments: install GitVersion.CommandLine -Version 4.0.0 -OutputDirectory $(Build.BinariesDirectory)/tools -ExcludeVersion
 
+- script: apt-get install libcurl3
 - script: mono $(Build.BinariesDirectory)/tools/GitVersion.CommandLine/tools/GitVersion.exe /output buildserver /nofetch
 - script: dotnet build ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj -c Release /p:Version='$(GitVersion.NugetVersion)'
 - script: dotnet pack ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj -c Release --no-build -o '$(build.artifactStagingDirectory)'
