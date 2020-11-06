@@ -15,6 +15,12 @@ steps:
 - script: sudo apt-get install libcurl3
   displayName: 'Install libcurl3'
 
+- task: CopyFiles@2
+  displayName: 'Copy GitVersion.yml'
+  inputs:
+    Contents: 'GitVersion.yml'
+    TargetFolder: $(Build.BinariesDirectory)/tools/GitVersion.CommandLine/tools/
+
 - script: mono $(Build.BinariesDirectory)/tools/GitVersion.CommandLine/tools/GitVersion.exe /output buildserver /nofetch
   displayName: 'Run GitVersion'
 
