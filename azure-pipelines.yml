@@ -15,9 +15,7 @@ steps:
 - script: sudo apt-get install libcurl3
   displayName: 'Install libcurl3'
 
-- script: ls $(Build.BinariesDirectory)/tools/GitVersion.CommandLine/tools
-
-- script: mono $(Build.BinariesDirectory)/tools/GitVersion.CommandLine/tools/GitVersion.exe /output buildserver /nofetch
+- script: mono $(Build.BinariesDirectory)/tools/GitVersion.CommandLine/tools/gitversion.exe /output buildserver /nofetch
   displayName: 'Run GitVersion'
 
 - script: dotnet build ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj -c Release /p:Version='$(GitVersion.NugetVersion)'
