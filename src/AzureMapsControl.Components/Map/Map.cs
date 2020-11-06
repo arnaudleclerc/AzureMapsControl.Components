@@ -44,6 +44,8 @@
 
         public IReadOnlyCollection<DataSource> DataSources => _dataSources;
 
+        internal Map() { }
+
         internal Map(string id,
             Func<IEnumerable<Control>, Task> addControlsCallback,
             Func<IEnumerable<HtmlMarker>, Task> addHtmlMarkersCallback,

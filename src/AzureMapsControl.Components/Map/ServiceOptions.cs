@@ -1,8 +1,11 @@
 ﻿namespace AzureMapsControl.Components.Map
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Global properties used in all atlas service requests.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal class ServiceOptions
     {
         /// <summary>

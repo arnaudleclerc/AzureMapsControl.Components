@@ -1,8 +1,11 @@
 ﻿namespace AzureMapsControl.Components.Layers
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Options used when rendering canvas, image, raster tile, and video layers
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public abstract class MediaLayerOptions : LayerOptions
     {
         /// <summary>

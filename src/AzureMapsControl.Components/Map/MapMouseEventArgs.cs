@@ -1,10 +1,12 @@
 ﻿namespace AzureMapsControl.Components.Map
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     using AzureMapsControl.Components.Atlas;
 
-    public class MapMouseEventArgs : MapEventArgs
+    [ExcludeFromCodeCoverage]
+    public sealed class MapMouseEventArgs : MapEventArgs
     {
         public string LayerId { get; }
         public IEnumerable<Feature> Shapes { get; }

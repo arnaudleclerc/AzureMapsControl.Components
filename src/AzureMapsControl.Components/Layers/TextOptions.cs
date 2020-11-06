@@ -1,10 +1,14 @@
 ﻿namespace AzureMapsControl.Components.Layers
 {
+    using System.Diagnostics.CodeAnalysis;
+
     using AzureMapsControl.Components.Atlas;
 
     /// <summary>
     /// Options used to customize the text in a SymbolLayer
     /// </summary>
+
+    [ExcludeFromCodeCoverage]
     public sealed class TextOptions
     {
         /// <summary>

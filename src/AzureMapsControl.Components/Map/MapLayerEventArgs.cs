@@ -1,6 +1,9 @@
-﻿namespace AzureMapsControl.Components.Map
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace AzureMapsControl.Components.Map
 {
-    public class MapLayerEventArgs : MapEventArgs
+    [ExcludeFromCodeCoverage]
+    public sealed class MapLayerEventArgs : MapEventArgs
     {
         public string Id { get; set; }
 

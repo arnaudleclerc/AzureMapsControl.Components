@@ -1,10 +1,13 @@
 ﻿namespace AzureMapsControl.Components.Layers
 {
+    using System.Diagnostics.CodeAnalysis;
+
     using AzureMapsControl.Components.Atlas;
 
     /// <summary>
     /// Options used to customize the icons in a SymbolLayer
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public sealed class IconOptions
     {
         /// <summary>

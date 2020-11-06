@@ -4,9 +4,9 @@
 
     internal delegate Task MapReadyEvent();
 
-    internal class MapService
+    internal class MapService : IMapService
     {
-        internal Map Map
+        public Map Map
         {
             get;
             private set;

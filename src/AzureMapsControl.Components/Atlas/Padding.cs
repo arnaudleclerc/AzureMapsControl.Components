@@ -1,6 +1,9 @@
 ﻿namespace AzureMapsControl.Components.Atlas
 {
-    public class Padding
+    using System.Diagnostics.CodeAnalysis;
+
+    [ExcludeFromCodeCoverage]
+    public sealed class Padding
     {
         public int Bottom { get; set; }
         public int Left { get; set; }

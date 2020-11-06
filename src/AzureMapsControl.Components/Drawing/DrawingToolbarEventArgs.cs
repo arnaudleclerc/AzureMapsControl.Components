@@ -1,9 +1,12 @@
 ﻿namespace AzureMapsControl.Components.Drawing
 {
+    using System.Diagnostics.CodeAnalysis;
+
     using AzureMapsControl.Components.Atlas;
     using AzureMapsControl.Components.Map;
 
-    public class DrawingToolbarEventArgs : MapEventArgs
+    [ExcludeFromCodeCoverage]
+    public sealed class DrawingToolbarEventArgs : MapEventArgs
     {
         public Feature Data { get; }
 

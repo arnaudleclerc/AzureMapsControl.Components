@@ -1,10 +1,12 @@
 ﻿namespace AzureMapsControl.Components.Map
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     using AzureMapsControl.Components.Atlas;
 
-    public class MapTouchEventArgs : MapEventArgs
+    [ExcludeFromCodeCoverage]
+    public sealed class MapTouchEventArgs : MapEventArgs
     {
         public string LayerId { get; }
         public Pixel Pixel { get; }

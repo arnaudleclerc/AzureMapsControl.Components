@@ -1,9 +1,11 @@
 ﻿namespace AzureMapsControl.Components.Map
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     using AzureMapsControl.Components.Atlas;
 
+    [ExcludeFromCodeCoverage]
     internal class MapJsEventArgs
     {
         public string Error { get; set; }

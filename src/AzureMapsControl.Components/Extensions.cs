@@ -33,7 +33,7 @@
         public static IServiceCollection AddAzureMapsControl(this IServiceCollection services, Action<AzureMapsConfiguration> configure)
         {
             services
-                .AddSingleton<MapService>()
+                .AddSingleton<IMapService, MapService>()
                 .AddOptions<AzureMapsConfiguration>()
                 .Configure(configure);
 

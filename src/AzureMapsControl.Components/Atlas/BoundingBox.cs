@@ -1,6 +1,9 @@
 ﻿namespace AzureMapsControl.Components.Atlas
 {
-    public class BoundingBox
+    using System.Diagnostics.CodeAnalysis;
+
+    [ExcludeFromCodeCoverage]
+    public sealed class BoundingBox
     {
         /// <summary>
         /// The east edge of the bounding box.

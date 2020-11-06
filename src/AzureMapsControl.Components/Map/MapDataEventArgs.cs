@@ -1,11 +1,14 @@
 ﻿namespace AzureMapsControl.Components.Map
 {
+    using System.Diagnostics.CodeAnalysis;
+
     using AzureMapsControl.Components.Atlas;
 
     /// <summary>
     /// Event object returned by the maps when a data event occurs.
     /// </summary>
-    public class MapDataEventArgs : MapEventArgs
+    [ExcludeFromCodeCoverage]
+    public sealed class MapDataEventArgs : MapEventArgs
     {
         /// <summary>
         /// The type of data that has changed.

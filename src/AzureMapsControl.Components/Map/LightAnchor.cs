@@ -1,5 +1,8 @@
 ﻿namespace AzureMapsControl.Components.Map
 {
+    using System.Diagnostics.CodeAnalysis;
+
+    [ExcludeFromCodeCoverage]
     public sealed class LightAnchor
     {
         private readonly string _anchor;

@@ -1,10 +1,13 @@
 ﻿namespace AzureMapsControl.Components.Layers
 {
+    using System.Diagnostics.CodeAnalysis;
+
     using AzureMapsControl.Components.Atlas;
 
     /// <summary>
     /// Options to display a bubble layer
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public sealed class BubbleLayerOptions : SourceLayerOptions
     {
         /// <summary>

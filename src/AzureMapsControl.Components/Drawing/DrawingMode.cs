@@ -1,8 +1,11 @@
 ﻿namespace AzureMapsControl.Components.Drawing
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// An enumeration of the available drawing modes.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public sealed class DrawingMode
     {
         private readonly string _mode;

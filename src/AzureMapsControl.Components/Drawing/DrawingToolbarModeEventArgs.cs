@@ -1,8 +1,11 @@
 ﻿namespace AzureMapsControl.Components.Drawing
 {
+    using System.Diagnostics.CodeAnalysis;
+
     using AzureMapsControl.Components.Map;
 
-    public class DrawingToolbarModeEventArgs : MapEventArgs
+    [ExcludeFromCodeCoverage]
+    public sealed class DrawingToolbarModeEventArgs : MapEventArgs
     {
         public string NewMode { get; }
 

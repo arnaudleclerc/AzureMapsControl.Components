@@ -1,9 +1,13 @@
 ﻿namespace AzureMapsControl.Components.Drawing
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// An enumeration of the available drawing interaction types.
     /// The drawing interaction type specifies how certain drawing modes behave.
     /// </summary>
+
+    [ExcludeFromCodeCoverage]
     public sealed class DrawingInteractionType
     {
         private readonly string _interactionType;

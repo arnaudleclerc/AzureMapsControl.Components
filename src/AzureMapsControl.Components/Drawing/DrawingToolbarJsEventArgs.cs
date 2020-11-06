@@ -1,7 +1,10 @@
 ﻿namespace AzureMapsControl.Components.Drawing
 {
+    using System.Diagnostics.CodeAnalysis;
+
     using AzureMapsControl.Components.Atlas;
 
+    [ExcludeFromCodeCoverage]
     internal class DrawingToolbarJsEventArgs
     {
         public string Type { get; set; }

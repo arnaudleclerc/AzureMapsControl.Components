@@ -1,5 +1,8 @@
 ﻿namespace AzureMapsControl.Components.Events
 {
+    using System.Diagnostics.CodeAnalysis;
+
+    [ExcludeFromCodeCoverage]
     public abstract class AtlasEventType
     {
         private readonly string _event;

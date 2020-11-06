@@ -1,10 +1,12 @@
 ﻿namespace AzureMapsControl.Components.Markers
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Contains the update information of an HtmlMarker
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public sealed class HtmlMarkerUpdate
     {
         internal HtmlMarker Marker { get; }

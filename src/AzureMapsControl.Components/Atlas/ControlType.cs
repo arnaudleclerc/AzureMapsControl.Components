@@ -1,5 +1,8 @@
 ﻿namespace AzureMapsControl.Components.Atlas
 {
+    using System.Diagnostics.CodeAnalysis;
+
+    [ExcludeFromCodeCoverage]
     public sealed class ControlType
     {
         private readonly string _type;

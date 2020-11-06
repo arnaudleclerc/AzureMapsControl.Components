@@ -1,7 +1,10 @@
 ﻿namespace AzureMapsControl.Components.Map
 {
+    using System.Diagnostics.CodeAnalysis;
+
     using AzureMapsControl.Components.Atlas;
 
+    [ExcludeFromCodeCoverage]
     internal class CameraOptions
     {
         public int? Bearing { get; set; }

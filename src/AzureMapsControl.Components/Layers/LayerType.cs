@@ -1,5 +1,8 @@
 ﻿namespace AzureMapsControl.Components.Layers
 {
+    using System.Diagnostics.CodeAnalysis;
+
+    [ExcludeFromCodeCoverage]
     internal sealed class LayerType
     {
         private readonly string _type;

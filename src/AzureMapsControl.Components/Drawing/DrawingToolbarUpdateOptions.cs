@@ -1,9 +1,11 @@
 ﻿namespace AzureMapsControl.Components.Drawing
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     using AzureMapsControl.Components.Atlas;
 
+    [ExcludeFromCodeCoverage]
     public class DrawingToolbarUpdateOptions
     {
         /// <summary>
@@ -38,8 +40,7 @@
 
         public static DrawingToolbarUpdateOptions FromOptions(DrawingToolbarUpdateOptions options)
         {
-            return new DrawingToolbarUpdateOptions 
-            {
+            return new DrawingToolbarUpdateOptions {
                 Buttons = options.Buttons,
                 ContainerId = options.ContainerId,
                 NumColumns = options.NumColumns,

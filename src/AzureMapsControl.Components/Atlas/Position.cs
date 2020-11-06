@@ -1,6 +1,9 @@
 ﻿namespace AzureMapsControl.Components.Atlas
 {
-    public class Position
+    using System.Diagnostics.CodeAnalysis;
+
+    [ExcludeFromCodeCoverage]
+    public sealed class Position
     {
         /// <summary>
         /// The position's elevation.

@@ -1,8 +1,12 @@
 ﻿namespace AzureMapsControl.Components.Traffic
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Type of traffic flow to display
     /// </summary>
+
+    [ExcludeFromCodeCoverage]
     public sealed class TrafficFlow
     {
         private readonly string _flow;

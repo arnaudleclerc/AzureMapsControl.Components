@@ -2,12 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
     using AzureMapsControl.Components.Atlas;
 
     [JsonConverter(typeof(LineCapJsonConverter))]
+    [ExcludeFromCodeCoverage]
     public sealed class LineCap
     {
         private readonly string _type;

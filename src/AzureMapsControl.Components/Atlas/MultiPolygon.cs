@@ -1,7 +1,9 @@
 ﻿namespace AzureMapsControl.Components.Atlas
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
+    [ExcludeFromCodeCoverage]
     public sealed class MultiPolygon : Geometry
     {
         public IEnumerable<IEnumerable<IEnumerable<Position>>> Coordinates

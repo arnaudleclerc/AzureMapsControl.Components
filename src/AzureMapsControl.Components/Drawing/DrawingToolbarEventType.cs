@@ -1,7 +1,10 @@
 ﻿namespace AzureMapsControl.Components.Drawing
 {
+    using System.Diagnostics.CodeAnalysis;
+
     using AzureMapsControl.Components.Events;
 
+    [ExcludeFromCodeCoverage]
     public sealed class DrawingToolbarEventType : AtlasEventType
     {
         public static DrawingToolbarEventType DrawingChanged = new DrawingToolbarEventType("drawingchanged");

@@ -1,7 +1,10 @@
 ﻿namespace AzureMapsControl.Components.Markers
 {
+    using System.Diagnostics.CodeAnalysis;
+
     using AzureMapsControl.Components.Events;
 
+    [ExcludeFromCodeCoverage]
     public sealed class HtmlMarkerEventType : AtlasEventType
     {
         public static readonly HtmlMarkerEventType Click = new HtmlMarkerEventType("click");

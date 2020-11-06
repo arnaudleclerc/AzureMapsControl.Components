@@ -1,6 +1,9 @@
 ﻿namespace AzureMapsControl.Components.Map
 {
-    public class LightOptionsPosition
+    using System.Diagnostics.CodeAnalysis;
+
+    [ExcludeFromCodeCoverage]
+    public sealed class LightOptionsPosition
     {
         public double A { get; set; }
         public double P { get; set; }

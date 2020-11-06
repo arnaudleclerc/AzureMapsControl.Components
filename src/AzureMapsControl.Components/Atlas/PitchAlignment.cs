@@ -1,10 +1,12 @@
 ﻿namespace AzureMapsControl.Components.Atlas
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
     [JsonConverter(typeof(PitchAlignmentJsonConverter))]
+    [ExcludeFromCodeCoverage]
     public sealed class PitchAlignment
     {
         private readonly string _type;

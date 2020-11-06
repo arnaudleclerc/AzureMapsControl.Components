@@ -1,5 +1,8 @@
 ﻿namespace AzureMapsControl.Components.Traffic
 {
+    using System.Diagnostics.CodeAnalysis;
+
+    [ExcludeFromCodeCoverage]
     internal class TrafficJsOptions
     {
         /// <summary>

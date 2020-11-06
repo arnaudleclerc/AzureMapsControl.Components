@@ -1,6 +1,9 @@
 ﻿namespace AzureMapsControl.Components.Atlas
 {
-    public class TileId
+    using System.Diagnostics.CodeAnalysis;
+
+    [ExcludeFromCodeCoverage]
+    public sealed class TileId
     {
         /// <summary>
         /// The x coordinate of the tile.

@@ -1,8 +1,11 @@
 ﻿namespace AzureMapsControl.Components.Atlas
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /**
      * Represent a pixel coordinate or offset.
      */
+    [ExcludeFromCodeCoverage]
     public sealed class Pixel
     {
         /// <summary>

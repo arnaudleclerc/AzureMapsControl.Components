@@ -1,8 +1,11 @@
 ﻿namespace AzureMapsControl.Components.Markers
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Indicates the marker's location relative to its position on the map.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public sealed class MarkerAnchor
     {
         private readonly string _anchor;

@@ -1,8 +1,11 @@
 ﻿namespace AzureMapsControl.Components.Layers
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// A base class which all other layer options inherit from.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public abstract class LayerOptions
     {
         /// <summary>

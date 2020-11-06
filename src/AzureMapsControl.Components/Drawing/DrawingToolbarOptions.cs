@@ -1,10 +1,13 @@
 ﻿namespace AzureMapsControl.Components.Drawing
 {
+    using System.Diagnostics.CodeAnalysis;
+
     using AzureMapsControl.Components.Markers;
 
     /// <summary>
     /// Options for the DrawingToolbar
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public sealed class DrawingToolbarOptions : DrawingToolbarUpdateOptions
     {
         /// <summary>

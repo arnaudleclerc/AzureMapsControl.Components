@@ -1,7 +1,10 @@
 ﻿namespace AzureMapsControl.Components.Markers
 {
+    using System.Diagnostics.CodeAnalysis;
+
     using AzureMapsControl.Components.Atlas;
 
+    [ExcludeFromCodeCoverage]
     public sealed class HtmlMarkerOptions
     {
         /// <summary>

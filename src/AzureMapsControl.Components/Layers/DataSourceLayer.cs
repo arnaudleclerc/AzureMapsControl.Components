@@ -1,5 +1,8 @@
 ﻿namespace AzureMapsControl.Components.Layers
 {
+    using System.Diagnostics.CodeAnalysis;
+
+    [ExcludeFromCodeCoverage]
     public abstract class DataSourceLayer<T> : Layer<T>
         where T : LayerOptions
     {

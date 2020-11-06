@@ -1,10 +1,12 @@
 ﻿namespace AzureMapsControl.Components.Traffic
 {
-    using System.Text.Json.Serialization;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Contains the configuration to display traffic on the map
     /// </summary>
+
+    [ExcludeFromCodeCoverage]
     public sealed class TrafficOptions
     {
         /// <summary>

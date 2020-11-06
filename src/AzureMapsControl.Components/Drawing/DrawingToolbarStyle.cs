@@ -1,5 +1,8 @@
 ﻿namespace AzureMapsControl.Components.Drawing
 {
+    using System.Diagnostics.CodeAnalysis;
+
+    [ExcludeFromCodeCoverage]
     public sealed class DrawingToolbarStyle
     {
         private readonly string _style;

@@ -1,10 +1,13 @@
 ﻿namespace AzureMapsControl.Components.Layers
 {
+    using System.Diagnostics.CodeAnalysis;
+
     using AzureMapsControl.Components.Atlas;
 
     /// <summary>
     /// Options used when rendering Point objects in a HeatMapLayer.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public sealed class HeatmapLayerOptions : SourceLayerOptions
     {
         /// <summary>

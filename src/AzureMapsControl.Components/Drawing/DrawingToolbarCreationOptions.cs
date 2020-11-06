@@ -1,9 +1,11 @@
 ﻿namespace AzureMapsControl.Components.Drawing
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     using AzureMapsControl.Components.Markers;
 
+    [ExcludeFromCodeCoverage]
     internal sealed class DrawingToolbarCreationOptions
     {
         public string[] Buttons { get; set; }

@@ -1,9 +1,12 @@
 ﻿namespace AzureMapsControl.Components.Map
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// The options for the map's lighting.
     /// </summary>
-    public class LightOptions
+    [ExcludeFromCodeCoverage]
+    public sealed class LightOptions
     {
         /// <summary>
         /// Specifies wether extruded geometries are lit relative to the map or viewport.

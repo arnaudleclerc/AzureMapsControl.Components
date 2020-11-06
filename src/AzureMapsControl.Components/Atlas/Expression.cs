@@ -2,13 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
-    using Microsoft.Extensions.Primitives;
-
     [JsonConverter(typeof(ExpressionJsonConverter))]
+    [ExcludeFromCodeCoverage]
     public class Expression
     {
         public IEnumerable<Expression> Expressions { get; set; }
@@ -22,6 +22,7 @@
     /// Can be specified as the value of filter or certain layer options.
     /// </summary>
     [JsonConverter(typeof(ExpressionOrNumberJsonConverter))]
+    [ExcludeFromCodeCoverage]
     public sealed class ExpressionOrNumber : Expression
     {
         internal double? Value { get; }
@@ -39,6 +40,7 @@
     /// Can be specified as the value of filter or certain layer options.
     /// </summary>
     [JsonConverter(typeof(ExpressionOrStringJsonConverter))]
+    [ExcludeFromCodeCoverage]
     public sealed class ExpressionOrString : Expression
     {
         internal string Value { get; }
@@ -56,6 +58,7 @@
     /// Can be specified as the value of filter or certain layer options.
     /// </summary>
     [JsonConverter(typeof(ExpressionOrStringArrayJsonConverter))]
+    [ExcludeFromCodeCoverage]
     public sealed class ExpressionOrStringArray : Expression
     {
         internal IEnumerable<string> Values { get; set; }

@@ -1,8 +1,12 @@
 ﻿namespace AzureMapsControl.Components.Atlas
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Positions where the control can be placed on the map.
     /// </summary>
+
+    [ExcludeFromCodeCoverage]
     public sealed class ControlPosition
     {
         private readonly string _position;

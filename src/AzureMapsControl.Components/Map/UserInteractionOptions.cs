@@ -1,5 +1,8 @@
 ﻿namespace AzureMapsControl.Components.Map
 {
+    using System.Diagnostics.CodeAnalysis;
+    
+    [ExcludeFromCodeCoverage]
     internal class UserInteractionOptions
     {
         public bool BoxZoomInteraction { get; set; }

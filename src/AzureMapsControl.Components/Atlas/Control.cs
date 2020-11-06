@@ -1,8 +1,10 @@
 ﻿namespace AzureMapsControl.Components.Atlas
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
 
-    public class Control
+    [ExcludeFromCodeCoverage]
+    public sealed class Control
     {
         internal ControlType Type { get; }
         internal ControlPosition Position { get; }

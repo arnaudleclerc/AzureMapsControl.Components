@@ -1,14 +1,17 @@
 ﻿namespace AzureMapsControl.Components.Layers
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
     using AzureMapsControl.Components.Atlas;
 
+
     /// <summary>
     /// Options used when rendering geometries in a SymbolLayer.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public sealed class SymbolLayerOptions : SourceLayerOptions
     {
         /// <summary>

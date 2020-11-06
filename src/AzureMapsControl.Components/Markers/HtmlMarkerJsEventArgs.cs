@@ -1,6 +1,9 @@
-﻿namespace AzureMapsControl.Components.Markers
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace AzureMapsControl.Components.Markers
 {
-    public class HtmlMarkerJsEventArgs
+    [ExcludeFromCodeCoverage]
+    public sealed class HtmlMarkerJsEventArgs
     {
         public string MarkerId { get; set; }
         public string Type { get; set; }

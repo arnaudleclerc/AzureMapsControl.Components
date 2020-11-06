@@ -1,6 +1,9 @@
 ﻿namespace AzureMapsControl.Components.Map
 {
-    public class MapErrorEventArgs : MapEventArgs
+    using System.Diagnostics.CodeAnalysis;
+
+    [ExcludeFromCodeCoverage]
+    public sealed class MapErrorEventArgs : MapEventArgs
     {
         public string Error { get; }
 

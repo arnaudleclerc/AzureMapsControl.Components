@@ -1,7 +1,10 @@
 ﻿namespace AzureMapsControl.Components.Map
 {
+    using System.Diagnostics.CodeAnalysis;
+
     using AzureMapsControl.Components.Events;
 
+    [ExcludeFromCodeCoverage]
     public sealed class MapEventType : AtlasEventType
     {
         public static readonly MapEventType BoxZoomEnd = new MapEventType("boxzoomend");

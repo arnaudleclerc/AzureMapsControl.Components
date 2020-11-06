@@ -1,9 +1,12 @@
 ﻿namespace AzureMapsControl.Components.Atlas
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Tile object returned by the map when a source data event occurs.
     /// </summary>
-    public class Tile
+    [ExcludeFromCodeCoverage]
+    public sealed class Tile
     {
         /// <summary>
         /// The ID of the tile.

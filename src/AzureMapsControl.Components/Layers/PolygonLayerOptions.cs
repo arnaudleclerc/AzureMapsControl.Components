@@ -1,10 +1,13 @@
 ﻿namespace AzureMapsControl.Components.Layers
 {
+    using System.Diagnostics.CodeAnalysis;
+
     using AzureMapsControl.Components.Atlas;
 
     /// <summary>
     /// Options used when rendering Polygon and MultiPolygon objects in a PolygonLayer.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public sealed class PolygonLayerOptions : SourceLayerOptions
     {
         /// <summary>

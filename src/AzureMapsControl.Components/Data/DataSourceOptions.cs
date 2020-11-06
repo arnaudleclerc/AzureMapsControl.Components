@@ -1,5 +1,8 @@
 ﻿namespace AzureMapsControl.Components.Data
 {
+    using System.Diagnostics.CodeAnalysis;
+
+    [ExcludeFromCodeCoverage]
     public sealed class DataSourceOptions
     {
         /// <summary>

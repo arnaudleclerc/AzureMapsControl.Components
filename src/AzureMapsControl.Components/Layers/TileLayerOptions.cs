@@ -2,12 +2,15 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     using AzureMapsControl.Components.Atlas;
 
     /// <summary>
     /// Options used when rendering raster tiled images in a TileLayer.
     /// </summary>
+    
+    [ExcludeFromCodeCoverage]
     public sealed class TileLayerOptions : MediaLayerOptions
     {
         public TileLayerOptions(Uri tileUrl) => TileUrl = tileUrl.ToString();

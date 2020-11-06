@@ -1,5 +1,8 @@
 ﻿namespace AzureMapsControl.Components.Map
 {
+    using System.Diagnostics.CodeAnalysis;
+
+    [ExcludeFromCodeCoverage]
     internal class StyleOptions
     {
         public bool AutoResize { get; set; }

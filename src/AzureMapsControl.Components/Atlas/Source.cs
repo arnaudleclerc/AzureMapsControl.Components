@@ -1,6 +1,9 @@
 ﻿namespace AzureMapsControl.Components.Atlas
 {
-    public class Source
+    using System.Diagnostics.CodeAnalysis;
+
+    [ExcludeFromCodeCoverage]
+    public sealed class Source
     {
         /// <summary>
         /// Id of the data source
