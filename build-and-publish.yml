@@ -30,3 +30,10 @@ steps:
 
 - script: dotnet pack ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj -p:Version='$(GitVersion.NugetVersion)' -c Release --no-build -o '$(build.artifactStagingDirectory)'
   displayName: 'Pack AzureMapsControl.Component'
+  
+- task: NuGetCommand@2
+  displayName: 'Push to Nuget'
+  inputs:
+    command: push
+    packagesToPush: '$(build.artifactStagingDirectory)/**/AzureMapsControl.Components*.nupkg'
+  condition: succeeded()
