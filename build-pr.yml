@@ -1,0 +1,11 @@
+pr:
+- master
+- develop
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+
+- script: dotnet build ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj -c Release'
+  displayName: 'Build AzureMapsControl.Component v$(GitVersion.NugetVersion)'

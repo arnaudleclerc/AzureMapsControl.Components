@@ -3,6 +3,10 @@ trigger:
 - develop
 - releases/*
 
+paths:
+    include:
+    - 'src/*'
+
 pool:
   vmImage: 'ubuntu-latest'
 
