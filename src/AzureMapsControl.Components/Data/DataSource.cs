@@ -30,10 +30,13 @@
 
         public DataSource(string id) => Id = id;
 
-        public async Task AddAsync(IEnumerable<Geometry> geometries) => await AddAsync(geometries.ToArray());
-
-        public async Task AddAsync(params Geometry[] geometries)
+        public async Task AddAsync(IEnumerable<Geometry> geometries)
         {
+            if (geometries == null || !geometries.Any())
+            {
+                return;
+            }
+
             if (_geometries == null)
             {
                 _geometries = new List<Geometry>();
@@ -42,6 +45,8 @@
             _geometries.AddRange(geometries);
             await AddCallback.Invoke(Id, geometries);
         }
+
+        public async Task AddAsync(params Geometry[] geometries) => await AddAsync((IEnumerable<Geometry>)geometries);
 
         /// <summary>
         /// Imports data from an URL into a data source
