@@ -36,4 +36,6 @@ steps:
   inputs:
     command: push
     packagesToPush: '$(build.artifactStagingDirectory)/**/AzureMapsControl.Components*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'NUGET AzureMapsControl.Components'
   condition: succeeded()
