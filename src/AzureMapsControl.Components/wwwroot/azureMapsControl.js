@@ -438,6 +438,10 @@ window.azureMapsControl = {
             case 'polygonLayer':
                 layer = new atlas.layer.PolygonLayer(this._map.sources.getById(layerOptions.source), id, layerOptions);
                 break;
+
+            case 'symbolLayer':
+                layer = new atlas.layer.SymbolLayer(this._map.sources.getById(layerOptions.source), id, layerOptions);
+                break;
         }
         if (layer) {
             enabledEvents.forEach(layerEvent => {

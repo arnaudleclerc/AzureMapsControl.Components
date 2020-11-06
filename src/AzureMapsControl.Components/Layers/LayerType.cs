@@ -10,6 +10,7 @@
         internal static LayerType LineLayer = new LayerType("lineLayer");
         internal static LayerType PolygonExtrusionLayer = new LayerType("polygonExtrusionLayer");
         internal static LayerType PolygonLayer = new LayerType("polygonLayer");
+        internal static LayerType SymbolLayer = new LayerType("symbolLayer");
         internal static LayerType TileLayer = new LayerType("tileLayer");
 
         private LayerType(string type) => _type = type;

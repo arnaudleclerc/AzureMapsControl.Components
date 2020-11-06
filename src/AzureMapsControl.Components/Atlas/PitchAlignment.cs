@@ -9,6 +9,8 @@
     {
         private readonly string _type;
 
+        public static PitchAlignment Auto = new PitchAlignment("auto");
+
         /// <summary>
         /// The circle is aligned to the plane of the map.
         /// </summary>
@@ -25,12 +27,20 @@
 
         internal static PitchAlignment FromString(string type)
         {
-            if (Map.ToString() == type)
+            switch (type)
             {
-                return Map;
-            }
+                case "auto":
+                    return Auto;
 
-            return ViewPort.ToString() == type ? ViewPort : null;
+                case "map":
+                    return Map;
+
+                case "viewport":
+                    return ViewPort;
+
+                default:
+                    return null;
+            }
         }
     }
 

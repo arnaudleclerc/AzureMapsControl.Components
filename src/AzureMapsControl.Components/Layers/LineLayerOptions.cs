@@ -33,22 +33,20 @@
 
         internal static LineCap FromString(string type)
         {
-            if (type == Butt.ToString())
+            switch (type)
             {
-                return Butt;
-            }
+                case "butt":
+                    return Butt;
 
-            if (type == Round.ToString())
-            {
-                return Round;
-            }
+                case "round":
+                    return Round;
 
-            if (type == Square.ToString())
-            {
-                return Square;
-            }
+                case "square":
+                    return Square;
 
-            return null;
+                default:
+                    return null;
+            }
         }
     }
 
@@ -85,22 +83,20 @@
 
         internal static LineJoin FromString(string type)
         {
-            if (type == Bevel.ToString())
+            switch (type)
             {
-                return Bevel;
-            }
+                case "bevel":
+                    return Bevel;
 
-            if (type == Miter.ToString())
-            {
-                return Miter;
-            }
+                case "miter":
+                    return Miter;
 
-            if (type == Round.ToString())
-            {
-                return Round;
-            }
+                case "round":
+                    return Round;
 
-            return null;
+                default:
+                    return null;
+            }
         }
     }
 

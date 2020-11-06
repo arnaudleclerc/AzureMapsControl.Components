@@ -2,8 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Text.Json;
     using System.Text.Json.Serialization;
+
+    using Microsoft.Extensions.Primitives;
 
     [JsonConverter(typeof(ExpressionJsonConverter))]
     public class Expression
@@ -49,6 +52,17 @@
         public ExpressionOrString(string expression) => Value = expression;
     }
 
+    /// <summary>
+    /// Can be specified as the value of filter or certain layer options.
+    /// </summary>
+    [JsonConverter(typeof(ExpressionOrStringArrayJsonConverter))]
+    public sealed class ExpressionOrStringArray : Expression
+    {
+        internal IEnumerable<string> Values { get; set; }
+        public ExpressionOrStringArray(IEnumerable<Expression> expressions) : base(expressions) { }
+        public ExpressionOrStringArray(IEnumerable<string> values) => Values = values;
+    }
+
     internal abstract class ExpressionBaseJsonConverter<T> : JsonConverter<T> where T : Expression
     {
         public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotImplementedException();
@@ -74,6 +88,10 @@
             {
                 WriteExpressionOrString(writer, value as ExpressionOrString);
             }
+            else if (value is ExpressionOrStringArray)
+            {
+                WriteExpressionOrStringArray(writer, value as ExpressionOrStringArray);
+            }
         }
 
         private void WriteExpressionOrNumber(Utf8JsonWriter writer, ExpressionOrNumber value)
@@ -85,6 +103,19 @@
         }
 
         private void WriteExpressionOrString(Utf8JsonWriter writer, ExpressionOrString value) => writer.WriteStringValue(value.Value);
+
+        private void WriteExpressionOrStringArray(Utf8JsonWriter writer, ExpressionOrStringArray value)
+        {
+            if (value.Values.Any())
+            {
+                writer.WriteStartArray();
+                foreach (var expression in value.Values)
+                {
+                    writer.WriteStringValue(expression);
+                }
+                writer.WriteEndArray();
+            }
+        }
     }
 
     internal class ExpressionJsonConverter : ExpressionBaseJsonConverter<Expression>
@@ -98,4 +129,6 @@
     internal class ExpressionOrStringJsonConverter : ExpressionBaseJsonConverter<ExpressionOrString>
     {
     }
+
+    internal class ExpressionOrStringArrayJsonConverter : ExpressionBaseJsonConverter<ExpressionOrStringArray> { }
 }

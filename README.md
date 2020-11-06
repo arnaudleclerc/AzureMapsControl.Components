@@ -658,6 +658,6 @@ The following table shows the implementation status for each type of layer
 | **ImageLayer** | **Done** |
 | **LineLayer** | **Done** |
 | **PolygonExtrusionLayer** | **Done** |
-| PolygonLayer | To do |
-| SymbolLayer | To do |
+| **PolygonLayer** | **Done** |
+| **SymbolLayer** | **Done** |
 | **TileLayer** | **Done** |
