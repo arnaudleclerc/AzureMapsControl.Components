@@ -26,7 +26,10 @@ steps:
   displayName: 'Run GitVersion'
 
 - script: dotnet build ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj -c Release -p:Version='$(GitVersion.NugetVersion)'
-  displayName: 'Build AzureMapsControl.Component v$(GitVersion.NugetVersion)'
+  displayName: 'Build AzureMapsControl.Component'
+
+- script: dotnet test ./tests/AzureMapsControl.Components.Tests/AzureMapsControl.Components.Tests.csproj
+  displayName: 'Test AzureMapsControl.Component'
 
 - script: dotnet pack ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj -p:Version='$(GitVersion.NugetVersion)' -c Release --no-build -o '$(build.artifactStagingDirectory)'
   displayName: 'Pack AzureMapsControl.Component'
