@@ -1,8 +1,8 @@
-[![Build status](https://dev.azure.com/aleclerc/azure-appinsights-api-wrapper/_apis/build/status/AppInsights.Http%20-%20Prerelease)](https://dev.azure.com/aleclerc/azure-appinsights-api-wrapper/_build/latest?definitionId=6) [![NuGet](https://img.shields.io/nuget/v/AzureMapsControl.Components.svg)](https://www.nuget.org/packages/AzureMapsControl.Components/)
-
 # AzureMapsControl.Components
 
-WIP of Azure Maps Control Razor Components
+Azure Maps Control Razor Components
+
+![Nuget](https://img.shields.io/nuget/v/AzureMapsControl.Components) ![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/AzureMapsControl.Components) ![Nuget](https://img.shields.io/nuget/dt/AzureMapsControl.Components)
 
 ## Install the Nuget Package
 
