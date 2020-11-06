@@ -9,3 +9,6 @@ steps:
 
 - script: dotnet build ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj -c Release
   displayName: 'Build AzureMapsControl.Component v$(GitVersion.NugetVersion)'
+
+- script: dotnet test ./tests/AzureMapsControl.Components.Tests/AzureMapsControl.Components.Tests.csproj
+  displayName: 'Test AzureMapsControl.Component'
