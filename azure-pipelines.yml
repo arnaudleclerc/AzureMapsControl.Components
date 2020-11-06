@@ -15,7 +15,7 @@ steps:
 - script: sudo apt-get install libcurl3
   displayName: 'Install libcurl3'
 
-- script: ls $(Build.BinariesDirectory)/tools/GitVersion.CommandLine
+- script: ls $(Build.BinariesDirectory)/tools/GitVersion.CommandLine/tools
 
 - script: mono $(Build.BinariesDirectory)/tools/GitVersion.CommandLine/tools/GitVersion.exe /output buildserver /nofetch
   displayName: 'Run GitVersion'
