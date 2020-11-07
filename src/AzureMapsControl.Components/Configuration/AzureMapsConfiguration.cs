@@ -3,9 +3,6 @@
     /// <summary>
     /// Options for specifying how the map control should authenticate with the Azure Maps services.
     /// </summary>
-    using System.Diagnostics.CodeAnalysis;
-
-    [ExcludeFromCodeCoverage]
     public sealed class AzureMapsConfiguration
     {
         /// <summary>
