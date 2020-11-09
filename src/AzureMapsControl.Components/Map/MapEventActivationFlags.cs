@@ -6,9 +6,6 @@
 
     public sealed class MapEventActivationFlags : EventActivationFlags<MapEventType, MapEventActivationFlags>
     {
-        public static readonly MapEventActivationFlags All = new MapEventActivationFlags(true);
-        public static readonly MapEventActivationFlags None = new MapEventActivationFlags(false);
-
         private MapEventActivationFlags(bool defaultFlag)
             : base(new Dictionary<MapEventType, bool>
         {
@@ -60,5 +57,7 @@
         })
         { }
 
+        public static MapEventActivationFlags All() => new MapEventActivationFlags(true);
+        public static MapEventActivationFlags None() => new MapEventActivationFlags(false);
     }
 }

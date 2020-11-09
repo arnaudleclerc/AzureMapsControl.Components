@@ -3,7 +3,7 @@
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
           EventActivationFlags="MapEventActivationFlags
-                                .None
+                                .None()
                                 .Enable(MapEventType.Click)"
           OnClick="OnMapClick" />
 
@@ -22,7 +22,7 @@
             new Components.Markers.HtmlMarkerOptions
             {
                 Position = args.Position
-            }, AzureMapsControl.Components.Markers.HtmlMarkerEventActivationFlags.None);
+            }, AzureMapsControl.Components.Markers.HtmlMarkerEventActivationFlags.None());
         await args.Map.AddHtmlMarkersAsync
         (
             _marker

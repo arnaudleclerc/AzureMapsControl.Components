@@ -3,7 +3,7 @@
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
           OnReady="MapReady"
-          EventActivationFlags="MapEventActivationFlags.None.Enable(MapEventType.Ready)"/>
+          EventActivationFlags="MapEventActivationFlags.None().Enable(MapEventType.Ready)"/>
 
 @code {
     public async Task MapReady(MapEventArgs eventArgs)

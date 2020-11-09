@@ -6,10 +6,7 @@
 
     public sealed class DrawingToolbarEventActivationFlags : EventActivationFlags<DrawingToolbarEventType, DrawingToolbarEventActivationFlags>
     {
-        public static readonly DrawingToolbarEventActivationFlags All = new DrawingToolbarEventActivationFlags(true);
-        public static readonly DrawingToolbarEventActivationFlags None = new DrawingToolbarEventActivationFlags(false);
-
-        private DrawingToolbarEventActivationFlags(bool defaultFlag) : base(new Dictionary<DrawingToolbarEventType, bool> 
+        private DrawingToolbarEventActivationFlags(bool defaultFlag) : base(new Dictionary<DrawingToolbarEventType, bool>
         {
             { DrawingToolbarEventType.DrawingChanged, defaultFlag },
             { DrawingToolbarEventType.DrawingChanging, defaultFlag },
@@ -20,5 +17,8 @@
         {
 
         }
+
+        public static DrawingToolbarEventActivationFlags All() => new DrawingToolbarEventActivationFlags(true);
+        public static DrawingToolbarEventActivationFlags None() => new DrawingToolbarEventActivationFlags(false);
     }
 }

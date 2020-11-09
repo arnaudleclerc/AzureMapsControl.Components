@@ -3,7 +3,7 @@
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
           EventActivationFlags="MapEventActivationFlags
-                                .None
+                                .None()
                                 .Enable(MapEventType.Ready)"
           OnReady="OnMapReady" />
 
@@ -20,7 +20,7 @@
                 Draggable = true,
                 Color = markerColor
             },
-            AzureMapsControl.Components.Markers.HtmlMarkerEventActivationFlags.None.Enable(
+            AzureMapsControl.Components.Markers.HtmlMarkerEventActivationFlags.None().Enable(
                 AzureMapsControl.Components.Markers.HtmlMarkerEventType.MouseEnter, 
                 AzureMapsControl.Components.Markers.HtmlMarkerEventType.MouseLeave)
             );

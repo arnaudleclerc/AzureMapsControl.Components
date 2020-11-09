@@ -107,7 +107,7 @@
         /// Constructor
         /// </summary>
         /// <param name="options">Options of the HtmlMarker</param>
-        public HtmlMarker(HtmlMarkerOptions options) : this(options, HtmlMarkerEventActivationFlags.All) { }
+        public HtmlMarker(HtmlMarkerOptions options) : this(options, HtmlMarkerEventActivationFlags.None()) { }
 
         /// <summary>
         /// Constructor

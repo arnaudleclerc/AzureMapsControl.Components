@@ -615,7 +615,7 @@
                     EnableAccessibility = EnableAccessibility,
                     RefreshExpiredTiles = RefreshExpiredTiles
                 },
-                (EventActivationFlags ?? MapEventActivationFlags.None).EnabledEvents,
+                (EventActivationFlags ?? MapEventActivationFlags.None()).EnabledEvents,
                 DotNetObjectReference.Create(_mapEventInvokeHelper));
         }
         await base.OnAfterRenderAsync(firstRender);

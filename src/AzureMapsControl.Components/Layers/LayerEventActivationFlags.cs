@@ -6,9 +6,6 @@
 
     public sealed class LayerEventActivationFlags : EventActivationFlags<LayerEventType, LayerEventActivationFlags>
     {
-        public static readonly LayerEventActivationFlags All = new LayerEventActivationFlags(true);
-        public static readonly LayerEventActivationFlags None = new LayerEventActivationFlags(false);
-
         private LayerEventActivationFlags(bool defaultFlag) :
             base
             (
@@ -34,5 +31,8 @@
                 }
             )
         { }
+
+        public static LayerEventActivationFlags All() => new LayerEventActivationFlags(true);
+        public static LayerEventActivationFlags None() => new LayerEventActivationFlags(false);
     }
 }

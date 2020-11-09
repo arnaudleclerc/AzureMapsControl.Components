@@ -37,7 +37,7 @@
         {
             Id = string.IsNullOrWhiteSpace(id) ? Guid.NewGuid().ToString() : id;
             Type = type;
-            EventActivationFlags = LayerEventActivationFlags.None;
+            EventActivationFlags = LayerEventActivationFlags.None();
         }
 
         internal abstract LayerOptions GetLayerOptions();
