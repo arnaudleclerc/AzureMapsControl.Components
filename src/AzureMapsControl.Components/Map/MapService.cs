@@ -2,7 +2,7 @@
 {
     using System.Threading.Tasks;
 
-    internal delegate Task MapReadyEvent();
+    public delegate Task MapReadyEvent();
 
     internal class MapService : IMapService
     {

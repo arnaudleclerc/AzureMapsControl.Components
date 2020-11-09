@@ -19,7 +19,8 @@
         public static IServiceCollection AddAzureMapsControl(this IServiceCollection services, Action<AzureMapsConfiguration> configure)
         {
             services
-                .AddSingleton<IMapService, MapService>()
+                .AddSingleton<MapService>()
+                .AddSingleton<IMapService>(sp => sp.GetRequiredService<MapService>())
                 .AddOptions<AzureMapsConfiguration>()
                 .Configure(configure);
 
