@@ -347,6 +347,9 @@ window.azureMapsControl = {
     clearDataSources: function () {
         this._map.sources.clear();
     },
+    clearHtmlMarkers: function () {
+        this._map.markers.clear();
+    },
     setOptions: function (cameraOptions,
         styleOptions,
         userInteractionOptions,

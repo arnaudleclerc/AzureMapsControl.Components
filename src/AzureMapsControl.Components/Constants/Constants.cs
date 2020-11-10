@@ -14,6 +14,7 @@
         internal const string MethodClearMap = "clearMap";
         internal const string MethodAddControl = "addControls";
         internal const string MethodAddHtmlMarkers = "addHtmlMarkers";
+        internal const string MethodClearHtmlMarkers = "clearHtmlMarkers";
         internal const string MethodSetOptions = "setOptions";
         internal const string MethodRemoveHtmlMarkers = "removeHtmlMarkers";
         internal const string MethodUpdateHtmlMarkers = "updateHtmlMarkers";

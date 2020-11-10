@@ -473,5 +473,18 @@
             Assert.True(assertClearDataSourcesCallback);
             Assert.Null(map.DataSources);
         }
+
+        [Fact]
+        public async void Should_ClearHtmlMarkers_Async()
+        {
+            var assertClearHtmlMarkers = false;
+            var map = new Components.Map.Map("id", addHtmlMarkersCallback: async _ => { }, clearHtmlMarkersCallback: async () => assertClearHtmlMarkers = true);
+
+            await map.AddHtmlMarkersAsync(new HtmlMarker(null));
+            await map.ClearHtmlMarkersAsync();
+
+            Assert.True(assertClearHtmlMarkers);
+            Assert.Null(map.HtmlMarkers);
+        }
     }
 }

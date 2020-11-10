@@ -31,6 +31,7 @@
         private readonly Func<Task> _clearMapCallback;
         private readonly Func<Task> _clearLayersCallback;
         private readonly Func<Task> _clearDataSourcesCallback;
+        private readonly Func<Task> _clearHtmlMarkersCallback;
 
         private List<Layer> _layers;
         private List<DataSource> _dataSources;
@@ -64,7 +65,8 @@
             Func<string, Task> removeDataSourceCallback = null,
             Func<Task> clearMapCallback = null,
             Func<Task> clearLayersCallback = null,
-            Func<Task> clearDataSourcesCallback = null)
+            Func<Task> clearDataSourcesCallback = null,
+            Func<Task> clearHtmlMarkersCallback = null)
         {
             Id = id;
             _addControlsCallback = addControlsCallback;
@@ -81,6 +83,7 @@
             _clearMapCallback = clearMapCallback;
             _clearLayersCallback = clearLayersCallback;
             _clearDataSourcesCallback = clearDataSourcesCallback;
+            _clearHtmlMarkersCallback = clearHtmlMarkersCallback;
         }
 
         /// <summary>
@@ -332,6 +335,16 @@
         {
             _dataSources = null;
             await _clearDataSourcesCallback.Invoke();
+        }
+
+        /// <summary>
+        /// Removes all markers
+        /// </summary>
+        /// <returns></returns>
+        public async Task ClearHtmlMarkersAsync()
+        {
+            HtmlMarkers = null;
+            await _clearHtmlMarkersCallback.Invoke();
         }
 
     }
