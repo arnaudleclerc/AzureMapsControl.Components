@@ -1,4 +1,4 @@
-﻿namespace AzureMapsControl.Components.Map
+﻿namespace AzureMapsControl.Components.Markers
 {
     using System;
     using System.Threading.Tasks;

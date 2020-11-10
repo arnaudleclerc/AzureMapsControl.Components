@@ -10,13 +10,13 @@
         [Fact]
         public async void Should_InvokeCallback_Async()
         {
-            var drawingToolbarEventArgs = new MapJsEventArgs();
+            var layerEventArgs = new MapJsEventArgs();
             var assertEqualEventArgs = false;
             var invokeHelper = new LayerEventInvokeHelper(async (eventArgs) => {
-                assertEqualEventArgs = eventArgs == drawingToolbarEventArgs;
+                assertEqualEventArgs = eventArgs == layerEventArgs;
             });
 
-            await invokeHelper.NotifyEventAsync(drawingToolbarEventArgs);
+            await invokeHelper.NotifyEventAsync(layerEventArgs);
 
             Assert.True(assertEqualEventArgs);
         }

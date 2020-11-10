@@ -15,9 +15,9 @@
 @code {
 
     private MapEventInvokeHelper _mapEventInvokeHelper;
-    private HtmlMarkerInvokeHelper _htmlMarkerEventInvokeHelper;
-    private AzureMapsControl.Components.Drawing.DrawingToolbarEventInvokeHelper _drawingToolbarEventInvokeHelper;
-    private AzureMapsControl.Components.Layers.LayerEventInvokeHelper _layerEventInvokeHelper;
+    private Markers.HtmlMarkerInvokeHelper _htmlMarkerEventInvokeHelper;
+    private Drawing.DrawingToolbarEventInvokeHelper _drawingToolbarEventInvokeHelper;
+    private Layers.LayerEventInvokeHelper _layerEventInvokeHelper;
 
     /// <summary>
     /// If true the map will automatically resize whenever the window's size changes. Otherwise map.resize() must be called.
@@ -592,7 +592,7 @@
     protected override void OnInitialized()
     {
         _mapEventInvokeHelper = new MapEventInvokeHelper(MapEventReceivedAsync);
-        _htmlMarkerEventInvokeHelper = new HtmlMarkerInvokeHelper(HtmlMarkerEventReceivedAsync);
+        _htmlMarkerEventInvokeHelper = new Markers.HtmlMarkerInvokeHelper(HtmlMarkerEventReceivedAsync);
         _drawingToolbarEventInvokeHelper = new Drawing.DrawingToolbarEventInvokeHelper(DrawingToolbarEventReceivedAsync);
         _layerEventInvokeHelper = new Layers.LayerEventInvokeHelper(LayerEventReceivedAsync);
         base.OnInitialized();
