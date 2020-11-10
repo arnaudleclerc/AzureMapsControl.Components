@@ -7,8 +7,8 @@
 @using Microsoft.Extensions.Options
 
 @inject IOptions<AzureMapsConfiguration> Configuration
-@inject MapService MapService
-@inject Microsoft.JSInterop.IJSRuntime JSRuntime
+@inject IMapAdderService MapService
+@inject IJSRuntime JSRuntime
 
 <div id="@Id"></div>
 

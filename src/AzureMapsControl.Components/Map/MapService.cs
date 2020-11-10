@@ -4,7 +4,7 @@
 
     public delegate Task MapReadyEvent();
 
-    internal class MapService : IMapService
+    internal class MapService : IMapAdderService
     {
         public Map Map
         {
@@ -14,7 +14,7 @@
 
         public event MapReadyEvent OnMapReadyAsync;
 
-        internal async Task AddMapAsync(Map map)
+        public async Task AddMapAsync(Map map)
         {
             Map = map;
 

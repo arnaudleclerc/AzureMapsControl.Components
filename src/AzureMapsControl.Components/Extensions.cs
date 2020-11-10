@@ -20,6 +20,7 @@
         {
             services
                 .AddSingleton<MapService>()
+                .AddSingleton<IMapAdderService>(sp => sp.GetRequiredService<MapService>())
                 .AddSingleton<IMapService>(sp => sp.GetRequiredService<MapService>())
                 .AddOptions<AzureMapsConfiguration>()
                 .Configure(configure);
