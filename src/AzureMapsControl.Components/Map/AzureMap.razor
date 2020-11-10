@@ -728,7 +728,8 @@
                 AddDataSourceAsync,
                 RemoveDataSourceAsync,
                 ClearMapAsync,
-                ClearLayersAsync)
+                ClearLayersAsync,
+                ClearDataSources)
             {
                 Controls = Controls,
                 HtmlMarkers = HtmlMarkers,
@@ -756,6 +757,7 @@
 
     private async Task ClearMapAsync() => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodClearMap.ToAzureMapsControlNamespace());
     private async Task ClearLayersAsync() => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodClearLayers.ToAzureMapsControlNamespace());
+    private async Task ClearDataSources() => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodClearDataSources.ToAzureMapsControlNamespace());
 
     private async Task AddControlsAsync(IEnumerable<Control> controls)
     {

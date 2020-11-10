@@ -461,5 +461,17 @@
             Assert.True(assertClearLayersCallback);
             Assert.Null(map.Layers);
         }
+
+        [Fact]
+        public async void Should_ClearDataSources_Async()
+        {
+            var assertClearDataSourcesCallback = false;
+            var map = new Components.Map.Map("id", addDataSourceCallback: async _ => { }, clearDataSourcesCallback: async () => assertClearDataSourcesCallback = true);
+
+            await map.AddDataSourceAsync(new DataSource());
+            await map.ClearDataSourcesAsync();
+            Assert.True(assertClearDataSourcesCallback);
+            Assert.Null(map.DataSources);
+        }
     }
 }
