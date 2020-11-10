@@ -751,6 +751,8 @@
         }
     }
 
+    private async Task ClearMapAsync() => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodClearMap.ToAzureMapsControlNamespace());
+
     private async Task AddControlsAsync(IEnumerable<Control> controls)
     {
         var newControls = controls?.Where(control => control != null);

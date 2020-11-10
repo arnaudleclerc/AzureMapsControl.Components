@@ -11,6 +11,7 @@
         internal const string Namespace = "azureMapsControl";
 
         internal const string MethodAddMap = "addMap";
+        internal const string MethodClearMap = "clearMap";
         internal const string MethodAddControl = "addControls";
         internal const string MethodAddHtmlMarkers = "addHtmlMarkers";
         internal const string MethodSetOptions = "setOptions";

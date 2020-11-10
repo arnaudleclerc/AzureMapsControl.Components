@@ -28,6 +28,7 @@
         private readonly Func<IEnumerable<string>, Task> _removeLayersCallback;
         private readonly Func<DataSource, Task> _addDataSourceCallback;
         private readonly Func<string, Task> _removeDataSourceCallback;
+        private readonly Func<Task> _clearMapCallback;
 
         private List<Layer> _layers;
         private List<DataSource> _dataSources;
@@ -58,7 +59,8 @@
             Func<Layer, string, Task> addLayerCallback = null,
             Func<IEnumerable<string>, Task> removeLayersCallback = null,
             Func<DataSource, Task> addDataSourceCallback = null,
-            Func<string, Task> removeDataSourceCallback = null)
+            Func<string, Task> removeDataSourceCallback = null,
+            Func<Task> clearMapCallback = null)
         {
             Id = id;
             _addControlsCallback = addControlsCallback;
@@ -72,6 +74,7 @@
             _removeLayersCallback = removeLayersCallback;
             _addDataSourceCallback = addDataSourceCallback;
             _removeDataSourceCallback = removeDataSourceCallback;
+            _clearMapCallback = clearMapCallback;
         }
 
         /// <summary>
@@ -291,6 +294,18 @@
                 await _removeDataSourceCallback.Invoke(id);
                 _dataSources.Remove(dataSource);
             }
+        }
+
+        /// <summary>
+        /// Removes all user added sources, layers, markers, and popups from the map. User added images are preserved.
+        /// </summary>
+        /// <returns></returns>
+        public async Task ClearMapAsync()
+        {
+            _dataSources = null;
+            _layers = null;
+            HtmlMarkers = null;
+            await _clearMapCallback.Invoke();
         }
 
     }

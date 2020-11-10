@@ -338,6 +338,9 @@ window.azureMapsControl = {
             });
         });
     },
+    clearMap: function () {
+        this._map.clear();
+    },
     setOptions: function (cameraOptions,
         styleOptions,
         userInteractionOptions,
