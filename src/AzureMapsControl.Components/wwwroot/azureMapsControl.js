@@ -163,6 +163,11 @@ window.azureMapsControl = {
             visible: drawingToolbarOptions.visible
         });
     },
+    removeDrawingToolbar: function () {
+        this._map.controls.remove(this._toolbar);
+        this._drawingManager = null;
+        this._toolbar = null;
+    },
     addHtmlMarkers: function (htmlMarkerOptions,
         eventHelper) {
 
@@ -459,6 +464,9 @@ window.azureMapsControl = {
     },
     addDataSource: function (id, options) {
         this._map.sources.add(new atlas.source.DataSource(id, options));
+    },
+    removeDataSource: function (id) {
+        this._map.sources.remove(id);
     },
     dataSource_add(id, geometries) {
         const shapes = [];

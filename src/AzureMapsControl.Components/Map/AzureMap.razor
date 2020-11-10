@@ -722,6 +722,7 @@
                 RemoveHtmlMarkersAsync,
                 AddDrawingToolbarAsync,
                 UpdateDrawingToolbarAsync,
+                RemoveDrawingToolbarAsync,
                 AddLayerAsync,
                 RemoveLayersAsync,
                 AddDataSourceAsync)
@@ -803,6 +804,8 @@
         });
     }
 
+    private async Task RemoveDrawingToolbarAsync() => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodRemoveDrawingToolbar.ToAzureMapsControlNamespace());
+
     private async Task AddHtmlMarkersAsync(IEnumerable<AzureMapsControl.Components.Markers.HtmlMarker>
         htmlMarkers)
     {
@@ -865,6 +868,8 @@
         dataSource.ImportDataFromUrlCallback = DataSource_ImportDataFromUrlAsync;
         dataSource.AddCallback = DataSource_AddAsync;
     }
+
+    private async Task RemoveDataSourceAsync(string dataSourceId) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodRemoveDataSource.ToAzureMapsControlNamespace(), dataSourceId);
 
     private async Task DataSource_ImportDataFromUrlAsync(string id, string url)
         => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodDataSourceImportDataFromUrl.ToAzureMapsControlNamespace(), id, url);

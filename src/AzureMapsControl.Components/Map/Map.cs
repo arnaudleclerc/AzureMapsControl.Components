@@ -8,6 +8,7 @@
     using AzureMapsControl.Components.Atlas;
     using AzureMapsControl.Components.Data;
     using AzureMapsControl.Components.Drawing;
+    using AzureMapsControl.Components.Exceptions;
     using AzureMapsControl.Components.Layers;
     using AzureMapsControl.Components.Markers;
 
@@ -22,38 +23,42 @@
         private readonly Func<IEnumerable<HtmlMarker>, Task> _removeHtmlMarkersCallback;
         private readonly Func<DrawingToolbarOptions, Task> _addDrawingToolbarCallback;
         private readonly Func<DrawingToolbarUpdateOptions, Task> _updateDrawingToolbarCallback;
+        private readonly Func<Task> _removeDrawingToolbarCallback;
         private readonly Func<Layer, string, Task> _addLayerCallback;
         private readonly Func<IEnumerable<string>, Task> _removeLayersCallback;
         private readonly Func<DataSource, Task> _addDataSourceCallback;
+        private readonly Func<string, Task> _removeDataSourceCallback;
 
-        private readonly List<Layer> _layers;
-        private readonly List<DataSource> _dataSources;
+        private List<Layer> _layers;
+        private List<DataSource> _dataSources;
 
         /// <summary>
         /// ID of the map
         /// </summary>
         public string Id { get; }
 
-        public IReadOnlyCollection<Control> Controls { get; internal set; }
+        public IEnumerable<Control> Controls { get; internal set; }
 
-        public IReadOnlyCollection<HtmlMarker> HtmlMarkers { get; internal set; }
+        public IEnumerable<HtmlMarker> HtmlMarkers { get; internal set; }
 
         public DrawingToolbarOptions DrawingToolbarOptions { get; internal set; }
 
-        public IReadOnlyCollection<Layer> Layers => _layers;
+        public IEnumerable<Layer> Layers => _layers;
 
-        public IReadOnlyCollection<DataSource> DataSources => _dataSources;
+        public IEnumerable<DataSource> DataSources => _dataSources;
 
         internal Map(string id,
-            Func<IEnumerable<Control>, Task> addControlsCallback,
-            Func<IEnumerable<HtmlMarker>, Task> addHtmlMarkersCallback,
-            Func<IEnumerable<HtmlMarkerUpdate>, Task> updateHtmlMarkersCallback,
-            Func<IEnumerable<HtmlMarker>, Task> removeHtmlMarkersCallback,
-            Func<DrawingToolbarOptions, Task> addDrawingToolbarCallback,
-            Func<DrawingToolbarUpdateOptions, Task> updateDrawingToolbarCallback,
-            Func<Layer, string, Task> addLayerCallback,
-            Func<IEnumerable<string>, Task> removeLayersCallback,
-            Func<DataSource, Task> addDataSourceCallback)
+            Func<IEnumerable<Control>, Task> addControlsCallback = null,
+            Func<IEnumerable<HtmlMarker>, Task> addHtmlMarkersCallback = null,
+            Func<IEnumerable<HtmlMarkerUpdate>, Task> updateHtmlMarkersCallback = null,
+            Func<IEnumerable<HtmlMarker>, Task> removeHtmlMarkersCallback = null,
+            Func<DrawingToolbarOptions, Task> addDrawingToolbarCallback = null,
+            Func<DrawingToolbarUpdateOptions, Task> updateDrawingToolbarCallback = null,
+            Func<Task> removeDrawingToolbarCallback = null,
+            Func<Layer, string, Task> addLayerCallback = null,
+            Func<IEnumerable<string>, Task> removeLayersCallback = null,
+            Func<DataSource, Task> addDataSourceCallback = null,
+            Func<string, Task> removeDataSourceCallback = null)
         {
             Id = id;
             _addControlsCallback = addControlsCallback;
@@ -62,22 +67,18 @@
             _removeHtmlMarkersCallback = removeHtmlMarkersCallback;
             _addDrawingToolbarCallback = addDrawingToolbarCallback;
             _updateDrawingToolbarCallback = updateDrawingToolbarCallback;
+            _removeDrawingToolbarCallback = removeDrawingToolbarCallback;
             _addLayerCallback = addLayerCallback;
             _removeLayersCallback = removeLayersCallback;
             _addDataSourceCallback = addDataSourceCallback;
-            _layers = new List<Layer>();
-            _dataSources = new List<DataSource>();
+            _removeDataSourceCallback = removeDataSourceCallback;
         }
 
         /// <summary>
         /// Adds controls to the map
         /// </summary>
         /// <param name="controls">Controls to add to the map</param>
-        public async Task AddControlsAsync(params Control[] controls)
-        {
-            Controls = controls?.Where(control => control != null).ToArray();
-            await _addControlsCallback.Invoke(Controls);
-        }
+        public async Task AddControlsAsync(params Control[] controls) => await AddControlsAsync(controls as IEnumerable<Control>);
 
         /// <summary>
         /// Adds controls to the map
@@ -85,7 +86,7 @@
         /// <param name="controls">Controls to add to the map</param>
         public async Task AddControlsAsync(IEnumerable<Control> controls)
         {
-            Controls = controls?.Where(control => control != null).ToArray();
+            Controls = controls;
             await _addControlsCallback.Invoke(Controls);
         }
 
@@ -94,11 +95,7 @@
         /// </summary>
         /// <param name="markers">Html Marker to add to the map</param>
         /// <returns></returns>
-        public async Task AddHtmlMarkersAsync(params HtmlMarker[] markers)
-        {
-            HtmlMarkers = (HtmlMarkers ?? new HtmlMarker[0]).Concat(markers?.Where(marker => marker != null)).ToArray();
-            await _addHtmlMarkersCallback.Invoke(HtmlMarkers);
-        }
+        public async Task AddHtmlMarkersAsync(params HtmlMarker[] markers) => await AddHtmlMarkersAsync(markers as IEnumerable<HtmlMarker>);
 
         /// <summary>
         /// Add HtmlMarkers to the map
@@ -107,8 +104,8 @@
         /// <returns></returns>
         public async Task AddHtmlMarkersAsync(IEnumerable<HtmlMarker> markers)
         {
-            HtmlMarkers = (HtmlMarkers ?? new HtmlMarker[0]).Concat(markers?.Where(marker => marker != null)).ToArray();
-            await _addHtmlMarkersCallback.Invoke(HtmlMarkers);
+            HtmlMarkers = (HtmlMarkers ?? new HtmlMarker[0]).Concat(markers);
+            await _addHtmlMarkersCallback.Invoke(markers);
         }
 
         /// <summary>
@@ -130,14 +127,7 @@
         /// </summary>
         /// <param name="markers">HtmlMarkers to remove</param>
         /// <returns></returns>
-        public async Task RemoveHtmlMarkersAsync(params HtmlMarker[] markers)
-        {
-            if (HtmlMarkers != null && markers != null)
-            {
-                HtmlMarkers = HtmlMarkers.Where(marker => markers.Any(m => m != null && m.Id != marker.Id)).ToArray();
-                await _removeHtmlMarkersCallback.Invoke(markers);
-            }
-        }
+        public async Task RemoveHtmlMarkersAsync(params HtmlMarker[] markers) => await RemoveHtmlMarkersAsync(markers as IEnumerable<HtmlMarker>);
 
         /// <summary>
         /// Remove HtmlMarkers from the map
@@ -148,7 +138,7 @@
         {
             if (HtmlMarkers != null && markers != null)
             {
-                HtmlMarkers = HtmlMarkers.Where(marker => markers.Any(m => m != null && m.Id != marker.Id)).ToArray();
+                HtmlMarkers = HtmlMarkers.Where(marker => markers.Any(m => m != null && m.Id != marker.Id));
                 await _removeHtmlMarkersCallback.Invoke(markers);
             }
         }
@@ -181,6 +171,19 @@
         }
 
         /// <summary>
+        /// Removes the drawing toolbar from the map
+        /// </summary>
+        /// <returns></returns>
+        public async Task RemoveDrawingToolbarAsync()
+        {
+            if (DrawingToolbarOptions != null)
+            {
+                await _removeDrawingToolbarCallback.Invoke();
+                DrawingToolbarOptions = null;
+            }
+        }
+
+        /// <summary>
         /// Add a layer to the map
         /// </summary>
         /// <typeparam name="T">Type of layer to add</typeparam>
@@ -197,9 +200,14 @@
         /// <returns></returns>
         public async Task AddLayerAsync<T>(T layer, string before) where T : Layer
         {
+            if (_layers == null)
+            {
+                _layers = new List<Layer>();
+            }
+
             if (_layers.Any(l => l.Id == layer.Id))
             {
-                throw new ArgumentException("A layer with the given ID has already been added");
+                throw new LayerAlreadyAddedException(layer.Id);
             }
 
             _layers.Add(layer);
@@ -210,23 +218,36 @@
         /// Remove layers from the map
         /// </summary>
         /// <param name="layers">Layers to remove</param>
-        /// <returns>Layers removed from the map</returns>
-        public async Task<IEnumerable<Layer>> RemoveLayersAsync(params Layer[] layers) => await RemoveLayersAsync(layers?.Select(l => l.Id).ToArray());
+        /// <returns></returns>
+        public async Task RemoveLayersAsync(IEnumerable<Layer> layers) => await RemoveLayersAsync(layers?.Select(l => l.Id));
+
+        /// <summary>
+        /// Remove layers from the map
+        /// </summary>
+        /// <param name="layers">Layers to remove</param>
+        /// <returns></returns>
+        public async Task RemoveLayersAsync(params Layer[] layers) => await RemoveLayersAsync(layers?.Select(l => l.Id));
 
         /// <summary>
         /// Remove layers from the map
         /// </summary>
         /// <param name="layerIds">ID of the layers to remove</param>
-        /// <returns>Layers removed from the map</returns>
-        public async Task<IEnumerable<Layer>> RemoveLayersAsync(params string[] layerIds)
+        /// <returns></returns>
+        public async Task RemoveLayersAsync(params string[] layerIds) => await RemoveLayersAsync(layerIds as IEnumerable<string>);
+
+        /// <summary>
+        /// Remove layers from the map
+        /// </summary>
+        /// <param name="layerIds">ID of the layers to remove</param>
+        /// <returns></returns>
+        public async Task RemoveLayersAsync(IEnumerable<string> layerIds)
         {
-            var layers = _layers.Where(l => layerIds.Contains(l.Id));
+            var layers = _layers?.Where(l => layerIds.Contains(l.Id));
             if (layers.Any())
             {
                 await _removeLayersCallback.Invoke(layers.Select(l => l.Id));
                 _layers.RemoveAll(l => layerIds.Contains(l.Id));
             }
-            return layers;
         }
 
         /// <summary>
@@ -236,13 +257,40 @@
         /// <returns></returns>
         public async Task AddDataSourceAsync(DataSource dataSource)
         {
+            if (_dataSources == null)
+            {
+                _dataSources = new List<DataSource>();
+            }
+
             if (_dataSources.Any(ds => ds.Id == dataSource.Id))
             {
-                throw new ArgumentException("A data source with the given ID has already been added");
+                throw new DataSourceAlreadyExistingException(dataSource.Id);
             }
 
             _dataSources.Add(dataSource);
             await _addDataSourceCallback(dataSource);
+        }
+
+        /// <summary>
+        /// Removes a data source from the map
+        /// </summary>
+        /// <param name="dataSource">Data source to remove</param>
+        /// <returns></returns>
+        public async Task RemoveDataSourceAsync(DataSource dataSource) => await RemoveDataSourceAsync(dataSource.Id);
+
+        /// <summary>
+        /// Removes a data source from the map
+        /// </summary>
+        /// <param name="id">ID of the data source to remove</param>
+        /// <returns></returns>
+        public async Task RemoveDataSourceAsync(string id)
+        {
+            var dataSource = _dataSources?.SingleOrDefault(ds => ds.Id == id);
+            if (dataSource != null)
+            {
+                await _removeDataSourceCallback.Invoke(id);
+                _dataSources.Remove(dataSource);
+            }
         }
 
     }
