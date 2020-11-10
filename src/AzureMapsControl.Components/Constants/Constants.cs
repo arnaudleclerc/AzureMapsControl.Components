@@ -22,6 +22,7 @@
         internal const string MethodRemoveDrawingToolbar = "removeDrawingToolbar";
         internal const string MethodAddLayer = "addLayer";
         internal const string MethodRemoveLayers = "removeLayers";
+        internal const string MethodClearLayers = "clearLayers";
         internal const string MethodAddDataSource = "addDataSource";
         internal const string MethodRemoveDataSource = "removeDataSource";
         internal const string MethodDataSourceImportDataFromUrl = "dataSource_importDataFromUrl";

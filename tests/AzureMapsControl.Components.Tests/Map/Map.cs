@@ -449,5 +449,17 @@
             Assert.Null(map.Layers);
             Assert.Null(map.HtmlMarkers);
         }
+
+        [Fact]
+        public async void Should_ClearLayers_Async()
+        {
+            var assertClearLayersCallback = false;
+            var map = new Components.Map.Map("id", addLayerCallback: async (_, before) => { }, clearLayersCallback: async () => assertClearLayersCallback = true);
+            await map.AddLayerAsync(new BubbleLayer());
+
+            await map.ClearLayersAsync();
+            Assert.True(assertClearLayersCallback);
+            Assert.Null(map.Layers);
+        }
     }
 }

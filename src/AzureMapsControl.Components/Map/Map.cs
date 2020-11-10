@@ -29,6 +29,7 @@
         private readonly Func<DataSource, Task> _addDataSourceCallback;
         private readonly Func<string, Task> _removeDataSourceCallback;
         private readonly Func<Task> _clearMapCallback;
+        private readonly Func<Task> _clearLayersCallback;
 
         private List<Layer> _layers;
         private List<DataSource> _dataSources;
@@ -60,7 +61,8 @@
             Func<IEnumerable<string>, Task> removeLayersCallback = null,
             Func<DataSource, Task> addDataSourceCallback = null,
             Func<string, Task> removeDataSourceCallback = null,
-            Func<Task> clearMapCallback = null)
+            Func<Task> clearMapCallback = null,
+            Func<Task> clearLayersCallback = null)
         {
             Id = id;
             _addControlsCallback = addControlsCallback;
@@ -75,6 +77,7 @@
             _addDataSourceCallback = addDataSourceCallback;
             _removeDataSourceCallback = removeDataSourceCallback;
             _clearMapCallback = clearMapCallback;
+            _clearLayersCallback = clearLayersCallback;
         }
 
         /// <summary>
@@ -306,6 +309,16 @@
             _layers = null;
             HtmlMarkers = null;
             await _clearMapCallback.Invoke();
+        }
+
+        /// <summary>
+        /// Removes all user added layers from the map
+        /// </summary>
+        /// <returns></returns>
+        public async Task ClearLayersAsync()
+        {
+            _layers = null;
+            await _clearLayersCallback.Invoke();
         }
 
     }
