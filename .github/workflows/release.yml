@@ -7,7 +7,7 @@ on:
       - develop
       - master
     paths:
-     src/**
+      - src/**
 
 jobs:
   build:

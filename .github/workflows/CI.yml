@@ -6,15 +6,15 @@ on:
       - features/**
       - hotfix/**
     paths:
-      src/**
-      tests/**
+      - src/**
+      - tests/**
   pull_request:
     branches: 
       - develop
       - master
     paths:
-      src/**
-      tests/**
+      - src/**
+      - tests/**
 
 jobs:
   build:
