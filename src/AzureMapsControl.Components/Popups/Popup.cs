@@ -21,10 +21,14 @@
         /// <summary>
         /// Options of the popup
         /// </summary>
-        public PopupOptions Options { get; set; }
+        internal PopupOptions Options { get; }
 
-        public Popup() : this(Guid.NewGuid().ToString()) { }
-        public Popup(string id) => Id = id;
+        public Popup(PopupOptions options) : this(Guid.NewGuid().ToString(), options) { }
+        public Popup(string id, PopupOptions options)
+        {
+            Id = id;
+            Options = options;
+        }
 
         /// <summary>
         /// Open the popup

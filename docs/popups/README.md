@@ -19,15 +19,11 @@ Popups can be added to the map using the `AddPopupAsync` method on the map. If t
 
     public async Task OnMapReady(MapEventArgs eventArgs)
     {
-        await eventArgs.Map.AddPopupAsync(new Components.Popups.Popup
+        await eventArgs.Map.AddPopupAsync(new Components.Popups.PopupOptions
         {
-            Options = new Components.Popups.PopupOptions
-            {
-                CloseButton = false,
-                Content = "Please customize me",
-                Position = new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534),
-                OpenOnAdd = true
-            }
+            CloseButton = false,
+            Content = "Please customize me",
+            Position = new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534)
         });
     }
 
@@ -51,15 +47,12 @@ A popup can also be opened using the `OpenAsync` method.
 
     public async Task OnMapReady(MapEventArgs eventArgs)
     {
-        var popup = new Components.Popups.Popup
+        var popup = new Components.Popups.Popup(new Components.Popups.PopupOptions
         {
-            Options = new Components.Popups.PopupOptions
-            {
-                CloseButton = false,
-                Content = "Please customize me",
-                Position = new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534)
-            }
-        };
+            CloseButton = false,
+            Content = "Please customize me",
+            Position = new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534)
+        });
         await eventArgs.Map.AddPopupAsync(popup);
         await popup.OpenAsync();
     }
@@ -84,15 +77,12 @@ The popup can then be close by calling the `CloseAsync` method.
 
     public async Task OnMapReady(MapEventArgs eventArgs)
     {
-        var popup = new Components.Popups.Popup
+        var popup = new Components.Popups.Popup(new Components.Popups.PopupOptions
         {
-            Options = new Components.Popups.PopupOptions
-            {
-                CloseButton = false,
-                Content = "Please customize me",
-                Position = new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534)
-            }
-        };
+            CloseButton = false,
+            Content = "Please customize me",
+            Position = new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534)
+        });
         await eventArgs.Map.AddPopupAsync(popup);
         await popup.OpenAsync();
         await popup.CloseAsync();
@@ -118,15 +108,12 @@ Calling the `RemoveAsync` method will remove the popup from the map.
 
     public async Task OnMapReady(MapEventArgs eventArgs)
     {
-        var popup = new Components.Popups.Popup
+        var popup = new Components.Popups.Popup(new Components.Popups.PopupOptions
         {
-            Options = new Components.Popups.PopupOptions
-            {
-                CloseButton = false,
-                Content = "Please customize me",
-                Position = new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534)
-            }
-        };
+            CloseButton = false,
+            Content = "Please customize me",
+            Position = new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534)
+        });
         await eventArgs.Map.AddPopupAsync(popup);
         await popup.OpenAsync();
 

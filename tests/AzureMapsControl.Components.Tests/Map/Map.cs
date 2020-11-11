@@ -493,7 +493,7 @@
         public async void Should_AddPopup_Async()
         {
             var assertAddPopup = false;
-            var popup = new Popup();
+            var popup = new Popup(new PopupOptions());
             var map = new Components.Map.Map("id", addPopupCallback: async popupCallback => assertAddPopup = popupCallback == popup);
             await map.AddPopupAsync(popup);
             Assert.True(assertAddPopup);
@@ -503,16 +503,16 @@
         [Fact]
         public async void Should_NotAddTwiceTheSamePopup_Async()
         {
-            var popup = new Popup();
+            var popup = new Popup(new PopupOptions());
             var map = new Components.Map.Map("id", addPopupCallback: async _ => { });
             await map.AddPopupAsync(popup);
             await Assert.ThrowsAnyAsync<PopupAlreadyExistingException>(async () => await map.AddPopupAsync(popup));
         }
 
         [Fact]
-        public async void Should_RemovePopupFromPopupsCollection()
+        public async void Should_RemovePopupFromPopupsCollection_Async()
         {
-            var popup = new Popup();
+            var popup = new Popup(new PopupOptions());
             var map = new Components.Map.Map("id", addPopupCallback: async _ => { });
             await map.AddPopupAsync(popup);
             map.RemovePopup(popup.Id);
