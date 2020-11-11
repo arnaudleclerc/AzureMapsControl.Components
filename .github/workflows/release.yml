@@ -67,9 +67,9 @@ jobs:
         echo "CommitsSinceVersionSource: ${{ steps.gitversion.outputs.commitsSinceVersionSource }}"
         echo "CommitsSinceVersionSourcePadded: ${{ steps.gitversion.outputs.commitsSinceVersionSourcePadded }}"
         echo "CommitDate: ${{ steps.gitversion.outputs.commitDate }}"
-    - name: Pack
-      run: dotnet pack ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj -p:Version='${{ steps.gitversion.outputs.nuGetVersionV2 }}"' -c Release --no-build
-    - name: Publish
-      env :
-        NUGETAPIKEY: ${{secrets.NUGETAPIKEY}}
-      run: dotnet nuget push "**/AzureMapsControl.Components*.nupkg" -s https://api.nuget.org/v3/index.json -k $NUGETAPIKEY
+    #- name: Pack
+    #  run: dotnet pack ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj -p:Version='${{ steps.gitversion.outputs.nuGetVersionV2 }}"' -c Release --no-build
+    #- name: Publish
+    #  env :
+    #    NUGETAPIKEY: ${{secrets.NUGETAPIKEY}}
+    #  run: dotnet nuget push "**/AzureMapsControl.Components*.nupkg" -s https://api.nuget.org/v3/index.json -k $NUGETAPIKEY
