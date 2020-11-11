@@ -11,6 +11,7 @@
     using AzureMapsControl.Components.Exceptions;
     using AzureMapsControl.Components.Layers;
     using AzureMapsControl.Components.Markers;
+    using AzureMapsControl.Components.Popups;
 
     /// <summary>
     /// Representation of a map
@@ -32,9 +33,11 @@
         private readonly Func<Task> _clearLayersCallback;
         private readonly Func<Task> _clearDataSourcesCallback;
         private readonly Func<Task> _clearHtmlMarkersCallback;
+        private readonly Func<Popup, Task> _addPopupCallback;
 
         private List<Layer> _layers;
         private List<DataSource> _dataSources;
+        private List<Popup> _popups;
 
         /// <summary>
         /// ID of the map
@@ -51,6 +54,8 @@
 
         public IEnumerable<DataSource> DataSources => _dataSources;
 
+        public IEnumerable<Popup> Popups => _popups;
+
         internal Map(string id,
             Func<IEnumerable<Control>, Task> addControlsCallback = null,
             Func<IEnumerable<HtmlMarker>, Task> addHtmlMarkersCallback = null,
@@ -66,7 +71,8 @@
             Func<Task> clearMapCallback = null,
             Func<Task> clearLayersCallback = null,
             Func<Task> clearDataSourcesCallback = null,
-            Func<Task> clearHtmlMarkersCallback = null)
+            Func<Task> clearHtmlMarkersCallback = null,
+            Func<Popup, Task> addPopupCallback = null)
         {
             Id = id;
             _addControlsCallback = addControlsCallback;
@@ -84,6 +90,7 @@
             _clearLayersCallback = clearLayersCallback;
             _clearDataSourcesCallback = clearDataSourcesCallback;
             _clearHtmlMarkersCallback = clearHtmlMarkersCallback;
+            _addPopupCallback = addPopupCallback;
         }
 
         /// <summary>
@@ -346,6 +353,28 @@
             HtmlMarkers = null;
             await _clearHtmlMarkersCallback.Invoke();
         }
+
+        /// <summary>
+        /// Add a new popup to the map
+        /// </summary>
+        /// <param name="poup">Popup to add to the map</param>
+        /// <returns></returns>
+        public async Task AddPopupAsync(Popup popup)
+        {
+            if(_popups == null)
+            {
+                _popups = new List<Popup>();
+            }
+
+            if(_popups.Any(p => p.Id == popup.Id))
+            {
+                throw new PopupAlreadyExistingException(popup.Id);
+            }
+
+            await _addPopupCallback.Invoke(popup);
+            _popups.Add(popup);
+        }
+
 
     }
 }

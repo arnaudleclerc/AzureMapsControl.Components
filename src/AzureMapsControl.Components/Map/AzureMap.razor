@@ -730,7 +730,8 @@
                 ClearMapAsync,
                 ClearLayersAsync,
                 ClearDataSourcesAsync,
-                ClearHtmlMarkersAsync)
+                ClearHtmlMarkersAsync,
+                AddPopupAsync)
             {
                 Controls = Controls,
                 HtmlMarkers = HtmlMarkers,
@@ -1074,4 +1075,8 @@
             }
         }
     }
+
+    private async Task AddPopupAsync(AzureMapsControl.Components.Popups.Popup popup) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodAddPopup.ToAzureMapsControlNamespace(),
+        popup.Id,
+        popup.Options);
 }

@@ -2,6 +2,7 @@ window.azureMapsControl = {
     _drawingManager: null,
     _toolbar: null,
     _map: null,
+    _popups: [],
     _mapEvents: [
         'boxzoomend',
         'boxzoomstart',
@@ -583,6 +584,26 @@ window.azureMapsControl = {
     },
     dataSource_clear: function (id) {
         this._map.sources.getById(id).clear();
+    },
+    addPopup: function (id, options) {
+        const popupOptions = {
+            draggable: options.draggable,
+            closeButton: options.closeButton,
+            content: options.content,
+            fillColor: options.fillColor,
+            pixelOffset: options.pixelOffset ? [options.pixelOffset.x, options.pixelOffset.y] : null,
+            position: options.position ? [options.position.longitude, options.position.latitude] : null,
+            showPointer: options.showPointer
+        };
+        const popup = new atlas.Popup(popupOptions);
+        this._popups.push({
+            id: id,
+            popup: popup
+        });
+        this._map.popups.add(popup);
+        if (options.openOnAdd) {
+            popup.open();
+        }
     },
     _addLayerEvent: function (key, layer, eventHelper) {
         this._map.events.add(key, layer, e => {
