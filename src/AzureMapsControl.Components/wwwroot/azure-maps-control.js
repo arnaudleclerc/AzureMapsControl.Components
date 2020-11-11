@@ -341,6 +341,7 @@ window.azureMapsControl = {
     },
     clearMap: function () {
         this._map.clear();
+        this._popups = [];
     },
     clearLayers: function () {
         this._map.layers.clear()

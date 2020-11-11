@@ -321,6 +321,7 @@
             _dataSources = null;
             _layers = null;
             HtmlMarkers = null;
+            _popups = null;
             await _clearMapCallback.Invoke();
         }
 

@@ -440,16 +440,18 @@
         public async void Should_ClearMap_Async()
         {
             var assertClearMapCallback = false;
-            var map = new Components.Map.Map("id", addHtmlMarkersCallback: async _ => { }, addLayerCallback: async (_, before) => { }, addDataSourceCallback: async _ => { }, clearMapCallback: async () => assertClearMapCallback = true);
+            var map = new Components.Map.Map("id", addHtmlMarkersCallback: async _ => { }, addLayerCallback: async (_, before) => { }, addDataSourceCallback: async _ => { }, addPopupCallback: async _ => { }, clearMapCallback: async () => assertClearMapCallback = true);
             await map.AddDataSourceAsync(new DataSource());
             await map.AddLayerAsync(new BubbleLayer());
             await map.AddHtmlMarkersAsync(new HtmlMarker(null));
+            await map.AddPopupAsync(new Popup(new PopupOptions()));
 
             await map.ClearMapAsync();
             Assert.True(assertClearMapCallback);
             Assert.Null(map.DataSources);
             Assert.Null(map.Layers);
             Assert.Null(map.HtmlMarkers);
+            Assert.Null(map.Popups);
         }
 
         [Fact]
