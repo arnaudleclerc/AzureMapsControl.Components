@@ -43,7 +43,7 @@ Layers can be added to the map after the `MapReady` event has been triggered by 
 }
 ```
 
-# Events
+## Events
 
 The following events are available and can be enabled or disabled for all the different types of layers : `MouseDown`, `MouseUp`, `MouseOver`, `MouseMove`, `Click`, `DblClick`, `MouseOut`, `MouseEnter`, `MouseLeave`, `ContextMenu`, `TouchStart`, `TouchEnd`, `TouchMove`, `TouchCancel`, `Wheel`. By default, all the events are deactivated. The events flags can be passed on the `Options` while creating the layer.
 
