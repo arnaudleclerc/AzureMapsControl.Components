@@ -6,7 +6,6 @@ on:
       - features/**
       - releases/**
       - hotfix/**
-      - develop
     paths:
       src/**
       tests/**
