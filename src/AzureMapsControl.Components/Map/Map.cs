@@ -34,6 +34,7 @@
         private readonly Func<Task> _clearDataSourcesCallback;
         private readonly Func<Task> _clearHtmlMarkersCallback;
         private readonly Func<Popup, Task> _addPopupCallback;
+        private readonly Func<string, Task> _removePopupCallback;
 
         private List<Layer> _layers;
         private List<DataSource> _dataSources;
@@ -72,7 +73,8 @@
             Func<Task> clearLayersCallback = null,
             Func<Task> clearDataSourcesCallback = null,
             Func<Task> clearHtmlMarkersCallback = null,
-            Func<Popup, Task> addPopupCallback = null)
+            Func<Popup, Task> addPopupCallback = null,
+            Func<string, Task> removePopupCallback = null)
         {
             Id = id;
             _addControlsCallback = addControlsCallback;
@@ -91,7 +93,10 @@
             _clearDataSourcesCallback = clearDataSourcesCallback;
             _clearHtmlMarkersCallback = clearHtmlMarkersCallback;
             _addPopupCallback = addPopupCallback;
+            _removePopupCallback = removePopupCallback;
         }
+
+        # region Controls
 
         /// <summary>
         /// Adds controls to the map
@@ -108,6 +113,111 @@
             Controls = controls;
             await _addControlsCallback.Invoke(Controls);
         }
+
+        #endregion
+
+        #region Data Sources
+
+        /// <summary>
+        /// Add a data source to the map
+        /// </summary>
+        /// <param name="dataSource">Data source to add</param>
+        /// <returns></returns>
+        public async Task AddDataSourceAsync(DataSource dataSource)
+        {
+            if (_dataSources == null)
+            {
+                _dataSources = new List<DataSource>();
+            }
+
+            if (_dataSources.Any(ds => ds.Id == dataSource.Id))
+            {
+                throw new DataSourceAlreadyExistingException(dataSource.Id);
+            }
+
+            _dataSources.Add(dataSource);
+            await _addDataSourceCallback(dataSource);
+        }
+
+        /// <summary>
+        /// Removes a data source from the map
+        /// </summary>
+        /// <param name="dataSource">Data source to remove</param>
+        /// <returns></returns>
+        public async Task RemoveDataSourceAsync(DataSource dataSource) => await RemoveDataSourceAsync(dataSource.Id);
+
+        /// <summary>
+        /// Removes a data source from the map
+        /// </summary>
+        /// <param name="id">ID of the data source to remove</param>
+        /// <returns></returns>
+        public async Task RemoveDataSourceAsync(string id)
+        {
+            var dataSource = _dataSources?.SingleOrDefault(ds => ds.Id == id);
+            if (dataSource != null)
+            {
+                await _removeDataSourceCallback.Invoke(id);
+                _dataSources.Remove(dataSource);
+            }
+        }
+
+        /// <summary>
+        /// Removes all sources from the map.
+        /// </summary>
+        /// <returns></returns>
+        public async Task ClearDataSourcesAsync()
+        {
+            _dataSources = null;
+            await _clearDataSourcesCallback.Invoke();
+        }
+
+        #endregion
+
+        #region Drawing Toolbar
+
+        /// <summary>
+        /// Add a drawing toolbar to the map
+        /// </summary>
+        /// <param name="drawingToolbarOptions">Options of the toolbar to create</param>
+        /// <returns></returns>
+        public async Task AddDrawingToolbarAsync(DrawingToolbarOptions drawingToolbarOptions)
+        {
+            DrawingToolbarOptions = drawingToolbarOptions;
+            await _addDrawingToolbarCallback.Invoke(drawingToolbarOptions);
+        }
+
+        /// <summary>
+        /// Update the drawing toolbar with the given options
+        /// </summary>
+        /// <param name="drawingToolbarUpdateOptions">Options to update the drawing toolbar</param>
+        /// <returns></returns>
+        public async Task UpdateDrawingToolbarAsync(DrawingToolbarUpdateOptions drawingToolbarUpdateOptions)
+        {
+            DrawingToolbarOptions.Buttons = drawingToolbarUpdateOptions.Buttons;
+            DrawingToolbarOptions.ContainerId = drawingToolbarUpdateOptions.ContainerId;
+            DrawingToolbarOptions.NumColumns = drawingToolbarUpdateOptions.NumColumns;
+            DrawingToolbarOptions.Position = drawingToolbarUpdateOptions.Position;
+            DrawingToolbarOptions.Style = drawingToolbarUpdateOptions.Style;
+            DrawingToolbarOptions.Visible = drawingToolbarUpdateOptions.Visible;
+            await _updateDrawingToolbarCallback.Invoke(drawingToolbarUpdateOptions);
+        }
+
+        /// <summary>
+        /// Removes the drawing toolbar from the map
+        /// </summary>
+        /// <returns></returns>
+        public async Task RemoveDrawingToolbarAsync()
+        {
+            if (DrawingToolbarOptions != null)
+            {
+                await _removeDrawingToolbarCallback.Invoke();
+                DrawingToolbarOptions = null;
+            }
+        }
+
+        #endregion
+
+        #region HTML Markers
 
         /// <summary>
         /// Add HtmlMarkers to the map
@@ -163,44 +273,18 @@
         }
 
         /// <summary>
-        /// Add a drawing toolbar to the map
+        /// Removes all markers
         /// </summary>
-        /// <param name="drawingToolbarOptions">Options of the toolbar to create</param>
         /// <returns></returns>
-        public async Task AddDrawingToolbarAsync(DrawingToolbarOptions drawingToolbarOptions)
+        public async Task ClearHtmlMarkersAsync()
         {
-            DrawingToolbarOptions = drawingToolbarOptions;
-            await _addDrawingToolbarCallback.Invoke(drawingToolbarOptions);
+            HtmlMarkers = null;
+            await _clearHtmlMarkersCallback.Invoke();
         }
 
-        /// <summary>
-        /// Update the drawing toolbar with the given options
-        /// </summary>
-        /// <param name="drawingToolbarUpdateOptions">Options to update the drawing toolbar</param>
-        /// <returns></returns>
-        public async Task UpdateDrawingToolbarAsync(DrawingToolbarUpdateOptions drawingToolbarUpdateOptions)
-        {
-            DrawingToolbarOptions.Buttons = drawingToolbarUpdateOptions.Buttons;
-            DrawingToolbarOptions.ContainerId = drawingToolbarUpdateOptions.ContainerId;
-            DrawingToolbarOptions.NumColumns = drawingToolbarUpdateOptions.NumColumns;
-            DrawingToolbarOptions.Position = drawingToolbarUpdateOptions.Position;
-            DrawingToolbarOptions.Style = drawingToolbarUpdateOptions.Style;
-            DrawingToolbarOptions.Visible = drawingToolbarUpdateOptions.Visible;
-            await _updateDrawingToolbarCallback.Invoke(drawingToolbarUpdateOptions);
-        }
+        #endregion
 
-        /// <summary>
-        /// Removes the drawing toolbar from the map
-        /// </summary>
-        /// <returns></returns>
-        public async Task RemoveDrawingToolbarAsync()
-        {
-            if (DrawingToolbarOptions != null)
-            {
-                await _removeDrawingToolbarCallback.Invoke();
-                DrawingToolbarOptions = null;
-            }
-        }
+        #region Layers
 
         /// <summary>
         /// Add a layer to the map
@@ -270,47 +354,18 @@
         }
 
         /// <summary>
-        /// Add a data source to the map
+        /// Removes all user added layers from the map
         /// </summary>
-        /// <param name="dataSource">Data source to add</param>
         /// <returns></returns>
-        public async Task AddDataSourceAsync(DataSource dataSource)
+        public async Task ClearLayersAsync()
         {
-            if (_dataSources == null)
-            {
-                _dataSources = new List<DataSource>();
-            }
-
-            if (_dataSources.Any(ds => ds.Id == dataSource.Id))
-            {
-                throw new DataSourceAlreadyExistingException(dataSource.Id);
-            }
-
-            _dataSources.Add(dataSource);
-            await _addDataSourceCallback(dataSource);
+            _layers = null;
+            await _clearLayersCallback.Invoke();
         }
 
-        /// <summary>
-        /// Removes a data source from the map
-        /// </summary>
-        /// <param name="dataSource">Data source to remove</param>
-        /// <returns></returns>
-        public async Task RemoveDataSourceAsync(DataSource dataSource) => await RemoveDataSourceAsync(dataSource.Id);
+        #endregion
 
-        /// <summary>
-        /// Removes a data source from the map
-        /// </summary>
-        /// <param name="id">ID of the data source to remove</param>
-        /// <returns></returns>
-        public async Task RemoveDataSourceAsync(string id)
-        {
-            var dataSource = _dataSources?.SingleOrDefault(ds => ds.Id == id);
-            if (dataSource != null)
-            {
-                await _removeDataSourceCallback.Invoke(id);
-                _dataSources.Remove(dataSource);
-            }
-        }
+        #region Map
 
         /// <summary>
         /// Removes all user added sources, layers, markers, and popups from the map. User added images are preserved.
@@ -325,35 +380,9 @@
             await _clearMapCallback.Invoke();
         }
 
-        /// <summary>
-        /// Removes all user added layers from the map
-        /// </summary>
-        /// <returns></returns>
-        public async Task ClearLayersAsync()
-        {
-            _layers = null;
-            await _clearLayersCallback.Invoke();
-        }
+        #endregion
 
-        /// <summary>
-        /// Removes all sources from the map.
-        /// </summary>
-        /// <returns></returns>
-        public async Task ClearDataSourcesAsync()
-        {
-            _dataSources = null;
-            await _clearDataSourcesCallback.Invoke();
-        }
-
-        /// <summary>
-        /// Removes all markers
-        /// </summary>
-        /// <returns></returns>
-        public async Task ClearHtmlMarkersAsync()
-        {
-            HtmlMarkers = null;
-            await _clearHtmlMarkersCallback.Invoke();
-        }
+        #region Popups
 
         /// <summary>
         /// Add a new popup to the map
@@ -362,12 +391,12 @@
         /// <returns></returns>
         public async Task AddPopupAsync(Popup popup)
         {
-            if(_popups == null)
+            if (_popups == null)
             {
                 _popups = new List<Popup>();
             }
 
-            if(_popups.Any(p => p.Id == popup.Id))
+            if (_popups.Any(p => p.Id == popup.Id))
             {
                 throw new PopupAlreadyExistingException(popup.Id);
             }
@@ -376,13 +405,37 @@
             _popups.Add(popup);
         }
 
+        /// <summary>
+        /// Remove a popup from the map
+        /// </summary>
+        /// <param name="id">ID of the popup to remove</param>
+        /// <returns></returns>
+        public async Task RemovePopupAsync(string id)
+        {
+            var popup = _popups?.SingleOrDefault(p => p.Id == id);
+            if (popup != null)
+            {
+                await _removePopupCallback.Invoke(id);
+                RemovePopup(id);
+            }
+        }
+
+        /// <summary>
+        /// Remove a popup from the map
+        /// </summary>
+        /// <param name="popup">Popup to remove</param>
+        /// <returns></returns>
+        public async Task RemovePopupAsync(Popup popup) => await RemovePopupAsync(popup.Id);
+
         internal void RemovePopup(string id)
         {
-            if(_popups != null)
+            if (_popups != null)
             {
                 var popupIndex = _popups.FindIndex(popup => popup.Id == id);
                 _popups.RemoveAt(popupIndex);
             }
         }
+
+        #endregion
     }
 }

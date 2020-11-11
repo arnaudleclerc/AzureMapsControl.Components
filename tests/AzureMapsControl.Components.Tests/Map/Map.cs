@@ -521,5 +521,43 @@
 
             Assert.DoesNotContain(popup, map.Popups);
         }
+
+        [Fact]
+        public async void Should_RemovePopup_Async()
+        {
+            var assertRemoveCallback = false;
+            var popup = new Popup(new PopupOptions());
+            var map = new Components.Map.Map("id", addPopupCallback: async _ => { }, removePopupCallback: async popupId => assertRemoveCallback = popupId == popup.Id);
+            await map.AddPopupAsync(popup);
+            await map.RemovePopupAsync(popup);
+
+            Assert.True(assertRemoveCallback);
+            Assert.DoesNotContain(popup, map.Popups);
+        }
+
+        [Fact]
+        public async void Should_RemovePopup_IdVersion_Async()
+        {
+            var assertRemoveCallback = false;
+            var popup = new Popup(new PopupOptions());
+            var map = new Components.Map.Map("id", addPopupCallback: async _ => { }, removePopupCallback: async popupId => assertRemoveCallback = popupId == popup.Id);
+            await map.AddPopupAsync(popup);
+            await map.RemovePopupAsync(popup.Id);
+
+            Assert.True(assertRemoveCallback);
+            Assert.DoesNotContain(popup, map.Popups);
+        }
+
+        [Fact]
+        public async void Should_NotRemovePopup_Async()
+        {
+            var assertRemoveCallback = false;
+            var popup = new Popup(new PopupOptions());
+            var map = new Components.Map.Map("id", addPopupCallback: async _ => { }, removePopupCallback: async popupId => assertRemoveCallback = true);
+            await map.AddPopupAsync(popup);
+            await map.RemovePopupAsync(new Popup(new PopupOptions()));
+
+            Assert.False(assertRemoveCallback);
+        }
     }
 }

@@ -91,7 +91,7 @@ The popup can then be close by calling the `CloseAsync` method.
 }
 ```
 
-Calling the `RemoveAsync` method will remove the popup from the map.
+Calling the `RemoveAsync` method will remove the popup from the map. You can also call the `RemovePopupAsync` method on the map and provide the popup to remove.
 
 ```
 @page "/PopupOnReady"
