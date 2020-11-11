@@ -7,10 +7,16 @@ on:
       - releases/**
       - hotfix/**
       - develop
+    paths:
+      src/**
+      tests/**
   pull_request:
     branches: 
       - develop
       - main
+    paths:
+      src/**
+      tests/**
 
 jobs:
   build:
