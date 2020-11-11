@@ -624,6 +624,22 @@ window.azureMapsControl = {
             this._popups.splice(index, 1);
         }
     },
+    popup_update: function (id, options) {
+        const popupEntry = this._popups.find(p => p.id === id);
+        if (popupEntry) {
+            const popupOptions = {
+                draggable: options.draggable,
+                closeButton: options.closeButton,
+                content: options.content,
+                fillColor: options.fillColor,
+                pixelOffset: options.pixelOffset ? [options.pixelOffset.x, options.pixelOffset.y] : null,
+                position: options.position ? [options.position.longitude, options.position.latitude] : null,
+                showPointer: options.showPointer
+            };
+
+            popupEntry.popup.setOptions(popupOptions);
+        }
+    },
     _addLayerEvent: function (key, layer, eventHelper) {
         this._map.events.add(key, layer, e => {
             eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(key, {

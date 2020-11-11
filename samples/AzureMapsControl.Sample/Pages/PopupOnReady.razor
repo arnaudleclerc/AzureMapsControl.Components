@@ -20,6 +20,8 @@
         });
         await eventArgs.Map.AddPopupAsync(popup);
         await popup.OpenAsync();
+
+        await popup.UpdateAsync(options => options.Content = "Thanks for updating me");
     }
 
 }

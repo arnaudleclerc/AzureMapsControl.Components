@@ -1117,7 +1117,8 @@
         await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodAddPopup.ToAzureMapsControlNamespace(), popup.Id, popup.Options);
         popup.OpenPopupCallback = Popup_OpenAsync;
         popup.ClosePopupCallback = Popup_CloseAsync;
-        popup.RemoveAsyncCallback = Popup_RemoveAsync;
+        popup.RemoveCallback = Popup_RemoveAsync;
+        popup.UpdateCallback = Popup_UpdateAsync;
     }
 
     private async Task Popup_OpenAsync(string id) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodPopupOpen.ToAzureMapsControlNamespace(), id);
@@ -1127,6 +1128,7 @@
         await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodPopupRemove.ToAzureMapsControlNamespace(), id);
         MapService.Map.RemovePopup(id);
     }
+    private async Task Popup_UpdateAsync(string id, AzureMapsControl.Components.Popups.PopupOptions options) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodPopupUpdate.ToAzureMapsControlNamespace(), id, options);
 
     #endregion
 }

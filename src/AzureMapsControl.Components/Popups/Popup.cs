@@ -12,7 +12,8 @@
     {
         internal Func<string, Task> OpenPopupCallback { get; set; }
         internal Func<string, Task> ClosePopupCallback { get; set; }
-        internal Func<string, Task> RemoveAsyncCallback { get; set; }
+        internal Func<string, Task> RemoveCallback { get; set; }
+        internal Func<string, PopupOptions, Task> UpdateCallback { get; set; }
 
         private bool _isRemoved = false;
 
@@ -53,8 +54,19 @@
                 throw new PopupAlreadyRemovedException();
             }
 
-            await RemoveAsyncCallback.Invoke(Id);
+            await RemoveCallback.Invoke(Id);
             _isRemoved = true;
+        }
+
+        /// <summary>
+        /// Update the popup with the updated options
+        /// </summary>
+        /// <param name="update">Update to provide on the options</param>
+        /// <returns></returns>
+        public async Task UpdateAsync(Action<PopupOptions> update)
+        {
+            update.Invoke(Options);
+            await UpdateCallback.Invoke(Id, Options);
         }
     }
 }

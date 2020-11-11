@@ -51,7 +51,7 @@
         {
             var assertRemove = false;
             var popup = new Popup(new PopupOptions());
-            popup.RemoveAsyncCallback = async popupId => assertRemove = popupId == popup.Id;
+            popup.RemoveCallback = async popupId => assertRemove = popupId == popup.Id;
             await popup.RemoveAsync();
             Assert.True(assertRemove);
         }
@@ -60,9 +60,21 @@
         public async void Should_NotRemoveTwice_Async()
         {
             var popup = new Popup(new PopupOptions());
-            popup.RemoveAsyncCallback = async _ => { };
+            popup.RemoveCallback = async _ => { };
             await popup.RemoveAsync();
             await Assert.ThrowsAnyAsync<PopupAlreadyRemovedException>(async () => await popup.RemoveAsync());
+        }
+
+        [Fact]
+        public async void Should_Update_Async()
+        {
+            var assertUpdate = false;
+            var popup = new Popup(new PopupOptions());
+            var updatedContent = "updatedContent";
+            popup.UpdateCallback = async (popupId, popupOptions) => assertUpdate = popupOptions == popup.Options && popup.Options.Content == updatedContent;
+            await popup.UpdateAsync(options => options.Content = updatedContent);
+            Assert.True(assertUpdate);
+            Assert.Equal(updatedContent, popup.Options.Content);
         }
     }
 }
