@@ -78,4 +78,4 @@ jobs:
     - name: Publish
       env :
         NUGETAPIKEY: ${{secrets.NUGETAPIKEY}}
-      run: dotnet nuget push "**/AzureMapsControl.Components*.nupkg" -s https://api.nuget.org/v3/index.json -k $NUGETAPIKEY
+      run: dotnet nuget push "**/AzureMapsControl.Components*.nupkg" -s https://api.nuget.org/v3/index.json -k $NUGETAPIKEY --skip-duplicate
