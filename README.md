@@ -96,6 +96,8 @@ public void ConfigureServices(IServiceCollection services)
         }
 ```
 
+## How to use
+
 - [Map](docs/map)
 - [Controls](docs/controls)
 - [Drawing Toolbar](docs/drawingtoolbar)
