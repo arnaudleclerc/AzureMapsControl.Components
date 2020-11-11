@@ -617,6 +617,13 @@ window.azureMapsControl = {
             popupEntry.popup.close();
         }
     },
+    popup_remove: function (id) {
+        const index = this._popups.findIndex(p => p.id === id);
+        if (index > -1) {
+            this._popups[index].popup.remove();
+            this._popups.splice(index, 1);
+        }
+    },
     _addLayerEvent: function (key, layer, eventHelper) {
         this._map.events.add(key, layer, e => {
             eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(key, {

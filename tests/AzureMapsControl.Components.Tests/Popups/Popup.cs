@@ -1,5 +1,6 @@
 ﻿namespace AzureMapsControl.Components.Tests.Popups
 {
+    using AzureMapsControl.Components.Exceptions;
     using AzureMapsControl.Components.Popups;
 
     using Xunit;
@@ -39,6 +40,25 @@
             popup.ClosePopupCallback = async popupId => assertClose = popupId == popup.Id;
             await popup.CloseAsync();
             Assert.True(assertClose);
+        }
+
+        [Fact]
+        public async void Should_RemoveAsync()
+        {
+            var assertRemove = false;
+            var popup = new Popup();
+            popup.RemoveAsyncCallback = async popupId => assertRemove = popupId == popup.Id;
+            await popup.RemoveAsync();
+            Assert.True(assertRemove);
+        }
+
+        [Fact]
+        public async void Should_NotRemoveTwice_Async()
+        {
+            var popup = new Popup();
+            popup.RemoveAsyncCallback = async _ => { };
+            await popup.RemoveAsync();
+            await Assert.ThrowsAnyAsync<PopupAlreadyRemovedException>(async () => await popup.RemoveAsync());
         }
     }
 }

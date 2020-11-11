@@ -508,5 +508,16 @@
             await map.AddPopupAsync(popup);
             await Assert.ThrowsAnyAsync<PopupAlreadyExistingException>(async () => await map.AddPopupAsync(popup));
         }
+
+        [Fact]
+        public async void Should_RemovePopupFromPopupsCollection()
+        {
+            var popup = new Popup();
+            var map = new Components.Map.Map("id", addPopupCallback: async _ => { });
+            await map.AddPopupAsync(popup);
+            map.RemovePopup(popup.Id);
+
+            Assert.DoesNotContain(popup, map.Popups);
+        }
     }
 }

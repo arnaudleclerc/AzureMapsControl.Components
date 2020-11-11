@@ -34,5 +34,6 @@
         internal const string MethodAddPopup = "addPopup";
         internal const string MethodPopupOpen = "popup_open";
         internal const string MethodPopupClose = "popup_close";
+        internal const string MethodPopupRemove = "popup_remove";
     }
 }

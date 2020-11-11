@@ -100,3 +100,5 @@ The popup can then be close by calling the `CloseAsync` method.
 
 }
 ```
+
+Calling the `RemoveAsync` method will remove the popup from the map.

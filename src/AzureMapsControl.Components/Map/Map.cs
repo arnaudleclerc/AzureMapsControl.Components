@@ -375,6 +375,13 @@
             _popups.Add(popup);
         }
 
-
+        internal void RemovePopup(string id)
+        {
+            if(_popups != null)
+            {
+                var popupIndex = _popups.FindIndex(popup => popup.Id == id);
+                _popups.RemoveAt(popupIndex);
+            }
+        }
     }
 }
