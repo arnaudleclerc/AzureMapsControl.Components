@@ -1,0 +1,36 @@
+## Tile Layer
+
+A Tile layer loads in tiles from a server. These images can either be pre-rendered or dynamically rendered. Pre-rendered images are stored like any other image on a server using a naming convention that the tile layer understands. Dynamically rendered images use a service to load the images close to real time.
+
+![Tile Layer](../assets/tilelayer.png)
+
+```
+@page "/TileLayerOnReady"
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          Center="new Components.Atlas.Position(-99.47, 40.75)"
+          Zoom="4"
+          EventActivationFlags="MapEventActivationFlags
+                                .None()
+                                .Enable(MapEventType.Ready)"
+          OnReady="OnMapReady" />
+
+@code  {
+    public async Task OnMapReady(MapEventArgs events)
+    {
+        var layer = new AzureMapsControl.Components.Layers.TileLayer
+        {
+            Options = new Components.Layers.TileLayerOptions("https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-900913/{z}/{x}/{y}.png"),
+            EventActivationFlags = AzureMapsControl.Components.Layers.LayerEventActivationFlags.None().Enable(AzureMapsControl.Components.Layers.LayerEventType.LayerAdded)
+        };
+
+        layer.OnLayerAdded += e =>
+        {
+            Console.WriteLine("Layer added");
+        };
+
+        await events.Map.AddLayerAsync(layer);
+    }
+}
+```
