@@ -20,10 +20,10 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.301
-    - name: use-actions
-      uses: GitTools/actions@v0.9.4
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0.9.5
       with:
-        versionSpec: 5.x
+        versionSpec: '5.3.x'
     - name: Install dependencies
       run: dotnet restore ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj
     - name: Build
@@ -32,7 +32,7 @@ jobs:
       run: dotnet test ./tests/AzureMapsControl.Components.Tests/AzureMapsControl.Components.Tests.csproj
     - name: Use GitVersion
       id: gitversion # step id used as reference for output values
-      uses: gittools/actions/gitversion/execute@v0.9.4
+      uses: gittools/actions/gitversion/execute@v0.9.5
     - run: |
         echo "Major: ${{ steps.gitversion.outputs.major }}"
         echo "Minor: ${{ steps.gitversion.outputs.minor }}"
