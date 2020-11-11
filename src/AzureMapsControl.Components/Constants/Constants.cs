@@ -29,5 +29,7 @@
         internal const string MethodClearDataSources = "clearDataSources";
         internal const string MethodDataSourceImportDataFromUrl = "dataSource_importDataFromUrl";
         internal const string MethodDataSourceAdd = "dataSource_add";
+        internal const string MethodDataSourceRemove = "dataSource_remove";
+        internal const string MethodDataSourceClear = "dataSource_clear";
     }
 }

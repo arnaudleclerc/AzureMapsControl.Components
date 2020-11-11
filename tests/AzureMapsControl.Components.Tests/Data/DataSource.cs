@@ -121,5 +121,147 @@
             Assert.True(idAssertResult);
             Assert.True(urlAssertResult);
         }
+
+        [Fact]
+        public async void Should_RemoveGeometries_Async()
+        {
+            var assertResult = false;
+            var dataSource = new DataSource();
+            var point1 = new Point("point1");
+            var point2 = new Point("point2");
+            var geometries = new List<Geometry> { point1, point2 };
+
+            dataSource.AddCallback = async (id, geometriesToAdd) => { };
+            dataSource.RemoveCallback = async (id, geometryIds) => {
+                assertResult = id == dataSource.Id && geometryIds.Single() == point1.Id;
+            };
+
+            await dataSource.AddAsync(geometries);
+            await dataSource.RemoveAsync(point1);
+
+            Assert.True(assertResult);
+            Assert.DoesNotContain(point1, dataSource.Geometries);
+            Assert.Contains(point2, dataSource.Geometries);
+        }
+
+        [Fact]
+        public async void Should_RemoveGeometries_EnumerableVersion_Async()
+        {
+            var assertResult = false;
+            var dataSource = new DataSource();
+            var point1 = new Point("point1");
+            var point2 = new Point("point2");
+            var geometries = new List<Geometry> { point1, point2 };
+
+            dataSource.AddCallback = async (id, geometriesToAdd) => { };
+            dataSource.RemoveCallback = async (id, geometryIds) => {
+                assertResult = id == dataSource.Id && geometryIds.Single() == point1.Id;
+            };
+
+            await dataSource.AddAsync(geometries);
+            await dataSource.RemoveAsync(new[] { point1 });
+
+            Assert.True(assertResult);
+            Assert.DoesNotContain(point1, dataSource.Geometries);
+            Assert.Contains(point2, dataSource.Geometries);
+        }
+
+        [Fact]
+        public async void Should_RemoveGeometries_IdsVersion_Async()
+        {
+            var assertResult = false;
+            var dataSource = new DataSource();
+            var point1 = new Point("point1");
+            var point2 = new Point("point2");
+            var geometries = new List<Geometry> { point1, point2 };
+
+            dataSource.AddCallback = async (id, geometriesToAdd) => { };
+            dataSource.RemoveCallback = async (id, geometryIds) => {
+                assertResult = id == dataSource.Id && geometryIds.Single() == point1.Id;
+            };
+
+            await dataSource.AddAsync(geometries);
+            await dataSource.RemoveAsync(point1.Id);
+
+            Assert.True(assertResult);
+            Assert.DoesNotContain(point1, dataSource.Geometries);
+            Assert.Contains(point2, dataSource.Geometries);
+        }
+
+        [Fact]
+        public async void Should_RemoveGeometries_IdsEnumerableVersion_Async()
+        {
+            var assertResult = false;
+            var dataSource = new DataSource();
+            var point1 = new Point("point1");
+            var point2 = new Point("point2");
+            var geometries = new List<Geometry> { point1, point2 };
+
+            dataSource.AddCallback = async (id, geometriesToAdd) => { };
+            dataSource.RemoveCallback = async (id, geometryIds) => {
+                assertResult = id == dataSource.Id && geometryIds.Single() == point1.Id;
+            };
+
+            await dataSource.AddAsync(geometries);
+            await dataSource.RemoveAsync(new List<string> { point1.Id });
+
+            Assert.True(assertResult);
+            Assert.DoesNotContain(point1, dataSource.Geometries);
+            Assert.Contains(point2, dataSource.Geometries);
+        }
+
+        [Fact]
+        public async void Should_NotRemoveGeometries_Async()
+        {
+            var assertResult = false;
+            var dataSource = new DataSource();
+            var point1 = new Point("point1");
+            var point2 = new Point("point2");
+
+            dataSource.AddCallback = async (id, geometriesToAdd) => { };
+            dataSource.RemoveCallback = async (id, geometryIds) => {
+                assertResult = false;
+            };
+
+            await dataSource.AddAsync(point2);
+            await dataSource.RemoveAsync(point1);
+
+            Assert.False(assertResult);
+        }
+
+        [Fact]
+        public async void Should_NotRemoveGeometries_NullCheck_Async()
+        {
+            var assertResult = false;
+            var dataSource = new DataSource();
+            var point1 = new Point("point1");
+
+            dataSource.AddCallback = async (id, geometriesToAdd) => { };
+            dataSource.RemoveCallback = async (id, geometryIds) => {
+                assertResult = false;
+            };
+
+            await dataSource.RemoveAsync(point1);
+
+            Assert.False(assertResult);
+        }
+
+        [Fact]
+        public async void Should_ClearDataSource_Async()
+        {
+            var assertResult = false;
+            var dataSource = new DataSource();
+            var point1 = new Point("point1");
+            var point2 = new Point("point2");
+
+            dataSource.AddCallback = async (id, geometriesToAdd) => { };
+            dataSource.ClearCallback = async (id) => assertResult = id == dataSource.Id;
+
+            await dataSource.AddAsync(point2);
+            await dataSource.ClearAsync();
+
+            Assert.True(assertResult);
+            Assert.Null(dataSource.Geometries);
+        }
     }
 }

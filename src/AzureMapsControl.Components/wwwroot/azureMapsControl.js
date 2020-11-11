@@ -480,97 +480,109 @@ window.azureMapsControl = {
     removeDataSource: function (id) {
         this._map.sources.remove(id);
     },
-    dataSource_add(id, geometries) {
+    dataSource_add: function (id, geometries) {
         const shapes = [];
         for (const geometry of geometries) {
             switch (geometry.type) {
                 case 'Point':
-                    shapes.push(new atlas.data.Point(new atlas.data.Position(geometry.coordinates.longitude, geometry.coordinates.latitude, geometry.coordinates.elevation)));
+                    shapes.push(new atlas.Shape(new atlas.data.Point(new atlas.data.Position(geometry.coordinates.longitude, geometry.coordinates.latitude, geometry.coordinates.elevation)), geometry.id));
                     break;
 
                 case 'LineString':
                     shapes.push(
-                        new atlas.data.LineString(
-                            geometry.coordinates.map(
-                                c => new atlas.data.Position(c.longitude, c.latitude, c.elevation)
-                            ),
-                            geometry.bbox ? new atlas.data.BoundingBox(
-                                new atlas.data.Position(geometry.bbox.south, geometry.bbox.west)
-                                , new atlas.data.Position(geometry.bbox.north, geometry.bbox.east)
-                            ) : null
-                        )
+                        new atlas.Shape(
+                            new atlas.data.LineString(
+                                geometry.coordinates.map(
+                                    c => new atlas.data.Position(c.longitude, c.latitude, c.elevation)
+                                ),
+                                geometry.bbox ? new atlas.data.BoundingBox(
+                                    new atlas.data.Position(geometry.bbox.south, geometry.bbox.west)
+                                    , new atlas.data.Position(geometry.bbox.north, geometry.bbox.east)
+                                ) : null
+                            )
+                            , geometry.id)
                     );
                     break;
 
                 case 'Polygon':
                     shapes.push(
-                        new atlas.data.Polygon(
-                            geometry.coordinates.map(
-                                c => c.map(
-                                    p => new atlas.data.Position(p.longitude, p.latitude, p.elevation)
-                                )
-                            ),
-                            geometry.bbox ? new atlas.data.BoundingBox(
-                                new atlas.data.Position(geometry.bbox.south, geometry.bbox.west)
-                                , new atlas.data.Position(geometry.bbox.north, geometry.bbox.east)
-                            ) : null
-                        )
+                        new atlas.Shape(
+                            new atlas.data.Polygon(
+                                geometry.coordinates.map(
+                                    c => c.map(
+                                        p => new atlas.data.Position(p.longitude, p.latitude, p.elevation)
+                                    )
+                                ),
+                                geometry.bbox ? new atlas.data.BoundingBox(
+                                    new atlas.data.Position(geometry.bbox.south, geometry.bbox.west)
+                                    , new atlas.data.Position(geometry.bbox.north, geometry.bbox.east)
+                                ) : null
+                            ), geometry.id)
                     );
                     break;
 
                 case 'MultiPoint':
                     shapes.push(
-                        new atlas.data.MultiPoint(
-                            geometry.coordinates.map(
-                                c => new atlas.data.Position(c.longitude, c.latitude, c.elevation)
-                            ),
-                            geometry.bbox ? new atlas.data.BoundingBox(
-                                new atlas.data.Position(geometry.bbox.south, geometry.bbox.west)
-                                , new atlas.data.Position(geometry.bbox.north, geometry.bbox.east)
-                            ) : null
-                        )
+                        new atlas.Shape(
+                            new atlas.data.MultiPoint(
+                                geometry.coordinates.map(
+                                    c => new atlas.data.Position(c.longitude, c.latitude, c.elevation)
+                                ),
+                                geometry.bbox ? new atlas.data.BoundingBox(
+                                    new atlas.data.Position(geometry.bbox.south, geometry.bbox.west)
+                                    , new atlas.data.Position(geometry.bbox.north, geometry.bbox.east)
+                                ) : null
+                            ), geometry.id)
                     );
                     break;
 
                 case 'MultiLineString':
                     shapes.push(
-                        new atlas.data.MultiLineString(
-                            geometry.coordinates.map(
-                                c => c.map(
-                                    p => new atlas.data.Position(p.longitude, p.latitude, p.elevation)
-                                )
-                            ),
-                            geometry.bbox ? new atlas.data.BoundingBox(
-                                new atlas.data.Position(geometry.bbox.south, geometry.bbox.west)
-                                , new atlas.data.Position(geometry.bbox.north, geometry.bbox.east)
-                            ) : null
-                        )
+                        new atlas.Shape(
+                            new atlas.data.MultiLineString(
+                                geometry.coordinates.map(
+                                    c => c.map(
+                                        p => new atlas.data.Position(p.longitude, p.latitude, p.elevation)
+                                    )
+                                ),
+                                geometry.bbox ? new atlas.data.BoundingBox(
+                                    new atlas.data.Position(geometry.bbox.south, geometry.bbox.west)
+                                    , new atlas.data.Position(geometry.bbox.north, geometry.bbox.east)
+                                ) : null
+                            ), geometry.id)
                     );
                     break;
 
                 case 'MultiPolygon':
                     shapes.push(
-                        new atlas.data.Polygon(
-                            geometry.coordinates.map(
-                                c => c.map(
-                                    r => r.map(
-                                        p => new atlas.data.Position(p.longitude, p.latitude, p.elevation)
+                        new atlas.Shape(
+                            new atlas.data.Polygon(
+                                geometry.coordinates.map(
+                                    c => c.map(
+                                        r => r.map(
+                                            p => new atlas.data.Position(p.longitude, p.latitude, p.elevation)
+                                        )
                                     )
-                                )
-                            ),
-                            geometry.bbox ? new atlas.data.BoundingBox(
-                                new atlas.data.Position(geometry.bbox.south, geometry.bbox.west)
-                                , new atlas.data.Position(geometry.bbox.north, geometry.bbox.east)
-                            ) : null
-                        )
+                                ),
+                                geometry.bbox ? new atlas.data.BoundingBox(
+                                    new atlas.data.Position(geometry.bbox.south, geometry.bbox.west)
+                                    , new atlas.data.Position(geometry.bbox.north, geometry.bbox.east)
+                                ) : null
+                            ), geometry.id)
                     );
                     break;
             }
         }
         this._map.sources.getById(id).add(shapes);
     },
-    dataSource_importDataFromUrl(id, url) {
+    dataSource_importDataFromUrl: function (id, url) {
         this._map.sources.getById(id).importDataFromUrl(url);
+    },
+    dataSource_remove: function (id, geometryIds) {
+        this._map.sources.getById(id).remove(geometryIds);
+    },
+    dataSource_clear: function (id) {
+        this._map.sources.getById(id).clear();
     },
     _addLayerEvent: function (key, layer, eventHelper) {
         this._map.events.add(key, layer, e => {

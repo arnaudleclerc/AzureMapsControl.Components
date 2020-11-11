@@ -615,7 +615,7 @@
                     EnableAccessibility = EnableAccessibility,
                     RefreshExpiredTiles = RefreshExpiredTiles
                 },
-                (EventActivationFlags ?? MapEventActivationFlags.None()).EnabledEvents,
+                (EventActivationFlags ?? MapEventActivationFlags.None().Enable(MapEventType.Ready)).EnabledEvents,
                 DotNetObjectReference.Create(_mapEventInvokeHelper));
         }
         await base.OnAfterRenderAsync(firstRender);
@@ -877,6 +877,8 @@
         await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodAddDataSource.ToAzureMapsControlNamespace(), dataSource.Id, dataSource.Options);
         dataSource.ImportDataFromUrlCallback = DataSource_ImportDataFromUrlAsync;
         dataSource.AddCallback = DataSource_AddAsync;
+        dataSource.RemoveCallback = DataSource_RemoveAsync;
+        dataSource.ClearCallback = DataSource_ClearAsync;
     }
 
     private async Task RemoveDataSourceAsync(string dataSourceId) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodRemoveDataSource.ToAzureMapsControlNamespace(), dataSourceId);
@@ -922,6 +924,9 @@
             await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodDataSourceAdd.ToAzureMapsControlNamespace(), id, polygons);
         }
     }
+
+    private async Task DataSource_RemoveAsync(string id, IEnumerable<string> geometryIds) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodDataSourceRemove.ToAzureMapsControlNamespace(), id, geometryIds);
+    private async Task DataSource_ClearAsync(string dataSourceId) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodDataSourceClear.ToAzureMapsControlNamespace(), dataSourceId);
 
     private async Task DispatchMapEventAsync(MapJsEventArgs mapEvent)
     {

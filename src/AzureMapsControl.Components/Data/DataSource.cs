@@ -13,6 +13,8 @@
 
         internal Func<string, string, Task> ImportDataFromUrlCallback { get; set; }
         internal Func<string, IEnumerable<Geometry>, Task> AddCallback { get; set; }
+        internal Func<string, IEnumerable<string>, Task> RemoveCallback { get; set; }
+        internal Func<string, Task> ClearCallback { get; set; }
 
         /// <summary>
         /// A unique id that the user assigns to the data source
@@ -30,6 +32,11 @@
 
         public DataSource(string id) => Id = id;
 
+        /// <summary>
+        /// Add geometries to the data source
+        /// </summary>
+        /// <param name="geometries">Geometries to add</param>
+        /// <returns></returns>
         public async Task AddAsync(IEnumerable<Geometry> geometries)
         {
             if (geometries == null || !geometries.Any())
@@ -46,7 +53,51 @@
             await AddCallback.Invoke(Id, geometries);
         }
 
-        public async Task AddAsync(params Geometry[] geometries) => await AddAsync((IEnumerable<Geometry>)geometries);
+        /// <summary>
+        /// Add geometries to the data source
+        /// </summary>
+        /// <param name="geometries">Geometries to add</param>
+        /// <returns></returns>
+        public async Task AddAsync(params Geometry[] geometries) => await AddAsync(geometries as IEnumerable<Geometry>);
+
+        /// <summary>
+        /// Remove geometries from the data source
+        /// </summary>
+        /// <param name="geometryIds">IDs of the geometries to remove</param>
+        /// <returns></returns>
+        public async Task RemoveAsync(IEnumerable<string> geometryIds)
+        {
+            if (_geometries != null)
+            {
+                var ids = _geometries.Where(geometry => geometryIds.Contains(geometry.Id)).Select(geometry => geometry.Id);
+                if (ids.Any())
+                {
+                    await RemoveCallback.Invoke(Id, ids);
+                    _geometries.RemoveAll(geometry => geometryIds.Contains(geometry.Id));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Remove geometries from the data source
+        /// </summary>
+        /// <param name="geometryIds">IDs of the geometries to remove</param>
+        /// <returns></returns>
+        public async Task RemoveAsync(params string[] geometryIds) => await RemoveAsync(geometryIds as IEnumerable<string>);
+
+        /// <summary>
+        /// Remove geometries from the datasource
+        /// </summary>
+        /// <param name="geometries">Geometries to remove</param>
+        /// <returns></returns>
+        public async Task RemoveAsync(IEnumerable<Geometry> geometries) => await RemoveAsync(geometries.Select(g => g.Id));
+
+        /// <summary>
+        /// Remove geometries from the data source
+        /// </summary>
+        /// <param name="geometries">Geometries to remove</param>
+        /// <returns></returns>
+        public async Task RemoveAsync(params Geometry[] geometries) => await RemoveAsync(geometries.Select(g => g.Id));
 
         /// <summary>
         /// Imports data from an URL into a data source
@@ -55,5 +106,15 @@
         /// <param name="url">Url to import the data from</param>
         /// <returns></returns>
         public async Task ImportDataFromUrlAsync(string url) => await ImportDataFromUrlCallback.Invoke(Id, url);
+
+        /// <summary>
+        /// Clear the datasource
+        /// </summary>
+        /// <returns></returns>
+        public async Task ClearAsync()
+        {
+            await ClearCallback.Invoke(Id);
+            _geometries = null;
+        }
     }
 }
