@@ -14,10 +14,16 @@
 
 @code {
 
+    #region Fields
+
     private MapEventInvokeHelper _mapEventInvokeHelper;
     private Markers.HtmlMarkerInvokeHelper _htmlMarkerEventInvokeHelper;
     private Drawing.DrawingToolbarEventInvokeHelper _drawingToolbarEventInvokeHelper;
     private Layers.LayerEventInvokeHelper _layerEventInvokeHelper;
+
+    #endregion
+
+    #region Parameters
 
     /// <summary>
     /// If true the map will automatically resize whenever the window's size changes. Otherwise map.resize() must be called.
@@ -589,6 +595,10 @@
     [Parameter]
     public EventCallback<AzureMapsControl.Components.Drawing.DrawingToolbarEventArgs> OnDrawingComplete { get; set; }
 
+    #endregion
+
+    #region Razor events
+
     protected override void OnInitialized()
     {
         _mapEventInvokeHelper = new MapEventInvokeHelper(MapEventReceivedAsync);
@@ -621,20 +631,88 @@
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    private async Task HtmlMarkerEventReceivedAsync(AzureMapsControl.Components.Markers.HtmlMarkerJsEventArgs htmlMarkerEvent)
+    #endregion
+
+    #region Controls
+
+    private async Task AddControlsAsync(IEnumerable<Control> controls)
     {
-        if (MapService.Map.HtmlMarkers != null)
+        var newControls = controls?.Where(control => control != null);
+        if (newControls != null && newControls.Any())
         {
-            var htmlMarker = MapService.Map.HtmlMarkers.First(marker => marker.Id == htmlMarkerEvent.MarkerId);
-            if (htmlMarker != null)
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodAddControl.ToAzureMapsControlNamespace(),
+            newControls.Select(control => new ControlOptions
             {
-                await Task.Run(() =>
-                {
-                    htmlMarker.DispatchEvent(MapService.Map, htmlMarkerEvent.Type);
-                });
-            }
+                Type = control.Type.ToString(),
+                Position = control.Position.ToString()
+            }));
         }
     }
+
+    #endregion
+
+    #region Data sources
+
+    private async Task ClearDataSourcesAsync() => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodClearDataSources.ToAzureMapsControlNamespace());
+
+    private async Task AddDataSourceAsync(AzureMapsControl.Components.Data.DataSource dataSource)
+    {
+        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodAddDataSource.ToAzureMapsControlNamespace(), dataSource.Id, dataSource.Options);
+        dataSource.ImportDataFromUrlCallback = DataSource_ImportDataFromUrlAsync;
+        dataSource.AddCallback = DataSource_AddAsync;
+        dataSource.RemoveCallback = DataSource_RemoveAsync;
+        dataSource.ClearCallback = DataSource_ClearAsync;
+    }
+
+    private async Task RemoveDataSourceAsync(string dataSourceId) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodRemoveDataSource.ToAzureMapsControlNamespace(), dataSourceId);
+
+    private async Task DataSource_ImportDataFromUrlAsync(string id, string url) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodDataSourceImportDataFromUrl.ToAzureMapsControlNamespace(), id, url);
+
+    private async Task DataSource_AddAsync(string id, IEnumerable<Geometry> geometries)
+    {
+        var lineStrings = geometries.OfType<LineString>();
+        if (lineStrings.Any())
+        {
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodDataSourceAdd.ToAzureMapsControlNamespace(), id, lineStrings);
+        }
+
+        var multiLineStrings = geometries.OfType<MultiLineString>();
+        if (multiLineStrings.Any())
+        {
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodDataSourceAdd.ToAzureMapsControlNamespace(), id, multiLineStrings);
+        }
+
+        var multiPoints = geometries.OfType<MultiPoint>();
+        if (multiPoints.Any())
+        {
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodDataSourceAdd.ToAzureMapsControlNamespace(), id, multiPoints);
+        }
+
+        var multiPolygons = geometries.OfType<MultiPolygon>();
+        if (multiPolygons.Any())
+        {
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodDataSourceAdd.ToAzureMapsControlNamespace(), id, multiPolygons);
+        }
+
+        var points = geometries.OfType<Point>();
+        if (points.Any())
+        {
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodDataSourceAdd.ToAzureMapsControlNamespace(), id, points);
+        }
+
+        var polygons = geometries.OfType<Polygon>();
+        if (polygons.Any())
+        {
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodDataSourceAdd.ToAzureMapsControlNamespace(), id, polygons);
+        }
+    }
+
+    private async Task DataSource_RemoveAsync(string id, IEnumerable<string> geometryIds) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodDataSourceRemove.ToAzureMapsControlNamespace(), id, geometryIds);
+    private async Task DataSource_ClearAsync(string dataSourceId) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodDataSourceClear.ToAzureMapsControlNamespace(), dataSourceId);
+
+    #endregion
+
+    #region Drawing Toolbar
 
     private async Task DrawingToolbarEventReceivedAsync(AzureMapsControl.Components.Drawing.DrawingToolbarJsEventArgs drawingToolbarEvent)
     {
@@ -661,6 +739,142 @@
                 break;
         }
     }
+
+    private async Task AddDrawingToolbarAsync(AzureMapsControl.Components.Drawing.DrawingToolbarOptions drawingToolbarOptions)
+    {
+        if (drawingToolbarOptions != null)
+        {
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodAddDrawingToolbar.ToAzureMapsControlNamespace(),
+            new AzureMapsControl.Components.Drawing.DrawingToolbarCreationOptions
+            {
+                Buttons = drawingToolbarOptions.Buttons?.Select(button => button.ToString()).ToArray(),
+                ContainerId = drawingToolbarOptions.ContainerId,
+                DragHandleStyle = drawingToolbarOptions.DragHandleStyle,
+                FreehandInterval = drawingToolbarOptions.FreehandInterval,
+                InteractionType = drawingToolbarOptions.InteractionType.ToString(),
+                Mode = drawingToolbarOptions.Mode.ToString(),
+                NumColumns = drawingToolbarOptions.NumColumns,
+                Position = drawingToolbarOptions.Position.ToString(),
+                SecondaryDragHandleStyle = drawingToolbarOptions.SecondaryDragHandleStyle,
+                ShapeDraggingEnabled = drawingToolbarOptions.ShapesDraggingEnabled,
+                Style = drawingToolbarOptions.Style.ToString(),
+                Visible = drawingToolbarOptions.Visible,
+                Events = drawingToolbarOptions.Events?.EnabledEvents
+            },
+            DotNetObjectReference.Create(_drawingToolbarEventInvokeHelper));
+        }
+    }
+
+    private async Task UpdateDrawingToolbarAsync(AzureMapsControl.Components.Drawing.DrawingToolbarUpdateOptions drawingToolbarOptions)
+    {
+        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodUpdateDrawingToolbar.ToAzureMapsControlNamespace(),
+        new AzureMapsControl.Components.Drawing.DrawingToolbarCreationOptions
+        {
+            Buttons = drawingToolbarOptions.Buttons?.Select(button => button.ToString()).ToArray(),
+            ContainerId = drawingToolbarOptions.ContainerId,
+            NumColumns = drawingToolbarOptions.NumColumns,
+            Position = drawingToolbarOptions.Position.ToString(),
+            Style = drawingToolbarOptions.Style.ToString(),
+            Visible = drawingToolbarOptions.Visible
+        });
+    }
+
+    private async Task RemoveDrawingToolbarAsync() => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodRemoveDrawingToolbar.ToAzureMapsControlNamespace());
+
+    #endregion
+
+    #region HTML Markers
+
+    private async Task HtmlMarkerEventReceivedAsync(AzureMapsControl.Components.Markers.HtmlMarkerJsEventArgs htmlMarkerEvent)
+    {
+        if (MapService.Map.HtmlMarkers != null)
+        {
+            var htmlMarker = MapService.Map.HtmlMarkers.First(marker => marker.Id == htmlMarkerEvent.MarkerId);
+            if (htmlMarker != null)
+            {
+                await Task.Run(() =>
+                {
+                    htmlMarker.DispatchEvent(MapService.Map, htmlMarkerEvent.Type);
+                });
+            }
+        }
+    }
+
+    private async Task ClearHtmlMarkersAsync() => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodClearHtmlMarkers.ToAzureMapsControlNamespace());
+
+    private async Task AddHtmlMarkersAsync(IEnumerable<AzureMapsControl.Components.Markers.HtmlMarker> htmlMarkers)
+    {
+        var newHtmlMarkers = htmlMarkers?.Where(marker => marker != null);
+        if (newHtmlMarkers != null && newHtmlMarkers.Any())
+        {
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodAddHtmlMarkers.ToAzureMapsControlNamespace(),
+            newHtmlMarkers.Select(marker => new AzureMapsControl.Components.Markers.HtmlMarkerCreationOptions
+            {
+                Id = marker.Id,
+                Events = marker.EventActivationFlags?.EnabledEvents,
+                Options = marker.Options
+            }),
+            DotNetObjectReference.Create(_htmlMarkerEventInvokeHelper));
+        }
+    }
+
+    private async Task RemoveHtmlMarkersAsync(IEnumerable<AzureMapsControl.Components.Markers.HtmlMarker> htmlMarkers)
+    {
+        var htmlMarkersToRemove = htmlMarkers?.Where(marker => marker != null && Guid.TryParse(marker.Id, out _));
+        if (htmlMarkersToRemove.Any())
+        {
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodRemoveHtmlMarkers.ToAzureMapsControlNamespace(), htmlMarkersToRemove.Select(marker => marker.Id));
+        }
+    }
+
+    private async Task UpdateHtmlMarkersAsync(IEnumerable<AzureMapsControl.Components.Markers.HtmlMarkerUpdate> updates)
+    {
+        var htmlMarkersToUpdate = updates?.Where(htmlMarker => htmlMarker?.Marker != null && htmlMarker.Options != null);
+        if (htmlMarkersToUpdate != null && htmlMarkersToUpdate.Any())
+        {
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodUpdateHtmlMarkers.ToAzureMapsControlNamespace(),
+            htmlMarkersToUpdate.Select(update => new AzureMapsControl.Components.Markers.HtmlMarkerCreationOptions
+            {
+                Id = update.Marker.Id,
+                Options = update.Options
+            }));
+        }
+    }
+
+    #endregion
+
+    #region Layers
+
+    private async Task LayerEventReceivedAsync(MapJsEventArgs eventArgs)
+    {
+        var layer = MapService.Map.Layers.FirstOrDefault(l => l.Id == eventArgs.LayerId);
+        if (layer != null)
+        {
+            await Task.Run(() =>
+            {
+                layer.DispatchEvent(MapService.Map, eventArgs);
+            });
+        }
+    }
+
+    private async Task ClearLayersAsync() => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodClearLayers.ToAzureMapsControlNamespace());
+
+    private async Task AddLayerAsync(AzureMapsControl.Components.Layers.Layer layer, string before)
+    {
+        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodAddLayer.ToAzureMapsControlNamespace(),
+            layer.Id,
+            before,
+            layer.Type.ToString(),
+            layer.GetLayerOptions().GenerateJsOptions(),
+            layer.EventActivationFlags.EnabledEvents,
+            DotNetObjectReference.Create(_layerEventInvokeHelper));
+    }
+
+    private async Task RemoveLayersAsync(IEnumerable<string> layerIds) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodRemoveLayers.ToAzureMapsControlNamespace(), layerIds);
+
+    #endregion
+
+    #region Map
 
     private async Task MapEventReceivedAsync(MapJsEventArgs mapEvent)
     {
@@ -730,7 +944,10 @@
                 ClearMapAsync,
                 ClearLayersAsync,
                 ClearDataSourcesAsync,
-                ClearHtmlMarkersAsync)
+                ClearHtmlMarkersAsync,
+                AddPopupAsync,
+                Popup_RemoveAsync,
+                ClearPopups)
             {
                 Controls = Controls,
                 HtmlMarkers = HtmlMarkers,
@@ -744,189 +961,7 @@
         await DispatchMapEventAsync(mapEvent);
     }
 
-    private async Task LayerEventReceivedAsync(MapJsEventArgs eventArgs)
-    {
-        var layer = MapService.Map.Layers.FirstOrDefault(l => l.Id == eventArgs.LayerId);
-        if (layer != null)
-        {
-            await Task.Run(() =>
-            {
-                layer.DispatchEvent(MapService.Map, eventArgs);
-            });
-        }
-    }
-
     private async Task ClearMapAsync() => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodClearMap.ToAzureMapsControlNamespace());
-    private async Task ClearLayersAsync() => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodClearLayers.ToAzureMapsControlNamespace());
-    private async Task ClearDataSourcesAsync() => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodClearDataSources.ToAzureMapsControlNamespace());
-    private async Task ClearHtmlMarkersAsync() => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodClearHtmlMarkers.ToAzureMapsControlNamespace());
-
-    private async Task AddControlsAsync(IEnumerable<Control> controls)
-    {
-        var newControls = controls?.Where(control => control != null);
-        if (newControls != null && newControls.Any())
-        {
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodAddControl.ToAzureMapsControlNamespace(),
-            newControls.Select(control => new ControlOptions
-            {
-                Type = control.Type.ToString(),
-                Position = control.Position.ToString()
-            }));
-        }
-    }
-
-    private async Task AddDrawingToolbarAsync(AzureMapsControl.Components.Drawing.DrawingToolbarOptions drawingToolbarOptions)
-    {
-        if (drawingToolbarOptions != null)
-        {
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodAddDrawingToolbar.ToAzureMapsControlNamespace(),
-            new AzureMapsControl.Components.Drawing.DrawingToolbarCreationOptions
-            {
-                Buttons = drawingToolbarOptions.Buttons?.Select(button => button.ToString()).ToArray(),
-                ContainerId = drawingToolbarOptions.ContainerId,
-                DragHandleStyle = drawingToolbarOptions.DragHandleStyle,
-                FreehandInterval = drawingToolbarOptions.FreehandInterval,
-                InteractionType = drawingToolbarOptions.InteractionType.ToString(),
-                Mode = drawingToolbarOptions.Mode.ToString(),
-                NumColumns = drawingToolbarOptions.NumColumns,
-                Position = drawingToolbarOptions.Position.ToString(),
-                SecondaryDragHandleStyle = drawingToolbarOptions.SecondaryDragHandleStyle,
-                ShapeDraggingEnabled = drawingToolbarOptions.ShapesDraggingEnabled,
-                Style = drawingToolbarOptions.Style.ToString(),
-                Visible = drawingToolbarOptions.Visible,
-                Events = drawingToolbarOptions.Events?.EnabledEvents
-            },
-            DotNetObjectReference.Create(_drawingToolbarEventInvokeHelper));
-        }
-    }
-
-    private async Task UpdateDrawingToolbarAsync(AzureMapsControl.Components.Drawing.DrawingToolbarUpdateOptions drawingToolbarOptions)
-    {
-        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodUpdateDrawingToolbar.ToAzureMapsControlNamespace(),
-        new AzureMapsControl.Components.Drawing.DrawingToolbarCreationOptions
-        {
-            Buttons = drawingToolbarOptions.Buttons?.Select(button => button.ToString()).ToArray(),
-            ContainerId = drawingToolbarOptions.ContainerId,
-            NumColumns = drawingToolbarOptions.NumColumns,
-            Position = drawingToolbarOptions.Position.ToString(),
-            Style = drawingToolbarOptions.Style.ToString(),
-            Visible = drawingToolbarOptions.Visible
-        });
-    }
-
-    private async Task RemoveDrawingToolbarAsync() => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodRemoveDrawingToolbar.ToAzureMapsControlNamespace());
-
-    private async Task AddHtmlMarkersAsync(IEnumerable<AzureMapsControl.Components.Markers.HtmlMarker>
-        htmlMarkers)
-    {
-        var newHtmlMarkers = htmlMarkers?.Where(marker => marker != null);
-        if (newHtmlMarkers != null && newHtmlMarkers.Any())
-        {
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodAddHtmlMarkers.ToAzureMapsControlNamespace(),
-            newHtmlMarkers.Select(marker => new AzureMapsControl.Components.Markers.HtmlMarkerCreationOptions
-            {
-                Id = marker.Id,
-                Events = marker.EventActivationFlags?.EnabledEvents,
-                Options = marker.Options
-            }),
-            DotNetObjectReference.Create(_htmlMarkerEventInvokeHelper));
-        }
-    }
-
-    private async Task RemoveHtmlMarkersAsync(IEnumerable<AzureMapsControl.Components.Markers.HtmlMarker>
-        htmlMarkers)
-    {
-        var htmlMarkersToRemove = htmlMarkers?.Where(marker => marker != null && Guid.TryParse(marker.Id, out _));
-        if (htmlMarkersToRemove.Any())
-        {
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodRemoveHtmlMarkers.ToAzureMapsControlNamespace(), htmlMarkersToRemove.Select(marker => marker.Id));
-        }
-    }
-
-    private async Task UpdateHtmlMarkersAsync(IEnumerable<AzureMapsControl.Components.Markers.HtmlMarkerUpdate>
-        updates)
-    {
-        var htmlMarkersToUpdate = updates?.Where(htmlMarker => htmlMarker?.Marker != null && htmlMarker.Options != null);
-        if (htmlMarkersToUpdate != null && htmlMarkersToUpdate.Any())
-        {
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodUpdateHtmlMarkers.ToAzureMapsControlNamespace(),
-            htmlMarkersToUpdate.Select(update => new AzureMapsControl.Components.Markers.HtmlMarkerCreationOptions
-            {
-                Id = update.Marker.Id,
-                Options = update.Options
-            }));
-        }
-    }
-
-    private async Task AddLayerAsync(AzureMapsControl.Components.Layers.Layer layer, string before)
-    {
-        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodAddLayer.ToAzureMapsControlNamespace(),
-            layer.Id,
-            before,
-            layer.Type.ToString(),
-            layer.GetLayerOptions().GenerateJsOptions(),
-            layer.EventActivationFlags.EnabledEvents,
-            DotNetObjectReference.Create(_layerEventInvokeHelper));
-    }
-
-    private async Task RemoveLayersAsync(IEnumerable<string> layerIds) =>
-        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodRemoveLayers.ToAzureMapsControlNamespace(), layerIds);
-
-    private async Task AddDataSourceAsync(AzureMapsControl.Components.Data.DataSource dataSource)
-    {
-        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodAddDataSource.ToAzureMapsControlNamespace(), dataSource.Id, dataSource.Options);
-        dataSource.ImportDataFromUrlCallback = DataSource_ImportDataFromUrlAsync;
-        dataSource.AddCallback = DataSource_AddAsync;
-        dataSource.RemoveCallback = DataSource_RemoveAsync;
-        dataSource.ClearCallback = DataSource_ClearAsync;
-    }
-
-    private async Task RemoveDataSourceAsync(string dataSourceId) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodRemoveDataSource.ToAzureMapsControlNamespace(), dataSourceId);
-
-    private async Task DataSource_ImportDataFromUrlAsync(string id, string url)
-        => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodDataSourceImportDataFromUrl.ToAzureMapsControlNamespace(), id, url);
-
-    private async Task DataSource_AddAsync(string id, IEnumerable<Geometry> geometries)
-    {
-        var lineStrings = geometries.OfType<LineString>();
-        if (lineStrings.Any())
-        {
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodDataSourceAdd.ToAzureMapsControlNamespace(), id, lineStrings);
-        }
-
-        var multiLineStrings = geometries.OfType<MultiLineString>();
-        if (multiLineStrings.Any())
-        {
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodDataSourceAdd.ToAzureMapsControlNamespace(), id, multiLineStrings);
-        }
-
-        var multiPoints = geometries.OfType<MultiPoint>();
-        if (multiPoints.Any())
-        {
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodDataSourceAdd.ToAzureMapsControlNamespace(), id, multiPoints);
-        }
-
-        var multiPolygons = geometries.OfType<MultiPolygon>();
-        if (multiPolygons.Any())
-        {
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodDataSourceAdd.ToAzureMapsControlNamespace(), id, multiPolygons);
-        }
-
-        var points = geometries.OfType<Point>();
-        if (points.Any())
-        {
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodDataSourceAdd.ToAzureMapsControlNamespace(), id, points);
-        }
-
-        var polygons = geometries.OfType<Polygon>();
-        if (polygons.Any())
-        {
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodDataSourceAdd.ToAzureMapsControlNamespace(), id, polygons);
-        }
-    }
-
-    private async Task DataSource_RemoveAsync(string id, IEnumerable<string> geometryIds) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodDataSourceRemove.ToAzureMapsControlNamespace(), id, geometryIds);
-    private async Task DataSource_ClearAsync(string dataSourceId) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodDataSourceClear.ToAzureMapsControlNamespace(), dataSourceId);
 
     private async Task DispatchMapEventAsync(MapJsEventArgs mapEvent)
     {
@@ -1074,4 +1109,29 @@
             }
         }
     }
+
+    #endregion
+
+    #region Popups
+
+    private async Task AddPopupAsync(AzureMapsControl.Components.Popups.Popup popup)
+    {
+        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodAddPopup.ToAzureMapsControlNamespace(), popup.Id, popup.Options);
+        popup.OpenPopupCallback = Popup_OpenAsync;
+        popup.ClosePopupCallback = Popup_CloseAsync;
+        popup.RemoveCallback = Popup_RemoveAsync;
+        popup.UpdateCallback = Popup_UpdateAsync;
+    }
+
+    private async Task Popup_OpenAsync(string id) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodPopupOpen.ToAzureMapsControlNamespace(), id);
+    private async Task Popup_CloseAsync(string id) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodPopupClose.ToAzureMapsControlNamespace(), id);
+    private async Task Popup_RemoveAsync(string id)
+    {
+        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodPopupRemove.ToAzureMapsControlNamespace(), id);
+        MapService.Map.RemovePopup(id);
+    }
+    private async Task Popup_UpdateAsync(string id, AzureMapsControl.Components.Popups.PopupOptions options) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodPopupUpdate.ToAzureMapsControlNamespace(), id, options);
+    private async Task ClearPopups() => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodClearPopups.ToAzureMapsControlNamespace());
+
+    #endregion
 }

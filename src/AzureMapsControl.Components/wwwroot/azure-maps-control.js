@@ -2,6 +2,7 @@ window.azureMapsControl = {
     _drawingManager: null,
     _toolbar: null,
     _map: null,
+    _popups: [],
     _mapEvents: [
         'boxzoomend',
         'boxzoomstart',
@@ -340,6 +341,7 @@ window.azureMapsControl = {
     },
     clearMap: function () {
         this._map.clear();
+        this._popups = [];
     },
     clearLayers: function () {
         this._map.layers.clear()
@@ -349,6 +351,10 @@ window.azureMapsControl = {
     },
     clearHtmlMarkers: function () {
         this._map.markers.clear();
+    },
+    clearPopups: function () {
+        this._map.popups.clear();
+        this._popups = [];
     },
     setOptions: function (cameraOptions,
         styleOptions,
@@ -583,6 +589,61 @@ window.azureMapsControl = {
     },
     dataSource_clear: function (id) {
         this._map.sources.getById(id).clear();
+    },
+    addPopup: function (id, options) {
+        const popupOptions = {
+            draggable: options.draggable,
+            closeButton: options.closeButton,
+            content: options.content,
+            fillColor: options.fillColor,
+            pixelOffset: options.pixelOffset ? [options.pixelOffset.x, options.pixelOffset.y] : null,
+            position: options.position ? [options.position.longitude, options.position.latitude] : null,
+            showPointer: options.showPointer
+        };
+        const popup = new atlas.Popup(popupOptions);
+        this._popups.push({
+            id: id,
+            popup: popup
+        });
+        this._map.popups.add(popup);
+        if (options.openOnAdd) {
+            popup.open();
+        }
+    },
+    popup_open: function (id) {
+        const popupEntry = this._popups.find(p => p.id === id);
+        if (popupEntry) {
+            popupEntry.popup.open();
+        }
+    },
+    popup_close: function (id) {
+        const popupEntry = this._popups.find(p => p.id === id);
+        if (popupEntry) {
+            popupEntry.popup.close();
+        }
+    },
+    popup_remove: function (id) {
+        const index = this._popups.findIndex(p => p.id === id);
+        if (index > -1) {
+            this._popups[index].popup.remove();
+            this._popups.splice(index, 1);
+        }
+    },
+    popup_update: function (id, options) {
+        const popupEntry = this._popups.find(p => p.id === id);
+        if (popupEntry) {
+            const popupOptions = {
+                draggable: options.draggable,
+                closeButton: options.closeButton,
+                content: options.content,
+                fillColor: options.fillColor,
+                pixelOffset: options.pixelOffset ? [options.pixelOffset.x, options.pixelOffset.y] : null,
+                position: options.position ? [options.position.longitude, options.position.latitude] : null,
+                showPointer: options.showPointer
+            };
+
+            popupEntry.popup.setOptions(popupOptions);
+        }
     },
     _addLayerEvent: function (key, layer, eventHelper) {
         this._map.events.add(key, layer, e => {
