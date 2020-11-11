@@ -28,4 +28,4 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj
     - name: Test
-      run: dotnet test ./tests/AzureMapsControl.Components.Tests/AzureMapsControl.Component.Tests.csproj
+      run: dotnet test ./tests/AzureMapsControl.Components.Tests/AzureMapsControl.Components.Tests.csproj
