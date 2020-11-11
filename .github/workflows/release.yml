@@ -15,9 +15,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Setup Nuget API Key
-      env :
-        NUGETAPIKEY: ${{secrets.NUGETAPIKEY}}
     - name: Checkout
       uses: actions/checkout@v2
       with:
@@ -73,4 +70,6 @@ jobs:
     - name: Pack
       run: dotnet pack ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj -p:Version='${{ steps.gitversion.outputs.nuGetVersionV2 }}"' -c Release --no-build
     - name: Publish
+      env :
+        NUGETAPIKEY: ${{secrets.NUGETAPIKEY}}
       run: dotnet nuget push "**/AzureMapsControl.Components*.nupkg" -s https://api.nuget.org/v3/index.json -k $NUGETAPIKEY
