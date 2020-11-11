@@ -3,11 +3,9 @@ name: release
 on:
   push:
     branches: 
-      - features/**
       - releases/**
-      - hotfix/**
       - develop
-      - main
+      - master
 
 jobs:
   build:
