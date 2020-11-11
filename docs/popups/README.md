@@ -155,3 +155,35 @@ The popup can be updated by calling the `UpdateAsync` method and providing the u
 }
 ```
 
+All the popups can be cleared using the `ClearPopupsAsync` method on the map.
+
+```
+@page "/PopupOnReady"
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          Style="grayscale_dark"
+          EventActivationFlags="MapEventActivationFlags
+                                .None()
+                                .Enable(MapEventType.Ready)"
+          OnReady="OnMapReady" />
+
+@code  {
+
+    public async Task OnMapReady(MapEventArgs eventArgs)
+    {
+        var popup = new Components.Popups.Popup(new Components.Popups.PopupOptions
+        {
+            CloseButton = false,
+            Content = "Please customize me",
+            Position = new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534)
+        });
+        await eventArgs.Map.AddPopupAsync(popup);
+        await popup.OpenAsync();
+
+        await popup.UpdateAsync(options => options.Content = "Thanks for updating me");
+        await eventArgs.Map.ClearPopupsAsync();
+    }
+
+}
+```

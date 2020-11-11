@@ -559,5 +559,18 @@
 
             Assert.False(assertRemoveCallback);
         }
+
+        [Fact]
+        public async void Should_ClearPopups_Async()
+        {
+            var assertClearCallback = false;
+            var popup = new Popup(new PopupOptions());
+            var map = new Components.Map.Map("id", addPopupCallback: async _ => { }, clearPopupsCallback: async () => assertClearCallback = true);
+            await map.AddPopupAsync(popup);
+            await map.ClearPopupsAsync();
+
+            Assert.True(assertClearCallback);
+            Assert.Null(map.Popups);
+        }
     }
 }

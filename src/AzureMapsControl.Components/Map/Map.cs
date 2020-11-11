@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security;
     using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Atlas;
@@ -35,6 +36,7 @@
         private readonly Func<Task> _clearHtmlMarkersCallback;
         private readonly Func<Popup, Task> _addPopupCallback;
         private readonly Func<string, Task> _removePopupCallback;
+        private readonly Func<Task> _clearPopupsCallback;
 
         private List<Layer> _layers;
         private List<DataSource> _dataSources;
@@ -74,7 +76,8 @@
             Func<Task> clearDataSourcesCallback = null,
             Func<Task> clearHtmlMarkersCallback = null,
             Func<Popup, Task> addPopupCallback = null,
-            Func<string, Task> removePopupCallback = null)
+            Func<string, Task> removePopupCallback = null,
+            Func<Task> clearPopupsCallback = null)
         {
             Id = id;
             _addControlsCallback = addControlsCallback;
@@ -94,6 +97,7 @@
             _clearHtmlMarkersCallback = clearHtmlMarkersCallback;
             _addPopupCallback = addPopupCallback;
             _removePopupCallback = removePopupCallback;
+            _clearPopupsCallback = clearPopupsCallback;
         }
 
         # region Controls
@@ -426,6 +430,16 @@
         /// <param name="popup">Popup to remove</param>
         /// <returns></returns>
         public async Task RemovePopupAsync(Popup popup) => await RemovePopupAsync(popup.Id);
+
+        /// <summary>
+        /// Remove all the popups from the map
+        /// </summary>
+        /// <returns></returns>
+        public async Task ClearPopupsAsync()
+        {
+            await _clearPopupsCallback.Invoke();
+            _popups = null;
+        }
 
         internal void RemovePopup(string id)
         {

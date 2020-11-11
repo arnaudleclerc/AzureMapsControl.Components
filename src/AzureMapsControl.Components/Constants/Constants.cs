@@ -42,5 +42,6 @@
         internal const string MethodPopupClose = "popup_close";
         internal const string MethodPopupRemove = "popup_remove";
         internal const string MethodPopupUpdate = "popup_update";
+        internal const string MethodClearPopups = "clearPopups";
     }
 }

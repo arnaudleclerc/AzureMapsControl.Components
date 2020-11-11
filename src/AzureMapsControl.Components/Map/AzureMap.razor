@@ -946,7 +946,8 @@
                 ClearDataSourcesAsync,
                 ClearHtmlMarkersAsync,
                 AddPopupAsync,
-                Popup_RemoveAsync)
+                Popup_RemoveAsync,
+                ClearPopups)
             {
                 Controls = Controls,
                 HtmlMarkers = HtmlMarkers,
@@ -1130,6 +1131,7 @@
         MapService.Map.RemovePopup(id);
     }
     private async Task Popup_UpdateAsync(string id, AzureMapsControl.Components.Popups.PopupOptions options) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodPopupUpdate.ToAzureMapsControlNamespace(), id, options);
+    private async Task ClearPopups() => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodClearPopups.ToAzureMapsControlNamespace());
 
     #endregion
 }

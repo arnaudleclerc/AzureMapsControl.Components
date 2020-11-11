@@ -352,6 +352,10 @@ window.azureMapsControl = {
     clearHtmlMarkers: function () {
         this._map.markers.clear();
     },
+    clearPopups: function () {
+        this._map.popups.clear();
+        this._popups = [];
+    },
     setOptions: function (cameraOptions,
         styleOptions,
         userInteractionOptions,
