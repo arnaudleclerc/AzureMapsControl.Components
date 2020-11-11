@@ -605,6 +605,12 @@ window.azureMapsControl = {
             popup.open();
         }
     },
+    popup_open: function (id) {
+        const popupEntry = this._popups.find(p => p.id === id);
+        if (popupEntry) {
+            popupEntry.popup.open();
+        }
+    },
     _addLayerEvent: function (key, layer, eventHelper) {
         this._map.events.add(key, layer, e => {
             eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(key, {

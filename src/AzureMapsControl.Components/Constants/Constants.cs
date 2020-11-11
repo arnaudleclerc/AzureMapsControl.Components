@@ -32,5 +32,6 @@
         internal const string MethodDataSourceRemove = "dataSource_remove";
         internal const string MethodDataSourceClear = "dataSource_clear";
         internal const string MethodAddPopup = "addPopup";
+        internal const string MethodPopupOpen = "popup_open";
     }
 }

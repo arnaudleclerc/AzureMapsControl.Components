@@ -1,12 +1,14 @@
 ﻿namespace AzureMapsControl.Components.Popups
 {
     using System;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// An information window anchored at a specified position on a map.
     /// </summary>
     public sealed class Popup
     {
+        internal Func<string, Task> OpenPopupCallback;
         public string Id { get; }
 
         /// <summary>
@@ -16,6 +18,8 @@
 
         public Popup() : this(Guid.NewGuid().ToString()) { }
         public Popup(string id) => Id = id;
+
+        public async Task OpenAsync() => await OpenPopupCallback.Invoke(Id);
 
     }
 }

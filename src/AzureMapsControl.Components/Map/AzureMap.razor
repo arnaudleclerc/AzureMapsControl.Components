@@ -1076,7 +1076,11 @@
         }
     }
 
-    private async Task AddPopupAsync(AzureMapsControl.Components.Popups.Popup popup) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodAddPopup.ToAzureMapsControlNamespace(),
-        popup.Id,
-        popup.Options);
+    private async Task AddPopupAsync(AzureMapsControl.Components.Popups.Popup popup)
+    {
+        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodAddPopup.ToAzureMapsControlNamespace(), popup.Id, popup.Options);
+        popup.OpenPopupCallback = Popup_OpenAsync;
+    }
+
+    private async Task Popup_OpenAsync(string id) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodPopupOpen.ToAzureMapsControlNamespace(), id);
 }
