@@ -6,6 +6,7 @@ on:
       - features/**
       - releases/**
       - hotfix/**
+      - develop
   pull_request:
     branches: 
       - develop
