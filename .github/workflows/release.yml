@@ -6,8 +6,8 @@ on:
       - releases/**
       - develop
       - master
-    #paths:
-    #  src/**
+    paths:
+     src/**
 
 jobs:
   build:
