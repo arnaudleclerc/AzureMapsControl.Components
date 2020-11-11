@@ -23,6 +23,8 @@
         };
         await eventArgs.Map.AddPopupAsync(popup);
         await popup.OpenAsync();
+
+        await popup.CloseAsync();
     }
 
 }

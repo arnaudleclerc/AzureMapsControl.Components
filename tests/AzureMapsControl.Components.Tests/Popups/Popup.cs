@@ -30,5 +30,15 @@
             await popup.OpenAsync();
             Assert.True(assertOpen);
         }
+
+        [Fact]
+        public async void Should_CloseAsync()
+        {
+            var assertClose = false;
+            var popup = new Popup();
+            popup.ClosePopupCallback = async popupId => assertClose = popupId == popup.Id;
+            await popup.CloseAsync();
+            Assert.True(assertClose);
+        }
     }
 }

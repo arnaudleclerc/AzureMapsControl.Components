@@ -8,7 +8,8 @@
     /// </summary>
     public sealed class Popup
     {
-        internal Func<string, Task> OpenPopupCallback;
+        internal Func<string, Task> OpenPopupCallback { get; set; }
+        internal Func<string, Task> ClosePopupCallback { get; set; }
         public string Id { get; }
 
         /// <summary>
@@ -20,6 +21,6 @@
         public Popup(string id) => Id = id;
 
         public async Task OpenAsync() => await OpenPopupCallback.Invoke(Id);
-
+        public async Task CloseAsync() => await ClosePopupCallback.Invoke(Id);
     }
 }

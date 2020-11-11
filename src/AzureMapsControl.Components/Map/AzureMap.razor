@@ -1080,7 +1080,9 @@
     {
         await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodAddPopup.ToAzureMapsControlNamespace(), popup.Id, popup.Options);
         popup.OpenPopupCallback = Popup_OpenAsync;
+        popup.ClosePopupCallback = Popup_CloseAsync;
     }
 
     private async Task Popup_OpenAsync(string id) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodPopupOpen.ToAzureMapsControlNamespace(), id);
+    private async Task Popup_CloseAsync(string id) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodPopupClose.ToAzureMapsControlNamespace(), id);
 }
