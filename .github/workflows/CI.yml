@@ -4,7 +4,6 @@ on:
   push:
     branches: 
       - features/**
-      - releases/**
       - hotfix/**
     paths:
       src/**
