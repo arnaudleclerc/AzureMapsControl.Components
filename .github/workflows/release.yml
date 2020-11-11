@@ -1,4 +1,4 @@
-name: CI
+name: release
 
 on:
   push:
@@ -8,9 +8,6 @@ on:
       - hotfix/**
       - develop
       - main
-    paths:
-      src/**
-      tests/**
 
 jobs:
   build:
