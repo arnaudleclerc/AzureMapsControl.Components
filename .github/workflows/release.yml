@@ -72,7 +72,7 @@ jobs:
       if: ${{ steps.gitversion.outputs.branchName != 'master' && steps.gitversion.outputs.branchName != 'main' }}
       uses: richardsimko/update-tag@v1
       with:
-        tag_name: ${{ steps.gitversion.outputs.majorMinorPatch }}
+        tag_name: ${{ steps.gitversion.outputs.nuGetVersionV2 }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Tag Repo
