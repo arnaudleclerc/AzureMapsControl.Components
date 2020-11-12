@@ -29,9 +29,10 @@
         internal const string MethodRemoveLayers = "removeLayers";
         internal const string MethodClearLayers = "clearLayers";
 
-        internal const string MethodAddDataSource = "addDataSource";
-        internal const string MethodRemoveDataSource = "removeDataSource";
-        internal const string MethodClearDataSources = "clearDataSources";
+        internal const string MethodAddSource = "addSource";
+        internal const string MethodRemoveSource = "removeSource";
+        internal const string MethodClearSources = "clearSources";
+
         internal const string MethodDataSourceImportDataFromUrl = "dataSource_importDataFromUrl";
         internal const string MethodDataSourceAdd = "dataSource_add";
         internal const string MethodDataSourceRemove = "dataSource_remove";

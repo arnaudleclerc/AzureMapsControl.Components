@@ -20,7 +20,7 @@ A Polygon Layer renders the areas of `Polygon` and `MultiPolygon` feature geomet
     {
         const string dataSourceId = "dataSource";
         var dataSource = new AzureMapsControl.Components.Data.DataSource(dataSourceId);
-        await events.Map.AddDataSourceAsync(dataSource);
+        await events.Map.AddSourceAsync(dataSource);
 
         var polygon = new AzureMapsControl.Components.Atlas.Polygon(new[]
         {

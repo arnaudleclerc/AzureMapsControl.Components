@@ -7,7 +7,7 @@
 
     using AzureMapsControl.Components.Atlas;
 
-    public sealed class DataSource
+    public sealed class DataSource : Source<DataSourceOptions>
     {
         private List<Geometry> _geometries;
 
@@ -16,21 +16,11 @@
         internal Func<string, IEnumerable<string>, Task> RemoveCallback { get; set; }
         internal Func<string, Task> ClearCallback { get; set; }
 
-        /// <summary>
-        /// A unique id that the user assigns to the data source
-        /// </summary>
-        public string Id { get; }
-
         public IEnumerable<Geometry> Geometries => _geometries;
-
-        /// <summary>
-        /// The options for the data source
-        /// </summary>
-        public DataSourceOptions Options { get; set; }
 
         public DataSource() : this(Guid.NewGuid().ToString()) { }
 
-        public DataSource(string id) => Id = string.IsNullOrWhiteSpace(id) ? Guid.NewGuid().ToString() : id;
+        public DataSource(string id) : base(id, SourceType.DataSource) { }
 
         /// <summary>
         /// Add geometries to the data source

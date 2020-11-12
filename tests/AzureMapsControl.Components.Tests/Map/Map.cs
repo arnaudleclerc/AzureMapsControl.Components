@@ -26,7 +26,7 @@
             Assert.Null(map.HtmlMarkers);
             Assert.Null(map.DrawingToolbarOptions);
             Assert.Null(map.Layers);
-            Assert.Null(map.DataSources);
+            Assert.Null(map.Sources);
             Assert.Null(map.Popups);
         }
 
@@ -349,106 +349,124 @@
         [Fact]
         public async void Should_AddDataSource_Async()
         {
-            var assertAddDatasourceCallback = false;
+            var assertaddSourceCallback = false;
+            var assertAttachEventsCallback = false;
             var dataSource = new DataSource();
 
-            var map = new Components.Map.Map("id", addDataSourceCallback: async dataSourceCallback => assertAddDatasourceCallback = dataSource == dataSourceCallback);
-            await map.AddDataSourceAsync(dataSource);
+            var map = new Components.Map.Map("id", addSourceCallback: async dataSourceCallback => assertaddSourceCallback = Equals(dataSource, dataSourceCallback), attachDataSourceEventsCallback: async (dataSourceCallback) => assertAttachEventsCallback = Equals(dataSource, dataSourceCallback));
+            await map.AddSourceAsync(dataSource);
 
-            Assert.True(assertAddDatasourceCallback);
-            Assert.Single(map.DataSources, dataSource);
+            Assert.True(assertaddSourceCallback);
+            Assert.True(assertAttachEventsCallback);
+            Assert.Single(map.Sources, dataSource);
+        }
+
+        [Fact]
+        public async void Should_AddVectorTileSourceAsync()
+        {
+            var assertaddSourceCallback = false;
+            var assertAttachEventsCallback = false;
+            var source = new VectorTileSource();
+
+            var map = new Components.Map.Map("id", addSourceCallback: async dataSourceCallback => assertaddSourceCallback = Equals(source, dataSourceCallback), attachDataSourceEventsCallback: async (dataSourceCallback) => assertAttachEventsCallback = Equals(source, dataSourceCallback));
+            await map.AddSourceAsync(source);
+
+            Assert.True(assertaddSourceCallback);
+            Assert.False(assertAttachEventsCallback);
+            Assert.Single(map.Sources, source);
         }
 
         [Fact]
         public async void Should_NotAddDataSource_Async()
         {
-            var assertAddDatasourceCallback = false;
+            var assertaddSourceCallback = false;
+            var assertAttachEventsCallback = false;
             var dataSource = new DataSource();
 
-            var map = new Components.Map.Map("id", addDataSourceCallback: async dataSourceCallback => assertAddDatasourceCallback = dataSource == dataSourceCallback);
-            await map.AddDataSourceAsync(dataSource);
-            await Assert.ThrowsAnyAsync<DataSourceAlreadyExistingException>(async () => await map.AddDataSourceAsync(dataSource));
+            var map = new Components.Map.Map("id", addSourceCallback: async dataSourceCallback => assertaddSourceCallback = dataSource == dataSourceCallback, attachDataSourceEventsCallback: async (dataSourceCallback) => assertAttachEventsCallback = Equals(dataSource, dataSourceCallback));
+            await map.AddSourceAsync(dataSource);
+            await Assert.ThrowsAnyAsync<SourceAlreadyExistingException>(async () => await map.AddSourceAsync(dataSource));
         }
 
         [Fact]
         public async void Should_RemoveDataSource_Async()
         {
-            var assertRemoveDatasourceCallback = false;
+            var assertremoveSourceCallback = false;
             var dataSource = new DataSource();
             var dataSource2 = new DataSource();
-            var map = new Components.Map.Map("id", addDataSourceCallback: async dataSourceCallback => { }, removeDataSourceCallback: async removeSourceCallback => assertRemoveDatasourceCallback = removeSourceCallback == dataSource.Id);
+            var map = new Components.Map.Map("id", addSourceCallback: async dataSourceCallback => { }, removeSourceCallback: async removeSource => assertremoveSourceCallback = removeSource == dataSource.Id, attachDataSourceEventsCallback: async (dataSourceCallback) => { });
 
-            await map.AddDataSourceAsync(dataSource);
-            await map.AddDataSourceAsync(dataSource2);
+            await map.AddSourceAsync(dataSource);
+            await map.AddSourceAsync(dataSource2);
             await map.RemoveDataSourceAsync(dataSource);
 
-            Assert.True(assertRemoveDatasourceCallback);
-            Assert.DoesNotContain(dataSource, map.DataSources);
-            Assert.Contains(dataSource2, map.DataSources);
+            Assert.True(assertremoveSourceCallback);
+            Assert.DoesNotContain(dataSource, map.Sources);
+            Assert.Contains(dataSource2, map.Sources);
         }
 
         [Fact]
         public async void Should_NotRemoveDataSource_Async()
         {
-            var assertRemoveDatasourceCallback = false;
+            var assertremoveSourceCallback = false;
             var dataSource = new DataSource();
             var dataSource2 = new DataSource();
-            var map = new Components.Map.Map("id", addDataSourceCallback: async dataSourceCallback => { }, removeDataSourceCallback: async removeSourceCallback => { });
+            var map = new Components.Map.Map("id", addSourceCallback: async dataSourceCallback => { }, removeSourceCallback: async removeSourceCallback => { }, attachDataSourceEventsCallback: async (dataSourceCallback) => { });
 
-            await map.AddDataSourceAsync(dataSource);
+            await map.AddSourceAsync(dataSource);
             await map.RemoveDataSourceAsync(dataSource2);
 
-            Assert.False(assertRemoveDatasourceCallback);
-            Assert.DoesNotContain(dataSource2, map.DataSources);
-            Assert.Contains(dataSource, map.DataSources);
+            Assert.False(assertremoveSourceCallback);
+            Assert.DoesNotContain(dataSource2, map.Sources);
+            Assert.Contains(dataSource, map.Sources);
         }
 
         [Fact]
         public async void Should_RemoveDataSource_ViaId_Async()
         {
-            var assertRemoveDatasourceCallback = false;
+            var assertremoveSourceCallback = false;
             var dataSource = new DataSource();
             var dataSource2 = new DataSource();
-            var map = new Components.Map.Map("id", addDataSourceCallback: async dataSourceCallback => { }, removeDataSourceCallback: async removeSourceCallback => assertRemoveDatasourceCallback = removeSourceCallback == dataSource.Id);
+            var map = new Components.Map.Map("id", addSourceCallback: async dataSourceCallback => { }, removeSourceCallback: async removeSourceCallback => assertremoveSourceCallback = removeSourceCallback == dataSource.Id, attachDataSourceEventsCallback: async _ => { });
 
-            await map.AddDataSourceAsync(dataSource);
-            await map.AddDataSourceAsync(dataSource2);
+            await map.AddSourceAsync(dataSource);
+            await map.AddSourceAsync(dataSource2);
             await map.RemoveDataSourceAsync(dataSource.Id);
 
-            Assert.True(assertRemoveDatasourceCallback);
-            Assert.DoesNotContain(dataSource, map.DataSources);
-            Assert.Contains(dataSource2, map.DataSources);
+            Assert.True(assertremoveSourceCallback);
+            Assert.DoesNotContain(dataSource, map.Sources);
+            Assert.Contains(dataSource2, map.Sources);
         }
 
         [Fact]
         public async void Should_NotRemoveDataSource_ViaId_Async()
         {
-            var assertRemoveDatasourceCallback = false;
+            var assertremoveSourceCallback = false;
             var dataSource = new DataSource();
             var dataSource2 = new DataSource();
-            var map = new Components.Map.Map("id", addDataSourceCallback: async dataSourceCallback => { }, removeDataSourceCallback: async removeSourceCallback => { });
+            var map = new Components.Map.Map("id", addSourceCallback: async dataSourceCallback => { }, removeSourceCallback: async removeSourceCallback => { }, attachDataSourceEventsCallback: async _ => { });
 
-            await map.AddDataSourceAsync(dataSource);
+            await map.AddSourceAsync(dataSource);
             await map.RemoveDataSourceAsync(dataSource2.Id);
 
-            Assert.False(assertRemoveDatasourceCallback);
-            Assert.DoesNotContain(dataSource2, map.DataSources);
-            Assert.Contains(dataSource, map.DataSources);
+            Assert.False(assertremoveSourceCallback);
+            Assert.DoesNotContain(dataSource2, map.Sources);
+            Assert.Contains(dataSource, map.Sources);
         }
 
         [Fact]
         public async void Should_ClearMap_Async()
         {
             var assertClearMapCallback = false;
-            var map = new Components.Map.Map("id", addHtmlMarkersCallback: async _ => { }, addLayerCallback: async (_, before) => { }, addDataSourceCallback: async _ => { }, addPopupCallback: async _ => { }, clearMapCallback: async () => assertClearMapCallback = true);
-            await map.AddDataSourceAsync(new DataSource());
+            var map = new Components.Map.Map("id", addHtmlMarkersCallback: async _ => { }, addLayerCallback: async (_, before) => { }, addSourceCallback: async _ => { }, addPopupCallback: async _ => { }, clearMapCallback: async () => assertClearMapCallback = true, attachDataSourceEventsCallback: async _ => { });
+            await map.AddSourceAsync(new DataSource());
             await map.AddLayerAsync(new BubbleLayer());
             await map.AddHtmlMarkersAsync(new HtmlMarker(null));
             await map.AddPopupAsync(new Popup(new PopupOptions()));
 
             await map.ClearMapAsync();
             Assert.True(assertClearMapCallback);
-            Assert.Null(map.DataSources);
+            Assert.Null(map.Sources);
             Assert.Null(map.Layers);
             Assert.Null(map.HtmlMarkers);
             Assert.Null(map.Popups);
@@ -470,12 +488,12 @@
         public async void Should_ClearDataSources_Async()
         {
             var assertClearDataSourcesCallback = false;
-            var map = new Components.Map.Map("id", addDataSourceCallback: async _ => { }, clearDataSourcesCallback: async () => assertClearDataSourcesCallback = true);
+            var map = new Components.Map.Map("id", addSourceCallback: async _ => { }, clearSourcesCallback: async () => assertClearDataSourcesCallback = true, attachDataSourceEventsCallback: _ => { });
 
-            await map.AddDataSourceAsync(new DataSource());
+            await map.AddSourceAsync(new DataSource());
             await map.ClearDataSourcesAsync();
             Assert.True(assertClearDataSourcesCallback);
-            Assert.Null(map.DataSources);
+            Assert.Null(map.Sources);
         }
 
         [Fact]
