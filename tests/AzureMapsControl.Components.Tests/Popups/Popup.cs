@@ -7,6 +7,16 @@
 
     public class PopupTests
     {
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public void Should_HaveId_IfInvalidOneIsGiven(string id)
+        {
+            var popup = new Popup(id, null);
+            Assert.False(string.IsNullOrWhiteSpace(popup.Id));
+        }
+
         [Fact]
         public void Should_BeInitialized_DefaultId()
         {

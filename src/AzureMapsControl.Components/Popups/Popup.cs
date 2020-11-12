@@ -27,7 +27,7 @@
         public Popup(PopupOptions options) : this(Guid.NewGuid().ToString(), options) { }
         public Popup(string id, PopupOptions options)
         {
-            Id = id;
+            Id = string.IsNullOrWhiteSpace(id) ? Guid.NewGuid().ToString() : id;
             Options = options;
         }
 
