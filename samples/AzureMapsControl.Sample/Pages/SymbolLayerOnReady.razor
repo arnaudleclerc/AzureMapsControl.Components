@@ -12,10 +12,10 @@ i
     public async Task OnMapReady(MapEventArgs events)
     {
         var blueDataSource = new AzureMapsControl.Components.Data.DataSource("blueDataSource");
-        await events.Map.AddDataSourceAsync(blueDataSource);
+        await events.Map.AddSourceAsync(blueDataSource);
 
         var redDataSource = new AzureMapsControl.Components.Data.DataSource("redDataSource");
-        await events.Map.AddDataSourceAsync(redDataSource);
+        await events.Map.AddSourceAsync(redDataSource);
 
         var bluePoints = new List<AzureMapsControl.Components.Atlas.Point>();
         var redPoints = new List<AzureMapsControl.Components.Atlas.Point>();
