@@ -30,14 +30,7 @@
 
         public DataSource() : this(Guid.NewGuid().ToString()) { }
 
-        public DataSource(string id)
-        {
-            if (string.IsNullOrWhiteSpace(id))
-            {
-                throw new ArgumentException("Invalid Datasource ID", nameof(id));
-            }
-            Id = id;
-        }
+        public DataSource(string id) => Id = string.IsNullOrWhiteSpace(id) ? Guid.NewGuid().ToString() : id;
 
         /// <summary>
         /// Add geometries to the data source

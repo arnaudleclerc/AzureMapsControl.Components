@@ -15,7 +15,11 @@
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public void Should_FailIfIDIsInvalid(string id) => _ = Assert.Throws<ArgumentException>("id", () => new DataSource(id));
+        public void Should_HaveADefaultIdIfInvalid(string id)
+        {
+            var dataSource = new DataSource(id);
+            Assert.False(string.IsNullOrWhiteSpace(dataSource.Id));
+        }
 
         [Fact]
         public void Should_HaveADefaultId()
