@@ -5,7 +5,7 @@ on:
     branches: 
       - releases/**
       - develop
-      - master
+      - main
     paths:
       - src/**
       - .github/**
