@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Security;
     using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Atlas;
@@ -28,18 +27,19 @@
         private readonly Func<Task> _removeDrawingToolbarCallback;
         private readonly Func<Layer, string, Task> _addLayerCallback;
         private readonly Func<IEnumerable<string>, Task> _removeLayersCallback;
-        private readonly Func<DataSource, Task> _addDataSourceCallback;
-        private readonly Func<string, Task> _removeDataSourceCallback;
+        private readonly Func<Data.Source, Task> _addSourceCallback;
+        private readonly Func<string, Task> _removeSourceCallback;
+        private readonly Action<DataSource> _attachDataSourceEventsCallback;
         private readonly Func<Task> _clearMapCallback;
         private readonly Func<Task> _clearLayersCallback;
-        private readonly Func<Task> _clearDataSourcesCallback;
+        private readonly Func<Task> _clearSourcesCallback;
         private readonly Func<Task> _clearHtmlMarkersCallback;
         private readonly Func<Popup, Task> _addPopupCallback;
         private readonly Func<string, Task> _removePopupCallback;
         private readonly Func<Task> _clearPopupsCallback;
 
         private List<Layer> _layers;
-        private List<DataSource> _dataSources;
+        private List<Data.Source> _sources;
         private List<Popup> _popups;
 
         /// <summary>
@@ -55,7 +55,7 @@
 
         public IEnumerable<Layer> Layers => _layers;
 
-        public IEnumerable<DataSource> DataSources => _dataSources;
+        public IEnumerable<Data.Source> Sources => _sources;
 
         public IEnumerable<Popup> Popups => _popups;
 
@@ -69,11 +69,12 @@
             Func<Task> removeDrawingToolbarCallback = null,
             Func<Layer, string, Task> addLayerCallback = null,
             Func<IEnumerable<string>, Task> removeLayersCallback = null,
-            Func<DataSource, Task> addDataSourceCallback = null,
-            Func<string, Task> removeDataSourceCallback = null,
+            Func<Data.Source, Task> addSourceCallback = null,
+            Func<string, Task> removeSourceCallback = null,
+            Action<DataSource> attachDataSourceEventsCallback = null,
             Func<Task> clearMapCallback = null,
             Func<Task> clearLayersCallback = null,
-            Func<Task> clearDataSourcesCallback = null,
+            Func<Task> clearSourcesCallback = null,
             Func<Task> clearHtmlMarkersCallback = null,
             Func<Popup, Task> addPopupCallback = null,
             Func<string, Task> removePopupCallback = null,
@@ -89,11 +90,12 @@
             _removeDrawingToolbarCallback = removeDrawingToolbarCallback;
             _addLayerCallback = addLayerCallback;
             _removeLayersCallback = removeLayersCallback;
-            _addDataSourceCallback = addDataSourceCallback;
-            _removeDataSourceCallback = removeDataSourceCallback;
+            _addSourceCallback = addSourceCallback;
+            _removeSourceCallback = removeSourceCallback;
+            _attachDataSourceEventsCallback = attachDataSourceEventsCallback;
             _clearMapCallback = clearMapCallback;
             _clearLayersCallback = clearLayersCallback;
-            _clearDataSourcesCallback = clearDataSourcesCallback;
+            _clearSourcesCallback = clearSourcesCallback;
             _clearHtmlMarkersCallback = clearHtmlMarkersCallback;
             _addPopupCallback = addPopupCallback;
             _removePopupCallback = removePopupCallback;
@@ -127,20 +129,25 @@
         /// </summary>
         /// <param name="dataSource">Data source to add</param>
         /// <returns></returns>
-        public async Task AddDataSourceAsync(DataSource dataSource)
+        public async Task AddSourceAsync<TSource>(TSource source) where TSource : Data.Source
         {
-            if (_dataSources == null)
+            if (_sources == null)
             {
-                _dataSources = new List<DataSource>();
+                _sources = new List<Data.Source>();
             }
 
-            if (_dataSources.Any(ds => ds.Id == dataSource.Id))
+            if (_sources.Any(ds => ds.Id == source.Id))
             {
-                throw new DataSourceAlreadyExistingException(dataSource.Id);
+                throw new SourceAlreadyExistingException(source.Id);
             }
 
-            _dataSources.Add(dataSource);
-            await _addDataSourceCallback(dataSource);
+            _sources.Add(source);
+            await _addSourceCallback(source);
+
+            if (source is DataSource dataSource)
+            {
+                _attachDataSourceEventsCallback.Invoke(dataSource);
+            }
         }
 
         /// <summary>
@@ -157,11 +164,11 @@
         /// <returns></returns>
         public async Task RemoveDataSourceAsync(string id)
         {
-            var dataSource = _dataSources?.SingleOrDefault(ds => ds.Id == id);
+            var dataSource = _sources?.SingleOrDefault(ds => ds.Id == id);
             if (dataSource != null)
             {
-                await _removeDataSourceCallback.Invoke(id);
-                _dataSources.Remove(dataSource);
+                await _removeSourceCallback.Invoke(id);
+                _sources.Remove(dataSource);
             }
         }
 
@@ -171,8 +178,8 @@
         /// <returns></returns>
         public async Task ClearDataSourcesAsync()
         {
-            _dataSources = null;
-            await _clearDataSourcesCallback.Invoke();
+            _sources = null;
+            await _clearSourcesCallback.Invoke();
         }
 
         #endregion
@@ -377,7 +384,7 @@
         /// <returns></returns>
         public async Task ClearMapAsync()
         {
-            _dataSources = null;
+            _sources = null;
             _layers = null;
             HtmlMarkers = null;
             _popups = null;

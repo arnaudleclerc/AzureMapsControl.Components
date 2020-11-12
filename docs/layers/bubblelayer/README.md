@@ -22,7 +22,7 @@ The `Bubble Layer` requires a data source. The ID of the datasource to bind to t
     {
         const string dataSourceId = "bubbleDataSource";
         var dataSource = new AzureMapsControl.Components.Data.DataSource(dataSourceId);
-        await events.Map.AddDataSourceAsync(dataSource);
+        await events.Map.AddSourceAsync(dataSource);
 
 
         var geometries = new List<AzureMapsControl.Components.Atlas.Geometry>();
