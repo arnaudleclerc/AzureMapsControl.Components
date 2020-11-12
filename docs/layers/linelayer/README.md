@@ -28,7 +28,7 @@ A line layer can be used to render `LineString` and `MultiLineString` features a
                 LineMetrics = true
             }
         };
-        await events.Map.AddDataSourceAsync(dataSource);
+        await events.Map.AddSourceAsync(dataSource);
 
         await dataSource.AddAsync(new AzureMapsControl.Components.Atlas.LineString(new[] {
             new AzureMapsControl.Components.Atlas.Position(11.575454, 48.137392),

@@ -659,18 +659,20 @@
 
     #region Data sources
 
-    private async Task ClearDataSourcesAsync() => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodClearDataSources.ToAzureMapsControlNamespace());
+    private async Task ClearSourcesAsync() => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodClearSources.ToAzureMapsControlNamespace());
 
-    private async Task AddDataSourceAsync(AzureMapsControl.Components.Data.DataSource dataSource)
+    private async Task AddSourceAsync(AzureMapsControl.Components.Data.Source source) =>
+        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodAddSource.ToAzureMapsControlNamespace(), source.Id, source.GetSourceOptions()?.GenerateJsOptions(), source.SourceType.ToString());
+
+    private void AttachDataSourcesCallback(AzureMapsControl.Components.Data.DataSource dataSource)
     {
-        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodAddDataSource.ToAzureMapsControlNamespace(), dataSource.Id, dataSource.Options);
         dataSource.ImportDataFromUrlCallback = DataSource_ImportDataFromUrlAsync;
         dataSource.AddCallback = DataSource_AddAsync;
         dataSource.RemoveCallback = DataSource_RemoveAsync;
         dataSource.ClearCallback = DataSource_ClearAsync;
     }
 
-    private async Task RemoveDataSourceAsync(string dataSourceId) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodRemoveDataSource.ToAzureMapsControlNamespace(), dataSourceId);
+    private async Task RemoveSourceAsync(string dataSourceId) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodRemoveSource.ToAzureMapsControlNamespace(), dataSourceId);
 
     private async Task DataSource_ImportDataFromUrlAsync(string id, string url) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodDataSourceImportDataFromUrl.ToAzureMapsControlNamespace(), id, url);
 
@@ -871,7 +873,7 @@
             layer.Id,
             before,
             layer.Type.ToString(),
-            layer.GetLayerOptions().GenerateJsOptions(),
+            layer.GetLayerOptions()?.GenerateJsOptions(),
             layer.EventActivationFlags.EnabledEvents,
             DotNetObjectReference.Create(_layerEventInvokeHelper));
     }
@@ -945,11 +947,12 @@
                 RemoveDrawingToolbarAsync,
                 AddLayerAsync,
                 RemoveLayersAsync,
-                AddDataSourceAsync,
-                RemoveDataSourceAsync,
+                AddSourceAsync,
+                RemoveSourceAsync,
+                AttachDataSourcesCallback,
                 ClearMapAsync,
                 ClearLayersAsync,
-                ClearDataSourcesAsync,
+                ClearSourcesAsync,
                 ClearHtmlMarkersAsync,
                 AddPopupAsync,
                 Popup_RemoveAsync,

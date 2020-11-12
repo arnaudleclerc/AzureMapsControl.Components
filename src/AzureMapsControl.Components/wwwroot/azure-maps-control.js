@@ -346,7 +346,7 @@ window.azureMapsControl = {
     clearLayers: function () {
         this._map.layers.clear()
     },
-    clearDataSources: function () {
+    clearSources: function () {
         this._map.sources.clear();
     },
     clearHtmlMarkers: function () {
@@ -480,10 +480,14 @@ window.azureMapsControl = {
     removeLayers: function (ids) {
         this._map.layers.remove(ids);
     },
-    addDataSource: function (id, options) {
-        this._map.sources.add(new atlas.source.DataSource(id, options));
+    addSource: function (id, options, type) {
+        if (type === "datasource") {
+            this._map.sources.add(new atlas.source.DataSource(id, options));
+        } else if (type === "vectortilesource") {
+            this._map.sources.add(new atlas.source.VectorTileSource(id, options));
+        }
     },
-    removeDataSource: function (id) {
+    removeSource: function (id) {
         this._map.sources.remove(id);
     },
     dataSource_add: function (id, geometries) {

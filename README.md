@@ -1,4 +1,4 @@
-![Nuget](https://img.shields.io/nuget/v/AzureMapsControl.Components) ![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/AzureMapsControl.Components) ![CI](https://github.com/arnaudleclerc/AzureMapsControl.Components/workflows/CI/badge.svg?branch=develop) ![release](https://github.com/arnaudleclerc/AzureMapsControl.Components/workflows/release/badge.svg?branch=develop)
+![Nuget](https://img.shields.io/nuget/v/AzureMapsControl.Components) ![Nuget (with prereleases)](https://img.shields.io/nuget/vpre/AzureMapsControl.Components) ![CI](https://github.com/arnaudleclerc/AzureMapsControl.Components/workflows/CI/badge.svg) ![release](https://github.com/arnaudleclerc/AzureMapsControl.Components/workflows/release/badge.svg)
 
 This library allows you to use `Azure Maps` inside your razor application.
 

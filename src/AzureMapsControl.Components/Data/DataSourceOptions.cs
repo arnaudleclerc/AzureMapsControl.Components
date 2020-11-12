@@ -3,7 +3,7 @@
     using System.Diagnostics.CodeAnalysis;
 
     [ExcludeFromCodeCoverage]
-    public sealed class DataSourceOptions
+    public sealed class DataSourceOptions : SourceOptions
     {
         /// <summary>
         /// The size of the buffer around each tile.

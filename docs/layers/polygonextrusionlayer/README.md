@@ -22,7 +22,7 @@ The polygon extrusion layer renders areas of `Polygon` and `MultiPolygon` featur
     {
         const string dataSourceId = "dataSource";
         var dataSource = new AzureMapsControl.Components.Data.DataSource(dataSourceId);
-        await events.Map.AddDataSourceAsync(dataSource);
+        await events.Map.AddSourceAsync(dataSource);
 
         await dataSource.ImportDataFromUrlAsync("https://raw.githubusercontent.com/arnaudleclerc/ng-azure-maps/master/assets/data/countries.geojson.json");
 
