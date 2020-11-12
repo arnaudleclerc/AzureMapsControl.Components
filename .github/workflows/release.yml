@@ -73,7 +73,7 @@ jobs:
       uses: richardsimko/update-tag@v1
       with:
         tag_name: ${{ steps.gitversion.outputs.majorMinorPatch }}
-      env:
+      env: test
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Pack PreRelease
       if: ${{ steps.gitversion.outputs.branchName != 'master' && steps.gitversion.outputs.branchName != 'main' }}
