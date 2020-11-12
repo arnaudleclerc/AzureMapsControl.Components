@@ -1,5 +1,6 @@
 ﻿namespace AzureMapsControl.Components.Tests.Data
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -10,6 +11,12 @@
 
     public class DataSourceTests
     {
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public void Should_FailIfIDIsInvalid(string id) => _ = Assert.Throws<ArgumentException>("id", () => new DataSource(id));
+
         [Fact]
         public void Should_HaveADefaultId()
         {
