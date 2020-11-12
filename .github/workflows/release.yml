@@ -20,8 +20,8 @@ jobs:
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
-    - name: Set branch
-        id: branch
+    - name: Set output
+        id: vars
         run: echo ::set-output name=short_ref::${GITHUB_REF#refs/*/}
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
@@ -72,17 +72,17 @@ jobs:
         echo "CommitsSinceVersionSourcePadded: ${{ steps.gitversion.outputs.commitsSinceVersionSourcePadded }}"
         echo "CommitDate: ${{ steps.gitversion.outputs.commitDate }}"
     - name: Tag Repo
-      if: ${{ steps.branch.outputs.shortName == 'master' || steps.branch.output.shortName == 'main' }}
+      if: ${{ steps.vars.outputs.shortName == 'master' || steps.vars.output.shortName == 'main' }}
       uses: richardsimko/update-tag@v1
       with:
         tag_name: ${{ steps.gitversion.outputs.majorMinorPatch }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Pack PreRelease
-      if: ${{ steps.branch.outputs.shortName != 'master' && steps.branch.output.shortName != 'main' }}
+      if: ${{ steps.vars.outputs.shortName != 'master' && steps.vars.output.shortName != 'main' }}
       run: dotnet pack ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj -p:Version='${{ steps.gitversion.outputs.nuGetVersionV2 }}"' -c Release --no-build
     - name: Pack
-      if: ${{ steps.branch.outputs.shortName == 'master' && steps.branch.output.shortName == 'main' }}
+      if: ${{ steps.vars.outputs.shortName == 'master' && steps.vars.output.shortName == 'main' }}
       run: dotnet pack ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj -p:Version='${{ steps.gitversion.outputs.majorMinorPatch }}"' -c Release --no-build
     - name: Publish
       env :
