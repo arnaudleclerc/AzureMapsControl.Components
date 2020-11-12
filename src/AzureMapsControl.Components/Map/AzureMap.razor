@@ -21,6 +21,8 @@
     private Drawing.DrawingToolbarEventInvokeHelper _drawingToolbarEventInvokeHelper;
     private Layers.LayerEventInvokeHelper _layerEventInvokeHelper;
 
+    private string _id;
+
     #endregion
 
     #region Parameters
@@ -140,7 +142,11 @@
     /// Id affected to the div hosting the map
     /// </summary>
     [Parameter]
-    public string Id { get; set; }
+    public string Id
+    {
+        get => _id;
+        set { if (string.IsNullOrWhiteSpace(value)) { throw new ArgumentException("ID on the map is mandatory"); } _id = value; }
+    }
 
     /// <summary>
     /// A bounding box in which to constrain the viewable map area to. Users won't be able to pan the center of the map outside of this bounding box. Set maxBounds to null or undefined to remove maxBounds
