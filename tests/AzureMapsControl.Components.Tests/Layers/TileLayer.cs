@@ -34,7 +34,7 @@
         {
             var layer = new TileLayer();
             var triggered = false;
-            var map = new Map(null, null, null, null, null, null, null, null, null, null);
+            var map = new Map("id");
             var eventArgs = CreateEventArgsForMouseEvent("click");
             layer.OnClick += args => {
                 triggered = args.Map == map
@@ -53,7 +53,7 @@
         {
             var layer = new TileLayer();
             var triggered = false;
-            var map = new Map(null, null, null, null, null, null, null, null, null, null);
+            var map = new Map("id");
             var eventArgs = CreateEventArgsForMouseEvent("contextmenu");
             layer.OnContextMenu += args => {
                 triggered = args.Map == map
@@ -72,7 +72,7 @@
         {
             var layer = new TileLayer();
             var triggered = false;
-            var map = new Map(null, null, null, null, null, null, null, null, null, null);
+            var map = new Map("id");
             var eventArgs = CreateEventArgsForMouseEvent("dblclick");
             layer.OnDblClick += args => {
                 triggered = args.Map == map
@@ -91,7 +91,7 @@
         {
             var layer = new TileLayer();
             var triggered = false;
-            var map = new Map(null, null, null, null, null, null, null, null, null, null);
+            var map = new Map("id");
             var eventArgs = new MapJsEventArgs {
                 Type = "layeradded"
             };
@@ -105,7 +105,7 @@
         {
             var layer = new TileLayer();
             var triggered = false;
-            var map = new Map(null, null, null, null, null, null, null, null, null, null);
+            var map = new Map("id");
             var eventArgs = new MapJsEventArgs {
                 Type = "layerremoved"
             };
@@ -119,7 +119,7 @@
         {
             var layer = new TileLayer();
             var triggered = false;
-            var map = new Map(null, null, null, null, null, null, null, null, null, null);
+            var map = new Map("id");
             var eventArgs = CreateEventArgsForMouseEvent("mousedown");
             layer.OnMouseDown += args => {
                 triggered = args.Map == map
@@ -138,7 +138,7 @@
         {
             var layer = new TileLayer();
             var triggered = false;
-            var map = new Map(null, null, null, null, null, null, null, null, null, null);
+            var map = new Map("id");
             var eventArgs = CreateEventArgsForMouseEvent("mouseenter");
             layer.OnMouseEnter += args => {
                 triggered = args.Map == map
@@ -157,7 +157,7 @@
         {
             var layer = new TileLayer();
             var triggered = false;
-            var map = new Map(null, null, null, null, null, null, null, null, null, null);
+            var map = new Map("id");
             var eventArgs = CreateEventArgsForMouseEvent("mouseleave");
             layer.OnMouseLeave += args => {
                 triggered = args.Map == map
@@ -176,7 +176,7 @@
         {
             var layer = new TileLayer();
             var triggered = false;
-            var map = new Map(null, null, null, null, null, null, null, null, null, null);
+            var map = new Map("id");
             var eventArgs = CreateEventArgsForMouseEvent("mousemove");
             layer.OnMouseMove += args => {
                 triggered = args.Map == map
@@ -195,7 +195,7 @@
         {
             var layer = new TileLayer();
             var triggered = false;
-            var map = new Map(null, null, null, null, null, null, null, null, null, null);
+            var map = new Map("id");
             var eventArgs = CreateEventArgsForMouseEvent("mouseout");
             layer.OnMouseOut += args => {
                 triggered = args.Map == map
@@ -214,7 +214,7 @@
         {
             var layer = new TileLayer();
             var triggered = false;
-            var map = new Map(null, null, null, null, null, null, null, null, null, null);
+            var map = new Map("id");
             var eventArgs = CreateEventArgsForMouseEvent("mouseover");
             layer.OnMouseOver += args => {
                 triggered = args.Map == map
@@ -233,7 +233,7 @@
         {
             var layer = new TileLayer();
             var triggered = false;
-            var map = new Map(null, null, null, null, null, null, null, null, null, null);
+            var map = new Map("id");
             var eventArgs = CreateEventArgsForMouseEvent("mouseup");
             layer.OnMouseUp += args => {
                 triggered = args.Map == map
@@ -252,7 +252,7 @@
         {
             var layer = new TileLayer();
             var triggered = false;
-            var map = new Map(null, null, null, null, null, null, null, null, null, null);
+            var map = new Map("id");
             var eventArgs = CreateEventArgsForTouchEvent("touchcancel");
             layer.OnTouchCancel += args => {
                 triggered = args.Map == map
@@ -273,7 +273,7 @@
         {
             var layer = new TileLayer();
             var triggered = false;
-            var map = new Map(null, null, null, null, null, null, null, null, null, null);
+            var map = new Map("id");
             var eventArgs = CreateEventArgsForTouchEvent("touchend");
             layer.OnTouchEnd += args => {
                 triggered = args.Map == map
@@ -294,7 +294,7 @@
         {
             var layer = new TileLayer();
             var triggered = false;
-            var map = new Map(null, null, null, null, null, null, null, null, null, null);
+            var map = new Map("id");
             var eventArgs = CreateEventArgsForTouchEvent("touchmove");
             layer.OnTouchMove += args => {
                 triggered = args.Map == map
@@ -315,7 +315,7 @@
         {
             var layer = new TileLayer();
             var triggered = false;
-            var map = new Map(null, null, null, null, null, null, null, null, null, null);
+            var map = new Map("id");
             var eventArgs = CreateEventArgsForTouchEvent("touchstart");
             layer.OnTouchStart += args => {
                 triggered = args.Map == map
@@ -336,7 +336,7 @@
         {
             var layer = new TileLayer();
             var triggered = false;
-            var map = new Map(null, null, null, null, null, null, null, null, null, null);
+            var map = new Map("id");
             var eventArgs = new MapJsEventArgs {
                 Type = "wheel"
             };
