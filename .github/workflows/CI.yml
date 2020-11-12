@@ -8,6 +8,7 @@ on:
     paths:
       - src/**
       - tests/**
+      - .github/**
   pull_request:
     branches: 
       - develop
@@ -15,6 +16,7 @@ on:
     paths:
       - src/**
       - tests/**
+      - .github/**
 
 jobs:
   build:
