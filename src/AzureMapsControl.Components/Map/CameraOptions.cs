@@ -5,7 +5,7 @@
     using AzureMapsControl.Components.Atlas;
 
     [ExcludeFromCodeCoverage]
-    internal class CameraOptions
+    public sealed class CameraOptions
     {
         public int? Bearing { get; set; }
         public BoundingBox Bounds { get; set; }
