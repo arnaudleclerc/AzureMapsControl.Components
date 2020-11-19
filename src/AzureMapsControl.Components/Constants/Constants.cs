@@ -13,6 +13,7 @@
         internal const string MethodAddMap = "addMap";
         internal const string MethodClearMap = "clearMap";
         internal const string MethodSetOptions = "setOptions";
+        internal const string MethodSetCameraOptions = "setCameraOptions";
 
         internal const string MethodAddControl = "addControls";
 

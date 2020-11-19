@@ -361,6 +361,15 @@ window.azureMapsControl = {
         userInteractionOptions,
         trafficOptions) {
 
+        this.setCameraOptions(cameraOptions);
+        this._map.setStyle(styleOptions);
+        this._map.setUserInteraction(userInteractionOptions);
+
+        if (trafficOptions) {
+            this._map.setTraffic(trafficOptions);
+        }
+    },
+    setCameraOptions: function (cameraOptions) {
         const options = {
             bearing: cameraOptions.bearing,
             centerOffset: cameraOptions.centerOffset,
@@ -384,12 +393,6 @@ window.azureMapsControl = {
         }
 
         this._map.setCamera(options);
-        this._map.setStyle(styleOptions);
-        this._map.setUserInteraction(userInteractionOptions);
-
-        if (trafficOptions) {
-            this._map.setTraffic(trafficOptions);
-        }
     },
     removeHtmlMarkers: function (markerIds) {
         this._map.markers.remove(this._map.markers.getMarkers().find(marker => markerIds.indexOf(marker.amc.id) > -1));
