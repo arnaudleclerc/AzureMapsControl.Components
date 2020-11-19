@@ -37,6 +37,7 @@
         private readonly Func<Popup, Task> _addPopupCallback;
         private readonly Func<string, Task> _removePopupCallback;
         private readonly Func<Task> _clearPopupsCallback;
+        private readonly Func<CameraOptions, Task> _setCameraCallback;
 
         private List<Layer> _layers;
         private List<Data.Source> _sources;
@@ -59,6 +60,8 @@
 
         public IEnumerable<Popup> Popups => _popups;
 
+        internal CameraOptions CameraOptions { get; set; }
+
         internal Map(string id,
             Func<IEnumerable<Control>, Task> addControlsCallback = null,
             Func<IEnumerable<HtmlMarker>, Task> addHtmlMarkersCallback = null,
@@ -78,7 +81,8 @@
             Func<Task> clearHtmlMarkersCallback = null,
             Func<Popup, Task> addPopupCallback = null,
             Func<string, Task> removePopupCallback = null,
-            Func<Task> clearPopupsCallback = null)
+            Func<Task> clearPopupsCallback = null,
+            Func<CameraOptions, Task> setCameraCallback = null)
         {
             Id = id;
             _addControlsCallback = addControlsCallback;
@@ -100,6 +104,7 @@
             _addPopupCallback = addPopupCallback;
             _removePopupCallback = removePopupCallback;
             _clearPopupsCallback = clearPopupsCallback;
+            _setCameraCallback = setCameraCallback;
         }
 
         # region Controls
@@ -389,6 +394,12 @@
             HtmlMarkers = null;
             _popups = null;
             await _clearMapCallback.Invoke();
+        }
+
+        public async Task SetCameraOptionsAsync(Action<CameraOptions> optionsCallback)
+        {
+            optionsCallback.Invoke(CameraOptions);
+            await _setCameraCallback.Invoke(CameraOptions);
         }
 
         #endregion

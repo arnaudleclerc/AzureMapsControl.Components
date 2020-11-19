@@ -888,23 +888,24 @@
     {
         if (mapEvent.Type == "ready")
         {
+            var cameraOptions = new CameraOptions
+            {
+                Bearing = (int?)Bearing,
+                CenterOffset = CenterOffset,
+                Duration = Duration,
+                MaxZoom = MaxZoom,
+                MinZoom = MinZoom,
+                Pitch = Pitch,
+                Type = CameryType?.ToString(),
+                Bounds = Bounds,
+                MaxBounds = Bounds != null ? MaxBounds : null,
+                Offset = Bounds != null ? Offset : null,
+                Padding = Bounds != null ? Padding : null,
+                Center = Bounds == null ? Center : null,
+                Zoom = Bounds == null ? Zoom : null
+            };
             await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodSetOptions.ToAzureMapsControlNamespace(),
-                new CameraOptions
-                {
-                    Bearing = (int?)Bearing,
-                    CenterOffset = CenterOffset,
-                    Duration = Duration,
-                    MaxZoom = MaxZoom,
-                    MinZoom = MinZoom,
-                    Pitch = Pitch,
-                    Type = CameryType?.ToString(),
-                    Bounds = Bounds,
-                    MaxBounds = Bounds != null ? MaxBounds : null,
-                    Offset = Bounds != null ? Offset : null,
-                    Padding = Bounds != null ? Padding : null,
-                    Center = Bounds == null ? Center : null,
-                    Zoom = Bounds == null ? Zoom : null
-                },
+                cameraOptions,
                 new StyleOptions
                 {
                     AutoResize = AutoResize,
@@ -956,11 +957,13 @@
                 ClearHtmlMarkersAsync,
                 AddPopupAsync,
                 Popup_RemoveAsync,
-                ClearPopups)
+                ClearPopupsAsync,
+                SetCameraOptionsAsync)
             {
                 Controls = Controls,
                 HtmlMarkers = HtmlMarkers,
-                DrawingToolbarOptions = DrawingToolbarOptions
+                DrawingToolbarOptions = DrawingToolbarOptions,
+                CameraOptions = cameraOptions
             });
 
             await AddControlsAsync(Controls);
@@ -969,6 +972,8 @@
         }
         await DispatchMapEventAsync(mapEvent);
     }
+
+    private async Task SetCameraOptionsAsync(CameraOptions options) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodSetCameraOptions.ToAzureMapsControlNamespace(), options);
 
     private async Task ClearMapAsync() => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodClearMap.ToAzureMapsControlNamespace());
 
@@ -1140,7 +1145,7 @@
         MapService.Map.RemovePopup(id);
     }
     private async Task Popup_UpdateAsync(string id, AzureMapsControl.Components.Popups.PopupOptions options) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodPopupUpdate.ToAzureMapsControlNamespace(), id, options);
-    private async Task ClearPopups() => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodClearPopups.ToAzureMapsControlNamespace());
+    private async Task ClearPopupsAsync() => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodClearPopups.ToAzureMapsControlNamespace());
 
     #endregion
 }

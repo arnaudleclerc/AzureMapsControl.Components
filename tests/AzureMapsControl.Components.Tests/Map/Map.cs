@@ -9,6 +9,7 @@
     using AzureMapsControl.Components.Drawing;
     using AzureMapsControl.Components.Exceptions;
     using AzureMapsControl.Components.Layers;
+    using AzureMapsControl.Components.Map;
     using AzureMapsControl.Components.Markers;
     using AzureMapsControl.Components.Popups;
 
@@ -589,6 +590,22 @@
 
             Assert.True(assertClearCallback);
             Assert.Null(map.Popups);
+        }
+
+        [Fact]
+        public async void Should_UpdateCameraOptions_Async()
+        {
+            var assertOptionsCallback = false;
+            var center = new Position(10, 10);
+            var initialCameraOptions = new CameraOptions {
+                Duration = 10
+            };
+            var map = new Map("id", setCameraCallback: async options => assertOptionsCallback = options.Center == center && options.Duration == initialCameraOptions.Duration) {
+                CameraOptions = initialCameraOptions
+            };
+
+            await map.SetCameraOptionsAsync(options => options.Center = center);
+            Assert.True(assertOptionsCallback);
         }
     }
 }

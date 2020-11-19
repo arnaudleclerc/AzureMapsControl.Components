@@ -27,5 +27,7 @@
         (
             _marker
         );
+
+        await args.Map.SetCameraOptionsAsync(options => options.Center = args.Position);
     }
 }
