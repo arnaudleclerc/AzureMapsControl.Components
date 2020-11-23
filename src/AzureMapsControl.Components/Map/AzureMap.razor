@@ -27,29 +27,29 @@
 
     #region Parameters
 
+    /// <summary>
+    /// The options for setting the map control's camera.
+    /// </summary>
     [Parameter]
     public CameraOptions CameraOptions { get; set; } = new CameraOptions();
 
+    /// <summary>
+    /// Options for the map's style.
+    /// </summary>
     [Parameter]
     public StyleOptions StyleOptions { get; set; } = new StyleOptions();
 
+    /// <summary>
+    /// Options for enabling/disabling user interaction with the map.
+    /// </summary>
     [Parameter]
     public UserInteractionOptions UserInteractionOptions { get; set; } = new UserInteractionOptions();
 
     /// <summary>
-    /// Disable telemetry collection
-    /// This option may only be set when initializing the map.
-    /// default: false
+    /// Global properties used in all atlas service requests.
     /// </summary>
     [Parameter]
-    public bool DisableTelemetry { get; set; }
-
-    /// <summary>
-    /// Enable accessibility
-    /// default: true
-    /// </summary>
-    [Parameter]
-    public bool EnableAccessibility { get; set; } = true;
+    public ServiceOptions ServiceOptions { get; set; } = new ServiceOptions();
 
     /// <summary>
     /// Id affected to the div hosting the map
@@ -60,14 +60,6 @@
         get => _id;
         set { if (string.IsNullOrWhiteSpace(value)) { throw new ArgumentException("ID on the map is mandatory"); } _id = value; }
     }
-
-    /// <summary>
-    /// A boolean that specifies if vector and raster tiles should be reloaded when they expire (based on expires header).
-    /// This is useful for data sets that update frequently. When set to false, each tile will be loaded once, when needed, and not reloaded when they expire.
-    /// default: true
-    /// <summary>
-    [Parameter]
-    public bool RefreshExpiredTiles { get; set; } = true;
 
     /// <summary>
     /// Defines the events which needs to be activated
@@ -425,17 +417,8 @@
         {
             await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodAddMap.ToAzureMapsControlNamespace(),
                 Id,
-                Configuration.Value.AuthType,
-                Configuration.Value.AadAppId,
-                Configuration.Value.AadTenant,
-                Configuration.Value.ClientId,
-                Configuration.Value.SubscriptionKey,
-                new ServiceOptions
-                {
-                    DisableTelemetry = DisableTelemetry,
-                    EnableAccessibility = EnableAccessibility,
-                    RefreshExpiredTiles = RefreshExpiredTiles
-                },
+                Configuration.Value,
+                ServiceOptions,
                 (EventActivationFlags ?? MapEventActivationFlags.None().Enable(MapEventType.Ready)).EnabledEvents,
                 DotNetObjectReference.Create(_mapEventInvokeHelper));
         }
