@@ -2,8 +2,7 @@
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
-          Center="new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534)"
-          Zoom="10"
+          CameraOptions="new CameraOptions { Center = new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534), Zoom = 10}"
           ShowLogo="false"
           EventActivationFlags="MapEventActivationFlags.None().Enable(MapEventType.Ready)"
           TrafficOptions="new Components.Traffic.TrafficOptions { Incidents = false, Flow = AzureMapsControl.Components.Traffic.TrafficFlow.Relative }"

@@ -2,8 +2,7 @@
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
-          Zoom="12"
-          Center="new Components.Atlas.Position(-74, 40.723)"
+          CameraOptions="new CameraOptions { Center = new Components.Atlas.Position(-74, 40.723), Zoom = 12 }"
           Style="grayscale_dark"
           EventActivationFlags="MapEventActivationFlags
                                 .None()

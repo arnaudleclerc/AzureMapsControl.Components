@@ -10,6 +10,7 @@
     /// </summary>
 
     [ExcludeFromCodeCoverage]
+    [JsonConverter(typeof(TrafficOptionsJsonConverter))]
     public sealed class TrafficOptions
     {
         /// <summary>
@@ -49,6 +50,7 @@
             {
                 writer.WriteBoolean("incidents", value.Incidents.Value);
             }
+            writer.WriteEndObject();
         }
     }
 }
