@@ -3,7 +3,7 @@
     using System.Diagnostics.CodeAnalysis;
 
     [ExcludeFromCodeCoverage]
-    internal class StyleOptions
+    public sealed class StyleOptions
     {
         public bool AutoResize { get; set; }
         public string Language { get; set; }

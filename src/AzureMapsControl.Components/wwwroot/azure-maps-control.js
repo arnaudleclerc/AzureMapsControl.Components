@@ -362,12 +362,15 @@ window.azureMapsControl = {
         trafficOptions) {
 
         this.setCameraOptions(cameraOptions);
-        this._map.setStyle(styleOptions);
+        this.setStyleOptions(styleOptions);
         this._map.setUserInteraction(userInteractionOptions);
 
         if (trafficOptions) {
             this._map.setTraffic(trafficOptions);
         }
+    },
+    setStyleOptions: function (styleOptions) {
+        this._map.setStyle(styleOptions);
     },
     setCameraOptions: function (cameraOptions) {
         const options = {

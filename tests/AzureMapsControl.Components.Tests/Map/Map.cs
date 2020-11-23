@@ -607,5 +607,21 @@
             await map.SetCameraOptionsAsync(options => options.Center = center);
             Assert.True(assertOptionsCallback);
         }
+
+        [Fact]
+        public async void Should_UpdateStyleOptions_Async()
+        {
+            var assertOptionsCallback = false;
+            var language = "fr";
+            var initialStyleOptions = new StyleOptions {
+                AutoResize = true
+            };
+            var map = new Map("id", setStyleCallback: async options => assertOptionsCallback = options.AutoResize == initialStyleOptions.AutoResize && options.Language == language) {
+                StyleOptions = initialStyleOptions
+            };
+
+            await map.SetStyleOptionsAsync(options => options.Language = language);
+            Assert.True(assertOptionsCallback);
+        }
     }
 }

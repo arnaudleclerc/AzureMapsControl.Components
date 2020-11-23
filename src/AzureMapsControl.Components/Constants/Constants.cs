@@ -14,6 +14,7 @@
         internal const string MethodClearMap = "clearMap";
         internal const string MethodSetOptions = "setOptions";
         internal const string MethodSetCameraOptions = "setCameraOptions";
+        internal const string MethodSetStyleOptions = "setStyleOptions";
 
         internal const string MethodAddControl = "addControls";
 
