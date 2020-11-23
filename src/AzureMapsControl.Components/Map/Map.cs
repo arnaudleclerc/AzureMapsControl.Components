@@ -12,6 +12,7 @@
     using AzureMapsControl.Components.Layers;
     using AzureMapsControl.Components.Markers;
     using AzureMapsControl.Components.Popups;
+    using AzureMapsControl.Components.Traffic;
 
     /// <summary>
     /// Representation of a map
@@ -40,6 +41,7 @@
         private readonly Func<CameraOptions, Task> _setCameraCallback;
         private readonly Func<StyleOptions, Task> _setStyleCallback;
         private readonly Func<UserInteractionOptions, Task> _setUserInteractionCallback;
+        private readonly Func<TrafficOptions, Task> _setTrafficOptions;
 
         private List<Layer> _layers;
         private List<Data.Source> _sources;
@@ -65,6 +67,7 @@
         internal CameraOptions CameraOptions { get; set; }
         internal StyleOptions StyleOptions { get; set; }
         internal UserInteractionOptions UserInteractionOptions { get; set; }
+        internal TrafficOptions TrafficOptions { get; set; }
 
         internal Map(string id,
             Func<IEnumerable<Control>, Task> addControlsCallback = null,
@@ -88,7 +91,8 @@
             Func<Task> clearPopupsCallback = null,
             Func<CameraOptions, Task> setCameraCallback = null,
             Func<StyleOptions, Task> setStyleCallback = null,
-            Func<UserInteractionOptions, Task> setUserInteractionCallback = null)
+            Func<UserInteractionOptions, Task> setUserInteractionCallback = null,
+            Func<TrafficOptions, Task> setTrafficOptions = null)
         {
             Id = id;
             _addControlsCallback = addControlsCallback;
@@ -113,6 +117,7 @@
             _setCameraCallback = setCameraCallback;
             _setStyleCallback = setStyleCallback;
             _setUserInteractionCallback = setUserInteractionCallback;
+            _setTrafficOptions = setTrafficOptions;
         }
 
         # region Controls
@@ -411,6 +416,10 @@
         /// <returns></returns>
         public async Task SetCameraOptionsAsync(Action<CameraOptions> configure)
         {
+            if (CameraOptions == null)
+            {
+                CameraOptions = new CameraOptions();
+            }
             configure.Invoke(CameraOptions);
             await _setCameraCallback.Invoke(CameraOptions);
         }
@@ -422,6 +431,10 @@
         /// <returns></returns>
         public async Task SetStyleOptionsAsync(Action<StyleOptions> configure)
         {
+            if (StyleOptions == null)
+            {
+                StyleOptions = new StyleOptions();
+            }
             configure.Invoke(StyleOptions);
             await _setStyleCallback.Invoke(StyleOptions);
         }
@@ -433,8 +446,27 @@
         /// <returns></returns>
         public async Task SetUserInteractionAsync(Action<UserInteractionOptions> configure)
         {
+            if (UserInteractionOptions == null)
+            {
+                UserInteractionOptions = new UserInteractionOptions();
+            }
             configure.Invoke(UserInteractionOptions);
             await _setUserInteractionCallback.Invoke(UserInteractionOptions);
+        }
+
+        /// <summary>
+        /// Update the traffic options on the map
+        /// </summary>
+        /// <param name="configure">Action setting the traffic options</param>
+        /// <returns></returns>
+        public async Task SetTrafficOptionsAsync(Action<TrafficOptions> configure)
+        {
+            if (TrafficOptions == null)
+            {
+                TrafficOptions = new TrafficOptions();
+            }
+            configure.Invoke(TrafficOptions);
+            await _setTrafficOptions.Invoke(TrafficOptions);
         }
 
         #endregion

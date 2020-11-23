@@ -936,11 +936,7 @@
                 cameraOptions,
                 styleOptions,
                 userInteractionOptions,
-                TrafficOptions != null ? new AzureMapsControl.Components.Traffic.TrafficJsOptions
-                {
-                    Flow = (TrafficOptions.Flow ?? AzureMapsControl.Components.Traffic.TrafficFlow.None).ToString(),
-                    Incidents = TrafficOptions.Incidents
-                } : null);
+                TrafficOptions);
 
             await MapService.AddMapAsync(new Map(Id,
                 AddControlsAsync,
@@ -964,14 +960,16 @@
                 ClearPopupsAsync,
                 SetCameraOptionsAsync,
                 SetStyleOptionsAsync,
-                SetUserInteractionAsync)
+                SetUserInteractionAsync,
+                SetTrafficAsync)
             {
                 Controls = Controls,
                 HtmlMarkers = HtmlMarkers,
                 DrawingToolbarOptions = DrawingToolbarOptions,
                 CameraOptions = cameraOptions,
                 StyleOptions = styleOptions,
-                UserInteractionOptions = userInteractionOptions
+                UserInteractionOptions = userInteractionOptions,
+                TrafficOptions = TrafficOptions
             });
 
             await AddControlsAsync(Controls);
@@ -986,6 +984,8 @@
     private async Task SetStyleOptionsAsync(StyleOptions options) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodSetStyleOptions.ToAzureMapsControlNamespace(), options);
 
     private async Task SetUserInteractionAsync(UserInteractionOptions options) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodSetUserInteraction.ToAzureMapsControlNamespace(), options);
+
+    private async Task SetTrafficAsync(AzureMapsControl.Components.Traffic.TrafficOptions options) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodSetTraffic.ToAzureMapsControlNamespace(), options);
 
     private async Task ClearMapAsync() => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodClearMap.ToAzureMapsControlNamespace());
 

@@ -12,6 +12,7 @@
     using AzureMapsControl.Components.Map;
     using AzureMapsControl.Components.Markers;
     using AzureMapsControl.Components.Popups;
+    using AzureMapsControl.Components.Traffic;
 
     using Xunit;
 
@@ -609,6 +610,17 @@
         }
 
         [Fact]
+        public async void Should_UpdateCameraOptions_NoCameraOptionsDefined_Async()
+        {
+            var assertOptionsCallback = false;
+            var center = new Position(10, 10);
+            var map = new Map("id", setCameraCallback: async options => assertOptionsCallback = options.Center == center);
+
+            await map.SetCameraOptionsAsync(options => options.Center = center);
+            Assert.True(assertOptionsCallback);
+        }
+
+        [Fact]
         public async void Should_UpdateStyleOptions_Async()
         {
             var assertOptionsCallback = false;
@@ -619,6 +631,17 @@
             var map = new Map("id", setStyleCallback: async options => assertOptionsCallback = options.AutoResize == initialStyleOptions.AutoResize && options.Language == language) {
                 StyleOptions = initialStyleOptions
             };
+
+            await map.SetStyleOptionsAsync(options => options.Language = language);
+            Assert.True(assertOptionsCallback);
+        }
+
+        [Fact]
+        public async void Should_UpdateStyleOptions_NoStyleOptionsDefined_Async()
+        {
+            var assertOptionsCallback = false;
+            var language = "fr";
+            var map = new Map("id", setStyleCallback: async options => assertOptionsCallback = options.Language == language);
 
             await map.SetStyleOptionsAsync(options => options.Language = language);
             Assert.True(assertOptionsCallback);
@@ -637,6 +660,44 @@
             };
 
             await map.SetUserInteractionAsync(options => options.DblclickZoomInteraction = dblClickZoomInteraction);
+            Assert.True(assertOptionsCallback);
+        }
+
+        [Fact]
+        public async void Should_UpdateUserInteraction_NoUserInteractionDefined_Async()
+        {
+            var assertOptionsCallback = false;
+            var dblClickZoomInteraction = true;
+            var map = new Map("id", setUserInteractionCallback: async options => assertOptionsCallback = options.DblclickZoomInteraction == dblClickZoomInteraction);
+
+            await map.SetUserInteractionAsync(options => options.DblclickZoomInteraction = dblClickZoomInteraction);
+            Assert.True(assertOptionsCallback);
+        }
+
+        [Fact]
+        public async void Should_UpdateTrafficInteraction_Async()
+        {
+            var assertOptionsCallback = false;
+            var initialTrafficOptions = new TrafficOptions {
+                Flow = TrafficFlow.Absolute
+            };
+            var incidents = true;
+            var map = new Map("id", setTrafficOptions: async options => assertOptionsCallback = options.Flow == initialTrafficOptions.Flow && options.Incidents == incidents) {
+                TrafficOptions = initialTrafficOptions
+            };
+
+            await map.SetTrafficOptionsAsync(options => options.Incidents = incidents);
+            Assert.True(assertOptionsCallback);
+        }
+
+        [Fact]
+        public async void Should_UpdateTrafficInteraction_NoTrafficOptionsDefined_Async()
+        {
+            var assertOptionsCallback = false;
+            var incidents = true;
+            var map = new Map("id", setTrafficOptions: async options => assertOptionsCallback = options.Incidents == incidents);
+
+            await map.SetTrafficOptionsAsync(options => options.Incidents = incidents);
             Assert.True(assertOptionsCallback);
         }
     }
