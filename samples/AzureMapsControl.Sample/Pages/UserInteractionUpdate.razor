@@ -3,14 +3,20 @@
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
           CameraOptions="new CameraOptions { Center = new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534), Zoom = 4}"
-          Style="grayscale_dark"
-          ShowLogo="false"
-          ShowFeedbackLink="false"
+          StyleOptions="StyleOptions"
           EventActivationFlags="MapEventActivationFlags.None().Enable(MapEventType.Ready)"
           Interactive="false"
           OnReady="OnMapReadyAsync" />
 
 @code {
+
+    public StyleOptions StyleOptions = new StyleOptions
+    {
+        Style = "grayscale_dark",
+        ShowLogo = false,
+        ShowFeedbackLink = false
+    };
+
     public async Task OnMapReadyAsync(MapEventArgs eventArgs)
     {
         System.Threading.Thread.Sleep(5000);
