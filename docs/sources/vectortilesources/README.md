@@ -5,15 +5,20 @@ A vector tile source loads data formatted as vector tiles for the current map vi
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
-          Zoom="12"
-          Center="new Components.Atlas.Position(-74, 40.723)"
-          Style="grayscale_dark"
+          CameraOptions="new CameraOptions { Center = new Components.Atlas.Position(-74, 40.723), Zoom = 12 }"
+          StyleOptions="StyleOptions"
           EventActivationFlags="MapEventActivationFlags
                                 .None()
                                 .Enable(MapEventType.Ready)"
           OnReady="OnMapReady" />
 
 @code  {
+
+    public StyleOptions StyleOptions = new StyleOptions
+    {
+        Style = "grayscale_dark"
+    };
+
     public async Task OnMapReady(MapEventArgs events)
     {
         var sourceId = "dataSourceId";

@@ -11,14 +11,20 @@ The `Heatmap Layer` requires a data source. The ID of the datasource to bind to 
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
-          Zoom="2"
-          Style="grayscale_dark"
+          CameraOptions="new CameraOptions { Zoom = 2 }"
+          StyleOptions="StyleOptions"
           EventActivationFlags="MapEventActivationFlags
                                 .None()
                                 .Enable(MapEventType.Ready)"
           OnReady="OnMapReady" />
 
 @code  {
+
+    public StyleOptions StyleOptions = new StyleOptions
+    {
+        Style = "grayscale_dark"
+    };
+
     public async Task OnMapReady(MapEventArgs events)
     {
         const string dataSourceId = "heatmapDataSource";

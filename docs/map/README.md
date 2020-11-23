@@ -9,11 +9,17 @@ You can use the `AzureMap` component to display a map.
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
-          Center="new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534)"
-          Zoom="10"
-          Style="grayscale_dark"
-          ShowLogo="false"
-          ShowFeedbackLink="false" />
+          CameraOptions="new CameraOptions { Center= new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534), Zoom= 10 }"
+          StyleOptions="StyleOptions"/>
+
+@code {
+    public StyleOptions StyleOptions = new StyleOptions
+    {
+        Style = "grayscale_dark",
+        ShowLogo = false,
+        ShowFeedbackLink = false
+    };
+}
 ```
 
 Different inputs can be specified to customize the map. Please refer to the [Azure Maps Web SDK Documentation](https://docs.microsoft.com/en-us/azure/azure-maps/map-create) for more information.
@@ -85,11 +91,8 @@ The following example activates all the events except `Drag`, `Idle`, `MouseMove
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
-          Center="new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534)"
-          Zoom="10"
-          Style="grayscale_dark"
-          ShowLogo="false"
-          ShowFeedbackLink="false"
+          CameraOptions="new CameraOptions { Center= new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534), Zoom= 10 }"
+          StyleOptions="StyleOptions"
           OnReady="@(async (e) => { Console.WriteLine(e.Type); })"
           EventActivationFlags="MapEventActivationFlags
                                 .All()
@@ -97,6 +100,15 @@ The following example activates all the events except `Drag`, `Idle`, `MouseMove
                                     MapEventType.Idle,
                                     MapEventType.MouseMove,
                                     MapEventType.Render)"/>
+
+@code {
+    public StyleOptions StyleOptions = new StyleOptions
+    {
+        Style = "grayscale_dark",
+        ShowLogo = false,
+        ShowFeedbackLink = false
+    };
+}
 ```
 
 The following example deactivates all the events except `Ready`.
@@ -106,13 +118,19 @@ The following example deactivates all the events except `Ready`.
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
-          Center="new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534)"
-          Zoom="10"
-          Style="grayscale_dark"
-          ShowLogo="false"
-          ShowFeedbackLink="false"
+          CameraOptions="new CameraOptions { Center= new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534), Zoom= 10 }"
+          StyleOptions="StyleOptions"
           OnReady="@(async (e) => { Console.WriteLine(e.Type); })"
           EventActivationFlags="MapEventActivationFlags
                                 .None()
                                 .Enable(MapEventType.Ready)"/>
+
+@code {
+    public StyleOptions StyleOptions = new StyleOptions
+    {
+        Style = "grayscale_dark",
+        ShowLogo = false,
+        ShowFeedbackLink = false
+    };
+}
 ```

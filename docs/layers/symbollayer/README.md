@@ -4,14 +4,14 @@ Connect a symbol to a data source, and use it to render an icon or a text at a g
 
 Symbol layers are rendered using WebGL. Use a symbol layer to render large collections of points on the map. Compared to HTML marker, the symbol layer renders a large number of point data on the map, with better performance. However, the symbol layer doesn't support traditional CSS and HTML elements for styling.
 
-![Symbol Layer](../assets/symbollayer.png)
+![Symbol Layer](../../assets/symbollayer.png)
 
 ```
 @page "/SymbolLayerOnReady"
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
-          Zoom="2"
+          CameraOptions="new CameraOptions { Zoom = 2 }"
           EventActivationFlags="MapEventActivationFlags
                                 .None()
                                 .Enable(MapEventType.Ready)"

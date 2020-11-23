@@ -12,6 +12,7 @@
     using AzureMapsControl.Components.Layers;
     using AzureMapsControl.Components.Markers;
     using AzureMapsControl.Components.Popups;
+    using AzureMapsControl.Components.Traffic;
 
     /// <summary>
     /// Representation of a map
@@ -38,6 +39,9 @@
         private readonly Func<string, Task> _removePopupCallback;
         private readonly Func<Task> _clearPopupsCallback;
         private readonly Func<CameraOptions, Task> _setCameraCallback;
+        private readonly Func<StyleOptions, Task> _setStyleCallback;
+        private readonly Func<UserInteractionOptions, Task> _setUserInteractionCallback;
+        private readonly Func<TrafficOptions, Task> _setTrafficOptions;
 
         private List<Layer> _layers;
         private List<Data.Source> _sources;
@@ -61,6 +65,9 @@
         public IEnumerable<Popup> Popups => _popups;
 
         internal CameraOptions CameraOptions { get; set; }
+        internal StyleOptions StyleOptions { get; set; }
+        internal UserInteractionOptions UserInteractionOptions { get; set; }
+        internal TrafficOptions TrafficOptions { get; set; }
 
         internal Map(string id,
             Func<IEnumerable<Control>, Task> addControlsCallback = null,
@@ -82,7 +89,10 @@
             Func<Popup, Task> addPopupCallback = null,
             Func<string, Task> removePopupCallback = null,
             Func<Task> clearPopupsCallback = null,
-            Func<CameraOptions, Task> setCameraCallback = null)
+            Func<CameraOptions, Task> setCameraCallback = null,
+            Func<StyleOptions, Task> setStyleCallback = null,
+            Func<UserInteractionOptions, Task> setUserInteractionCallback = null,
+            Func<TrafficOptions, Task> setTrafficOptions = null)
         {
             Id = id;
             _addControlsCallback = addControlsCallback;
@@ -105,6 +115,9 @@
             _removePopupCallback = removePopupCallback;
             _clearPopupsCallback = clearPopupsCallback;
             _setCameraCallback = setCameraCallback;
+            _setStyleCallback = setStyleCallback;
+            _setUserInteractionCallback = setUserInteractionCallback;
+            _setTrafficOptions = setTrafficOptions;
         }
 
         # region Controls
@@ -396,10 +409,64 @@
             await _clearMapCallback.Invoke();
         }
 
-        public async Task SetCameraOptionsAsync(Action<CameraOptions> optionsCallback)
+        /// <summary>
+        /// Update the camera options of the map
+        /// </summary>
+        /// <param name="configure">Action setting the camera options</param>
+        /// <returns></returns>
+        public async Task SetCameraOptionsAsync(Action<CameraOptions> configure)
         {
-            optionsCallback.Invoke(CameraOptions);
+            if (CameraOptions == null)
+            {
+                CameraOptions = new CameraOptions();
+            }
+            configure.Invoke(CameraOptions);
             await _setCameraCallback.Invoke(CameraOptions);
+        }
+
+        /// <summary>
+        /// Update the style options of the map
+        /// </summary>
+        /// <param name="configure">Action setting the style options</param>
+        /// <returns></returns>
+        public async Task SetStyleOptionsAsync(Action<StyleOptions> configure)
+        {
+            if (StyleOptions == null)
+            {
+                StyleOptions = new StyleOptions();
+            }
+            configure.Invoke(StyleOptions);
+            await _setStyleCallback.Invoke(StyleOptions);
+        }
+
+        /// <summary>
+        /// Update the user interaction options of the map
+        /// </summary>
+        /// <param name="configure">Action setting the user interaction options</param>
+        /// <returns></returns>
+        public async Task SetUserInteractionAsync(Action<UserInteractionOptions> configure)
+        {
+            if (UserInteractionOptions == null)
+            {
+                UserInteractionOptions = new UserInteractionOptions();
+            }
+            configure.Invoke(UserInteractionOptions);
+            await _setUserInteractionCallback.Invoke(UserInteractionOptions);
+        }
+
+        /// <summary>
+        /// Update the traffic options on the map
+        /// </summary>
+        /// <param name="configure">Action setting the traffic options</param>
+        /// <returns></returns>
+        public async Task SetTrafficOptionsAsync(Action<TrafficOptions> configure)
+        {
+            if (TrafficOptions == null)
+            {
+                TrafficOptions = new TrafficOptions();
+            }
+            configure.Invoke(TrafficOptions);
+            await _setTrafficOptions.Invoke(TrafficOptions);
         }
 
         #endregion
