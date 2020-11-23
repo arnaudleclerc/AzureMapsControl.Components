@@ -9,7 +9,7 @@ A Polygon Layer renders the areas of `Polygon` and `MultiPolygon` feature geomet
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
-          Zoom="2"
+          CameraOptions="new CameraOptions { Zoom = 2 }"
           EventActivationFlags="MapEventActivationFlags
                                 .None()
                                 .Enable(MapEventType.Ready)"

@@ -17,8 +17,7 @@ Layers can be added to the map after the `MapReady` event has been triggered by 
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
-          Center="new Components.Atlas.Position(-99.47, 40.75)"
-          Zoom="4"
+          CameraOptions="new CameraOptions { Center = new Components.Atlas.Position(-99.47, 40.75), Zoom = 4}"
           EventActivationFlags="MapEventActivationFlags
                                 .None()
                                 .Enable(MapEventType.Ready)"
@@ -64,8 +63,7 @@ Layers can be removed by calling the `RemoveLayersAsync` method on the map and p
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
-          Center="new Components.Atlas.Position(-99.47, 40.75)"
-          Zoom="4"
+          CameraOptions="new CameraOptions { Center = new Components.Atlas.Position(-99.47, 40.75), Zoom = 4 } "
           EventActivationFlags="MapEventActivationFlags
                                 .None()
                                 .Enable(MapEventType.Ready)"

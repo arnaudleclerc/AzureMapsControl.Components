@@ -9,9 +9,7 @@ The polygon extrusion layer renders areas of `Polygon` and `MultiPolygon` featur
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
-          Zoom="4"
-          Pitch="45"
-          Center="new Components.Atlas.Position(11.581990, 48.143534)"
+          CameraOptions="new CameraOptions { Center = new Components.Atlas.Position(11.581990, 48.143534), Zoom = 4, Pitch = 45 }"
           EventActivationFlags="MapEventActivationFlags
                                 .None()
                                 .Enable(MapEventType.Ready)"
@@ -24,7 +22,7 @@ The polygon extrusion layer renders areas of `Polygon` and `MultiPolygon` featur
         var dataSource = new AzureMapsControl.Components.Data.DataSource(dataSourceId);
         await events.Map.AddSourceAsync(dataSource);
 
-        await dataSource.ImportDataFromUrlAsync("https://raw.githubusercontent.com/arnaudleclerc/ng-azure-maps/master/assets/data/countries.geojson.json");
+        await dataSource.ImportDataFromUrlAsync("https://raw.githubusercontent.com/arnaudleclerc/ng-azure-maps/main/assets/data/countries.geojson.json");
 
         var layer = new AzureMapsControl.Components.Layers.PolygonExtrusionLayer
         {
