@@ -33,17 +33,8 @@
     [Parameter]
     public StyleOptions StyleOptions { get; set; } = new StyleOptions();
 
-    /// <summary>
-    /// Whether the Shift + left click and drag will draw a zoom box. default true
-    /// </summary>
     [Parameter]
-    public bool BoxZoomInteraction { get; set; } = true;
-
-    /// <summary>
-    /// Whether double left click will zoom the map inwards. Default true
-    /// </summary>
-    [Parameter]
-    public bool DblclickZoomInteraction { get; set; } = true;
+    public UserInteractionOptions UserInteractionOptions { get; set; } = new UserInteractionOptions();
 
     /// <summary>
     /// Disable telemetry collection
@@ -54,35 +45,11 @@
     public bool DisableTelemetry { get; set; }
 
     /// <summary>
-    /// Whether left click and drag will pan the map. default true
-    /// </summary>
-    [Parameter]
-    public bool DragPanInteraction { get; set; } = true;
-
-    /// <summary>
-    /// Whether right click and drag will rotate and pitch the map. default true
-    /// </summary>
-    [Parameter]
-    public bool DragRotateInteraction { get; set; } = true;
-
-    /// <summary>
     /// Enable accessibility
     /// default: true
     /// </summary>
     [Parameter]
     public bool EnableAccessibility { get; set; } = true;
-
-    /// <summary>
-    /// Whether the map is interactive or static. If false, all user interaction is disabled. If true, only selected user interactions will enabled. default true
-    /// </summary>
-    [Parameter]
-    public bool Interactive { get; set; } = true;
-
-    /// <summary>
-    /// Whether the keyboard interactions are enabled. Default true
-    /// </summary>
-    [Parameter]
-    public bool KeyboardInteraction { get; set; } = true;
 
     /// <summary>
     /// Id affected to the div hosting the map
@@ -101,25 +68,6 @@
     /// <summary>
     [Parameter]
     public bool RefreshExpiredTiles { get; set; } = true;
-
-
-    /// <summary>
-    /// Whether the map should zoom on scroll input. default true
-    /// </summary>
-    [Parameter]
-    public bool ScrollZoomInteraction { get; set; } = true;
-
-    /// <summary>
-    /// Whether touch interactions are enabled for touch devices. default true
-    /// </summary>
-    [Parameter]
-    public bool TouchInteraction { get; set; }
-
-    /// <summary>
-    /// Sets the zoom rate of the mouse wheel default 1/450
-    /// </summary>
-    [Parameter]
-    public double WheelZoomRate { get; set; }
 
     /// <summary>
     /// Defines the events which needs to be activated
@@ -745,23 +693,10 @@
     {
         if (mapEvent.Type == "ready")
         {
-            var userInteractionOptions = new UserInteractionOptions
-            {
-                BoxZoomInteraction = BoxZoomInteraction,
-                DblclickZoomInteraction = DblclickZoomInteraction,
-                DragPanInteraction = DragPanInteraction,
-                DragRotateInteraction = DragRotateInteraction,
-                Interactive = Interactive,
-                KeyboardInteraction = KeyboardInteraction,
-                ScrollZoomInteraction = ScrollZoomInteraction,
-                TouchInteraction = TouchInteraction,
-                WheelZoomRate = WheelZoomRate
-            };
-
             await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodSetOptions.ToAzureMapsControlNamespace(),
                 CameraOptions,
                 StyleOptions,
-                userInteractionOptions,
+                UserInteractionOptions,
                 TrafficOptions);
 
             await MapService.AddMapAsync(new Map(Id,
@@ -794,7 +729,7 @@
                 DrawingToolbarOptions = DrawingToolbarOptions,
                 CameraOptions = CameraOptions,
                 StyleOptions = StyleOptions,
-                UserInteractionOptions = userInteractionOptions,
+                UserInteractionOptions = UserInteractionOptions,
                 TrafficOptions = TrafficOptions
             });
 

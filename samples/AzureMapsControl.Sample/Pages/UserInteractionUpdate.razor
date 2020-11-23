@@ -5,7 +5,7 @@
           CameraOptions="new CameraOptions { Center = new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534), Zoom = 4}"
           StyleOptions="StyleOptions"
           EventActivationFlags="MapEventActivationFlags.None().Enable(MapEventType.Ready)"
-          Interactive="false"
+          UserInteractionOptions="new UserInteractionOptions { Interactive = false }"
           OnReady="OnMapReadyAsync" />
 
 @code {
