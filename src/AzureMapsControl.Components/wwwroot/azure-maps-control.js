@@ -200,30 +200,26 @@ window.azureMapsControl = {
         });
     },
     addMap: function (mapId,
-        authType,
-        aadAppId,
-        aadTenant,
-        clientId,
-        subscriptionKey,
+        configuration,
         serviceOptions,
         enabledEvents,
         eventHelper) {
 
-        if (authType === 'aad') {
+        if (configuration.authType === 'aad') {
             atlas.setAuthenticationOptions({
-                authType: authType,
-                aadAppId: aadAppId,
-                aadTenant: aadTenant,
-                clientId: clientId
+                authType: configuration.authType,
+                aadAppId: configuration.aadAppId,
+                aadTenant: configuration.aadTenant,
+                clientId: configuration.clientId
             });
-        } else if (authType === 'subscriptionKey') {
+        } else if (configuration.authType === 'subscriptionKey') {
             atlas.setAuthenticationOptions({
-                authType: authType,
-                subscriptionKey: subscriptionKey
+                authType: configuration.authType,
+                subscriptionKey: configuration.subscriptionKey
             });
         } else {
             atlas.setAuthenticationOptions({
-                authType: authType
+                authType: configuration.authType
             });
         }
 
@@ -362,12 +358,18 @@ window.azureMapsControl = {
         trafficOptions) {
 
         this.setCameraOptions(cameraOptions);
-        this._map.setStyle(styleOptions);
+        this.setStyleOptions(styleOptions);
+        this.setUserInteraction(userInteractionOptions);
+        this.setTraffic(trafficOptions);
+    },
+    setTraffic: function (trafficOptions) {
+        this._map.setTraffic(trafficOptions);
+    },
+    setUserInteraction: function (userInteractionOptions) {
         this._map.setUserInteraction(userInteractionOptions);
-
-        if (trafficOptions) {
-            this._map.setTraffic(trafficOptions);
-        }
+    },
+    setStyleOptions: function (styleOptions) {
+        this._map.setStyle(styleOptions);
     },
     setCameraOptions: function (cameraOptions) {
         const options = {

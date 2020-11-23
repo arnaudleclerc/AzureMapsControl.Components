@@ -1,5 +1,6 @@
 ﻿namespace AzureMapsControl.Components.Traffic
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
@@ -29,6 +30,21 @@
         public static readonly TrafficFlow RelativeDelay = new TrafficFlow("relative-delay");
 
         private TrafficFlow(string flow) => _flow = flow;
+
+        internal static TrafficFlow FromString(string type)
+        {
+            switch (type)
+            {
+                case "absolute":
+                    return Absolute;
+                case "relative":
+                    return Relative;
+                case "relative-delay":
+                    return RelativeDelay;
+                default:
+                    return None;
+            }
+        }
 
         public override string ToString() => _flow;
     }

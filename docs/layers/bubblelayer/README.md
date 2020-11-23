@@ -11,7 +11,7 @@ The `Bubble Layer` requires a data source. The ID of the datasource to bind to t
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
-          Zoom="2"
+          CameraOptions="new CameraOptions { Zoom = 2 }"
           EventActivationFlags="MapEventActivationFlags
                                 .None()
                                 .Enable(MapEventType.Ready)"

@@ -9,13 +9,18 @@ Popups can be added to the map using the `AddPopupAsync` method on the map. If t
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
-          Style="grayscale_dark"
+          StyleOptions="StyleOptions"
           EventActivationFlags="MapEventActivationFlags
                                 .None()
                                 .Enable(MapEventType.Ready)"
           OnReady="OnMapReady" />
 
 @code  {
+
+    public StyleOptions StyleOptions = new StyleOptions
+    {
+        Style = "grayscale_dark"
+    };
 
     public async Task OnMapReady(MapEventArgs eventArgs)
     {
@@ -37,13 +42,18 @@ A popup can also be opened using the `OpenAsync` method.
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
-          Style="grayscale_dark"
+          StyleOptions="StyleOptions"
           EventActivationFlags="MapEventActivationFlags
                                 .None()
                                 .Enable(MapEventType.Ready)"
           OnReady="OnMapReady" />
 
 @code  {
+
+    public StyleOptions StyleOptions = new StyleOptions
+    {
+        Style = "grayscale_dark"
+    };
 
     public async Task OnMapReady(MapEventArgs eventArgs)
     {
@@ -67,13 +77,18 @@ The popup can then be close by calling the `CloseAsync` method.
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
-          Style="grayscale_dark"
+          StyleOptions="StyleOptions"
           EventActivationFlags="MapEventActivationFlags
                                 .None()
                                 .Enable(MapEventType.Ready)"
           OnReady="OnMapReady" />
 
 @code  {
+
+    public StyleOptions StyleOptions = new StyleOptions
+    {
+        Style = "grayscale_dark"
+    };
 
     public async Task OnMapReady(MapEventArgs eventArgs)
     {
@@ -98,13 +113,18 @@ Calling the `RemoveAsync` method will remove the popup from the map. You can als
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
-          Style="grayscale_dark"
+          StyleOptions="StyleOptions"
           EventActivationFlags="MapEventActivationFlags
                                 .None()
                                 .Enable(MapEventType.Ready)"
           OnReady="OnMapReady" />
 
 @code  {
+
+    public StyleOptions StyleOptions = new StyleOptions
+    {
+        Style = "grayscale_dark"
+    };
 
     public async Task OnMapReady(MapEventArgs eventArgs)
     {
@@ -130,13 +150,18 @@ The popup can be updated by calling the `UpdateAsync` method and providing the u
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
-          Style="grayscale_dark"
+          StyleOptions="StyleOptions"
           EventActivationFlags="MapEventActivationFlags
                                 .None()
                                 .Enable(MapEventType.Ready)"
           OnReady="OnMapReady" />
 
 @code  {
+
+    public StyleOptions StyleOptions = new StyleOptions
+    {
+        Style = "grayscale_dark"
+    };
 
     public async Task OnMapReady(MapEventArgs eventArgs)
     {
@@ -162,13 +187,18 @@ All the popups can be cleared using the `ClearPopupsAsync` method on the map.
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
-          Style="grayscale_dark"
+          StyleOptions="StyleOptions"
           EventActivationFlags="MapEventActivationFlags
                                 .None()
                                 .Enable(MapEventType.Ready)"
           OnReady="OnMapReady" />
 
 @code  {
+
+    public StyleOptions StyleOptions = new StyleOptions
+    {
+        Style = "grayscale_dark"
+    };
 
     public async Task OnMapReady(MapEventArgs eventArgs)
     {

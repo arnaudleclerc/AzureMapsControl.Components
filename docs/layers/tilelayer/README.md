@@ -2,15 +2,14 @@
 
 A Tile layer loads in tiles from a server. These images can either be pre-rendered or dynamically rendered. Pre-rendered images are stored like any other image on a server using a naming convention that the tile layer understands. Dynamically rendered images use a service to load the images close to real time.
 
-![Tile Layer](../assets/tilelayer.png)
+![Tile Layer](../../assets/tilelayer.png)
 
 ```
 @page "/TileLayerOnReady"
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
-          Center="new Components.Atlas.Position(-99.47, 40.75)"
-          Zoom="4"
+          CameraOptions="new CameraOptions { Center = new Components.Atlas.Position(-99.47, 40.75), Zoom = 4}"
           EventActivationFlags="MapEventActivationFlags
                                 .None()
                                 .Enable(MapEventType.Ready)"

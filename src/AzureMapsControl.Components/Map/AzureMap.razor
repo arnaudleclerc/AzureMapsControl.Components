@@ -28,115 +28,28 @@
     #region Parameters
 
     /// <summary>
-    /// If true the map will automatically resize whenever the window's size changes. Otherwise map.resize() must be called.
-    /// Default true.
+    /// The options for setting the map control's camera.
     /// </summary>
     [Parameter]
-    public bool AutoResize { get; set; } = true;
+    public CameraOptions CameraOptions { get; set; } = new CameraOptions();
 
     /// <summary>
-    /// The bearing of the map (rotation).
-    /// default: North
+    /// Options for the map's style.
     /// </summary>
     [Parameter]
-    public Bearing Bearing { get; set; } = Bearing.North;
+    public StyleOptions StyleOptions { get; set; } = new StyleOptions();
 
     /// <summary>
-    /// The bounds of the map control's camera
+    /// Options for enabling/disabling user interaction with the map.
     /// </summary>
     [Parameter]
-    public BoundingBox Bounds { get; set; }
+    public UserInteractionOptions UserInteractionOptions { get; set; } = new UserInteractionOptions();
 
     /// <summary>
-    /// Whether the Shift + left click and drag will draw a zoom box. default true
+    /// Global properties used in all atlas service requests.
     /// </summary>
     [Parameter]
-    public bool BoxZoomInteraction { get; set; } = true;
-
-    /// <summary>
-    /// The type of animation.
-    /// "jump" is an immediate change.
-    /// "ease" is a gradual change of the camera's settings.
-    /// "fly" is a gradual change of the camera's settings following an arc resembling flight.
-    /// </summary>
-    [Parameter]
-    public CameraType CameryType { get; set; }
-
-    /// <summary>
-    /// The position to align the center of the map view with
-    /// </summary>
-    [Parameter]
-    public Position Center { get; set; }
-
-    /// <summary>
-    /// A pixel offset to apply to the center of the map.
-    /// This is useful if you want to programmatically pan the map to another location or if you want to center the map over a shape, then offset the maps view to make room for a popup.
-    /// </summary>
-    [Parameter]
-    public Pixel CenterOffset { get; set; }
-
-    /// <summary>
-    /// Whether double left click will zoom the map inwards. Default true
-    /// </summary>
-    [Parameter]
-    public bool DblclickZoomInteraction { get; set; } = true;
-
-    /// <summary>
-    /// Disable telemetry collection
-    /// This option may only be set when initializing the map.
-    /// default: false
-    /// </summary>
-    [Parameter]
-    public bool DisableTelemetry { get; set; }
-
-    /// <summary>
-    /// Whether left click and drag will pan the map. default true
-    /// </summary>
-    [Parameter]
-    public bool DragPanInteraction { get; set; } = true;
-
-    /// <summary>
-    /// Whether right click and drag will rotate and pitch the map. default true
-    /// </summary>
-    [Parameter]
-    public bool DragRotateInteraction { get; set; } = true;
-
-    /// <summary>
-    /// The duration of the animation in milliseconds.
-    /// </summary>
-    [Parameter]
-    public int? Duration { get; set; }
-
-    /// <summary>
-    /// Enable accessibility
-    /// default: true
-    /// </summary>
-    [Parameter]
-    public bool EnableAccessibility { get; set; } = true;
-
-    /// <summary>
-    /// Whether the map is interactive or static. If false, all user interaction is disabled. If true, only selected user interactions will enabled. default true
-    /// </summary>
-    [Parameter]
-    public bool Interactive { get; set; } = true;
-
-    /// <summary>
-    /// Whether the keyboard interactions are enabled. Default true
-    /// </summary>
-    [Parameter]
-    public bool KeyboardInteraction { get; set; } = true;
-
-    /// <summary>
-    /// The language of the map labels.
-    /// </summary>
-    [Parameter]
-    public string Language { get; set; }
-
-    /// <summary>
-    /// Sets the lighting options of the map.
-    /// </summary>
-    [Parameter]
-    public LightOptions Light { get; set; }
+    public ServiceOptions ServiceOptions { get; set; } = new ServiceOptions();
 
     /// <summary>
     /// Id affected to the div hosting the map
@@ -147,122 +60,6 @@
         get => _id;
         set { if (string.IsNullOrWhiteSpace(value)) { throw new ArgumentException("ID on the map is mandatory"); } _id = value; }
     }
-
-    /// <summary>
-    /// A bounding box in which to constrain the viewable map area to. Users won't be able to pan the center of the map outside of this bounding box. Set maxBounds to null or undefined to remove maxBounds
-    /// </summary>
-    [Parameter]
-    public BoundingBox MaxBounds { get; set; }
-
-    /// <summary>
-    /// The maximum zoom level that the map can be zoomed into during the animation. Must be between 0 and 24, and greater than or equal to `minZoom`.
-    /// </summary>
-    [Parameter]
-    public int? MaxZoom { get; set; }
-
-    /// <summary>
-    /// The minimum zoom level that the map can be zoomed out to during the animation. Must be between 0 and 24, and less than or equal to `maxZoom`.
-    /// </summary>
-    [Parameter]
-    public int? MinZoom { get; set; }
-
-    /// <summary>
-    /// An offset of the center of the given bounds relative to the map's center, measured in pixels
-    /// </summary>
-    [Parameter]
-    public Pixel Offset { get; set; }
-
-    /// <summary>
-    /// The amount of padding in pixels to add to the given bounds
-    /// </summary>
-    [Parameter]
-    public Padding Padding { get; set; }
-
-    /// <summary>
-    /// The pitch (tilt) of the map in degrees between 0 and 60, where 0 is looking straight down on the map.
-    /// </summary>
-    [Parameter]
-    public int? Pitch { get; set; }
-
-    /// <summary>
-    /// If true, the map's canvas can be exported to a PNG using map.getCanvas().toDataURL().
-    /// </summary>
-    [Parameter]
-    public bool PreserveDrawingBuffer { get; set; }
-
-    /// <summary>
-    /// A boolean that specifies if vector and raster tiles should be reloaded when they expire (based on expires header).
-    /// This is useful for data sets that update frequently. When set to false, each tile will be loaded once, when needed, and not reloaded when they expire.
-    /// default: true
-    /// <summary>
-    [Parameter]
-    public bool RefreshExpiredTiles { get; set; } = true;
-
-    /// <summary>
-    /// Specifies if multiple copies of the world should be rendered when zoomed out. Default true
-    /// </summary>
-    [Parameter]
-    public bool RenderWorldCopies { get; set; } = true;
-
-    /// <summary>
-    /// Whether the map should zoom on scroll input. default true
-    /// </summary>
-    [Parameter]
-    public bool ScrollZoomInteraction { get; set; } = true;
-
-    /// <summary>
-    /// Specifies if buildings will be rendered with their models. If false all buildings will be rendered as just their footprints
-    /// </summary>
-    [Parameter]
-    public bool ShowBuildingModels { get; set; }
-
-    /// <summary>
-    /// Specifies if the feedback link should be displayed on the map or not. Default true
-    /// </summary>
-    [Parameter]
-    public bool ShowFeedbackLink { get; set; } = true;
-
-    /// <summary>
-    /// Specifies if the Microsoft logo should be hidden or not. If set to true a Microsoft copyright string will be added to the map. Default true
-    /// </summary>
-    [Parameter]
-    public bool ShowLogo { get; set; } = true;
-
-    /// <summary>
-    /// Specifies if the map should render an outline around each tile and the tile ID. These tile boundaries are useful for debugging. The uncompressed file size of the first vector source is drawn in the top left corner of each tile, next to the tile ID
-    /// </summary>
-    [Parameter]
-    public bool ShowTilesBoundaries { get; set; }
-
-    /// <summary>
-    /// The name of the style to use when rendering the map
-    /// </summary>
-    [Parameter]
-    public string Style { get; set; }
-
-    /// <summary>
-    /// Whether touch interactions are enabled for touch devices. default true
-    /// </summary>
-    [Parameter]
-    public bool TouchInteraction { get; set; }
-
-    /// <summary>
-    /// Specifies which set of geopolitically disputed borders and labels are displayed on the map. The View parameter (also referred to as “user region parameter”) is a 2-letter ISO-3166 Country Code that will show the correct maps for that country/region. Country/Regions that are not on the View list or if unspecified will default to the “Unified” View
-    /// </summary>
-    [Parameter]
-    public string View { get; set; }
-
-    /// <summary>
-    /// Sets the zoom rate of the mouse wheel default 1/450
-    /// </summary>
-    [Parameter]
-    public double WheelZoomRate { get; set; }
-
-    /// <summary>
-    /// The zoom level of the map view
-    /// </summary>
-    [Parameter]
-    public int? Zoom { get; set; }
 
     /// <summary>
     /// Defines the events which needs to be activated
@@ -620,17 +417,8 @@
         {
             await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodAddMap.ToAzureMapsControlNamespace(),
                 Id,
-                Configuration.Value.AuthType,
-                Configuration.Value.AadAppId,
-                Configuration.Value.AadTenant,
-                Configuration.Value.ClientId,
-                Configuration.Value.SubscriptionKey,
-                new ServiceOptions
-                {
-                    DisableTelemetry = DisableTelemetry,
-                    EnableAccessibility = EnableAccessibility,
-                    RefreshExpiredTiles = RefreshExpiredTiles
-                },
+                Configuration.Value,
+                ServiceOptions,
                 (EventActivationFlags ?? MapEventActivationFlags.None().Enable(MapEventType.Ready)).EnabledEvents,
                 DotNetObjectReference.Create(_mapEventInvokeHelper));
         }
@@ -888,55 +676,11 @@
     {
         if (mapEvent.Type == "ready")
         {
-            var cameraOptions = new CameraOptions
-            {
-                Bearing = (int?)Bearing,
-                CenterOffset = CenterOffset,
-                Duration = Duration,
-                MaxZoom = MaxZoom,
-                MinZoom = MinZoom,
-                Pitch = Pitch,
-                Type = CameryType?.ToString(),
-                Bounds = Bounds,
-                MaxBounds = Bounds != null ? MaxBounds : null,
-                Offset = Bounds != null ? Offset : null,
-                Padding = Bounds != null ? Padding : null,
-                Center = Bounds == null ? Center : null,
-                Zoom = Bounds == null ? Zoom : null
-            };
             await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodSetOptions.ToAzureMapsControlNamespace(),
-                cameraOptions,
-                new StyleOptions
-                {
-                    AutoResize = AutoResize,
-                    Language = Language,
-                    Light = Light,
-                    PreserveDrawingBuffer = PreserveDrawingBuffer,
-                    RenderWorldCopies = RenderWorldCopies,
-                    ShowBuildingModels = ShowBuildingModels,
-                    ShowFeedbackLink = ShowFeedbackLink,
-                    ShowLogo = ShowLogo,
-                    ShowTileBoundaries = ShowTilesBoundaries,
-                    Style = Style,
-                    View = View
-                },
-                new UserInteractionOptions
-                {
-                    BoxZoomInteraction = BoxZoomInteraction,
-                    DblclickZoomInteraction = DblclickZoomInteraction,
-                    DragPanInteraction = DragPanInteraction,
-                    DragRotateInteraction = DragRotateInteraction,
-                    Interactive = Interactive,
-                    KeyboardInteraction = KeyboardInteraction,
-                    ScrollZoomInteraction = ScrollZoomInteraction,
-                    TouchInteraction = TouchInteraction,
-                    WheelZoomRate = WheelZoomRate
-                },
-                TrafficOptions != null ? new AzureMapsControl.Components.Traffic.TrafficJsOptions
-                {
-                    Flow = (TrafficOptions.Flow ?? AzureMapsControl.Components.Traffic.TrafficFlow.None).ToString(),
-                    Incidents = TrafficOptions.Incidents
-                } : null);
+                CameraOptions,
+                StyleOptions,
+                UserInteractionOptions,
+                TrafficOptions);
 
             await MapService.AddMapAsync(new Map(Id,
                 AddControlsAsync,
@@ -958,12 +702,18 @@
                 AddPopupAsync,
                 Popup_RemoveAsync,
                 ClearPopupsAsync,
-                SetCameraOptionsAsync)
+                SetCameraOptionsAsync,
+                SetStyleOptionsAsync,
+                SetUserInteractionAsync,
+                SetTrafficAsync)
             {
                 Controls = Controls,
                 HtmlMarkers = HtmlMarkers,
                 DrawingToolbarOptions = DrawingToolbarOptions,
-                CameraOptions = cameraOptions
+                CameraOptions = CameraOptions,
+                StyleOptions = StyleOptions,
+                UserInteractionOptions = UserInteractionOptions,
+                TrafficOptions = TrafficOptions
             });
 
             await AddControlsAsync(Controls);
@@ -974,6 +724,12 @@
     }
 
     private async Task SetCameraOptionsAsync(CameraOptions options) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodSetCameraOptions.ToAzureMapsControlNamespace(), options);
+
+    private async Task SetStyleOptionsAsync(StyleOptions options) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodSetStyleOptions.ToAzureMapsControlNamespace(), options);
+
+    private async Task SetUserInteractionAsync(UserInteractionOptions options) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodSetUserInteraction.ToAzureMapsControlNamespace(), options);
+
+    private async Task SetTrafficAsync(AzureMapsControl.Components.Traffic.TrafficOptions options) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodSetTraffic.ToAzureMapsControlNamespace(), options);
 
     private async Task ClearMapAsync() => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodClearMap.ToAzureMapsControlNamespace());
 

@@ -14,8 +14,7 @@ The image layer supports the following image formats
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
-          Center="new Components.Atlas.Position(11.575454, 48.137392)"
-          Zoom="13"
+          CameraOptions="new CameraOptions { Center = new Components.Atlas.Position(11.575454, 48.137392), Zoom = 13 }"
           EventActivationFlags="MapEventActivationFlags
                                 .None()
                                 .Enable(MapEventType.Ready)"

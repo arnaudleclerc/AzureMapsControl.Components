@@ -1,8 +1,13 @@
 ﻿namespace AzureMapsControl.Components.Configuration
 {
+    using System;
+    using System.Text.Json;
+    using System.Text.Json.Serialization;
+
     /// <summary>
     /// Options for specifying how the map control should authenticate with the Azure Maps services.
     /// </summary>
+    [JsonConverter(typeof(AzureMapsConfigurationJsonConverter))]
     public sealed class AzureMapsConfiguration
     {
         /// <summary>
@@ -41,6 +46,27 @@
                     ? "aad"
                     : "anonymous";
             }
+        }
+    }
+
+    internal sealed class AzureMapsConfigurationJsonConverter : JsonConverter<AzureMapsConfiguration>
+    {
+        public override AzureMapsConfiguration Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotImplementedException();
+        public override void Write(Utf8JsonWriter writer, AzureMapsConfiguration value, JsonSerializerOptions options)
+        {
+            writer.WriteStartObject();
+            writer.WriteString("authType", value.AuthType);
+            if (value.AuthType == "subscriptionKey")
+            {
+                writer.WriteString("subscriptionKey", value.SubscriptionKey);
+            }
+            else if (value.AuthType == "aad")
+            {
+                writer.WriteString("aadAppId", value.AadAppId);
+                writer.WriteString("aadTenant", value.AadTenant);
+                writer.WriteString("clientId", value.ClientId);
+            }
+            writer.WriteEndObject();
         }
     }
 }
