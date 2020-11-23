@@ -905,24 +905,21 @@
                 Zoom = Bounds == null ? Zoom : null
             };
             var styleOptions = new StyleOptions
-                {
-                    AutoResize = AutoResize,
-                    Language = Language,
-                    Light = Light,
-                    PreserveDrawingBuffer = PreserveDrawingBuffer,
-                    RenderWorldCopies = RenderWorldCopies,
-                    ShowBuildingModels = ShowBuildingModels,
-                    ShowFeedbackLink = ShowFeedbackLink,
-                    ShowLogo = ShowLogo,
-                    ShowTileBoundaries = ShowTilesBoundaries,
-                    Style = Style,
-                    View = View
-                };
+            {
+                AutoResize = AutoResize,
+                Language = Language,
+                Light = Light,
+                PreserveDrawingBuffer = PreserveDrawingBuffer,
+                RenderWorldCopies = RenderWorldCopies,
+                ShowBuildingModels = ShowBuildingModels,
+                ShowFeedbackLink = ShowFeedbackLink,
+                ShowLogo = ShowLogo,
+                ShowTileBoundaries = ShowTilesBoundaries,
+                Style = Style,
+                View = View
+            };
 
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodSetOptions.ToAzureMapsControlNamespace(),
-                cameraOptions,
-                styleOptions,
-                new UserInteractionOptions
+            var userInteractionOptions = new UserInteractionOptions
                 {
                     BoxZoomInteraction = BoxZoomInteraction,
                     DblclickZoomInteraction = DblclickZoomInteraction,
@@ -933,7 +930,12 @@
                     ScrollZoomInteraction = ScrollZoomInteraction,
                     TouchInteraction = TouchInteraction,
                     WheelZoomRate = WheelZoomRate
-                },
+                };
+
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodSetOptions.ToAzureMapsControlNamespace(),
+                cameraOptions,
+                styleOptions,
+                userInteractionOptions,
                 TrafficOptions != null ? new AzureMapsControl.Components.Traffic.TrafficJsOptions
                 {
                     Flow = (TrafficOptions.Flow ?? AzureMapsControl.Components.Traffic.TrafficFlow.None).ToString(),
@@ -961,13 +963,15 @@
                 Popup_RemoveAsync,
                 ClearPopupsAsync,
                 SetCameraOptionsAsync,
-                SetStyleOptionsAsync)
+                SetStyleOptionsAsync,
+                SetUserInteractionAsync)
             {
                 Controls = Controls,
                 HtmlMarkers = HtmlMarkers,
                 DrawingToolbarOptions = DrawingToolbarOptions,
                 CameraOptions = cameraOptions,
-                StyleOptions = styleOptions
+                StyleOptions = styleOptions,
+                UserInteractionOptions = userInteractionOptions
             });
 
             await AddControlsAsync(Controls);
@@ -980,6 +984,8 @@
     private async Task SetCameraOptionsAsync(CameraOptions options) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodSetCameraOptions.ToAzureMapsControlNamespace(), options);
 
     private async Task SetStyleOptionsAsync(StyleOptions options) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodSetStyleOptions.ToAzureMapsControlNamespace(), options);
+
+    private async Task SetUserInteractionAsync(UserInteractionOptions options) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodSetUserInteraction.ToAzureMapsControlNamespace(), options);
 
     private async Task ClearMapAsync() => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodClearMap.ToAzureMapsControlNamespace());
 

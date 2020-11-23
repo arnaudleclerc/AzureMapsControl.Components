@@ -39,6 +39,7 @@
         private readonly Func<Task> _clearPopupsCallback;
         private readonly Func<CameraOptions, Task> _setCameraCallback;
         private readonly Func<StyleOptions, Task> _setStyleCallback;
+        private readonly Func<UserInteractionOptions, Task> _setUserInteractionCallback;
 
         private List<Layer> _layers;
         private List<Data.Source> _sources;
@@ -63,6 +64,7 @@
 
         internal CameraOptions CameraOptions { get; set; }
         internal StyleOptions StyleOptions { get; set; }
+        internal UserInteractionOptions UserInteractionOptions { get; set; }
 
         internal Map(string id,
             Func<IEnumerable<Control>, Task> addControlsCallback = null,
@@ -85,7 +87,8 @@
             Func<string, Task> removePopupCallback = null,
             Func<Task> clearPopupsCallback = null,
             Func<CameraOptions, Task> setCameraCallback = null,
-            Func<StyleOptions, Task> setStyleCallback = null)
+            Func<StyleOptions, Task> setStyleCallback = null,
+            Func<UserInteractionOptions, Task> setUserInteractionCallback = null)
         {
             Id = id;
             _addControlsCallback = addControlsCallback;
@@ -109,6 +112,7 @@
             _clearPopupsCallback = clearPopupsCallback;
             _setCameraCallback = setCameraCallback;
             _setStyleCallback = setStyleCallback;
+            _setUserInteractionCallback = setUserInteractionCallback;
         }
 
         # region Controls
@@ -414,12 +418,23 @@
         /// <summary>
         /// Update the style options of the map
         /// </summary>
-        /// <param name="configure">Action settings the style options</param>
+        /// <param name="configure">Action setting the style options</param>
         /// <returns></returns>
         public async Task SetStyleOptionsAsync(Action<StyleOptions> configure)
         {
             configure.Invoke(StyleOptions);
             await _setStyleCallback.Invoke(StyleOptions);
+        }
+
+        /// <summary>
+        /// Update the user interaction options of the map
+        /// </summary>
+        /// <param name="configure">Action setting the user interaction options</param>
+        /// <returns></returns>
+        public async Task SetUserInteractionAsync(Action<UserInteractionOptions> configure)
+        {
+            configure.Invoke(UserInteractionOptions);
+            await _setUserInteractionCallback.Invoke(UserInteractionOptions);
         }
 
         #endregion

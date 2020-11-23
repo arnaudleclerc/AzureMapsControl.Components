@@ -623,5 +623,21 @@
             await map.SetStyleOptionsAsync(options => options.Language = language);
             Assert.True(assertOptionsCallback);
         }
+
+        [Fact]
+        public async void Should_UpdateUserInteraction_Async()
+        {
+            var assertOptionsCallback = false;
+            var initialUserInteractionOptions = new UserInteractionOptions {
+                BoxZoomInteraction = true
+            };
+            var dblClickZoomInteraction = true;
+            var map = new Map("id", setUserInteractionCallback: async options => assertOptionsCallback = options.BoxZoomInteraction == initialUserInteractionOptions.BoxZoomInteraction && options.DblclickZoomInteraction == dblClickZoomInteraction) {
+                UserInteractionOptions = initialUserInteractionOptions
+            };
+
+            await map.SetUserInteractionAsync(options => options.DblclickZoomInteraction = dblClickZoomInteraction);
+            Assert.True(assertOptionsCallback);
+        }
     }
 }

@@ -363,11 +363,14 @@ window.azureMapsControl = {
 
         this.setCameraOptions(cameraOptions);
         this.setStyleOptions(styleOptions);
-        this._map.setUserInteraction(userInteractionOptions);
+        this.setUserInteraction(userInteractionOptions);
 
         if (trafficOptions) {
             this._map.setTraffic(trafficOptions);
         }
+    },
+    setUserInteraction: function (userInteractionOptions) {
+        this._map.setUserInteraction(userInteractionOptions);
     },
     setStyleOptions: function (styleOptions) {
         this._map.setStyle(styleOptions);

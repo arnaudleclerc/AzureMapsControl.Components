@@ -1,0 +1,20 @@
+﻿@page "/UserInteractionUpdate"
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          Center="new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534)"
+          Zoom="4"
+          Style="grayscale_dark"
+          ShowLogo="false"
+          ShowFeedbackLink="false"
+          EventActivationFlags="MapEventActivationFlags.None().Enable(MapEventType.Ready)"
+          Interactive="false"
+          OnReady="OnMapReadyAsync" />
+
+@code {
+    public async Task OnMapReadyAsync(MapEventArgs eventArgs)
+    {
+        System.Threading.Thread.Sleep(5000);
+        await eventArgs.Map.SetUserInteractionAsync(options => options.Interactive = true);
+    }
+} 
