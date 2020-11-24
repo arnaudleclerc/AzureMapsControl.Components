@@ -700,5 +700,543 @@
             await map.SetTrafficOptionsAsync(options => options.Incidents = incidents);
             Assert.True(assertOptionsCallback);
         }
+
+        [Fact]
+        public void Should_DispatchBoxZoomEndEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "boxzoomend" };
+            map.OnBoxZoomEnd += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchBoxZoomStartEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "boxzoomstart" };
+            map.OnBoxZoomStart += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchClickEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "click" };
+            map.OnClick += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchContextMenuEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "contextmenu" };
+            map.OnContextMenu += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchDataEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "data" };
+            map.OnData += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchDragEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "drag" };
+            map.OnDrag += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchDragEndEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "dragend" };
+            map.OnDragEnd += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchDragStartEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "dragstart" };
+            map.OnDragStart += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchErrorEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "error" };
+            map.OnError += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchIdleEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "idle" };
+            map.OnIdle += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchLayerAddedEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "layeradded" };
+            map.OnLayerAdded += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchLayerRemovedEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "layerremoved" };
+            map.OnLayerRemoved += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchLoadEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "load" };
+            map.OnLoad += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchMouseDownEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "mousedown" };
+            map.OnMouseDown += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchMouseMoveEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "mousemove" };
+            map.OnMouseMove += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+        }
+
+        [Fact]
+        public void Should_DispatchMouseOutEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "mouseout" };
+            map.OnMouseOut += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchMouseOverEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "mouseover" };
+            map.OnMouseOver += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchMouseUpEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "mouseup" };
+            map.OnMouseUp += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchMoveEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "move" };
+            map.OnMove += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchMoveEndEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "moveend" };
+            map.OnMoveEnd += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchMoveStartEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "movestart" };
+            map.OnMoveStart += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchPitchEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "pitch" };
+            map.OnPitch += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchPitchEndEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "pitchend" };
+            map.OnPitchEnd += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchPitchStartEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "pitchstart" };
+            map.OnPitchStart += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchReadyEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "ready" };
+            map.OnReady += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchRenderEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "render" };
+            map.OnRender += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchResizeEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "resize" };
+            map.OnResize += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchRotateEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "rotate" };
+            map.OnRotate += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchRotateEndEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "rotateend" };
+            map.OnRotateEnd += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchRotateStartEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "rotatestart" };
+            map.OnRotateStart += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchSourceAddedEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "sourceadded" };
+            map.OnSourceAdded += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchSourceDataEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "sourcedata" };
+            map.OnSourceData += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchSourceRemovedEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "sourceremoved" };
+            map.OnSourceRemoved += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchStyleDataEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "styledata" };
+            map.OnStyleData += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchStyleImageMissingEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "styleimagemissing" };
+            map.OnStyleImageMissing += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchTokenAcquiredEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "tokenacquired" };
+            map.OnTokenAcquired += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchTouchCancelEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "touchcancel" };
+            map.OnTouchCancel += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchTouchEndEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "touchend" };
+            map.OnTouchEnd += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchTouchMoveEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "touchmove" };
+            map.OnTouchMove += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchTouchStartEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "touchstart" };
+            map.OnTouchStart += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchWheelEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "wheel" };
+            map.OnWheel += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchZoomEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "zoom" };
+            map.OnZoom+= eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchZoomEndEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "zoomend" };
+            map.OnZoomEnd += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchZoomStartEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "zoomstart" };
+            map.OnZoomStart += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchDrawingChangedEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new DrawingToolbarJsEventArgs { Type = "drawingchanged" };
+            map.OnDrawingChanged += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchDrawingToolbarEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchDrawingChangingEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new DrawingToolbarJsEventArgs { Type = "drawingchanging" };
+            map.OnDrawingChanging += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchDrawingToolbarEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchDrawingCompleteEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new DrawingToolbarJsEventArgs { Type = "drawingcomplete" };
+            map.OnDrawingComplete += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchDrawingToolbarEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchDrawingModeChangedEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new DrawingToolbarJsEventArgs { Type = "drawingmodechanged" };
+            map.OnDrawingModeChanged += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchDrawingToolbarEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchDrawingStartedEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new DrawingToolbarJsEventArgs { Type = "drawingstarted" };
+            map.OnDrawingStarted += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchDrawingToolbarEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
     }
 }

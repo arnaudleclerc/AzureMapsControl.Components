@@ -80,6 +80,8 @@ The events of the map are exposed as `EventCallback` on the `AzureMap` component
 | `zoomend` | `OnZoomEnd` | Fired just after the map completes a transition from one zoom level to another, as the result of either user interaction or methods. |
 | `zoomstart` | `OnZoomStart` | Fired just before the map begins a transition from one zoom level to another, as the result of either user interaction or methods. |
 
+Those events are also triggered by the `Map` property on `IMapService`.
+
 ### Activate or deactivate events
 
 It is possible and recommended to active only the events you need, or at least deactivate the events which are often triggered in order to avoid overflowing the WebSocket communication between the component and the server application. The `AzureMap` component accepts an `EventActivationFlags` parameter where you can define which events should be triggered by the map. By default, all events except `Ready` are deactivated.
