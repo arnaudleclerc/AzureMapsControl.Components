@@ -5,6 +5,8 @@
 
     using AzureMapsControl.Components.Exceptions;
 
+    public delegate void PopupEvent(PopupEventArgs eventArgs);
+
     /// <summary>
     /// An information window anchored at a specified position on a map.
     /// </summary>
@@ -19,16 +21,30 @@
 
         public string Id { get; }
 
+        public PopupEventActivationFlags EventActivationFlags { get; set; }
+
         /// <summary>
         /// Options of the popup
         /// </summary>
         internal PopupOptions Options { get; }
 
+        public event PopupEvent OnClose;
+        public event PopupEvent OnDrag;
+        public event PopupEvent OnDragEnd;
+        public event PopupEvent OnDragStart;
+        public event PopupEvent OnOpen;
+
         public Popup(PopupOptions options) : this(Guid.NewGuid().ToString(), options) { }
-        public Popup(string id, PopupOptions options)
+
+        public Popup(PopupOptions options, PopupEventActivationFlags eventActivationFlags) : this(Guid.NewGuid().ToString(), options, eventActivationFlags) { }
+
+        public Popup(string id, PopupOptions options) : this(id, options, PopupEventActivationFlags.None()) { }
+
+        public Popup(string id, PopupOptions options, PopupEventActivationFlags eventActivationFlags)
         {
             Id = string.IsNullOrWhiteSpace(id) ? Guid.NewGuid().ToString() : id;
             Options = options;
+            EventActivationFlags = eventActivationFlags;
         }
 
         /// <summary>
@@ -67,6 +83,32 @@
         {
             update.Invoke(Options);
             await UpdateCallback.Invoke(Id, Options);
+        }
+
+        internal void DispatchEvent(PopupEventArgs eventArgs)
+        {
+            switch (eventArgs.Type)
+            {
+                case "close":
+                    OnClose?.Invoke(eventArgs);
+                    break;
+
+                case "drag":
+                    OnDrag?.Invoke(eventArgs);
+                    break;
+
+                case "dragend":
+                    OnDragEnd?.Invoke(eventArgs);
+                    break;
+
+                case "dragstart":
+                    OnDragStart?.Invoke(eventArgs);
+                    break;
+
+                case "open":
+                    OnOpen?.Invoke(eventArgs);
+                    break;
+            }
         }
     }
 }

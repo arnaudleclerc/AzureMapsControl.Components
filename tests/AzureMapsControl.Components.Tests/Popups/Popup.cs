@@ -86,5 +86,75 @@
             Assert.True(assertUpdate);
             Assert.Equal(updatedContent, popup.Options.Content);
         }
+
+        [Fact]
+        public void Should_DispatchOpenEvent()
+        {
+            var popup = new Popup(new PopupOptions());
+            var eventArgs = new PopupEventArgs {
+                Id = "id",
+                Type = "open"
+            };
+            var assertEvent = false;
+            popup.OnOpen += e => assertEvent = e == eventArgs;
+            popup.DispatchEvent(eventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchDragEvent()
+        {
+            var popup = new Popup(new PopupOptions());
+            var eventArgs = new PopupEventArgs {
+                Id = "id",
+                Type = "drag"
+            };
+            var assertEvent = false;
+            popup.OnDrag += e => assertEvent = e == eventArgs;
+            popup.DispatchEvent(eventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchDragStartEvent()
+        {
+            var popup = new Popup(new PopupOptions());
+            var eventArgs = new PopupEventArgs {
+                Id = "id",
+                Type = "dragstart"
+            };
+            var assertEvent = false;
+            popup.OnDragStart += e => assertEvent = e == eventArgs;
+            popup.DispatchEvent(eventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchDragEndEvent()
+        {
+            var popup = new Popup(new PopupOptions());
+            var eventArgs = new PopupEventArgs {
+                Id = "id",
+                Type = "dragend"
+            };
+            var assertEvent = false;
+            popup.OnDragEnd += e => assertEvent = e == eventArgs;
+            popup.DispatchEvent(eventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchCloseEvent()
+        {
+            var popup = new Popup(new PopupOptions());
+            var eventArgs = new PopupEventArgs {
+                Id = "id",
+                Type = "close"
+            };
+            var assertEvent = false;
+            popup.OnClose += e => assertEvent = e == eventArgs;
+            popup.DispatchEvent(eventArgs);
+            Assert.True(assertEvent);
+        }
     }
 }

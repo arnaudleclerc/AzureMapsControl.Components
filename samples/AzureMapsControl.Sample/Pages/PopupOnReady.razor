@@ -22,12 +22,18 @@
             CloseButton = false,
             Content = "Please customize me",
             Position = new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534)
-        });
+        }, AzureMapsControl.Components.Popups.PopupEventActivationFlags.None().Enable(AzureMapsControl.Components.Popups.PopupEventType.Open));
+
+        popup.OnOpen += eventArgs =>
+        {
+            Console.WriteLine("Popup opened");
+        };
+
         await eventArgs.Map.AddPopupAsync(popup);
         await popup.OpenAsync();
 
         await popup.UpdateAsync(options => options.Content = "Thanks for updating me");
-        await eventArgs.Map.ClearPopupsAsync();
+        //await eventArgs.Map.ClearPopupsAsync();
     }
 
 }
