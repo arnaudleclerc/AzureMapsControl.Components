@@ -69,6 +69,7 @@ You can specify the events to enable or disable on the `DrawingToolbarOptions` o
 | `DrawingModeChanged` | Fired when the drawing mode has changed. The new drawing mode is passed into the event handler. |
 | `DrawingStarted` | Fired when the user starts drawing a shape or puts a shape into edit mode. |
 
+Those events are also triggered by the `Map` property on `IMapService`.
 
 ### Updating the toolbar
 

@@ -514,6 +514,7 @@
 
     private async Task DrawingToolbarEventReceivedAsync(AzureMapsControl.Components.Drawing.DrawingToolbarJsEventArgs drawingToolbarEvent)
     {
+        MapService.Map.DispatchDrawingToolbarEvent(drawingToolbarEvent);
         switch (drawingToolbarEvent.Type)
         {
             case "drawingchanged":
@@ -741,6 +742,7 @@
         && EventActivationFlags.EnabledEvents != null
         && EventActivationFlags.EnabledEvents.Contains(mapEvent.Type))
         {
+            MapService.Map.DispatchEvent(mapEvent);
             switch (mapEvent.Type)
             {
                 case "boxzoomend":
@@ -839,7 +841,7 @@
                 case "sourceadded":
                     await OnSourceAdded.InvokeAsync(new MapDataEventArgs(MapService.Map, mapEvent));
                     break;
-                case "sourcedate":
+                case "sourcedata":
                     await OnSourceData.InvokeAsync(new MapDataEventArgs(MapService.Map, mapEvent));
                     break;
                 case "sourceremoved":
