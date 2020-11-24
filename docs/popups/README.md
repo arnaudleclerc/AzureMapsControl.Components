@@ -217,3 +217,50 @@ All the popups can be cleared using the `ClearPopupsAsync` method on the map.
 
 }
 ```
+
+### Events
+
+You can subscribe to events triggered on the popup by defining the `EventActivationFlags` and subscribing to the corresponding event on the `Popup`. 
+
+The following events are available : `Open`, `DragStart`, `DragEnd`, `Drag` and `Close`.
+
+The following example reacts to the opening of a popup : 
+
+```
+@page "/PopupOnReady"
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          StyleOptions="StyleOptions"
+          EventActivationFlags="MapEventActivationFlags
+                                .None()
+                                .Enable(MapEventType.Ready)"
+          OnReady="OnMapReady" />
+
+@code  {
+
+    public StyleOptions StyleOptions = new StyleOptions
+    {
+        Style = "grayscale_dark"
+    };
+
+    public async Task OnMapReady(MapEventArgs eventArgs)
+    {
+        var popup = new Components.Popups.Popup(new Components.Popups.PopupOptions
+        {
+            CloseButton = false,
+            Content = "Please customize me",
+            Position = new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534)
+        }, AzureMapsControl.Components.Popups.PopupEventActivationFlags.None().Enable(AzureMapsControl.Components.Popups.PopupEventType.Open));
+
+        popup.OnOpen += eventArgs =>
+        {
+            Console.WriteLine("Popup opened");
+        };
+
+        await eventArgs.Map.AddPopupAsync(popup);
+        await popup.OpenAsync();
+    }
+
+}
+```
