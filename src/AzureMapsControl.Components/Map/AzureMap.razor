@@ -20,6 +20,7 @@
     private Markers.HtmlMarkerInvokeHelper _htmlMarkerEventInvokeHelper;
     private Drawing.DrawingToolbarEventInvokeHelper _drawingToolbarEventInvokeHelper;
     private Layers.LayerEventInvokeHelper _layerEventInvokeHelper;
+    private Popups.PopupInvokeHelper _popupInvokeHelper;
 
     private string _id;
 
@@ -408,6 +409,7 @@
         _htmlMarkerEventInvokeHelper = new Markers.HtmlMarkerInvokeHelper(HtmlMarkerEventReceivedAsync);
         _drawingToolbarEventInvokeHelper = new Drawing.DrawingToolbarEventInvokeHelper(DrawingToolbarEventReceivedAsync);
         _layerEventInvokeHelper = new Layers.LayerEventInvokeHelper(LayerEventReceivedAsync);
+        _popupInvokeHelper = new Popups.PopupInvokeHelper(PopupEventReceivedAsync);
         base.OnInitialized();
     }
 
@@ -512,6 +514,7 @@
 
     private async Task DrawingToolbarEventReceivedAsync(AzureMapsControl.Components.Drawing.DrawingToolbarJsEventArgs drawingToolbarEvent)
     {
+        MapService.Map.DispatchDrawingToolbarEvent(drawingToolbarEvent);
         switch (drawingToolbarEvent.Type)
         {
             case "drawingchanged":
@@ -739,6 +742,7 @@
         && EventActivationFlags.EnabledEvents != null
         && EventActivationFlags.EnabledEvents.Contains(mapEvent.Type))
         {
+            MapService.Map.DispatchEvent(mapEvent);
             switch (mapEvent.Type)
             {
                 case "boxzoomend":
@@ -837,7 +841,7 @@
                 case "sourceadded":
                     await OnSourceAdded.InvokeAsync(new MapDataEventArgs(MapService.Map, mapEvent));
                     break;
-                case "sourcedate":
+                case "sourcedata":
                     await OnSourceData.InvokeAsync(new MapDataEventArgs(MapService.Map, mapEvent));
                     break;
                 case "sourceremoved":
@@ -886,7 +890,7 @@
 
     private async Task AddPopupAsync(AzureMapsControl.Components.Popups.Popup popup)
     {
-        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodAddPopup.ToAzureMapsControlNamespace(), popup.Id, popup.Options);
+        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodAddPopup.ToAzureMapsControlNamespace(), popup.Id, popup.Options, popup.EventActivationFlags.EnabledEvents, DotNetObjectReference.Create(_popupInvokeHelper));
         popup.OpenPopupCallback = Popup_OpenAsync;
         popup.ClosePopupCallback = Popup_CloseAsync;
         popup.RemoveCallback = Popup_RemoveAsync;
@@ -902,6 +906,9 @@
     }
     private async Task Popup_UpdateAsync(string id, AzureMapsControl.Components.Popups.PopupOptions options) => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodPopupUpdate.ToAzureMapsControlNamespace(), id, options);
     private async Task ClearPopupsAsync() => await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodClearPopups.ToAzureMapsControlNamespace());
+
+    private async Task PopupEventReceivedAsync(AzureMapsControl.Components.Popups.PopupEventArgs eventArgs) => 
+        await Task.Run(() => MapService.Map.Popups.First(popup => popup.Id == eventArgs.Id).DispatchEvent(eventArgs));
 
     #endregion
 }

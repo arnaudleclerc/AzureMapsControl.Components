@@ -14,11 +14,25 @@
     using AzureMapsControl.Components.Popups;
     using AzureMapsControl.Components.Traffic;
 
+    public delegate void MapEvent(MapEventArgs eventArgs);
+    public delegate void MapMouseEvent(MapMouseEventArgs eventArgs);
+    public delegate void MapDataEvent(MapDataEventArgs eventArgs);
+    public delegate void MapErrorEvent(MapErrorEventArgs eventArgs);
+    public delegate void MapLayerEvent(MapLayerEventArgs eventArgs);
+    public delegate void MapTouchEvent(MapTouchEventArgs eventArgs);
+    public delegate void MapMessageEvent(MapMessageEventArgs eventArgs);
+
+    public delegate void DrawingToolbarModeEvent(DrawingToolbarModeEventArgs eventArgs);
+    public delegate void DrawingToolbarEvent(DrawingToolbarEventArgs eventArgs);
+
     /// <summary>
     /// Representation of a map
     /// </summary>
     public sealed class Map
     {
+
+        #region Fields
+
         private readonly Func<IEnumerable<Control>, Task> _addControlsCallback;
         private readonly Func<IEnumerable<HtmlMarker>, Task> _addHtmlMarkersCallback;
         private readonly Func<IEnumerable<HtmlMarkerUpdate>, Task> _updateHtmlMarkersCallback;
@@ -47,6 +61,10 @@
         private List<Data.Source> _sources;
         private List<Popup> _popups;
 
+        #endregion
+
+        #region Properties
+
         /// <summary>
         /// ID of the map
         /// </summary>
@@ -68,6 +86,64 @@
         internal StyleOptions StyleOptions { get; set; }
         internal UserInteractionOptions UserInteractionOptions { get; set; }
         internal TrafficOptions TrafficOptions { get; set; }
+
+        #endregion
+
+        #region Events
+
+        public event MapEvent OnBoxZoomEnd;
+        public event MapEvent OnBoxZoomStart;
+        public event MapMouseEvent OnClick;
+        public event MapMouseEvent OnContextMenu;
+        public event MapDataEvent OnData;
+        public event MapMouseEvent OnDblClick;
+        public event MapEvent OnDrag;
+        public event MapEvent OnDragEnd;
+        public event MapEvent OnDragStart;
+        public event MapErrorEvent OnError;
+        public event MapEvent OnIdle;
+        public event MapLayerEvent OnLayerAdded;
+        public event MapLayerEvent OnLayerRemoved;
+        public event MapEvent OnLoad;
+        public event MapMouseEvent OnMouseDown;
+        public event MapMouseEvent OnMouseMove;
+        public event MapMouseEvent OnMouseOut;
+        public event MapMouseEvent OnMouseOver;
+        public event MapMouseEvent OnMouseUp;
+        public event MapEvent OnMove;
+        public event MapEvent OnMoveEnd;
+        public event MapEvent OnMoveStart;
+        public event MapEvent OnPitch;
+        public event MapEvent OnPitchEnd;
+        public event MapEvent OnPitchStart;
+        public event MapEvent OnReady;
+        public event MapEvent OnRender;
+        public event MapEvent OnResize;
+        public event MapEvent OnRotate;
+        public event MapEvent OnRotateEnd;
+        public event MapEvent OnRotateStart;
+        public event MapDataEvent OnSourceAdded;
+        public event MapDataEvent OnSourceData;
+        public event MapDataEvent OnSourceRemoved;
+        public event MapDataEvent OnStyleData;
+        public event MapMessageEvent OnStyleImageMissing;
+        public event MapEvent OnTokenAcquired;
+        public event MapTouchEvent OnTouchCancel;
+        public event MapTouchEvent OnTouchEnd;
+        public event MapTouchEvent OnTouchMove;
+        public event MapTouchEvent OnTouchStart;
+        public event MapEvent OnWheel;
+        public event MapEvent OnZoom;
+        public event MapEvent OnZoomEnd;
+        public event MapEvent OnZoomStart;
+
+        public event DrawingToolbarModeEvent OnDrawingModeChanged;
+        public event MapEvent OnDrawingStarted;
+        public event DrawingToolbarEvent OnDrawingChanging;
+        public event DrawingToolbarEvent OnDrawingChanged;
+        public event DrawingToolbarEvent OnDrawingComplete;
+
+        #endregion
 
         internal Map(string id,
             Func<IEnumerable<Control>, Task> addControlsCallback = null,
@@ -241,6 +317,32 @@
             {
                 await _removeDrawingToolbarCallback.Invoke();
                 DrawingToolbarOptions = null;
+            }
+        }
+
+        internal void DispatchDrawingToolbarEvent(DrawingToolbarJsEventArgs eventArgs)
+        {
+            switch (eventArgs.Type)
+            {
+                case "drawingchanged":
+                     OnDrawingChanged?.Invoke(new DrawingToolbarEventArgs(this, eventArgs));
+                    break;
+
+                case "drawingchanging":
+                     OnDrawingChanging?.Invoke(new DrawingToolbarEventArgs(this, eventArgs));
+                    break;
+
+                case "drawingcomplete":
+                     OnDrawingComplete?.Invoke(new DrawingToolbarEventArgs(this, eventArgs));
+                    break;
+
+                case "drawingmodechanged":
+                     OnDrawingModeChanged?.Invoke(new DrawingToolbarModeEventArgs(this, eventArgs));
+                    break;
+
+                case "drawingstarted":
+                     OnDrawingStarted?.Invoke(new MapEventArgs(this, eventArgs.Type));
+                    break;
             }
         }
 
@@ -467,6 +569,148 @@
             }
             configure.Invoke(TrafficOptions);
             await _setTrafficOptions.Invoke(TrafficOptions);
+        }
+
+        internal void DispatchEvent(MapJsEventArgs eventArgs)
+        {
+            switch (eventArgs.Type)
+            {
+                case "boxzoomend":
+                    OnBoxZoomEnd?.Invoke(new MapEventArgs(this, eventArgs.Type));
+                    break;
+                case "boxzoomstart":
+                    OnBoxZoomStart?.Invoke(new MapEventArgs(this, eventArgs.Type));
+                    break;
+                case "click":
+                    OnClick?.Invoke(new MapMouseEventArgs(this, eventArgs));
+                    break;
+                case "contextmenu":
+                    OnContextMenu?.Invoke(new MapMouseEventArgs(this, eventArgs));
+                    break;
+                case "data":
+                    OnData?.Invoke(new MapDataEventArgs(this, eventArgs));
+                    break;
+                case "dblclick":
+                    OnDblClick?.Invoke(new MapMouseEventArgs(this, eventArgs));
+                    break;
+                case "drag":
+                    OnDrag?.Invoke(new MapEventArgs(this, eventArgs.Type));
+                    break;
+                case "dragend":
+                    OnDragEnd?.Invoke(new MapEventArgs(this, eventArgs.Type));
+                    break;
+                case "dragstart":
+                    OnDragStart?.Invoke(new MapEventArgs(this, eventArgs.Type));
+                    break;
+                case "error":
+                    OnError?.Invoke(new MapErrorEventArgs(this, eventArgs));
+                    break;
+                case "idle":
+                    OnIdle?.Invoke(new MapEventArgs(this, eventArgs.Type));
+                    break;
+                case "layeradded":
+                    OnLayerAdded?.Invoke(new MapLayerEventArgs(this, eventArgs));
+                    break;
+                case "layerremoved":
+                    OnLayerRemoved?.Invoke(new MapLayerEventArgs(this, eventArgs));
+                    break;
+                case "load":
+                    OnLoad?.Invoke(new MapEventArgs(this, eventArgs.Type));
+                    break;
+                case "mousedown":
+                    OnMouseDown?.Invoke(new MapMouseEventArgs(this, eventArgs));
+                    break;
+                case "mousemove":
+                    OnMouseMove?.Invoke(new MapMouseEventArgs(this, eventArgs));
+                    break;
+                case "mouseout":
+                    OnMouseOut?.Invoke(new MapMouseEventArgs(this, eventArgs));
+                    break;
+                case "mouseover":
+                    OnMouseOver?.Invoke(new MapMouseEventArgs(this, eventArgs));
+                    break;
+                case "mouseup":
+                    OnMouseUp?.Invoke(new MapMouseEventArgs(this, eventArgs));
+                    break;
+                case "move":
+                    OnMove?.Invoke(new MapEventArgs(this, eventArgs.Type));
+                    break;
+                case "moveend":
+                    OnMoveEnd?.Invoke(new MapEventArgs(this, eventArgs.Type));
+                    break;
+                case "movestart":
+                    OnMoveStart?.Invoke(new MapEventArgs(this, eventArgs.Type));
+                    break;
+                case "pitch":
+                    OnPitch?.Invoke(new MapEventArgs(this, eventArgs.Type));
+                    break;
+                case "pitchend":
+                    OnPitchEnd?.Invoke(new MapEventArgs(this, eventArgs.Type));
+                    break;
+                case "pitchstart":
+                    OnPitchStart?.Invoke(new MapEventArgs(this, eventArgs.Type));
+                    break;
+                case "ready":
+                    OnReady?.Invoke(new MapEventArgs(this, eventArgs.Type));
+                    break;
+                case "render":
+                    OnRender?.Invoke(new MapEventArgs(this, eventArgs.Type));
+                    break;
+                case "resize":
+                    OnResize?.Invoke(new MapEventArgs(this, eventArgs.Type));
+                    break;
+                case "rotate":
+                    OnRotate?.Invoke(new MapEventArgs(this, eventArgs.Type));
+                    break;
+                case "rotateend":
+                    OnRotateEnd?.Invoke(new MapEventArgs(this, eventArgs.Type));
+                    break;
+                case "rotatestart":
+                    OnRotateStart?.Invoke(new MapEventArgs(this, eventArgs.Type));
+                    break;
+                case "sourceadded":
+                    OnSourceAdded?.Invoke(new MapDataEventArgs(this, eventArgs));
+                    break;
+                case "sourcedata":
+                    OnSourceData?.Invoke(new MapDataEventArgs(this, eventArgs));
+                    break;
+                case "sourceremoved":
+                    OnSourceRemoved?.Invoke(new MapDataEventArgs(this, eventArgs));
+                    break;
+                case "styledata":
+                    OnStyleData?.Invoke(new MapDataEventArgs(this, eventArgs));
+                    break;
+                case "styleimagemissing":
+                    OnStyleImageMissing?.Invoke(new MapMessageEventArgs(this, eventArgs));
+                    break;
+                case "tokenacquired":
+                    OnTokenAcquired?.Invoke(new MapEventArgs(this, eventArgs.Type));
+                    break;
+                case "touchcancel":
+                    OnTouchCancel?.Invoke(new MapTouchEventArgs(this, eventArgs));
+                    break;
+                case "touchend":
+                    OnTouchEnd?.Invoke(new MapTouchEventArgs(this, eventArgs));
+                    break;
+                case "touchmove":
+                    OnTouchMove?.Invoke(new MapTouchEventArgs(this, eventArgs));
+                    break;
+                case "touchstart":
+                    OnTouchStart?.Invoke(new MapTouchEventArgs(this, eventArgs));
+                    break;
+                case "wheel":
+                    OnWheel?.Invoke(new MapEventArgs(this, eventArgs.Type));
+                    break;
+                case "zoom":
+                    OnZoom?.Invoke(new MapEventArgs(this, eventArgs.Type));
+                    break;
+                case "zoomend":
+                    OnZoomEnd?.Invoke(new MapEventArgs(this, eventArgs.Type));
+                    break;
+                case "zoomstart":
+                    OnZoomStart?.Invoke(new MapEventArgs(this, eventArgs.Type));
+                    break;
+            }
         }
 
         #endregion

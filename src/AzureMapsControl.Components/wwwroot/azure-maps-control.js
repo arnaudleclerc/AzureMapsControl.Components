@@ -599,7 +599,10 @@ window.azureMapsControl = {
     dataSource_clear: function (id) {
         this._map.sources.getById(id).clear();
     },
-    addPopup: function (id, options) {
+    addPopup: function (id
+        , options
+        , events
+        , eventHelper) {
         const popupOptions = {
             draggable: options.draggable,
             closeButton: options.closeButton,
@@ -615,6 +618,16 @@ window.azureMapsControl = {
             popup: popup
         });
         this._map.popups.add(popup);
+
+        events.forEach(key => {
+            this._map.events.add(key, popup, e => {
+                eventHelper.invokeMethodAsync('NotifyEventAsync', {
+                    type: key,
+                    id: id
+                });
+            });
+        });
+
         if (options.openOnAdd) {
             popup.open();
         }
