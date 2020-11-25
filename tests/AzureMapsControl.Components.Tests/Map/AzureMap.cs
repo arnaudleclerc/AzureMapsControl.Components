@@ -8,6 +8,7 @@
     using Bunit;
 
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
     using Microsoft.JSInterop;
 
     using Moq;
@@ -18,6 +19,7 @@
     {
         internal Mock<IMapAdderService> MapService { get; }
         public Mock<IJSRuntime> JsRuntime { get; }
+        public Mock<ILogger<AzureMap>> Logger { get; }
         public AzureMapsConfiguration Configuration { get; }
 
         public TestContext TestContext { get; }
@@ -26,6 +28,8 @@
         {
             MapService = new Mock<IMapAdderService>();
             JsRuntime = new Mock<IJSRuntime>();
+            Logger = new Mock<ILogger<AzureMap>>();
+
             Configuration = new AzureMapsConfiguration();
             TestContext = new TestContext();
         }
@@ -35,6 +39,7 @@
             TestContext.Services
                 .AddSingleton(MapService.Object)
                 .AddSingleton(JsRuntime.Object)
+                .AddSingleton(Logger.Object)
                 .AddOptions<AzureMapsConfiguration>().Configure(options => {
                     options.AadAppId = Configuration.AadAppId;
                     options.AadTenant = Configuration.AadTenant;
