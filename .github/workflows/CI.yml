@@ -27,9 +27,12 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
     - name: Install dependencies
       run: dotnet restore ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj
     - name: Build
-      run: dotnet build --configuration Release --no-restore ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj
+      run: dotnet build --configuration Release --no-restore ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj -f net5.0
     - name: Test
       run: dotnet test ./tests/AzureMapsControl.Components.Tests/AzureMapsControl.Components.Tests.csproj
