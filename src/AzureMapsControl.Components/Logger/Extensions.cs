@@ -40,7 +40,8 @@
         AzureMap_Popup_RemoveAsync = 1033,
         AzureMap_Popup_UpdateAsync = 1034,
         AzureMap_ClearPopupsAsync = 1035,
-        AzureMap_PopupEventReceivedAsync = 1036
+        AzureMap_PopupEventReceivedAsync = 1036,
+        MapService_AddMapAsync = 2000
     }
 
     internal static class Extensions

@@ -10,7 +10,7 @@
         public async void Should_AddMap_Async()
         {
             var map = new Map("id");
-            var service = new MapService();
+            var service = new MapService(null);
             await service.AddMapAsync(map);
             Assert.Equal(map, service.Map);
         }
@@ -19,7 +19,7 @@
         public async void Should_AddMapAndTriggerOnReady_Async()
         {
             var map = new Map("id");
-            var service = new MapService();
+            var service = new MapService(null);
 
             var eventReceived = false;
 
