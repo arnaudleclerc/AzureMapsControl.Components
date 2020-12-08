@@ -219,7 +219,8 @@ window.azureMapsControl = {
             });
         } else {
             atlas.setAuthenticationOptions({
-                authType: configuration.authType
+                authType: configuration.authType,
+                getToken: window.azureMapsControl.extensions.getTokenCallback
             });
         }
 
@@ -683,5 +684,8 @@ window.azureMapsControl = {
         const result = properties || {};
         result.type = type;
         return result;
+    },
+    extensions: {
+        getTokenCallback: function (resolve, reject, map) { }
     }
 };

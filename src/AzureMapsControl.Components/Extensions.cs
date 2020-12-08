@@ -23,7 +23,8 @@
                 .AddSingleton<IMapAdderService>(sp => sp.GetRequiredService<MapService>())
                 .AddSingleton<IMapService>(sp => sp.GetRequiredService<MapService>())
                 .AddOptions<AzureMapsConfiguration>()
-                .Configure(configure);
+                .Configure(configure)
+                .Validate(configuration => configuration.Validate(), "The given AzureMapsConfiguration is invalid");
 
             return services;
         }

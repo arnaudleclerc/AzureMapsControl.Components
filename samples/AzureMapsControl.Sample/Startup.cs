@@ -27,6 +27,9 @@
             //This code uses a subscription key authentication
             //services.AddAzureMapsControl(configuration => configuration.SubscriptionKey = Configuration["AzureMaps:SubscriptionKey"]);
 
+            //This code uses an anonymous authentication
+            //services.AddAzureMapsControl(configuration => configuration.ClientId = Configuration["AzureMaps:ClientId"]);
+
             //This code uses an AAD authentication
             services.AddAzureMapsControl(configuration => {
                 configuration.AadAppId = Configuration["AzureMaps:AadAppId"];
