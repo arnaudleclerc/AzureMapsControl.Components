@@ -31,10 +31,19 @@
     <app>
         <component type="typeof(App)" render-mode="ServerPrerendered" />
     </app>
-
     <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
     <script src="https://atlas.microsoft.com/sdk/javascript/drawing/0.1/atlas-drawing.min.js"></script>
     <script src="_content/AzureMapsControl.Components/azure-maps-control.js"></script>
     <script src="_framework/blazor.server.js"></script>
+    <script type="text/javascript">
+        window.azureMapsControl.extensions.getTokenCallback = (resolve, reject, map) => {
+            const url = "url_of_my_token_endpoint";
+            fetch(url).then(function (response) {
+                return response.text();
+            }).then(function (token) {
+                resolve(token);
+            });
+        };
+    </script>
 </body>
 </html>

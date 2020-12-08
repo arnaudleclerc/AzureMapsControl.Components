@@ -34,7 +34,7 @@ If you plan to use the drawing toolbar, you also need to include the following c
 
 ### Register the Components
 
-You will need to pass the authentication information of your `AzureMaps` instance to the library. `SubscriptionKey` and `Aad` authentication are supported. You will need to call the `AddAzureMapsControl` method on your services.
+You will need to pass the authentication information of your `AzureMaps` instance to the library. `SubscriptionKey`, `Aad` and `Anonymous` authentication are supported. You will need to call the `AddAzureMapsControl` method on your services.
 
 You can authenticate using a `subscription key` :
 
@@ -45,6 +45,7 @@ You can authenticate using a `subscription key` :
     {
         services.AddRazorPages();
         services.AddServerSideBlazor();
+        
         services.AddAzureMapsControl(configuration => configuration.SubscriptionKey = "Your Subscription Key");
     }
 ```
@@ -63,6 +64,71 @@ public void ConfigureServices(IServiceCollection services)
                 configuration.ClientId = "Your Client Id";
             });
         }
+```
+
+The `Anonymous` authentication requires only a `ClientId`:
+
+```
+public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddRazorPages();
+            services.AddServerSideBlazor(options => options.DetailedErrors = true);
+
+            services.AddAzureMapsControl(configuration => configuration.ClientId = Configuration["AzureMaps:ClientId"])
+        }
+```
+
+It also needs to fetch the token to send to the requests of the atlas library. For that, you have to override the `window.azureMapsControl.extensions.getTokenCallback` method on your application after referencing `azure-maps-control.js` and resolve the token in it. For example : 
+
+```
+@page "/"
+@namespace AzureMapsControl.Sample.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AzureMapsControl.Sample</title>
+    <base href="~/" />
+    <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css" type="text/css" />
+    <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/drawing/0.1/atlas-drawing.min.css" type="text/css" />
+    <style>
+        body {
+            margin: 0;
+        }
+
+        #map {
+            position: absolute;
+            width: 100%;
+            min-width: 290px;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <app>
+        <component type="typeof(App)" render-mode="ServerPrerendered" />
+    </app>
+    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
+    <script src="https://atlas.microsoft.com/sdk/javascript/drawing/0.1/atlas-drawing.min.js"></script>
+    <script src="_content/AzureMapsControl.Components/azure-maps-control.js"></script>
+    <script src="_framework/blazor.server.js"></script>
+    <script type="text/javascript">
+        window.azureMapsControl.extensions.getTokenCallback = (resolve, reject, map) => {
+            const url = "url_of_my_token_endpoint";
+            fetch(url).then(function (response) {
+                return response.text();
+            }).then(function (token) {
+                resolve(token);
+            });        };
+    </script>
+</body>
+</html>
 ```
 
 ## How to use
