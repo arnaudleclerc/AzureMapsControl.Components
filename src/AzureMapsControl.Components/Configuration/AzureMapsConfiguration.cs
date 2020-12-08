@@ -33,6 +33,8 @@
         /// </summary>
         public string SubscriptionKey { get; set; }
 
+        internal bool Validate() => !string.IsNullOrWhiteSpace(AuthType);
+
         internal string AuthType
         {
             get {
@@ -41,11 +43,15 @@
                     return "subscriptionKey";
                 }
 
-                return !string.IsNullOrWhiteSpace(AadAppId)
+                if (!string.IsNullOrWhiteSpace(ClientId))
+                {
+                    return !string.IsNullOrWhiteSpace(AadAppId)
                     && !string.IsNullOrWhiteSpace(AadTenant)
-                    && !string.IsNullOrWhiteSpace(ClientId)
                     ? "aad"
                     : "anonymous";
+                }
+
+                return null;
             }
         }
     }
@@ -65,6 +71,10 @@
             {
                 writer.WriteString("aadAppId", value.AadAppId);
                 writer.WriteString("aadTenant", value.AadTenant);
+                writer.WriteString("clientId", value.ClientId);
+            }
+            else if (value.AuthType == "anonymous")
+            {
                 writer.WriteString("clientId", value.ClientId);
             }
             writer.WriteEndObject();
