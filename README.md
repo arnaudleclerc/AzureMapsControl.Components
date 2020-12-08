@@ -45,6 +45,7 @@ You can authenticate using a `subscription key` :
     {
         services.AddRazorPages();
         services.AddServerSideBlazor();
+        
         services.AddAzureMapsControl(configuration => configuration.SubscriptionKey = "Your Subscription Key");
     }
 ```
@@ -68,10 +69,16 @@ public void ConfigureServices(IServiceCollection services)
 The `Anonymous` authentication requires only a `ClientId`:
 
 ```
-services.AddAzureMapsControl(configuration => configuration.ClientId = Configuration["AzureMaps:ClientId"])
+public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddRazorPages();
+            services.AddServerSideBlazor(options => options.DetailedErrors = true);
+
+            services.AddAzureMapsControl(configuration => configuration.ClientId = Configuration["AzureMaps:ClientId"])
+        }
 ```
 
-It also needs to fetch the token to send to the request. For that, you have to override the `window.azureMapsControl.extensions.getTokenCallback` method on your application after referencing `azure-maps-control.js`. For example : 
+It also needs to fetch the token to send to the requests of the atlas library. For that, you have to override the `window.azureMapsControl.extensions.getTokenCallback` method on your application after referencing `azure-maps-control.js` and resolve the token in it. For example : 
 
 ```
 @page "/"
@@ -113,8 +120,12 @@ It also needs to fetch the token to send to the request. For that, you have to o
     <script src="_framework/blazor.server.js"></script>
     <script type="text/javascript">
         window.azureMapsControl.extensions.getTokenCallback = (resolve, reject, map) => {
-            //Fetch your token and resolve the promise with it here
-        };
+            const url = "url_of_my_token_endpoint";
+            fetch(url).then(function (response) {
+                return response.text();
+            }).then(function (token) {
+                resolve(token);
+            });        };
     </script>
 </body>
 </html>
