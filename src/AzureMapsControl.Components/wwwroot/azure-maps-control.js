@@ -113,7 +113,7 @@ window.azureMapsControl = {
                 draggable: drawingToolbarOptions.dragHandleStyle.draggable,
                 htmlContent: drawingToolbarOptions.dragHandleStyle.htmlContent,
                 pixelOffset: drawingToolbarOptions.dragHandleStyle.pixelOffset,
-                position: [drawingToolbarOptions.dragHandleStyle.position.longitude, drawingToolbarOptions.dragHandleStyle.position.latitude],
+                position: drawingToolbarOptions.dragHandleStyle.position,
                 secondaryColor: drawingToolbarOptions.dragHandleStyle.secondaryColor,
                 text: drawingToolbarOptions.dragHandleStyle.text,
                 visible: drawingToolbarOptions.dragHandleStyle.visible
@@ -127,7 +127,7 @@ window.azureMapsControl = {
                 draggable: drawingToolbarOptions.secondaryDragHandleStyle.draggable,
                 htmlContent: drawingToolbarOptions.secondaryDragHandleStyle.htmlContent,
                 pixelOffset: drawingToolbarOptions.secondaryDragHandleStyle.pixelOffset,
-                position: [drawingToolbarOptions.secondaryDragHandleStyle.position.longitude, drawingToolbarOptions.secondaryDragHandleStyle.position.latitude],
+                position: drawingToolbarOptions.secondaryDragHandleStyle.position,
                 secondaryColor: drawingToolbarOptions.secondaryDragHandleStyle.secondaryColor,
                 text: drawingToolbarOptions.secondaryDragHandleStyle.text,
                 visible: drawingToolbarOptions.secondaryDragHandleStyle.visible
@@ -179,7 +179,7 @@ window.azureMapsControl = {
                 draggable: htmlMarkerOption.options.draggable,
                 htmlContent: htmlMarkerOption.options.htmlContent,
                 pixelOffset: htmlMarkerOption.options.pixelOffset,
-                position: [htmlMarkerOption.options.position.longitude, htmlMarkerOption.options.position.latitude],
+                position: htmlMarkerOption.options.position,
                 secondaryColor: htmlMarkerOption.options.secondaryColor,
                 text: htmlMarkerOption.options.text,
                 visible: htmlMarkerOption.options.visible
@@ -190,9 +190,7 @@ window.azureMapsControl = {
             if (htmlMarkerOption.events) {
                 htmlMarkerOption.events.forEach(htmlMarkerEvent => {
                     this._map.events.add(htmlMarkerEvent, marker, event => {
-                        eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(event.type, {
-                            markerId: marker.amc.id
-                        }));
+                        eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMarkerEvent(event, marker.amc.id));
                     });
                 });
             }
@@ -263,14 +261,8 @@ window.azureMapsControl = {
                         eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(value, {
                             layerId: event.layerId,
                             shapes: event.shapes,
-                            pixel: Array.isArray(event.pixel) ? {
-                                x: event.pixel[0],
-                                y: event.pixel[1]
-                            } : event.pixel,
-                            position: Array.isArray(event.position) ? {
-                                longitude: event.position[0],
-                                latitude: event.position[1]
-                            } : event.position
+                            pixel: event.pixel,
+                            position: event.position
                         }));
                     });
                 }
@@ -390,7 +382,7 @@ window.azureMapsControl = {
             options.padding = cameraOptions.padding;
         } else {
             if (cameraOptions.center) {
-                options.center = [cameraOptions.center.longitude, cameraOptions.center.latitude];
+                options.center = cameraOptions.center;
             }
             options.zoom = cameraOptions.zoom;
         }
@@ -417,7 +409,7 @@ window.azureMapsControl = {
                 options.htmlContent = htmlMarkerOption.options.htmlContent;
             }
             if (htmlMarkerOption.options.position) {
-                options.position = [htmlMarkerOption.options.position.longitude, htmlMarkerOption.options.position.latitude];
+                options.position = htmlMarkerOption.options.position;
             }
             if (htmlMarkerOption.options.secondaryColor) {
                 options.secondaryColor = htmlMarkerOption.options.secondaryColor;
@@ -501,16 +493,14 @@ window.azureMapsControl = {
         for (const geometry of geometries) {
             switch (geometry.type) {
                 case 'Point':
-                    shapes.push(new atlas.Shape(new atlas.data.Point(new atlas.data.Position(geometry.coordinates.longitude, geometry.coordinates.latitude, geometry.coordinates.elevation)), geometry.id));
+                    shapes.push(new atlas.Shape(new atlas.data.Point(geometry.coordinates), geometry.id));
                     break;
 
                 case 'LineString':
                     shapes.push(
                         new atlas.Shape(
                             new atlas.data.LineString(
-                                geometry.coordinates.map(
-                                    c => new atlas.data.Position(c.longitude, c.latitude, c.elevation)
-                                ),
+                                geometry.coordinates,
                                 geometry.bbox ? new atlas.data.BoundingBox(
                                     new atlas.data.Position(geometry.bbox.south, geometry.bbox.west)
                                     , new atlas.data.Position(geometry.bbox.north, geometry.bbox.east)
@@ -524,11 +514,7 @@ window.azureMapsControl = {
                     shapes.push(
                         new atlas.Shape(
                             new atlas.data.Polygon(
-                                geometry.coordinates.map(
-                                    c => c.map(
-                                        p => new atlas.data.Position(p.longitude, p.latitude, p.elevation)
-                                    )
-                                ),
+                                geometry.coordinates,
                                 geometry.bbox ? new atlas.data.BoundingBox(
                                     new atlas.data.Position(geometry.bbox.south, geometry.bbox.west)
                                     , new atlas.data.Position(geometry.bbox.north, geometry.bbox.east)
@@ -541,9 +527,7 @@ window.azureMapsControl = {
                     shapes.push(
                         new atlas.Shape(
                             new atlas.data.MultiPoint(
-                                geometry.coordinates.map(
-                                    c => new atlas.data.Position(c.longitude, c.latitude, c.elevation)
-                                ),
+                                geometry.coordinates,
                                 geometry.bbox ? new atlas.data.BoundingBox(
                                     new atlas.data.Position(geometry.bbox.south, geometry.bbox.west)
                                     , new atlas.data.Position(geometry.bbox.north, geometry.bbox.east)
@@ -556,11 +540,7 @@ window.azureMapsControl = {
                     shapes.push(
                         new atlas.Shape(
                             new atlas.data.MultiLineString(
-                                geometry.coordinates.map(
-                                    c => c.map(
-                                        p => new atlas.data.Position(p.longitude, p.latitude, p.elevation)
-                                    )
-                                ),
+                                geometry.coordinates,
                                 geometry.bbox ? new atlas.data.BoundingBox(
                                     new atlas.data.Position(geometry.bbox.south, geometry.bbox.west)
                                     , new atlas.data.Position(geometry.bbox.north, geometry.bbox.east)
@@ -573,13 +553,7 @@ window.azureMapsControl = {
                     shapes.push(
                         new atlas.Shape(
                             new atlas.data.Polygon(
-                                geometry.coordinates.map(
-                                    c => c.map(
-                                        r => r.map(
-                                            p => new atlas.data.Position(p.longitude, p.latitude, p.elevation)
-                                        )
-                                    )
-                                ),
+                                geometry.coordinates,
                                 geometry.bbox ? new atlas.data.BoundingBox(
                                     new atlas.data.Position(geometry.bbox.south, geometry.bbox.west)
                                     , new atlas.data.Position(geometry.bbox.north, geometry.bbox.east)
@@ -609,8 +583,8 @@ window.azureMapsControl = {
             closeButton: options.closeButton,
             content: options.content,
             fillColor: options.fillColor,
-            pixelOffset: options.pixelOffset ? [options.pixelOffset.x, options.pixelOffset.y] : null,
-            position: options.position ? [options.position.longitude, options.position.latitude] : null,
+            pixelOffset: options.pixelOffset,
+            position: options.position,
             showPointer: options.showPointer
         };
         const popup = new atlas.Popup(popupOptions);
@@ -660,8 +634,8 @@ window.azureMapsControl = {
                 closeButton: options.closeButton,
                 content: options.content,
                 fillColor: options.fillColor,
-                pixelOffset: options.pixelOffset ? [options.pixelOffset.x, options.pixelOffset.y] : null,
-                position: options.position ? [options.position.longitude, options.position.latitude] : null,
+                pixelOffset: options.pixelOffset,
+                position: options.position,
                 showPointer: options.showPointer
             };
 
@@ -683,6 +657,15 @@ window.azureMapsControl = {
     _toMapEvent: function (type, properties) {
         const result = properties || {};
         result.type = type;
+        return result;
+    },
+    _toMarkerEvent: function (event, markerId) {
+        const result = this._toMapEvent(event.type, {
+            markerId: markerId
+        });
+        if (event.target && event.target.options) {
+            result.options = event.target.options;
+        }
         return result;
     },
     extensions: {

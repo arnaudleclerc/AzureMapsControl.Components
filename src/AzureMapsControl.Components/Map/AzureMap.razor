@@ -662,7 +662,7 @@
                 {
                     Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_HtmlMarkerEventReceivedAsync, "Dispatching html marker event");
                     Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_HtmlMarkerEventReceivedAsync, $"Id: {htmlMarkerEvent.MarkerId} | Type: {htmlMarkerEvent.Type}");
-                    htmlMarker.DispatchEvent(MapService.Map, htmlMarkerEvent.Type);
+                    htmlMarker.DispatchEvent(MapService.Map, htmlMarkerEvent);
                 });
             }
         }

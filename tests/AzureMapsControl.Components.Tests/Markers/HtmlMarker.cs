@@ -15,6 +15,32 @@
         }
 
         [Fact]
+        public void Should_UpdateOptionsWithEvent()
+        {
+            var marker = new HtmlMarker(new HtmlMarkerOptions());
+            var options = new HtmlMarkerOptions {
+                Color = "#bbbbbb"
+            };
+
+            var map = new Components.Map.Map("id");
+            marker.DispatchEvent(new Components.Map.Map("id"), new HtmlMarkerJsEventArgs { Options = options });
+            Assert.Equal(options, marker.Options);
+        }
+
+        [Fact]
+        public void Should_NotUpdateOptionsWithEvent()
+        {
+            var marker = new HtmlMarker(new HtmlMarkerOptions());
+            var options = new HtmlMarkerOptions {
+                Color = "#bbbbbb"
+            };
+
+            var map = new Components.Map.Map("id");
+            marker.DispatchEvent(new Components.Map.Map("id"), new HtmlMarkerJsEventArgs());
+            Assert.NotNull(marker.Options);
+        }
+
+        [Fact]
         public void Should_DispatchClickEvent()
         {
             var assertEvent = false;
@@ -22,7 +48,7 @@
             var map = new Components.Map.Map("id");
             var type = "click";
             marker.OnClick += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == type && eventArgs.HtmlMarker == marker;
-            marker.DispatchEvent(map, type);
+            marker.DispatchEvent(map, new HtmlMarkerJsEventArgs { Type = type });
             Assert.True(assertEvent);
         }
 
@@ -34,7 +60,7 @@
             var map = new Components.Map.Map("id");
             var type = "contextmenu";
             marker.OnContextMenu += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == type && eventArgs.HtmlMarker == marker;
-            marker.DispatchEvent(map, type);
+            marker.DispatchEvent(map, new HtmlMarkerJsEventArgs { Type = type });
             Assert.True(assertEvent);
         }
 
@@ -46,7 +72,7 @@
             var map = new Components.Map.Map("id");
             var type = "drag";
             marker.OnDrag += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == type && eventArgs.HtmlMarker == marker;
-            marker.DispatchEvent(map, type);
+            marker.DispatchEvent(map, new HtmlMarkerJsEventArgs { Type = type });
             Assert.True(assertEvent);
         }
 
@@ -58,7 +84,7 @@
             var map = new Components.Map.Map("id");
             var type = "dragend";
             marker.OnDragEnd += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == type && eventArgs.HtmlMarker == marker;
-            marker.DispatchEvent(map, type);
+            marker.DispatchEvent(map, new HtmlMarkerJsEventArgs { Type = type });
             Assert.True(assertEvent);
         }
 
@@ -70,7 +96,7 @@
             var map = new Components.Map.Map("id");
             var type = "dragstart";
             marker.OnDragStart += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == type && eventArgs.HtmlMarker == marker;
-            marker.DispatchEvent(map, type);
+            marker.DispatchEvent(map, new HtmlMarkerJsEventArgs { Type = type });
             Assert.True(assertEvent);
         }
 
@@ -82,7 +108,7 @@
             var map = new Components.Map.Map("id");
             var type = "keydown";
             marker.OnKeyDown += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == type && eventArgs.HtmlMarker == marker;
-            marker.DispatchEvent(map, type);
+            marker.DispatchEvent(map, new HtmlMarkerJsEventArgs { Type = type });
             Assert.True(assertEvent);
         }
 
@@ -94,7 +120,7 @@
             var map = new Components.Map.Map("id");
             var type = "keypress";
             marker.OnKeyPress += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == type && eventArgs.HtmlMarker == marker;
-            marker.DispatchEvent(map, type);
+            marker.DispatchEvent(map, new HtmlMarkerJsEventArgs { Type = type });
             Assert.True(assertEvent);
         }
 
@@ -106,7 +132,7 @@
             var map = new Components.Map.Map("id");
             var type = "keyup";
             marker.OnKeyUp += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == type && eventArgs.HtmlMarker == marker;
-            marker.DispatchEvent(map, type);
+            marker.DispatchEvent(map, new HtmlMarkerJsEventArgs { Type = type });
             Assert.True(assertEvent);
         }
 
@@ -118,7 +144,7 @@
             var map = new Components.Map.Map("id");
             var type = "mousedown";
             marker.OnMouseDown += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == type && eventArgs.HtmlMarker == marker;
-            marker.DispatchEvent(map, type);
+            marker.DispatchEvent(map, new HtmlMarkerJsEventArgs { Type = type });
             Assert.True(assertEvent);
         }
 
@@ -130,7 +156,7 @@
             var map = new Components.Map.Map("id");
             var type = "mouseenter";
             marker.OnMouseEnter += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == type && eventArgs.HtmlMarker == marker;
-            marker.DispatchEvent(map, type);
+            marker.DispatchEvent(map, new HtmlMarkerJsEventArgs { Type = type });
         }
 
         [Fact]
@@ -141,7 +167,7 @@
             var map = new Components.Map.Map("id");
             var type = "mouseleave";
             marker.OnMouseLeave += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == type && eventArgs.HtmlMarker == marker;
-            marker.DispatchEvent(map, type);
+            marker.DispatchEvent(map, new HtmlMarkerJsEventArgs { Type = type });
         }
 
         [Fact]
@@ -152,7 +178,7 @@
             var map = new Components.Map.Map("id");
             var type = "mousemove";
             marker.OnMouseMove += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == type && eventArgs.HtmlMarker == marker;
-            marker.DispatchEvent(map, type);
+            marker.DispatchEvent(map, new HtmlMarkerJsEventArgs { Type = type });
         }
 
         [Fact]
@@ -163,7 +189,7 @@
             var map = new Components.Map.Map("id");
             var type = "mouseout";
             marker.OnMouseOut += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == type && eventArgs.HtmlMarker == marker;
-            marker.DispatchEvent(map, type);
+            marker.DispatchEvent(map, new HtmlMarkerJsEventArgs { Type = type });
             Assert.True(assertEvent);
         }
 
@@ -175,7 +201,7 @@
             var map = new Components.Map.Map("id");
             var type = "mouseover";
             marker.OnMouseOver += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == type && eventArgs.HtmlMarker == marker;
-            marker.DispatchEvent(map, type);
+            marker.DispatchEvent(map, new HtmlMarkerJsEventArgs { Type = type });
             Assert.True(assertEvent);
         }
 
@@ -187,7 +213,7 @@
             var map = new Components.Map.Map("id");
             var type = "mouseup";
             marker.OnMouseUp += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == type && eventArgs.HtmlMarker == marker;
-            marker.DispatchEvent(map, type);
+            marker.DispatchEvent(map, new HtmlMarkerJsEventArgs { Type = type });
             Assert.True(assertEvent);
         }
     }
