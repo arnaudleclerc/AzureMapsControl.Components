@@ -16,7 +16,7 @@
         /// <summary>
         /// Options of the marker
         /// </summary>
-        public HtmlMarkerOptions Options { get; }
+        public HtmlMarkerOptions Options { get; private set; }
 
         /// <summary>
         /// Events to activate on the marker
@@ -121,72 +121,77 @@
             EventActivationFlags = eventActivationFlags;
         }
 
-        internal void DispatchEvent(Map map, string type)
+        internal void DispatchEvent(Map map, HtmlMarkerJsEventArgs eventArgs)
         {
-            switch(type)
+            if(eventArgs.Options != null)
+            {
+                Options = eventArgs.Options;
+            }
+
+            switch (eventArgs.Type)
             {
                 case "click":
-                    OnClick?.Invoke(new HtmlMarkerEventArgs(map, type, this));
+                    OnClick?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
                     break;
 
                 case "contextmenu":
-                    OnContextMenu?.Invoke(new HtmlMarkerEventArgs(map, type, this));
+                    OnContextMenu?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
                     break;
 
                 case "dblclick":
-                    OnDblClick?.Invoke(new HtmlMarkerEventArgs(map, type, this));
+                    OnDblClick?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
                     break;
 
                 case "drag":
-                    OnDrag?.Invoke(new HtmlMarkerEventArgs(map, type, this));
+                    OnDrag?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
                     break;
 
                 case "dragend":
-                    OnDragEnd?.Invoke(new HtmlMarkerEventArgs(map, type, this));
+                    OnDragEnd?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
                     break;
 
                 case "dragstart":
-                    OnDragStart?.Invoke(new HtmlMarkerEventArgs(map, type, this));
+                    OnDragStart?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
                     break;
 
                 case "keydown":
-                    OnKeyDown?.Invoke(new HtmlMarkerEventArgs(map, type, this));
+                    OnKeyDown?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
                     break;
 
                 case "keypress":
-                    OnKeyPress?.Invoke(new HtmlMarkerEventArgs(map, type, this));
+                    OnKeyPress?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
                     break;
 
                 case "keyup":
-                    OnKeyUp?.Invoke(new HtmlMarkerEventArgs(map, type, this));
+                    OnKeyUp?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
                     break;
 
                 case "mousedown":
-                    OnMouseDown?.Invoke(new HtmlMarkerEventArgs(map, type, this));
+                    OnMouseDown?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
                     break;
 
                 case "mouseenter":
-                    OnMouseEnter?.Invoke(new HtmlMarkerEventArgs(map, type, this));
+                    OnMouseEnter?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
                     break;
 
                 case "mouseleave":
-                    OnMouseLeave?.Invoke(new HtmlMarkerEventArgs(map, type, this));
+                    OnMouseLeave?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
                     break;
 
                 case "mousemove":
-                    OnMouseMove?.Invoke(new HtmlMarkerEventArgs(map, type, this));
+                    OnMouseMove?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
                     break;
 
                 case "mouseout":
-                    OnMouseOut?.Invoke(new HtmlMarkerEventArgs(map, type, this));
+                    OnMouseOut?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
                     break;
 
                 case "mouseover":
-                    OnMouseOver?.Invoke(new HtmlMarkerEventArgs(map, type, this));
+                    OnMouseOver?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
                     break;
 
                 case "mouseup":
-                    OnMouseUp?.Invoke(new HtmlMarkerEventArgs(map, type, this));
+                    OnMouseUp?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
                     break;
             }
         }

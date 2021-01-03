@@ -1,8 +1,12 @@
 ﻿namespace AzureMapsControl.Components.Atlas
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Text.Json;
+    using System.Text.Json.Serialization;
 
     [ExcludeFromCodeCoverage]
+    [JsonConverter(typeof(PositionJsonConverter))]
     public sealed class Position
     {
         /// <summary>
@@ -40,5 +44,40 @@
         /// <param name="latitude">The position's latitude.</param>
         /// <param name="elevation">The position's elevation.</param>
         public Position(double longitude, double latitude, int elevation) : this(longitude, latitude) => Elevation = elevation;
+    }
+
+    internal sealed class PositionJsonConverter : JsonConverter<Position>
+    {
+        public override Position Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            var position = new Position();
+            if (reader.TokenType == JsonTokenType.StartArray)
+            {
+                reader.Read();
+                position.Longitude = reader.GetDouble();
+                reader.Read();
+                position.Latitude = reader.GetDouble();
+                reader.Read();
+                if(reader.TokenType == JsonTokenType.Number)
+                {
+                    position.Elevation = reader.GetInt32();
+                    reader.Read();
+                }
+            }
+
+            return position;
+        }
+
+        public override void Write(Utf8JsonWriter writer, Position value, JsonSerializerOptions options)
+        {
+            writer.WriteStartArray();
+            writer.WriteNumberValue(value.Longitude);
+            writer.WriteNumberValue(value.Latitude);
+            if (value.Elevation.HasValue)
+            {
+                writer.WriteNumberValue(value.Elevation.Value);
+            }
+            writer.WriteEndArray();
+        }
     }
 }
