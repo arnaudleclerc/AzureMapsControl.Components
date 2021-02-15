@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
 
-    using AzureMapsControl.Components.Atlas;
+    using AzureMapsControl.Components.Controls;
 
     [ExcludeFromCodeCoverage]
     public class DrawingToolbarUpdateOptions

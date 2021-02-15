@@ -5,7 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using AzureMapsControl.Components.Atlas;
+    using AzureMapsControl.Components.Controls;
     using AzureMapsControl.Components.Data;
     using AzureMapsControl.Components.Drawing;
     using AzureMapsControl.Components.Exceptions;
@@ -325,23 +325,23 @@
             switch (eventArgs.Type)
             {
                 case "drawingchanged":
-                     OnDrawingChanged?.Invoke(new DrawingToolbarEventArgs(this, eventArgs));
+                    OnDrawingChanged?.Invoke(new DrawingToolbarEventArgs(this, eventArgs));
                     break;
 
                 case "drawingchanging":
-                     OnDrawingChanging?.Invoke(new DrawingToolbarEventArgs(this, eventArgs));
+                    OnDrawingChanging?.Invoke(new DrawingToolbarEventArgs(this, eventArgs));
                     break;
 
                 case "drawingcomplete":
-                     OnDrawingComplete?.Invoke(new DrawingToolbarEventArgs(this, eventArgs));
+                    OnDrawingComplete?.Invoke(new DrawingToolbarEventArgs(this, eventArgs));
                     break;
 
                 case "drawingmodechanged":
-                     OnDrawingModeChanged?.Invoke(new DrawingToolbarModeEventArgs(this, eventArgs));
+                    OnDrawingModeChanged?.Invoke(new DrawingToolbarModeEventArgs(this, eventArgs));
                     break;
 
                 case "drawingstarted":
-                     OnDrawingStarted?.Invoke(new MapEventArgs(this, eventArgs.Type));
+                    OnDrawingStarted?.Invoke(new MapEventArgs(this, eventArgs.Type));
                     break;
             }
         }

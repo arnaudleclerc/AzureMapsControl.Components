@@ -52,9 +52,9 @@
         public bool ShowTileBoundaries { get; set; }
 
         /// <summary>
-        /// The name of the style to use when rendering the map
+        /// The style to use when rendering the map
         /// </summary>
-        public string Style { get; set; }
+        public MapStyle Style { get; set; }
 
         /// <summary>
         /// Specifies which set of geopolitically disputed borders and labels are displayed on the map. The View parameter (also referred to as “user region parameter”) is a 2-letter ISO-3166 Country Code that will show the correct maps for that country/region. Country/Regions that are not on the View list or if unspecified will default to the “Unified” View

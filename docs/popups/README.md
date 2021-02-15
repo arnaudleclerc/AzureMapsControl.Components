@@ -19,7 +19,7 @@ Popups can be added to the map using the `AddPopupAsync` method on the map. If t
 
     public StyleOptions StyleOptions = new StyleOptions
     {
-        Style = "grayscale_dark"
+        Style = MapStyle.GrayscaleDark
     };
 
     public async Task OnMapReady(MapEventArgs eventArgs)
@@ -52,7 +52,7 @@ A popup can also be opened using the `OpenAsync` method.
 
     public StyleOptions StyleOptions = new StyleOptions
     {
-        Style = "grayscale_dark"
+        Style = MapStyle.GrayscaleDark
     };
 
     public async Task OnMapReady(MapEventArgs eventArgs)
@@ -87,7 +87,7 @@ The popup can then be close by calling the `CloseAsync` method.
 
     public StyleOptions StyleOptions = new StyleOptions
     {
-        Style = "grayscale_dark"
+        Style = MapStyle.GrayscaleDark
     };
 
     public async Task OnMapReady(MapEventArgs eventArgs)
@@ -123,7 +123,7 @@ Calling the `RemoveAsync` method will remove the popup from the map. You can als
 
     public StyleOptions StyleOptions = new StyleOptions
     {
-        Style = "grayscale_dark"
+        Style = MapStyle.GrayscaleDark
     };
 
     public async Task OnMapReady(MapEventArgs eventArgs)
@@ -160,7 +160,7 @@ The popup can be updated by calling the `UpdateAsync` method and providing the u
 
     public StyleOptions StyleOptions = new StyleOptions
     {
-        Style = "grayscale_dark"
+        Style = MapStyle.GrayscaleDark
     };
 
     public async Task OnMapReady(MapEventArgs eventArgs)
@@ -197,7 +197,7 @@ All the popups can be cleared using the `ClearPopupsAsync` method on the map.
 
     public StyleOptions StyleOptions = new StyleOptions
     {
-        Style = "grayscale_dark"
+        Style = MapStyle.GrayscaleDark
     };
 
     public async Task OnMapReady(MapEventArgs eventArgs)
@@ -241,7 +241,7 @@ The following example reacts to the opening of a popup :
 
     public StyleOptions StyleOptions = new StyleOptions
     {
-        Style = "grayscale_dark"
+        Style = MapStyle.GrayscaleDark
     };
 
     public async Task OnMapReady(MapEventArgs eventArgs)

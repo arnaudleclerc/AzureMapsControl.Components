@@ -58,28 +58,28 @@ window.azureMapsControl = {
         'touchend',
         'touchstart'
     ],
-    addControls: function (controlOptions) {
-        if (controlOptions && controlOptions.length > 0) {
-            controlOptions.forEach(controlOption => {
-                switch (controlOption.type) {
+    addControls: function (controls) {
+        if (controls && controls.length > 0) {
+            controls.forEach(control => {
+                switch (control.type) {
                     case "compass":
-                        this._map.controls.add(new atlas.control.CompassControl(), {
-                            position: controlOption.position
+                        this._map.controls.add(new atlas.control.CompassControl(control.options), {
+                            position: control.position
                         });
                         break;
                     case "pitch":
-                        this._map.controls.add(new atlas.control.PitchControl(), {
-                            position: controlOption.position
+                        this._map.controls.add(new atlas.control.PitchControl(control.options), {
+                            position: control.position
                         });
                         break;
                     case "style":
-                        this._map.controls.add(new atlas.control.StyleControl(), {
-                            position: controlOption.position
+                        this._map.controls.add(new atlas.control.StyleControl(control.options), {
+                            position: control.position
                         });
                         break;
                     case "zoom":
-                        this._map.controls.add(new atlas.control.ZoomControl(), {
-                            position: controlOption.position
+                        this._map.controls.add(new atlas.control.ZoomControl(control.options), {
+                            position: control.position
                         });
                         break;
                 }

@@ -15,7 +15,7 @@ A Drawing toolbar can be added to the map by providing the `DrawingToolbarOption
                                          AzureMapsControl.Components.Drawing.DrawingButton.DrawCircle,
                                          AzureMapsControl.Components.Drawing.DrawingButton.DrawLine
                                      },
-                                     Position = Components.Atlas.ControlPosition.TopRight,
+                                     Position = Components.Controls.ControlPosition.TopRight,
                                      Style = AzureMapsControl.Components.Drawing.DrawingToolbarStyle.Dark,
                                      Events = AzureMapsControl.Components.Drawing.DrawingToolbarEventActivationFlags.All()
                                  }"
@@ -50,7 +50,7 @@ It can also be added once the map is ready.
                                          AzureMapsControl.Components.Drawing.DrawingButton.DrawCircle,
                                          AzureMapsControl.Components.Drawing.DrawingButton.DrawLine
                                      },
-            Position = Components.Atlas.ControlPosition.TopRight,
+            Position = Components.Controls.ControlPosition.TopRight,
             Style = AzureMapsControl.Components.Drawing.DrawingToolbarStyle.Dark
         });
     }
@@ -87,7 +87,7 @@ The toolbar can be updated using the `UpdateDrawingToolbarAsync` method on the m
                                          AzureMapsControl.Components.Drawing.DrawingButton.DrawCircle,
                                          AzureMapsControl.Components.Drawing.DrawingButton.DrawLine
                                      },
-                                     Position = Components.Atlas.ControlPosition.TopRight,
+                                     Position = Components.Controls.ControlPosition.TopRight,
                                      Style = AzureMapsControl.Components.Drawing.DrawingToolbarStyle.Dark
                                  }"
           EventActivationFlags="MapEventActivationFlags.None().Enable(MapEventType.Ready)"
@@ -105,7 +105,7 @@ The toolbar can be updated using the `UpdateDrawingToolbarAsync` method on the m
         };
 
         options.Style = AzureMapsControl.Components.Drawing.DrawingToolbarStyle.Light;
-        options.Position = Components.Atlas.ControlPosition.TopLeft;
+        options.Position = Components.Controls.ControlPosition.TopLeft;
         options.NumColumns = 1;
 
         await eventArgs.Map.UpdateDrawingToolbarAsync(options);

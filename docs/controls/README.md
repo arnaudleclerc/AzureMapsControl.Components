@@ -18,12 +18,12 @@ There are two ways to add the controls to the map :
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
-          Controls="new []
+          Controls="new Components.Controls.Control[]
           {
-                        new Components.Atlas.Control(AzureMapsControl.Components.Atlas.ControlType.Zoom, AzureMapsControl.Components.Atlas.ControlPosition.TopLeft),
-            new Components.Atlas.Control(AzureMapsControl.Components.Atlas.ControlType.Pitch, AzureMapsControl.Components.Atlas.ControlPosition.TopRight),
-            new Components.Atlas.Control(AzureMapsControl.Components.Atlas.ControlType.Compass, AzureMapsControl.Components.Atlas.ControlPosition.BottomLeft),
-            new Components.Atlas.Control(AzureMapsControl.Components.Atlas.ControlType.Style, AzureMapsControl.Components.Atlas.ControlPosition.BottomRight)
+                        new Components.Controls.ZoomControl(new Components.Controls.ZoomControlOptions { Style = AzureMapsControl.Components.Controls.ControlStyle.Dark }, AzureMapsControl.Components.Controls.ControlPosition.TopLeft),
+            new Components.Controls.PitchControl(new Components.Controls.PitchControlOptions { Style = AzureMapsControl.Components.Controls.ControlStyle.Dark }, AzureMapsControl.Components.Controls.ControlPosition.TopRight),
+            new Components.Controls.CompassControl(new Components.Controls.CompassControlOptions { Style = AzureMapsControl.Components.Controls.ControlStyle.Dark }, AzureMapsControl.Components.Controls.ControlPosition.BottomLeft),
+            new Components.Controls.StyleControl(new Components.Controls.StyleControlOptions { Style = AzureMapsControl.Components.Controls.ControlStyle.Dark, MapStyles = MapStyle.All() }, AzureMapsControl.Components.Controls.ControlPosition.BottomRight)
           }" />
 ```
 
@@ -45,10 +45,10 @@ There are two ways to add the controls to the map :
     {
         await eventArgs.Map.AddControlsAsync
         (
-            new Components.Atlas.Control(AzureMapsControl.Components.Atlas.ControlType.Zoom, AzureMapsControl.Components.Atlas.ControlPosition.TopLeft),
-            new Components.Atlas.Control(AzureMapsControl.Components.Atlas.ControlType.Pitch, AzureMapsControl.Components.Atlas.ControlPosition.TopRight),
-            new Components.Atlas.Control(AzureMapsControl.Components.Atlas.ControlType.Compass, AzureMapsControl.Components.Atlas.ControlPosition.BottomLeft),
-            new Components.Atlas.Control(AzureMapsControl.Components.Atlas.ControlType.Style, AzureMapsControl.Components.Atlas.ControlPosition.BottomRight)
+            new Components.Controls.ZoomControl(position: AzureMapsControl.Components.Controls.ControlPosition.TopLeft),
+            new Components.Controls.PitchControl(position: AzureMapsControl.Components.Controls.ControlPosition.TopRight),
+            new Components.Controls.CompassControl(position: AzureMapsControl.Components.Controls.ControlPosition.BottomLeft),
+            new Components.Controls.StyleControl(position: AzureMapsControl.Components.Controls.ControlPosition.BottomRight)
         );
     }
 

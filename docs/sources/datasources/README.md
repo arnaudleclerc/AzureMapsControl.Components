@@ -77,7 +77,7 @@ You can import data on the data source using the `ImportDataFromUrlAsync` method
 
     public StyleOptions StyleOptions = new StyleOptions
     {
-        Style = "grayscale_dark"
+        Style = MapStyle.GrayscaleDark
     };
 
     public async Task OnMapReady(MapEventArgs events)

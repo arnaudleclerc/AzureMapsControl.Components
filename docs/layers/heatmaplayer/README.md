@@ -22,7 +22,7 @@ The `Heatmap Layer` requires a data source. The ID of the datasource to bind to 
 
     public StyleOptions StyleOptions = new StyleOptions
     {
-        Style = "grayscale_dark"
+        Style = MapStyle.GrayscaleDark
     };
 
     public async Task OnMapReady(MapEventArgs events)

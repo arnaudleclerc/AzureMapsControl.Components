@@ -2,9 +2,9 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading;
 
     using AzureMapsControl.Components.Atlas;
+    using AzureMapsControl.Components.Controls;
     using AzureMapsControl.Components.Data;
     using AzureMapsControl.Components.Drawing;
     using AzureMapsControl.Components.Exceptions;
@@ -37,7 +37,7 @@
         {
             var assertControlsCallback = false;
             var controls = new List<Control> {
-                new Control(ControlType.Compass, ControlPosition.BottomLeft)
+                new CompassControl()
             };
             var map = new Components.Map.Map("id", addControlsCallback: async callbacksControls => assertControlsCallback = callbacksControls == controls);
 
@@ -50,7 +50,7 @@
         public async void Should_AddControls_ParamsVersion_Async()
         {
             var assertControlsCallback = false;
-            var control = new Control(ControlType.Compass, ControlPosition.BottomLeft);
+            var control = new CompassControl(position: ControlPosition.BottomLeft);
             var map = new Components.Map.Map("id", addControlsCallback: async callbacksControls => assertControlsCallback = callbacksControls.SingleOrDefault() == control);
 
             await map.AddControlsAsync(control);
@@ -1157,7 +1157,7 @@
             var assertEvent = false;
             var map = new Map("id");
             var jsEventArgs = new MapJsEventArgs { Type = "zoom" };
-            map.OnZoom+= eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.OnZoom += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
             map.DispatchEvent(jsEventArgs);
             Assert.True(assertEvent);
         }

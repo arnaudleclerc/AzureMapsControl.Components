@@ -20,7 +20,7 @@ A line layer can be used to render `LineString` and `MultiLineString` features a
 
     public StyleOptions StyleOptions = new StyleOptions
     {
-        Style = "grayscale_dark"
+        Style = MapStyle.GrayscaleDark
     };
 
     public async Task OnMapReady(MapEventArgs events)

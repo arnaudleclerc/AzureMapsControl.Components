@@ -1,4 +1,4 @@
-﻿namespace AzureMapsControl.Components.Atlas
+﻿namespace AzureMapsControl.Components.Controls
 {
     using System.Diagnostics.CodeAnalysis;
 

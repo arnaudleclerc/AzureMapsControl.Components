@@ -16,7 +16,7 @@ A vector tile source loads data formatted as vector tiles for the current map vi
 
     public StyleOptions StyleOptions = new StyleOptions
     {
-        Style = "grayscale_dark"
+        Style = MapStyle.GrayscaleDark
     };
 
     public async Task OnMapReady(MapEventArgs events)

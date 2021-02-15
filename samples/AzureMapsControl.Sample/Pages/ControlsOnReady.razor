@@ -13,10 +13,10 @@
     {
         await eventArgs.Map.AddControlsAsync
         (
-            new Components.Atlas.Control(AzureMapsControl.Components.Atlas.ControlType.Zoom, AzureMapsControl.Components.Atlas.ControlPosition.TopLeft),
-            new Components.Atlas.Control(AzureMapsControl.Components.Atlas.ControlType.Pitch, AzureMapsControl.Components.Atlas.ControlPosition.TopRight),
-            new Components.Atlas.Control(AzureMapsControl.Components.Atlas.ControlType.Compass, AzureMapsControl.Components.Atlas.ControlPosition.BottomLeft),
-            new Components.Atlas.Control(AzureMapsControl.Components.Atlas.ControlType.Style, AzureMapsControl.Components.Atlas.ControlPosition.BottomRight)
+            new Components.Controls.ZoomControl(position: AzureMapsControl.Components.Controls.ControlPosition.TopLeft),
+            new Components.Controls.PitchControl(position: AzureMapsControl.Components.Controls.ControlPosition.TopRight),
+            new Components.Controls.CompassControl(position: AzureMapsControl.Components.Controls.ControlPosition.BottomLeft),
+            new Components.Controls.StyleControl(position: AzureMapsControl.Components.Controls.ControlPosition.BottomRight)
         );
     }
 

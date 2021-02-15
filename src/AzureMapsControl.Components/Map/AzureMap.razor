@@ -74,7 +74,7 @@
     /// Defines the controls to add to the map when it is ready
     /// </summary>
     [Parameter]
-    public IReadOnlyCollection<Control> Controls { get; set; }
+    public IReadOnlyCollection<AzureMapsControl.Components.Controls.Control> Controls { get; set; }
 
     /// <summary>
     /// HtmlMarkers to add to the map when it is ready
@@ -441,20 +441,15 @@
 
     #region Controls
 
-    private async Task AddControlsAsync(IEnumerable<Control> controls)
+    private async Task AddControlsAsync(IEnumerable<AzureMapsControl.Components.Controls.Control> controls)
     {
         Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_AddControlsAsync, "AzureMap - AddControlsAsync");
         var newControls = controls?.Where(control => control != null);
         if (newControls != null && newControls.Any())
         {
-            var controlOptions = newControls.Select(control => new ControlOptions
-            {
-                Type = control.Type.ToString(),
-                Position = control.Position.ToString()
-            });
-            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_AddControlsAsync, $"Adding controls", controlOptions);
-            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_AddControlsAsync, $"{controlOptions.Count()} controls will be added: {string.Join('|', controlOptions.Select(co => co.Type))}");
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodAddControl.ToAzureMapsControlNamespace(), controlOptions);
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_AddControlsAsync, $"Adding controls", newControls);
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_AddControlsAsync, $"{newControls.Count()} controls will be added: {string.Join('|', newControls.Select(co => co.Type))}");
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.MethodAddControl.ToAzureMapsControlNamespace(), newControls);
         }
     }
 

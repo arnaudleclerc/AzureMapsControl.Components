@@ -15,7 +15,7 @@ You can use the `AzureMap` component to display a map.
 @code {
     public StyleOptions StyleOptions = new StyleOptions
     {
-        Style = "grayscale_dark",
+        Style = MapStyle.GrayscaleDark,
         ShowLogo = false,
         ShowFeedbackLink = false
     };
@@ -106,7 +106,7 @@ The following example activates all the events except `Drag`, `Idle`, `MouseMove
 @code {
     public StyleOptions StyleOptions = new StyleOptions
     {
-        Style = "grayscale_dark",
+        Style = MapStyle.GrayscaleDark,
         ShowLogo = false,
         ShowFeedbackLink = false
     };
@@ -130,7 +130,7 @@ The following example deactivates all the events except `Ready`.
 @code {
     public StyleOptions StyleOptions = new StyleOptions
     {
-        Style = "grayscale_dark",
+        Style = MapStyle.GrayscaleDark,
         ShowLogo = false,
         ShowFeedbackLink = false
     };
