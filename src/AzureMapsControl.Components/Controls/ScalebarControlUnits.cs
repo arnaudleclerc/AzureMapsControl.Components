@@ -1,19 +1,19 @@
 ﻿namespace AzureMapsControl.Components.Controls
 {
-    public sealed class ScalebarControlUnits
+    public sealed class ScaleBarControlUnits
     {
         private readonly string _units;
 
-        public static ScalebarControlUnits Imperial = new ScalebarControlUnits("imperial");
-        public static ScalebarControlUnits Metric = new ScalebarControlUnits("metric");
-        public static ScalebarControlUnits Meters = new ScalebarControlUnits("meters");
-        public static ScalebarControlUnits Kilometers = new ScalebarControlUnits("kilometers");
-        public static ScalebarControlUnits Yards = new ScalebarControlUnits("yards");
-        public static ScalebarControlUnits Feet = new ScalebarControlUnits("feet");
-        public static ScalebarControlUnits Miles = new ScalebarControlUnits("miles");
-        public static ScalebarControlUnits NauticalMiles = new ScalebarControlUnits("nauticalMiles");
+        public static ScaleBarControlUnits Imperial = new ScaleBarControlUnits("imperial");
+        public static ScaleBarControlUnits Metric = new ScaleBarControlUnits("metric");
+        public static ScaleBarControlUnits Meters = new ScaleBarControlUnits("meters");
+        public static ScaleBarControlUnits Kilometers = new ScaleBarControlUnits("kilometers");
+        public static ScaleBarControlUnits Yards = new ScaleBarControlUnits("yards");
+        public static ScaleBarControlUnits Feet = new ScaleBarControlUnits("feet");
+        public static ScaleBarControlUnits Miles = new ScaleBarControlUnits("miles");
+        public static ScaleBarControlUnits NauticalMiles = new ScaleBarControlUnits("nauticalMiles");
 
-        private ScalebarControlUnits(string units) => _units = units;
+        private ScaleBarControlUnits(string units) => _units = units;
 
         public override string ToString() => _units;
     }

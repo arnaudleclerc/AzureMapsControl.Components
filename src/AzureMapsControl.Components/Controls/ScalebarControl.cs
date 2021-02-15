@@ -4,20 +4,20 @@
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
-    [JsonConverter(typeof(ScalebarControlJsonConverter))]
-    public sealed class ScalebarControl : Control<ScaleBarControlOptions>
+    [JsonConverter(typeof(ScaleBarControlJsonConverter))]
+    public sealed class ScaleBarControl : Control<ScaleBarControlOptions>
     {
         internal override string Type => "scalebar";
 
-        public ScalebarControl(ScaleBarControlOptions options = null, ControlPosition position = null): base(options, position) { }
+        public ScaleBarControl(ScaleBarControlOptions options = null, ControlPosition position = null): base(options, position) { }
     }
 
-    internal class ScalebarControlJsonConverter : JsonConverter<ScalebarControl>
+    internal class ScaleBarControlJsonConverter : JsonConverter<ScaleBarControl>
     {
-        public override ScalebarControl Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotImplementedException();
-        public override void Write(Utf8JsonWriter writer, ScalebarControl value, JsonSerializerOptions options) => Write(writer, value);
+        public override ScaleBarControl Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotImplementedException();
+        public override void Write(Utf8JsonWriter writer, ScaleBarControl value, JsonSerializerOptions options) => Write(writer, value);
 
-        internal static void Write(Utf8JsonWriter writer, ScalebarControl value)
+        internal static void Write(Utf8JsonWriter writer, ScaleBarControl value)
         {
             writer.WriteStartObject();
             writer.WriteString("type", value.Type);

@@ -10,6 +10,6 @@
         /// <summary>
         /// The distance units of the scale bar.
         /// </summary>
-        public ScalebarControlUnits Units { get; set; }
+        public ScaleBarControlUnits Units { get; set; }
     }
 }

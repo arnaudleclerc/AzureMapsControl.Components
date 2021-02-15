@@ -48,7 +48,7 @@
                     ZoomControlJsonConverter.Write(writer, value as ZoomControl);
                     break;
                 case "scalebar":
-                    ScalebarControlJsonConverter.Write(writer, value as ScalebarControl);
+                    ScaleBarControlJsonConverter.Write(writer, value as ScaleBarControl);
                     break;
             }
         }
