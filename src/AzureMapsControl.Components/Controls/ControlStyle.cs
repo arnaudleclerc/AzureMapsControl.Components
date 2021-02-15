@@ -21,7 +21,7 @@
         /// The control will automatically switch styles based on the style of the map.
         /// If a control doesn't support automatic styling the light style will be used by default.
         /// </summary>
-        public static ControlStyle Auto = new ControlStyle("dark");
+        public static ControlStyle Auto = new ControlStyle("auto");
 
         private ControlStyle(string style) => _style = style;
 
