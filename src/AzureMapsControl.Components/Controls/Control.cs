@@ -8,14 +8,24 @@
     public abstract class Control
     {
         internal abstract string Type { get; }
+
+        /// <summary>
+        /// Position of the control
+        /// </summary>
+        public ControlPosition Position { get; }
+
+        internal Control(ControlPosition position) => Position = position;
     }
 
     public abstract class Control<T> : Control
         where T : ControlOptions
     {
+        /// <summary>
+        /// Options of the control
+        /// </summary>
         public T Options { get; }
 
-        internal Control(T options) => Options = options;
+        internal Control(T options, ControlPosition position) : base(position) => Options = options;
     }
 
     internal class ControlJsonConverter : JsonConverter<Control>
@@ -36,6 +46,9 @@
                     break;
                 case "zoom":
                     ZoomControlJsonConverter.Write(writer, value as ZoomControl);
+                    break;
+                case "scalebar":
+                    ScalebarControlJsonConverter.Write(writer, value as ScalebarControl);
                     break;
             }
         }

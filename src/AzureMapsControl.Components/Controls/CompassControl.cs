@@ -13,12 +13,7 @@
     {
         internal override string Type => "compass";
 
-        /// <summary>
-        /// Position of the control
-        /// </summary>
-        public ControlPosition Position { get; set; }
-
-        public CompassControl(CompassControlOptions options = null, ControlPosition position = null) : base(options) => Position = position;
+        public CompassControl(CompassControlOptions options = null, ControlPosition position = null) : base(options, position) { }
     }
 
     internal class CompassControlJsonConverter : JsonConverter<CompassControl>

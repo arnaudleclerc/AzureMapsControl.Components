@@ -12,9 +12,7 @@
     {
         internal override string Type => "zoom";
 
-        public ControlPosition Position { get; set; }
-
-        public ZoomControl(ZoomControlOptions options = null, ControlPosition position = null) : base(options) => Position = position;
+        public ZoomControl(ZoomControlOptions options = null, ControlPosition position = null) : base(options, position) { }
     }
 
     internal sealed class ZoomControlJsonConverter : JsonConverter<ZoomControl>

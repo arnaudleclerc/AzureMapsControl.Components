@@ -12,9 +12,7 @@
     {
         internal override string Type => "style";
 
-        public ControlPosition Position { get; set; }
-
-        public StyleControl(StyleControlOptions options = null, ControlPosition position = null) : base(options) => Position = position;
+        public StyleControl(StyleControlOptions options = null, ControlPosition position = null) : base(options, position) { }
     }
 
     internal sealed class StyleControlJsonConverter : JsonConverter<StyleControl>

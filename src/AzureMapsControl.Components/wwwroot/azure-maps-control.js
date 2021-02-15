@@ -188,6 +188,11 @@ window.azureMapsControl = {
                             position: control.position
                         });
                         break;
+                    case "scalebar":
+                        this._map.controls.add(new atlas.control.ScaleBarControl(control.options), {
+                            position: control.position
+                        });
+                        break;
                 }
             });
         }

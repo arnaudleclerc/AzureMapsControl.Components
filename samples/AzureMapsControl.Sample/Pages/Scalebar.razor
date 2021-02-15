@@ -1,0 +1,12 @@
+﻿@page "/Scalebar"
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          Controls="new Components.Controls.Control[]
+          {
+              new AzureMapsControl.Components.Controls.ScalebarControl(new Components.Controls.ScaleBarControlOptions
+              {
+                  Units = AzureMapsControl.Components.Controls.ScalebarControlUnits.Metric
+              },
+              AzureMapsControl.Components.Controls.ControlPosition.BottomRight),
+          }" />

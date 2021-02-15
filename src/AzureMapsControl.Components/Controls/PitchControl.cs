@@ -9,9 +9,7 @@
     {
         internal override string Type => "pitch";
 
-        public ControlPosition Position { get; set; }
-
-        public PitchControl(PitchControlOptions options = null, ControlPosition position = null) : base(options) => Position = position;
+        public PitchControl(PitchControlOptions options = null, ControlPosition position = null) : base(options, position) { }
     }
 
     internal class PitchControlJsonConverter : JsonConverter<PitchControl>
