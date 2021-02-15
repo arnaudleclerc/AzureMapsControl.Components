@@ -1,8 +1,110 @@
 window.azureMapsControl = {
-    _drawingManager: null,
-    _toolbar: null,
+    /**
+     * Drawing
+     */
+    drawing: {
+        _drawingManager: null,
+        _toolbar: null,
+        addDrawingToolbar: function (drawingToolbarOptions,
+            eventHelper) {
+
+            this._toolbar = new atlas.control.DrawingToolbar({
+                buttons: drawingToolbarOptions.buttons,
+                containerId: drawingToolbarOptions.containerId,
+                numColumns: drawingToolbarOptions.numColumns,
+                position: drawingToolbarOptions.position,
+                style: drawingToolbarOptions.style,
+                visible: drawingToolbarOptions.visible
+            });
+
+            const drawingManagerOptions = {
+                freehandInterval: drawingToolbarOptions.freehandInterval,
+                interactionType: drawingToolbarOptions.interactionType,
+                mode: drawingToolbarOptions.mode,
+                shapeDraggingEnabled: drawingToolbarOptions.shapeDraggingEnabled,
+                toolbar: this._toolbar
+            };
+
+            if (drawingToolbarOptions.dragHandleStyle) {
+                drawingManagerOptions.dragHandleStyle = new atlas.HtmlMarker({
+                    anchor: drawingToolbarOptions.dragHandleStyle.anchor,
+                    color: drawingToolbarOptions.dragHandleStyle.color,
+                    draggable: drawingToolbarOptions.dragHandleStyle.draggable,
+                    htmlContent: drawingToolbarOptions.dragHandleStyle.htmlContent,
+                    pixelOffset: drawingToolbarOptions.dragHandleStyle.pixelOffset,
+                    position: drawingToolbarOptions.dragHandleStyle.position,
+                    secondaryColor: drawingToolbarOptions.dragHandleStyle.secondaryColor,
+                    text: drawingToolbarOptions.dragHandleStyle.text,
+                    visible: drawingToolbarOptions.dragHandleStyle.visible
+                });
+            }
+
+            if (drawingToolbarOptions.secondaryDragHandleStyle) {
+                drawingManagerOptions.secondaryDragHandleStyle = new atlas.HtmlMarker({
+                    anchor: drawingToolbarOptions.secondaryDragHandleStyle.anchor,
+                    color: drawingToolbarOptions.secondaryDragHandleStyle.color,
+                    draggable: drawingToolbarOptions.secondaryDragHandleStyle.draggable,
+                    htmlContent: drawingToolbarOptions.secondaryDragHandleStyle.htmlContent,
+                    pixelOffset: drawingToolbarOptions.secondaryDragHandleStyle.pixelOffset,
+                    position: drawingToolbarOptions.secondaryDragHandleStyle.position,
+                    secondaryColor: drawingToolbarOptions.secondaryDragHandleStyle.secondaryColor,
+                    text: drawingToolbarOptions.secondaryDragHandleStyle.text,
+                    visible: drawingToolbarOptions.secondaryDragHandleStyle.visible
+                });
+            }
+
+            const map = window.azureMapsControl.getMap();
+            this._drawingManager = new atlas.drawing.DrawingManager(map, drawingManagerOptions);
+
+            if (drawingToolbarOptions.events) {
+                drawingToolbarOptions.events.forEach(drawingToolbarEvent => {
+                    map.events.add(drawingToolbarEvent, this._drawingManager, e => {
+                        if (drawingToolbarEvent === 'drawingmodechanged') {
+                            eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(drawingToolbarEvent, {
+                                newMode: e
+                            }));
+                        } else if (drawingToolbarEvent === 'drawingstarted') {
+                            eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(drawingToolbarEvent));
+                        } else {
+                            eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(drawingToolbarEvent, {
+                                data: e.data
+                            }));
+                        }
+                    });
+                });
+            }
+        },
+        updateDrawingToolbar: function (drawingToolbarOptions) {
+            this._toolbar.setOptions({
+                buttons: drawingToolbarOptions.buttons,
+                containerId: drawingToolbarOptions.containerId,
+                numColumns: drawingToolbarOptions.numColumns,
+                position: drawingToolbarOptions.position,
+                style: drawingToolbarOptions.style,
+                visible: drawingToolbarOptions.visible
+            });
+        },
+        removeDrawingToolbar: function () {
+            window.azureMapsControl.getMap().controls.remove(this._toolbar);
+            this._drawingManager = null;
+            this._toolbar = null;
+        },
+        _toMapEvent: function (type, properties) {
+            const result = properties || {};
+            result.type = type;
+            return result;
+        },
+    },
+    /**
+     * Extensions namespace
+     */
+    extensions: {
+        getTokenCallback: function (resolve, reject, map) { }
+    },
+    /**
+     * Private fields
+     */
     _map: null,
-    _popups: [],
     _mapEvents: [
         'boxzoomend',
         'boxzoomstart',
@@ -58,6 +160,10 @@ window.azureMapsControl = {
         'touchend',
         'touchstart'
     ],
+    _popups: [],
+    /**
+     * Controls
+     */
     addControls: function (controls) {
         if (controls && controls.length > 0) {
             controls.forEach(control => {
@@ -85,90 +191,11 @@ window.azureMapsControl = {
                 }
             });
         }
-    },
-    addDrawingToolbar: function (drawingToolbarOptions,
-        eventHelper) {
-
-        this._toolbar = new atlas.control.DrawingToolbar({
-            buttons: drawingToolbarOptions.buttons,
-            containerId: drawingToolbarOptions.containerId,
-            numColumns: drawingToolbarOptions.numColumns,
-            position: drawingToolbarOptions.position,
-            style: drawingToolbarOptions.style,
-            visible: drawingToolbarOptions.visible
-        });
-
-        const drawingManagerOptions = {
-            freehandInterval: drawingToolbarOptions.freehandInterval,
-            interactionType: drawingToolbarOptions.interactionType,
-            mode: drawingToolbarOptions.mode,
-            shapeDraggingEnabled: drawingToolbarOptions.shapeDraggingEnabled,
-            toolbar: this._toolbar
-        };
-
-        if (drawingToolbarOptions.dragHandleStyle) {
-            drawingManagerOptions.dragHandleStyle = new atlas.HtmlMarker({
-                anchor: drawingToolbarOptions.dragHandleStyle.anchor,
-                color: drawingToolbarOptions.dragHandleStyle.color,
-                draggable: drawingToolbarOptions.dragHandleStyle.draggable,
-                htmlContent: drawingToolbarOptions.dragHandleStyle.htmlContent,
-                pixelOffset: drawingToolbarOptions.dragHandleStyle.pixelOffset,
-                position: drawingToolbarOptions.dragHandleStyle.position,
-                secondaryColor: drawingToolbarOptions.dragHandleStyle.secondaryColor,
-                text: drawingToolbarOptions.dragHandleStyle.text,
-                visible: drawingToolbarOptions.dragHandleStyle.visible
-            });
-        }
-
-        if (drawingToolbarOptions.secondaryDragHandleStyle) {
-            drawingManagerOptions.secondaryDragHandleStyle = new atlas.HtmlMarker({
-                anchor: drawingToolbarOptions.secondaryDragHandleStyle.anchor,
-                color: drawingToolbarOptions.secondaryDragHandleStyle.color,
-                draggable: drawingToolbarOptions.secondaryDragHandleStyle.draggable,
-                htmlContent: drawingToolbarOptions.secondaryDragHandleStyle.htmlContent,
-                pixelOffset: drawingToolbarOptions.secondaryDragHandleStyle.pixelOffset,
-                position: drawingToolbarOptions.secondaryDragHandleStyle.position,
-                secondaryColor: drawingToolbarOptions.secondaryDragHandleStyle.secondaryColor,
-                text: drawingToolbarOptions.secondaryDragHandleStyle.text,
-                visible: drawingToolbarOptions.secondaryDragHandleStyle.visible
-            });
-        }
-
-        this._drawingManager = new atlas.drawing.DrawingManager(this._map, drawingManagerOptions);
-
-        if (drawingToolbarOptions.events) {
-            drawingToolbarOptions.events.forEach(drawingToolbarEvent => {
-                this._map.events.add(drawingToolbarEvent, this._drawingManager, e => {
-                    if (drawingToolbarEvent === 'drawingmodechanged') {
-                        eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(drawingToolbarEvent, {
-                            newMode: e
-                        }));
-                    } else if (drawingToolbarEvent === 'drawingstarted') {
-                        eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(drawingToolbarEvent));
-                    } else {
-                        eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(drawingToolbarEvent, {
-                            data: e.data
-                        }));
-                    }
-                });
-            });
-        }
-    },
-    updateDrawingToolbar: function (drawingToolbarOptions) {
-        this._toolbar.setOptions({
-            buttons: drawingToolbarOptions.buttons,
-            containerId: drawingToolbarOptions.containerId,
-            numColumns: drawingToolbarOptions.numColumns,
-            position: drawingToolbarOptions.position,
-            style: drawingToolbarOptions.style,
-            visible: drawingToolbarOptions.visible
-        });
-    },
-    removeDrawingToolbar: function () {
-        this._map.controls.remove(this._toolbar);
-        this._drawingManager = null;
-        this._toolbar = null;
-    },
+    },    
+    /**
+     * 
+     * HTML Markers
+     */
     addHtmlMarkers: function (htmlMarkerOptions,
         eventHelper) {
 
@@ -197,6 +224,47 @@ window.azureMapsControl = {
             this._map.markers.add(marker);
         });
     },
+    clearHtmlMarkers: function () {
+        this._map.markers.clear();
+    },
+    removeHtmlMarkers: function (markerIds) {
+        this._map.markers.remove(this._map.markers.getMarkers().find(marker => markerIds.indexOf(marker.amc.id) > -1));
+    },
+    updateHtmlMarkers: function (htmlMarkerOptions) {
+        htmlMarkerOptions.forEach(htmlMarkerOption => {
+
+            const options = {};
+            if (htmlMarkerOption.options.anchor) {
+                options.anchor = htmlMarkerOption.options.anchor;
+            }
+            if (htmlMarkerOption.options.color) {
+                options.color = htmlMarkerOption.options.color;
+            }
+            if (htmlMarkerOption.options.draggable) {
+                options.draggable = htmlMarkerOption.options.draggable;
+            }
+            if (htmlMarkerOption.options.htmlContent) {
+                options.htmlContent = htmlMarkerOption.options.htmlContent;
+            }
+            if (htmlMarkerOption.options.position) {
+                options.position = htmlMarkerOption.options.position;
+            }
+            if (htmlMarkerOption.options.secondaryColor) {
+                options.secondaryColor = htmlMarkerOption.options.secondaryColor;
+            }
+            if (htmlMarkerOption.options.text) {
+                options.text = htmlMarkerOption.options.text;
+            }
+            if (htmlMarkerOption.options.visible) {
+                options.visible = htmlMarkerOption.options.visible;
+            }
+
+            this._map.markers.getMarkers().find(marker => marker.amc.id === htmlMarkerOption.id).setOptions(options);
+        });
+    },
+    /**
+     * Map
+     */
     addMap: function (mapId,
         configuration,
         serviceOptions,
@@ -332,19 +400,7 @@ window.azureMapsControl = {
         this._map.clear();
         this._popups = [];
     },
-    clearLayers: function () {
-        this._map.layers.clear()
-    },
-    clearSources: function () {
-        this._map.sources.clear();
-    },
-    clearHtmlMarkers: function () {
-        this._map.markers.clear();
-    },
-    clearPopups: function () {
-        this._map.popups.clear();
-        this._popups = [];
-    },
+    getMap: function () { return this._map; },
     setOptions: function (cameraOptions,
         styleOptions,
         userInteractionOptions,
@@ -389,41 +445,9 @@ window.azureMapsControl = {
 
         this._map.setCamera(options);
     },
-    removeHtmlMarkers: function (markerIds) {
-        this._map.markers.remove(this._map.markers.getMarkers().find(marker => markerIds.indexOf(marker.amc.id) > -1));
-    },
-    updateHtmlMarkers: function (htmlMarkerOptions) {
-        htmlMarkerOptions.forEach(htmlMarkerOption => {
-
-            const options = {};
-            if (htmlMarkerOption.options.anchor) {
-                options.anchor = htmlMarkerOption.options.anchor;
-            }
-            if (htmlMarkerOption.options.color) {
-                options.color = htmlMarkerOption.options.color;
-            }
-            if (htmlMarkerOption.options.draggable) {
-                options.draggable = htmlMarkerOption.options.draggable;
-            }
-            if (htmlMarkerOption.options.htmlContent) {
-                options.htmlContent = htmlMarkerOption.options.htmlContent;
-            }
-            if (htmlMarkerOption.options.position) {
-                options.position = htmlMarkerOption.options.position;
-            }
-            if (htmlMarkerOption.options.secondaryColor) {
-                options.secondaryColor = htmlMarkerOption.options.secondaryColor;
-            }
-            if (htmlMarkerOption.options.text) {
-                options.text = htmlMarkerOption.options.text;
-            }
-            if (htmlMarkerOption.options.visible) {
-                options.visible = htmlMarkerOption.options.visible;
-            }
-
-            this._map.markers.getMarkers().find(marker => marker.amc.id === htmlMarkerOption.id).setOptions(options);
-        });
-    },
+    /**
+     * Layers
+     */
     addLayer: function (id,
         before,
         layerType,
@@ -475,15 +499,24 @@ window.azureMapsControl = {
             );
         }
     },
+    clearLayers: function () {
+        this._map.layers.clear()
+    },
     removeLayers: function (ids) {
         this._map.layers.remove(ids);
     },
+    /**
+     * Sources
+     */
     addSource: function (id, options, type) {
         if (type === "datasource") {
             this._map.sources.add(new atlas.source.DataSource(id, options));
         } else if (type === "vectortilesource") {
             this._map.sources.add(new atlas.source.VectorTileSource(id, options));
         }
+    },
+    clearSources: function () {
+        this._map.sources.clear();
     },
     removeSource: function (id) {
         this._map.sources.remove(id);
@@ -565,15 +598,18 @@ window.azureMapsControl = {
         }
         this._map.sources.getById(id).add(shapes);
     },
+    dataSource_clear: function (id) {
+        this._map.sources.getById(id).clear();
+    },
     dataSource_importDataFromUrl: function (id, url) {
         this._map.sources.getById(id).importDataFromUrl(url);
     },
     dataSource_remove: function (id, geometryIds) {
         this._map.sources.getById(id).remove(geometryIds);
     },
-    dataSource_clear: function (id) {
-        this._map.sources.getById(id).clear();
-    },
+    /**
+     * Popups 
+     */
     addPopup: function (id
         , options
         , events
@@ -606,6 +642,10 @@ window.azureMapsControl = {
         if (options.openOnAdd) {
             popup.open();
         }
+    },
+    clearPopups: function () {
+        this._map.popups.clear();
+        this._popups = [];
     },
     popup_open: function (id) {
         const popupEntry = this._popups.find(p => p.id === id);
@@ -642,6 +682,9 @@ window.azureMapsControl = {
             popupEntry.popup.setOptions(popupOptions);
         }
     },
+    /**
+     * Private methods
+     */
     _addLayerEvent: function (key, layer, eventHelper) {
         this._map.events.add(key, layer, e => {
             eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(key, {
@@ -667,8 +710,5 @@ window.azureMapsControl = {
             result.options = event.target.options;
         }
         return result;
-    },
-    extensions: {
-        getTokenCallback: function (resolve, reject, map) { }
     }
 };

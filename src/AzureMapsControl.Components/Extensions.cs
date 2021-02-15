@@ -29,11 +29,7 @@
             return services;
         }
 
-        /// <summary>
-        /// Formats the given Js Interop method to the namespace specific method
-        /// </summary>
-        /// <param name="method">Method</param>
-        /// <returns>JsInterop method with namespace</returns>
-        internal static string ToAzureMapsControlNamespace(this string method) => $"{JsConstants.Namespace}.{method}";
+        internal static string ToAzureMapsControlNamespace(this string method) => $"{JsConstants.Namespaces.Base}.{method}";
+        internal static string ToAzureMapsControlDrawingNamespace(this string method) => $"{JsConstants.Namespaces.Drawing}.{method}";
     }
 }
