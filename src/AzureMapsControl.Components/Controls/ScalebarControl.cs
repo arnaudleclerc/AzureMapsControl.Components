@@ -8,8 +8,8 @@
     public sealed class ScaleBarControl : Control<ScaleBarControlOptions>
     {
         internal override string Type => "scalebar";
-
-        public ScaleBarControl(ScaleBarControlOptions options = null, ControlPosition position = null): base(options, position) { }
+        internal override int Order => 0;
+        public ScaleBarControl(ScaleBarControlOptions options = null, ControlPosition position = null) : base(options, position) { }
     }
 
     internal class ScaleBarControlJsonConverter : JsonConverter<ScaleBarControl>

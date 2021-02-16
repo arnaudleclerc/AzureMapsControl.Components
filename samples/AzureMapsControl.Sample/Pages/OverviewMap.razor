@@ -1,0 +1,15 @@
+﻿@page "/OverviewMap"
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          Controls="new Components.Controls.Control[]
+          {
+              new AzureMapsControl.Components.Controls.OverviewMapControl(new Components.Controls.OverviewMapControlOptions
+              {
+                  ShowToggle = true,
+                  Style = new Components.Atlas.Either<Components.Controls.ControlStyle, string>(AzureMapsControl.Components.Controls.ControlStyle.Auto),
+                  MapStyle = MapStyle.HighContrastDark
+              },
+              AzureMapsControl.Components.Controls.ControlPosition.TopLeft),
+              new AzureMapsControl.Components.Controls.StyleControl(position: AzureMapsControl.Components.Controls.ControlPosition.BottomRight)
+          }" />

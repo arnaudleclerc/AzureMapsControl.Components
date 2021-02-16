@@ -8,6 +8,7 @@
     public sealed class PitchControl : Control<PitchControlOptions>
     {
         internal override string Type => "pitch";
+        internal override int Order => 0;
 
         public PitchControl(PitchControlOptions options = null, ControlPosition position = null) : base(options, position) { }
     }

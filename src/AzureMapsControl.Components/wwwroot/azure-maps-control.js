@@ -193,6 +193,11 @@ window.azureMapsControl = {
                             position: control.position
                         });
                         break;
+                    case "overviewmap":
+                        this._map.controls.add(new atlas.control.OverviewMap(control.options), {
+                            position: control.position
+                        });
+                        break;
                 }
             });
         }

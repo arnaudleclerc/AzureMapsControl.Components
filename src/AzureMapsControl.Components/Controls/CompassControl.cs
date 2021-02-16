@@ -1,7 +1,6 @@
 ﻿namespace AzureMapsControl.Components.Controls
 {
     using System;
-    using System.Net;
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
@@ -12,6 +11,7 @@
     public sealed class CompassControl : Control<CompassControlOptions>
     {
         internal override string Type => "compass";
+        internal override int Order => 0;
 
         public CompassControl(CompassControlOptions options = null, ControlPosition position = null) : base(options, position) { }
     }

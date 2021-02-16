@@ -11,6 +11,7 @@
     public sealed class StyleControl : Control<StyleControlOptions>
     {
         internal override string Type => "style";
+        internal override int Order => 0;
 
         public StyleControl(StyleControlOptions options = null, ControlPosition position = null) : base(options, position) { }
     }

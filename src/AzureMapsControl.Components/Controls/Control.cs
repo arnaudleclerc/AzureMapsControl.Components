@@ -8,6 +8,7 @@
     public abstract class Control
     {
         internal abstract string Type { get; }
+        internal abstract int Order { get; }
 
         /// <summary>
         /// Position of the control
@@ -49,6 +50,9 @@
                     break;
                 case "scalebar":
                     ScaleBarControlJsonConverter.Write(writer, value as ScaleBarControl);
+                    break;
+                case "overviewmap":
+                    OverviewMapControlJsonConverter.Write(writer, value as OverviewMapControl);
                     break;
             }
         }

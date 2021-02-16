@@ -449,7 +449,9 @@
         {
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_AddControlsAsync, $"Adding controls", newControls);
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_AddControlsAsync, $"{newControls.Count()} controls will be added: {string.Join('|', newControls.Select(co => co.Type))}");
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.AddControl.ToAzureMapsControlNamespace(), newControls);
+            //Ordering the controls is necessary if the controls contain an OverviewMapControl. This one needs to be added last, otherwise the controls added after it will be added to the overlay.
+            //Following : https://github.com/Azure-Samples/azure-maps-overview-map/issues/1
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.AddControl.ToAzureMapsControlNamespace(), newControls?.OrderBy(control => control.Order));
         }
     }
 

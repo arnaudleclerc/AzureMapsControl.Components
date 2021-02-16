@@ -11,6 +11,7 @@
     public sealed class ZoomControl : Control<ZoomControlOptions>
     {
         internal override string Type => "zoom";
+        internal override int Order => 0;
 
         public ZoomControl(ZoomControlOptions options = null, ControlPosition position = null) : base(options, position) { }
     }
