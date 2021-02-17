@@ -3,14 +3,32 @@
     using System;
     using System.Text.Json;
     using System.Text.Json.Serialization;
+    using System.Threading.Tasks;
 
     [JsonConverter(typeof(OverviewMapControlJsonConverter))]
     public sealed class OverviewMapControl : Control<OverviewMapControlOptions>
     {
         internal override string Type => "overviewmap";
         internal override int Order => int.MaxValue;
+        internal Func<Task> UpdateCallback { get; set; }
 
         public OverviewMapControl(OverviewMapControlOptions options, ControlPosition position) : base(options, position) { }
+
+        /// <summary>
+        /// Update the options of the control
+        /// </summary>
+        /// <param name="update">Update to apply to the options</param>
+        /// <returns></returns>
+        public async Task UpdateAsync(Action<OverviewMapControlOptions> update)
+        {
+            if (Options is null)
+            {
+                Options = new OverviewMapControlOptions();
+            }
+
+            update(Options);
+            await UpdateCallback.Invoke();
+        }
     }
 
     internal class OverviewMapControlJsonConverter : JsonConverter<OverviewMapControl>
@@ -21,6 +39,7 @@
         internal static void Write(Utf8JsonWriter writer, OverviewMapControl value)
         {
             writer.WriteStartObject();
+            writer.WriteString("id", value.Id);
             writer.WriteString("type", value.Type);
             if (value.Position is not null)
             {

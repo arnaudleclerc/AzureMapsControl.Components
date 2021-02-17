@@ -20,6 +20,7 @@
         internal static void Write(Utf8JsonWriter writer, ScaleBarControl value)
         {
             writer.WriteStartObject();
+            writer.WriteString("id", value.Id);
             writer.WriteString("type", value.Type);
             if (value.Options is not null)
             {

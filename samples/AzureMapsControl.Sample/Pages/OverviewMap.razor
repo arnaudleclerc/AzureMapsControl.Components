@@ -7,9 +7,21 @@
               new AzureMapsControl.Components.Controls.OverviewMapControl(new Components.Controls.OverviewMapControlOptions
               {
                   ShowToggle = true,
-                  Style = new Components.Atlas.Either<Components.Controls.ControlStyle, string>(AzureMapsControl.Components.Controls.ControlStyle.Auto),
-                  MapStyle = MapStyle.HighContrastDark
+                  Style = new Components.Atlas.Either<Components.Controls.ControlStyle, string>(AzureMapsControl.Components.Controls.ControlStyle.Auto)
               },
               AzureMapsControl.Components.Controls.ControlPosition.TopLeft),
-              new AzureMapsControl.Components.Controls.StyleControl(position: AzureMapsControl.Components.Controls.ControlPosition.BottomRight)
-          }" />
+              new AzureMapsControl.Components.Controls.StyleControl(position: AzureMapsControl.Components.Controls.ControlPosition.TopRight)
+          }"
+          EventActivationFlags="MapEventActivationFlags.None().Enable(MapEventType.StyleData)"
+          OnStyleData="OnStyleData"/>
+
+@code {
+    public async void OnStyleData(MapStyleDataEventArgs eventArgs)
+    {
+        var overviewControl = eventArgs.Map.Controls?.OfType<AzureMapsControl.Components.Controls.OverviewMapControl>()?.FirstOrDefault();
+        if(overviewControl is not null)
+        {
+            await overviewControl.UpdateAsync(options => options.MapStyle = eventArgs.Style);
+        }
+    }
+} 

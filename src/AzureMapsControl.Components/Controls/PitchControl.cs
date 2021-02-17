@@ -21,6 +21,7 @@
         internal static void Write(Utf8JsonWriter writer, PitchControl value)
         {
             writer.WriteStartObject();
+            writer.WriteString("id", value.Id);
             writer.WriteString("type", value.Type);
             if (value.Position is not null)
             {

@@ -9,13 +9,16 @@
     {
         internal abstract string Type { get; }
         internal abstract int Order { get; }
+        internal Guid Id { get; }
 
         /// <summary>
         /// Position of the control
         /// </summary>
         public ControlPosition Position { get; }
 
-        internal Control(ControlPosition position) => Position = position;
+        private Control() => Id = Guid.NewGuid();
+
+        internal Control(ControlPosition position) : this() => Position = position;
     }
 
     public abstract class Control<T> : Control
@@ -24,7 +27,7 @@
         /// <summary>
         /// Options of the control
         /// </summary>
-        public T Options { get; }
+        protected internal T Options { get; protected set; }
 
         internal Control(T options, ControlPosition position) : base(position) => Options = options;
     }

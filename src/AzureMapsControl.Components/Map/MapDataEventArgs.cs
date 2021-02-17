@@ -8,7 +8,7 @@
     /// Event object returned by the maps when a data event occurs.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public sealed class MapDataEventArgs : MapEventArgs
+    public class MapDataEventArgs : MapEventArgs
     {
         /// <summary>
         /// The type of data that has changed.

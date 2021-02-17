@@ -21,6 +21,7 @@
         public bool? IsSourceLoaded { get; set; }
         public Source Source { get; set; }
         public string SourceDataType { get; set; }
+        public string Style { get; set; }
         public Tile Tile { get; set; }
 
         public string Message { get; set; }

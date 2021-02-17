@@ -16,6 +16,7 @@
 
     public delegate void MapEvent(MapEventArgs eventArgs);
     public delegate void MapMouseEvent(MapMouseEventArgs eventArgs);
+    public delegate void MapStyleDataEvent(MapStyleDataEventArgs eventArgs);
     public delegate void MapDataEvent(MapDataEventArgs eventArgs);
     public delegate void MapErrorEvent(MapErrorEventArgs eventArgs);
     public delegate void MapLayerEvent(MapLayerEventArgs eventArgs);
@@ -42,7 +43,7 @@
         private readonly Func<Task> _removeDrawingToolbarCallback;
         private readonly Func<Layer, string, Task> _addLayerCallback;
         private readonly Func<IEnumerable<string>, Task> _removeLayersCallback;
-        private readonly Func<Data.Source, Task> _addSourceCallback;
+        private readonly Func<Source, Task> _addSourceCallback;
         private readonly Func<string, Task> _removeSourceCallback;
         private readonly Action<DataSource> _attachDataSourceEventsCallback;
         private readonly Func<Task> _clearMapCallback;
@@ -58,7 +59,7 @@
         private readonly Func<TrafficOptions, Task> _setTrafficOptions;
 
         private List<Layer> _layers;
-        private List<Data.Source> _sources;
+        private List<Source> _sources;
         private List<Popup> _popups;
 
         #endregion
@@ -78,7 +79,7 @@
 
         public IEnumerable<Layer> Layers => _layers;
 
-        public IEnumerable<Data.Source> Sources => _sources;
+        public IEnumerable<Source> Sources => _sources;
 
         public IEnumerable<Popup> Popups => _popups;
 
@@ -125,7 +126,7 @@
         public event MapDataEvent OnSourceAdded;
         public event MapDataEvent OnSourceData;
         public event MapDataEvent OnSourceRemoved;
-        public event MapDataEvent OnStyleData;
+        public event MapStyleDataEvent OnStyleData;
         public event MapMessageEvent OnStyleImageMissing;
         public event MapEvent OnTokenAcquired;
         public event MapTouchEvent OnTouchCancel;
@@ -155,7 +156,7 @@
             Func<Task> removeDrawingToolbarCallback = null,
             Func<Layer, string, Task> addLayerCallback = null,
             Func<IEnumerable<string>, Task> removeLayersCallback = null,
-            Func<Data.Source, Task> addSourceCallback = null,
+            Func<Source, Task> addSourceCallback = null,
             Func<string, Task> removeSourceCallback = null,
             Action<DataSource> attachDataSourceEventsCallback = null,
             Func<Task> clearMapCallback = null,
@@ -364,7 +365,7 @@
         /// <returns></returns>
         public async Task AddHtmlMarkersAsync(IEnumerable<HtmlMarker> markers)
         {
-            HtmlMarkers = (HtmlMarkers ?? new HtmlMarker[0]).Concat(markers);
+            HtmlMarkers = (HtmlMarkers ?? Array.Empty<HtmlMarker>()).Concat(markers);
             await _addHtmlMarkersCallback.Invoke(markers);
         }
 
@@ -678,7 +679,7 @@
                     OnSourceRemoved?.Invoke(new MapDataEventArgs(this, eventArgs));
                     break;
                 case "styledata":
-                    OnStyleData?.Invoke(new MapDataEventArgs(this, eventArgs));
+                    OnStyleData?.Invoke(new MapStyleDataEventArgs(this, eventArgs));
                     break;
                 case "styleimagemissing":
                     OnStyleImageMissing?.Invoke(new MapMessageEventArgs(this, eventArgs));

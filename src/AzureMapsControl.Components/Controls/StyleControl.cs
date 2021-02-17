@@ -24,6 +24,7 @@
         internal static void Write(Utf8JsonWriter writer, StyleControl value)
         {
             writer.WriteStartObject();
+            writer.WriteString("id", value.Id);
             writer.WriteString("type", value.Type);
             if (value.Position is not null)
             {

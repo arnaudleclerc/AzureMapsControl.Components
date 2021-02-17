@@ -21,7 +21,8 @@
             internal const string SetUserInteraction = "setUserInteraction";
             internal const string SetTraffic = "setTraffic";
 
-            internal const string AddControl = "addControls";
+            internal const string AddControls = "addControls";
+            internal const string UpdateControl = "updateControl";
 
             internal const string AddHtmlMarkers = "addHtmlMarkers";
             internal const string ClearHtmlMarkers = "clearHtmlMarkers";

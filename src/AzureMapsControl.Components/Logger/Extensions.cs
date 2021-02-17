@@ -41,6 +41,7 @@
         AzureMap_Popup_UpdateAsync = 1034,
         AzureMap_ClearPopupsAsync = 1035,
         AzureMap_PopupEventReceivedAsync = 1036,
+        AzureMap_UpdateControlAsync = 1037,
         MapService_AddMapAsync = 2000
     }
 

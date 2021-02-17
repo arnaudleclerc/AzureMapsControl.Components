@@ -309,7 +309,7 @@
     /// Fired when the map's style loads or changes.
     /// </summary>
     [Parameter]
-    public EventCallback<MapDataEventArgs> OnStyleData { get; set; }
+    public EventCallback<MapStyleDataEventArgs> OnStyleData { get; set; }
 
     /// <summary>
     /// Fired when a layer tries to load an image from the image sprite that doesn't exist
@@ -447,12 +447,26 @@
         var newControls = controls?.Where(control => control != null);
         if (newControls != null && newControls.Any())
         {
+            var overviewMapControl = newControls.OfType<AzureMapsControl.Components.Controls.OverviewMapControl>()?.FirstOrDefault();
+            if(overviewMapControl is not null)
+            {
+                overviewMapControl.UpdateCallback = async () => await UpdateControlAsync(overviewMapControl);
+            }
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_AddControlsAsync, $"Adding controls", newControls);
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_AddControlsAsync, $"{newControls.Count()} controls will be added: {string.Join('|', newControls.Select(co => co.Type))}");
             //Ordering the controls is necessary if the controls contain an OverviewMapControl. This one needs to be added last, otherwise the controls added after it will be added to the overlay.
             //Following : https://github.com/Azure-Samples/azure-maps-overview-map/issues/1
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.AddControl.ToAzureMapsControlNamespace(), newControls?.OrderBy(control => control.Order));
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.AddControls.ToAzureMapsControlNamespace(), newControls?.OrderBy(control => control.Order));
         }
+    }
+
+    private async Task UpdateControlAsync(AzureMapsControl.Components.Controls.Control control)
+    {
+        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_AddControlsAsync, "AzureMap - UpdateControlAsync");
+        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_UpdateControlAsync, "Updating control", control);
+        Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_UpdateControlAsync, $"Id: {control.Id}");
+        Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_UpdateControlAsync, $"Type: {control.Type}");
+        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.UpdateControl.ToAzureMapsControlNamespace(), control);
     }
 
     #endregion
@@ -857,7 +871,8 @@
     {
         if (EventActivationFlags != null
         && EventActivationFlags.EnabledEvents != null
-        && EventActivationFlags.EnabledEvents.Contains(mapEvent.Type))
+        && EventActivationFlags.EnabledEvents.Contains(mapEvent.Type)
+        && MapService.Map is not null)
         {
             MapService.Map.DispatchEvent(mapEvent);
             switch (mapEvent.Type)
@@ -1000,7 +1015,7 @@
                     break;
                 case "styledata":
                     Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_MapEventReceivedAsync, "Emitting OnStyleData");
-                    await OnStyleData.InvokeAsync(new MapDataEventArgs(MapService.Map, mapEvent));
+                    await OnStyleData.InvokeAsync(new MapStyleDataEventArgs(MapService.Map, mapEvent));
                     break;
                 case "styleimagemissing":
                     Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_MapEventReceivedAsync, "Emitting OnStyleImageMissing");

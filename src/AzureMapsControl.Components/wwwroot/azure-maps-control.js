@@ -167,41 +167,40 @@ window.azureMapsControl = {
     addControls: function (controls) {
         if (controls && controls.length > 0) {
             controls.forEach(control => {
+                let mapControl;
                 switch (control.type) {
                     case "compass":
-                        this._map.controls.add(new atlas.control.CompassControl(control.options), {
-                            position: control.position
-                        });
+                        mapControl = new atlas.control.CompassControl(control.options);
                         break;
                     case "pitch":
-                        this._map.controls.add(new atlas.control.PitchControl(control.options), {
-                            position: control.position
-                        });
+                        mapControl = new atlas.control.PitchControl(control.options);
                         break;
                     case "style":
-                        this._map.controls.add(new atlas.control.StyleControl(control.options), {
-                            position: control.position
-                        });
+                        mapControl = new atlas.control.StyleControl(control.options);
                         break;
                     case "zoom":
-                        this._map.controls.add(new atlas.control.ZoomControl(control.options), {
-                            position: control.position
-                        });
+                        mapControl = new atlas.control.ZoomControl(control.options);
                         break;
                     case "scalebar":
-                        this._map.controls.add(new atlas.control.ScaleBarControl(control.options), {
-                            position: control.position
-                        });
+                        mapControl = new atlas.control.ScaleBarControl(control.options);
                         break;
                     case "overviewmap":
-                        this._map.controls.add(new atlas.control.OverviewMap(control.options), {
-                            position: control.position
-                        });
+                        mapControl = new atlas.control.OverviewMap(control.options);
                         break;
                 }
+                mapControl.amc = {
+                    id: control.id
+                };
+                this._map.controls.add(mapControl, {
+                    position: control.position
+                });
             });
         }
-    },    
+    },
+    updateControl: function (control) {
+        const mapControl = this._map.controls.getControls().find(ctrl =>ctrl.amc && ctrl.amc.id === control.id);
+        mapControl.setOptions(control.options);
+    },
     /**
      * 
      * HTML Markers
@@ -351,7 +350,7 @@ window.azureMapsControl = {
                     return value === eventType;
                 })) {
                     map.events.add(value, event => {
-                        eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(value, {
+                        const mapEvent = {
                             dataType: event.dataType,
                             isSourceLoaded: event.isSourceLoaded,
                             source: event.source ? {
@@ -359,7 +358,11 @@ window.azureMapsControl = {
                             } : null,
                             sourceDataType: event.sourceDataType,
                             tile: event.tile
-                        }));
+                        };
+                        if (value === 'styledata') {
+                            mapEvent.style = map.getStyle().style;
+                        }
+                        eventHelper.invokeMethodAsync('NotifyEventAsync', this._toMapEvent(value, mapEvent));
                     });
                 }
             });
