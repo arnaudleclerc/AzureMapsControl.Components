@@ -1,1 +1,1 @@
-export { AzureMapsControl } from "./azureMapsControl";
+export { Core } from "./core";

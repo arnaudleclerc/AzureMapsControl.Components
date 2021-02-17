@@ -2,12 +2,19 @@
   "name": "azure-maps-control-components",
   "version": "0.0.0",
   "scripts": {
-    "build": "node ./_build/build.js"
+    "build": "node ./_build/build.js",
+    "lint": "eslint . --ext .ts"
   },
   "private": true,
   "dependencies": {},
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.15.1",
+    "@typescript-eslint/parser": "^4.15.1",
     "azure-maps-control": "^2.0.31",
+    "eslint": "^7.20.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jsdoc": "^32.0.2",
+    "eslint-plugin-prefer-arrow": "^1.2.3",
     "fs-extra": "^9.1.0",
     "rollup": "^2.39.0",
     "rollup-plugin-commonjs": "^10.1.0",

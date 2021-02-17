@@ -1,7 +1,8 @@
-﻿import * as azmaps from 'azure-maps-control';
-import { Configuration } from './configuration';
+import * as azmaps from 'azure-maps-control';
+import { Configuration } from '../configuration';
+import { Extensions } from '../extensions';
 
-export class AzureMapsControl {
+export class Core {
     private _map: azmaps.Map;
 
     private readonly _popups: azmaps.Popup[] = [];
@@ -23,10 +24,10 @@ export class AzureMapsControl {
                 subscriptionKey: configuration.subscriptionKey
             });
         } else {
-            // atlas.setAuthenticationOptions({
-            //     authType: configuration.authType,
-            //     getToken: window.azureMapsControl.extensions.getTokenCallback
-            // })
+            azmaps.setAuthenticationOptions({
+                authType: configuration.authType,
+                getToken: Extensions.getTokenCallback
+            })
         }
 
         const map = new azmaps.Map(mapId, serviceOptions);

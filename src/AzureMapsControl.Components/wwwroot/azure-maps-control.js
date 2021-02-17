@@ -25,11 +25,17 @@ SOFTWARE.
 (function (exports, azmaps) {
     'use strict';
 
-    var AzureMapsControl = /** @class */ (function () {
-        function AzureMapsControl() {
+    var Extensions = /** @class */ (function () {
+        function Extensions() {
+        }
+        return Extensions;
+    }());
+
+    var Core = /** @class */ (function () {
+        function Core() {
             this._popups = [];
         }
-        AzureMapsControl.addMap = function (mapId, configuration, serviceOptions) {
+        Core.addMap = function (mapId, configuration, serviceOptions) {
             if (configuration.authType === 'aad') {
                 azmaps.setAuthenticationOptions({
                     authType: configuration.authType,
@@ -44,13 +50,18 @@ SOFTWARE.
                     subscriptionKey: configuration.subscriptionKey
                 });
             }
-            else ;
+            else {
+                azmaps.setAuthenticationOptions({
+                    authType: configuration.authType,
+                    getToken: Extensions.getTokenCallback
+                });
+            }
             new azmaps.Map(mapId, serviceOptions);
         };
-        return AzureMapsControl;
+        return Core;
     }());
 
-    exports.AzureMapsControl = AzureMapsControl;
+    exports.Core = Core;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

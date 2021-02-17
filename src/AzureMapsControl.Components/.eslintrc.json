@@ -1,0 +1,186 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "*.ts"
+      ],
+      "parserOptions": {
+        "project": [
+          "tsconfig.json"
+        ],
+        "createDefaultProgram": true
+      },
+      "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
+      ],
+      "rules": {
+        "@typescript-eslint/consistent-type-definitions": "error",
+        "@typescript-eslint/dot-notation": "off",
+        "@typescript-eslint/explicit-function-return-type": "warn",
+        "@typescript-eslint/explicit-member-accessibility": [
+          "off",
+          {
+            "accessibility": "explicit"
+          }
+        ],
+        "@typescript-eslint/member-ordering": [
+          "warn",
+          {
+            "default": [
+              "static-field",
+              "instance-field",
+              "abstract-field",
+              "decorated-field",
+              "constructor",
+              "static-method",
+              "instance-method",
+              "abstract-method",
+              "decorated-method",
+              "private-instance-method"
+            ]
+          }
+        ],
+        "@typescript-eslint/naming-convention": [
+          "warn",
+          {
+            "selector": "property",
+            "modifiers": [
+              "private"
+            ],
+            "format": [
+              "camelCase"
+            ],
+            "leadingUnderscore": "require"
+          },
+          {
+            "selector": "enumMember",
+            "format": [
+              "PascalCase"
+            ]
+          },
+          {
+            "selector": "typeParameter",
+            "format": [
+              "PascalCase"
+            ],
+            "prefix": [
+              "T"
+            ]
+          }
+        ],
+        "@typescript-eslint/no-empty-interface": [
+          "warn",
+          {
+            "allowSingleExtends": false
+          }
+        ],
+        "@typescript-eslint/no-inferrable-types": [
+          "error",
+          {
+            "ignoreParameters": true,
+            "ignoreProperties": true
+          }
+        ],
+        "@typescript-eslint/no-shadow": [
+          "error"
+        ],
+        "@typescript-eslint/no-unused-vars": [
+          "warn",
+          {
+            "argsIgnorePattern": "^_"
+          }
+        ],
+        "@typescript-eslint/no-var-requires": "error",
+        "@typescript-eslint/prefer-readonly": [
+          "warn"
+        ],
+        "prefer-arrow/prefer-arrow-functions": [
+          "warn",
+          {
+            "disallowPrototype": true,
+            "singleReturnOnly": false,
+            "classPropertiesAllowed": false,
+            "allowStandaloneDeclarations": false
+          }
+        ],
+        "arrow-parens": [
+          "off",
+          "always"
+        ],
+        "brace-style": [
+          "error",
+          "1tbs"
+        ],
+        "comma-dangle": [
+          "error",
+          {
+            "objects": "always-multiline",
+            "arrays": "always-multiline",
+            "functions": "never"
+          }
+        ],
+        "complexity": [
+          "warn",
+          30
+        ],
+        "eqeqeq": [
+          "warn",
+          "always"
+        ],
+        "id-blacklist": "off",
+        "id-match": "off",
+        "import/order": "warn",
+        "max-classes-per-file": [
+          "error",
+          1
+        ],
+        "max-depth": [
+          "warn",
+          4
+        ],
+        "max-len": [
+          "warn",
+          {
+            "ignorePattern": "^import [^,]+ from |^export | implements",
+            "ignoreComments": true,
+            "ignoreTrailingComments": true,
+            "ignoreStrings": true,
+            "ignoreTemplateLiterals": true,
+            "ignoreRegExpLiterals": true,
+            "code": 280
+          }
+        ],
+        "max-lines": [
+          "warn",
+          {
+            "max": 300,
+            "skipBlankLines": true,
+            "skipComments": true
+          }
+        ],
+        "max-lines-per-function": [
+          "warn",
+          30
+        ],
+        "no-duplicate-imports": [
+          "warn",
+          {
+            "includeExports": true
+          }
+        ],
+        "no-lonely-if": "warn",
+        "no-underscore-dangle": "off",
+        "no-var": "warn",
+        "no-unused-vars": "off",
+        "no-shadow": "off"
+      }
+    }
+  ]
+}
