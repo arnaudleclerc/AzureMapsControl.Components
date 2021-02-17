@@ -37,6 +37,10 @@ jobs:
       run: dotnet build --configuration Release --no-restore ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj -f net5.0
     - name: Test
       run: dotnet test ./tests/AzureMapsControl.Components.Tests/AzureMapsControl.Components.Tests.csproj
+    - name: Lint
+      run: cd ./src/AzureMapsControl.Components && npm run lint
+    - name: Build Typescript
+      run: cd ./src/AzureMapsControl.Components && npm run build
     - name: Use GitVersion
       id: gitversion # step id used as reference for output values
       uses: gittools/actions/gitversion/execute@v0.9.6
