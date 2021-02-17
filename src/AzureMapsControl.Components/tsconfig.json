@@ -23,7 +23,7 @@
     ]
   },
   "include": [
-    "_src/**/*"
+    "azureMapsControl/**/*"
   ],
   "exclude": [
     "node_modules",

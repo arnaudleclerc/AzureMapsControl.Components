@@ -2,7 +2,7 @@
   "name": "azure-maps-control-components",
   "version": "0.0.0",
   "scripts": {
-    "build": "node ./_build/build.js",
+    "build": "node ./build/build.js",
     "lint": "eslint . --ext .ts"
   },
   "private": true,
