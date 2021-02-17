@@ -96,7 +96,7 @@ let rollupError = false;
         exports: "named",
         file: outFilePath,
         format: "iife",
-        name: "amc",
+        name: "azureMapsControl",
         extend: true,
         globals: {
             "azure-maps-control": "atlas"

@@ -119,7 +119,7 @@ It also needs to fetch the token to send to the requests of the atlas library. F
     <script src="_content/AzureMapsControl.Components/azure-maps-control.js"></script>
     <script src="_framework/blazor.server.js"></script>
     <script type="text/javascript">
-        window.azureMapsControl.extensions.getTokenCallback = (resolve, reject, map) => {
+        azureMapsControl.Extensions.getTokenCallback = (resolve, reject, map) => {
             const url = "url_of_my_token_endpoint";
             fetch(url).then(function (response) {
                 return response.text();

@@ -169,7 +169,11 @@
         "no-underscore-dangle": "off",
         "no-var": "warn",
         "no-unused-vars": "off",
-        "no-shadow": "off"
+        "no-shadow": "off",
+        "quotes": [
+          "error",
+          "single"
+        ]
       }
     }
   ]
