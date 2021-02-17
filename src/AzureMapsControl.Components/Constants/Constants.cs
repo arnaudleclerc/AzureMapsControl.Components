@@ -9,6 +9,7 @@
         {
             internal const string Base = "azureMapsControl.Core";
             internal const string Drawing = "azureMapsControl.Core.Drawing";
+            internal const string Datasource = "azureMapsControl.Datasource";
         }
 
         internal static class Methods

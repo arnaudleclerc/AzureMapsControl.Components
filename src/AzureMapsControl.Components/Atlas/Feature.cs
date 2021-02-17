@@ -6,7 +6,7 @@
     public sealed class Feature
     {
         public string Type { get; set; }
-        public BoundingBox BBOx { get; set; }
+        public BoundingBox BBox { get; set; }
         public string Id { get; set; }
     }
 }

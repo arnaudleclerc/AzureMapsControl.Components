@@ -81,6 +81,7 @@
             "allowSingleExtends": false
           }
         ],
+        "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-inferrable-types": [
           "error",
           {
@@ -155,10 +156,7 @@
             "skipComments": true
           }
         ],
-        "max-lines-per-function": [
-          "warn",
-          30
-        ],
+        "max-lines-per-function": "off",
         "no-duplicate-imports": [
           "warn",
           {
