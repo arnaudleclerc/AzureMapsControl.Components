@@ -33,6 +33,8 @@ jobs:
       run: dotnet build --configuration Release --no-restore ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj
     - name: Test
       run: dotnet test ./tests/AzureMapsControl.Components.Tests/AzureMapsControl.Components.Tests.csproj
+    - name: NPM Install
+      run: cd ./src/AzureMapsControl.Components && npm i
     - name: Lint
       run: cd ./src/AzureMapsControl.Components && npm run lint
     - name: Build Typescript
