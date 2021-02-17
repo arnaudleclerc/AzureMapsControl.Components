@@ -1,0 +1,1 @@
+export { AzureMapsControl } from "./azureMapsControl";

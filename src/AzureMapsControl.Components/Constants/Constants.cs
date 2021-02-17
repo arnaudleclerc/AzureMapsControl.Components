@@ -7,8 +7,8 @@
     {
         internal static class Namespaces
         {
-            internal const string Base = "azureMapsControl";
-            internal const string Drawing = "azureMapsControl.drawing";
+            internal const string Base = "amc.AzureMapsControl";
+            internal const string Drawing = "amc.AzureMapsControl.Drawing";
         }
 
         internal static class Methods
