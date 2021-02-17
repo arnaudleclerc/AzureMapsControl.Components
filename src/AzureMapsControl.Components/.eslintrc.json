@@ -101,15 +101,6 @@
         "@typescript-eslint/prefer-readonly": [
           "warn"
         ],
-        "prefer-arrow/prefer-arrow-functions": [
-          "warn",
-          {
-            "disallowPrototype": true,
-            "singleReturnOnly": false,
-            "classPropertiesAllowed": false,
-            "allowStandaloneDeclarations": false
-          }
-        ],
         "arrow-parens": [
           "off",
           "always"
@@ -121,8 +112,8 @@
         "comma-dangle": [
           "error",
           {
-            "objects": "always-multiline",
-            "arrays": "always-multiline",
+            "objects": "never",
+            "arrays": "never",
             "functions": "never"
           }
         ],
@@ -136,7 +127,6 @@
         ],
         "id-blacklist": "off",
         "id-match": "off",
-        "import/order": "warn",
         "max-classes-per-file": [
           "error",
           1
