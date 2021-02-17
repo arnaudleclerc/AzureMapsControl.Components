@@ -2,13 +2,14 @@
 
 ![Controls](../assets/controls.png) 
 
-4 types of controls are available :
+The following controls are available :
 
 - `Compass` : A control for changing the rotation of the map.
 - `Pitch` :  A control for changing the pitch of the map.
 - `Style`: A control for changing the style of the map.
 - `Zoom` : A control for changing the zoom of the map.
-- `Scalebar`: A control displaying a scalebar on the map
+- `ScaleBar`: A control displaying a scalebar on the map
+- `OverviewMap`: A control displaying an overview of the map
 
 There are two ways to add the controls to the map : 
 
@@ -55,5 +56,3 @@ There are two ways to add the controls to the map :
 
 }
 ```
-
-The `Scalebar` control not being part of the `atlas` library, you need to include the js file of the scalebar into your application and reference it with a `script` tag on your razor page. It can be found on the [GitHub repository of the scalebar](https://github.com/Azure-Samples/azure-maps-scale-bar-control)
