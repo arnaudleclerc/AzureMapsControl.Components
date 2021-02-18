@@ -20,7 +20,15 @@
     "typeRoots": [
       "./types",
       "./node_modules/@types"
-    ]
+    ],
+    "paths": {
+      "azure-maps-control-scalebar": [
+        "types/ScalebarControl"
+      ],
+      "azure-maps-control-overviewmap": [
+        "types/OverviewMap"
+      ]
+    }
   },
   "include": [
     "azureMapsControl/**/*"

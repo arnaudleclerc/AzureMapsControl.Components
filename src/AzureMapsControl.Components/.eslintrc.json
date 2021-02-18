@@ -148,14 +148,7 @@
             "code": 280
           }
         ],
-        "max-lines": [
-          "warn",
-          {
-            "max": 300,
-            "skipBlankLines": true,
-            "skipComments": true
-          }
-        ],
+        "max-lines": "off",
         "max-lines-per-function": "off",
         "no-duplicate-imports": [
           "warn",

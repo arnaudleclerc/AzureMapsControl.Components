@@ -1,23 +1,86 @@
 import * as azmaps from 'azure-maps-control';
-import { EventHelper } from '../helpers';
 import { Configuration } from '../configuration';
 import { Extensions } from '../extensions';
-import { mapDataEvents, mapEvents, mapLayerEvents, mapMouseEvents, mapStringEvents, mapTouchEvents } from '../map';
-import { EventArgs } from '../events';
+import { mapDataEvents, mapEvents, mapLayerEvents, mapMouseEvents, mapStringEvents, mapTouchEvents, MapEventArgs } from '../map';
+import { EventHelper } from '../events';
 import { LayerType } from '../layers';
 import { SourceType } from '../sources';
+import { Control } from '../controls';
+import * as scalebar from 'azure-maps-control-scalebar';
+import * as overviewmap from 'azure-maps-control-overviewmap';
+import { HtmlMarkerEventArgs, HtmlMarkerOptions, toMarkerEvent } from '../html-markers';
 
 export class Core {
     private static readonly _popups: Map<string, azmaps.Popup> = new Map<string, azmaps.Popup>();
 
     private static _map: azmaps.Map;
 
+    public static addControls(controls: Control[]): void {
+        controls.forEach(control => {
+            let mapControl: azmaps.Control;
+            switch (control.type) {
+                case 'compass':
+                    mapControl = new azmaps.control.CompassControl(control.options);
+                    break;
+                case 'pitch':
+                    mapControl = new azmaps.control.PitchControl(control.options);
+                    break;
+                case 'style':
+                    mapControl = new azmaps.control.StyleControl(control.options);
+                    break;
+                case 'zoom':
+                    mapControl = new azmaps.control.ZoomControl(control.options);
+                    break;
+                case 'scalebar':
+                    mapControl = new scalebar.control.ScaleBarControl(control.options);
+                    break;
+                case 'overviewmap':
+                    mapControl = new overviewmap.control.OverviewMap(control.options);
+                    break;
+            }
+
+            (mapControl as any).amc = {
+                id: control.id
+            };
+            this._map.controls.add(mapControl, {
+                position: control.position
+            });
+        });
+    }
+
+    public static addHtmlMarkers(htmlMarkerOptions: HtmlMarkerOptions[], eventHelper: EventHelper<HtmlMarkerEventArgs>): void {
+        htmlMarkerOptions.forEach(htmlMarkerOption => {
+            const marker = new azmaps.HtmlMarker({
+                anchor: htmlMarkerOption.options.anchor,
+                color: htmlMarkerOption.options.color,
+                draggable: htmlMarkerOption.options.draggable,
+                htmlContent: htmlMarkerOption.options.htmlContent,
+                pixelOffset: htmlMarkerOption.options.pixelOffset,
+                position: htmlMarkerOption.options.position,
+                secondaryColor: htmlMarkerOption.options.secondaryColor,
+                text: htmlMarkerOption.options.text,
+                visible: htmlMarkerOption.options.visible
+            });
+            (marker as any).amc = {
+                id: htmlMarkerOption.id
+            };
+            if (htmlMarkerOption.events) {
+                htmlMarkerOption.events.forEach(htmlMarkerEvent => {
+                    this._map.events.add(htmlMarkerEvent as any, marker, event => {
+                        eventHelper.invokeMethodAsync('NotifyEventAsync', toMarkerEvent(event, (marker as any).amc.id));
+                    });
+                });
+            }
+            this._map.markers.add(marker);
+        });
+    }
+
     public static addLayer(id: string,
         before: string,
         layerType: LayerType,
         layerOptions: azmaps.LayerOptions,
         enabledEvents: string[],
-        eventHelper: EventHelper): void {
+        eventHelper: EventHelper<MapEventArgs>): void {
         let layer: azmaps.layer.Layer;
         switch (layerType) {
             case 'tileLayer':
@@ -75,7 +138,7 @@ export class Core {
         configuration: Configuration,
         serviceOptions: azmaps.ServiceOptions,
         enabledEvents: string[],
-        eventHelper: EventHelper): void {
+        eventHelper: EventHelper<MapEventArgs>): void {
 
         if (configuration.authType === 'aad') {
             azmaps.setAuthenticationOptions({
@@ -131,7 +194,7 @@ export class Core {
 
             mapDataEvents.filter(value => enabledEvents.includes(value)).forEach(value => {
                 map.events.add(value as any, (dataEvent: azmaps.MapDataEvent) => {
-                    const mapEvent: EventArgs = {
+                    const mapEvent: MapEventArgs = {
                         dataType: dataEvent.dataType,
                         isSourceLoaded: dataEvent.isSourceLoaded,
                         source: dataEvent.source ? {
@@ -182,7 +245,7 @@ export class Core {
         });
     }
 
-    public static addPopup(id: string, options: azmaps.PopupOptions, events: string[], eventHelper: EventHelper): void {
+    public static addPopup(id: string, options: azmaps.PopupOptions, events: string[], eventHelper: EventHelper<MapEventArgs>): void {
         const popupOptions = {
             draggable: options.draggable,
             closeButton: options.closeButton,
@@ -218,6 +281,10 @@ export class Core {
         }
     }
 
+    public static clearHtmlMarkers(): void {
+        this._map.markers.clear();
+    }
+
     public static clearLayers(): void {
         this._map.layers.clear();
     }
@@ -242,6 +309,10 @@ export class Core {
 
     public static getPopup(id: string): azmaps.Popup {
         return this._popups.has(id) ? this._popups.get(id) : null;
+    }
+
+    public static removeHtmlMarkers(markerIds: string[]): void {
+        this._map.markers.remove(this._map.markers.getMarkers().find(marker => markerIds.indexOf((marker as any).amc.id) > -1));
     }
 
     public static removeLayers(ids: string[]): void {
@@ -304,5 +375,42 @@ export class Core {
 
     public static setUserInteraction(userInteractionOptions: azmaps.UserInteractionOptions): void {
         this._map.setUserInteraction(userInteractionOptions);
+    }
+
+    public static updateControl(control: Control): void {
+        const mapControl = this._map.controls.getControls().find(ctrl => (ctrl as any).amc && (ctrl as any).amc.id === control.id);
+        (mapControl as overviewmap.control.OverviewMap).setOptions(control.options);
+    }
+
+    public static updateHtmlMarkers(htmlMarkerOptions: HtmlMarkerOptions[]): void {
+        htmlMarkerOptions.forEach(htmlMarkerOption => {
+            const options: azmaps.HtmlMarkerOptions = {};
+            if (htmlMarkerOption.options.anchor) {
+                options.anchor = htmlMarkerOption.options.anchor;
+            }
+            if (htmlMarkerOption.options.color) {
+                options.color = htmlMarkerOption.options.color;
+            }
+            if (htmlMarkerOption.options.draggable) {
+                options.draggable = htmlMarkerOption.options.draggable;
+            }
+            if (htmlMarkerOption.options.htmlContent) {
+                options.htmlContent = htmlMarkerOption.options.htmlContent;
+            }
+            if (htmlMarkerOption.options.position) {
+                options.position = htmlMarkerOption.options.position;
+            }
+            if (htmlMarkerOption.options.secondaryColor) {
+                options.secondaryColor = htmlMarkerOption.options.secondaryColor;
+            }
+            if (htmlMarkerOption.options.text) {
+                options.text = htmlMarkerOption.options.text;
+            }
+            if (htmlMarkerOption.options.visible) {
+                options.visible = htmlMarkerOption.options.visible;
+            }
+
+            this._map.markers.getMarkers().find(marker => (marker as any).amc.id === htmlMarkerOption.id).setOptions(options);
+        });
     }
 }
