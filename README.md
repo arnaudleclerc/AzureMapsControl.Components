@@ -22,6 +22,13 @@ You will need to add the atlas script and css files as well as the script genera
 <script src="_content/AzureMapsControl.Components/azure-maps-control.js"></script>
 ```
 
+Or use the minimized version : 
+
+```
+<script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
+<script src="_content/AzureMapsControl.Components/azure-maps-control.min.js"></script>
+```
+
 If you plan to use the drawing toolbar, you also need to include the following css and scripts :
 
 ```
@@ -78,7 +85,7 @@ public void ConfigureServices(IServiceCollection services)
         }
 ```
 
-It also needs to fetch the token to send to the requests of the atlas library. For that, you have to override the `window.azureMapsControl.extensions.getTokenCallback` method on your application after referencing `azure-maps-control.js` and resolve the token in it. For example : 
+It also needs to fetch the token to send to the requests of the atlas library. For that, you have to override the `azureMapsControl.Extensions.getTokenCallback` method on your application after referencing `azure-maps-control.min.js` and resolve the token in it. For example : 
 
 ```
 @page "/"
@@ -116,7 +123,7 @@ It also needs to fetch the token to send to the requests of the atlas library. F
     </app>
     <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
     <script src="https://atlas.microsoft.com/sdk/javascript/drawing/0.1/atlas-drawing.min.js"></script>
-    <script src="_content/AzureMapsControl.Components/azure-maps-control.js"></script>
+    <script src="_content/AzureMapsControl.Components/azure-maps-control.min.js"></script>
     <script src="_framework/blazor.server.js"></script>
     <script type="text/javascript">
         azureMapsControl.Extensions.getTokenCallback = (resolve, reject, map) => {
@@ -125,7 +132,8 @@ It also needs to fetch the token to send to the requests of the atlas library. F
                 return response.text();
             }).then(function (token) {
                 resolve(token);
-            });        };
+            });        
+        };
     </script>
 </body>
 </html>
