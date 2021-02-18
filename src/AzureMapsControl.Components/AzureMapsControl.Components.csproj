@@ -13,6 +13,20 @@
     <PackageLicenseUrl>https://github.com/arnaudleclerc/AzureMapsControl.Components/blob/main/LICENSE</PackageLicenseUrl>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Remove=".eslintrc.json" />
+    <Content Remove="package.json" />
+    <Content Remove="package-lock.json" />
+    <Content Remove="tsconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include=".eslintrc.json" />
+    <None Include="package.json" />
+    <None Include="package-lock.json" />
+    <None Include="tsconfig.json" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components" Version="5.0.0" />
