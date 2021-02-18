@@ -7,6 +7,7 @@
     {
         internal static class Namespaces
         {
+            internal const string Animation = "Animation";
             internal const string AzureMapsControl = "azureMapsControl";
             internal const string Core = "Core";
             internal const string Drawing = "Drawing";
@@ -16,6 +17,11 @@
 
         internal static class Methods
         {
+            internal static class Animations
+            {
+                internal const string Snakeline = "snakeline";
+            }
+
             internal static class Core
             {
                 internal const string AddControls = "addControls";

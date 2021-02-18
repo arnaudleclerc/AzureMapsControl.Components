@@ -2,6 +2,7 @@
 {
     using System;
 
+    using AzureMapsControl.Components.Animations;
     using AzureMapsControl.Components.Configuration;
     using AzureMapsControl.Components.Constants;
     using AzureMapsControl.Components.Map;
@@ -22,6 +23,7 @@
                 .AddSingleton<MapService>()
                 .AddSingleton<IMapAdderService>(sp => sp.GetRequiredService<MapService>())
                 .AddSingleton<IMapService>(sp => sp.GetRequiredService<MapService>())
+                .AddScoped<IAnimationService, AnimationService>()
                 .AddOptions<AzureMapsConfiguration>()
                 .Configure(configure)
                 .Validate(configuration => configuration.Validate(), "The given AzureMapsConfiguration is invalid");
@@ -29,6 +31,7 @@
             return services;
         }
 
+        internal static string ToAnimationsNamespace(this string method) => $"{JsConstants.Namespaces.AzureMapsControl}.{JsConstants.Namespaces.Animation}.{method}";
         internal static string ToCoreNamespace(this string method) => $"{JsConstants.Namespaces.AzureMapsControl}.{JsConstants.Namespaces.Core}.{method}";
         internal static string ToDrawingNamespace(this string method) => $"{JsConstants.Namespaces.AzureMapsControl}.{JsConstants.Namespaces.Drawing}.{method}";
         internal static string ToPopupNamespace(this string method) => $"{JsConstants.Namespaces.AzureMapsControl}.{JsConstants.Namespaces.Popup}.{method}";

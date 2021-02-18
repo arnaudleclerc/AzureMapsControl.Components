@@ -27,6 +27,9 @@
       ],
       "azure-maps-control-overviewmap": [
         "types/OverviewMap"
+      ],
+      "azure-maps-control-animations": [
+        "types/Animations"
       ]
     }
   },
