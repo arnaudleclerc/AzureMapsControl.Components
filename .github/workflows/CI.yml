@@ -41,7 +41,6 @@ jobs:
     - name: Build Typescript
       run: cd ./src/AzureMapsControl.Components && npm run build
     - name: Use GitVersion
-      if: ${{ contains(steps.gitversion.outputs.branchName, 'features/publish/') }}
       id: gitversion # step id used as reference for output values
       uses: gittools/actions/gitversion/execute@v0.9.6
     - run: |
