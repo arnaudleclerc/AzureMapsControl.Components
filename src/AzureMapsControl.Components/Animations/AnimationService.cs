@@ -20,12 +20,14 @@
             _logger = logger;
         }
 
-        public async Task SnakeLine(LineString line, DataSource source, SnakeLineAnimationOptions options)
+        public async Task<PlayableAnimation> SnakelineAsync(LineString line, DataSource source, SnakeLineAnimationOptions options)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_Snakeline, "Calling snakeline");
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Snakeline, "LineId", line.Id);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Snakeline, "Options", options);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animations.Snakeline.ToAnimationsNamespace(), Guid.NewGuid(), line.Id, source.Id, options);
+            var animation = new PlayableAnimation(Guid.NewGuid().ToString(), options, _jsRuntime);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Snakeline.ToAnimationNamespace(), animation.Id, line.Id, source.Id, options);
+            return animation;
         }
     }
 }

@@ -31,11 +31,10 @@
             return services;
         }
 
-        internal static string ToAnimationsNamespace(this string method) => $"{JsConstants.Namespaces.AzureMapsControl}.{JsConstants.Namespaces.Animation}.{method}";
+        internal static string ToAnimationNamespace(this string method) => $"{JsConstants.Namespaces.AzureMapsControl}.{JsConstants.Namespaces.Animation}.{method}";
         internal static string ToCoreNamespace(this string method) => $"{JsConstants.Namespaces.AzureMapsControl}.{JsConstants.Namespaces.Core}.{method}";
         internal static string ToDrawingNamespace(this string method) => $"{JsConstants.Namespaces.AzureMapsControl}.{JsConstants.Namespaces.Drawing}.{method}";
         internal static string ToPopupNamespace(this string method) => $"{JsConstants.Namespaces.AzureMapsControl}.{JsConstants.Namespaces.Popup}.{method}";
         internal static string ToSourceNamespace(this string method) => $"{JsConstants.Namespaces.AzureMapsControl}.{JsConstants.Namespaces.Source}.{method}";
-
     }
 }

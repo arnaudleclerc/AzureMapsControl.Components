@@ -17,8 +17,15 @@
 
         internal static class Methods
         {
-            internal static class Animations
+            internal static class Animation
             {
+                internal const string Dispose = "dispose";
+                internal const string Pause = "pause";
+                internal const string Play = "play";
+                internal const string Reset = "reset";
+                internal const string Seek = "seek";
+                internal const string Stop = "stop";
+                internal const string SetOptions = "setOptions";
                 internal const string Snakeline = "snakeline";
             }
 

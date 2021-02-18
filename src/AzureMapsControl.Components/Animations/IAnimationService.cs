@@ -13,7 +13,7 @@
         /// <param name="line">A LineString shape to animate.</param>
         /// <param name="source">DataSource the given line string is attached to</param>
         /// <param name="options">Options for the animation.</param>
-        /// <returns></returns>
-        Task SnakeLine(LineString line, DataSource source, SnakeLineAnimationOptions options);
+        /// <returns>Animation</returns>
+        Task<PlayableAnimation> SnakelineAsync(LineString line, DataSource source, SnakeLineAnimationOptions options);
     }
 }
