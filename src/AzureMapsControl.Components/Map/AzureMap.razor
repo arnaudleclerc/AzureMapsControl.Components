@@ -607,7 +607,7 @@
                 UserInteractionOptions,
                 TrafficOptions);
 
-            await MapService.AddMapAsync(new Map(Id, JSRuntime, Logger, _drawingToolbarEventInvokeHelper, _htmlMarkerEventInvokeHelper, _layerEventInvokeHelper)
+            await MapService.AddMapAsync(new Map(Id, JSRuntime, Logger, _drawingToolbarEventInvokeHelper, _htmlMarkerEventInvokeHelper, _layerEventInvokeHelper, _popupInvokeHelper)
             {
                 Controls = Controls,
                 HtmlMarkers = HtmlMarkers,
@@ -822,52 +822,6 @@
     #endregion
 
     #region Popups
-
-    private async Task AddPopupAsync(AzureMapsControl.Components.Popups.Popup popup)
-    {
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_AddPopupAsync, "Adding popup");
-        Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_AddPopupAsync, $"Id: {popup.Id} | Events: {string.Join('|', popup.EventActivationFlags.EnabledEvents)}");
-        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddPopup.ToCoreNamespace(), popup.Id, popup.Options, popup.EventActivationFlags.EnabledEvents, DotNetObjectReference.Create(_popupInvokeHelper));
-        popup.OpenPopupCallback = Popup_OpenAsync;
-        popup.ClosePopupCallback = Popup_CloseAsync;
-        popup.RemoveCallback = Popup_RemoveAsync;
-        popup.UpdateCallback = Popup_UpdateAsync;
-    }
-
-    private async Task Popup_OpenAsync(string id)
-    {
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_Popup_OpenAsync, "Opening popup");
-        Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_Popup_OpenAsync, $"Id: {id}");
-        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Open.ToPopupNamespace(), id);
-    }
-
-    private async Task Popup_CloseAsync(string id)
-    {
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_Popup_CloseAsync, "Closing popup");
-        Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_Popup_CloseAsync, $"Id: {id}");
-        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Close.ToPopupNamespace(), id);
-    }
-
-    private async Task Popup_RemoveAsync(string id)
-    {
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_Popup_RemoveAsync, "Removing popup");
-        Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_Popup_RemoveAsync, $"Id: {id}");
-        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Remove.ToPopupNamespace(), id);
-        MapService.Map.RemovePopup(id);
-    }
-
-    private async Task Popup_UpdateAsync(string id, AzureMapsControl.Components.Popups.PopupOptions options)
-    {
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_Popup_UpdateAsync, "Removing popup");
-        Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_Popup_UpdateAsync, $"Id: {id}");
-        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Update.ToPopupNamespace(), id, options);
-    }
-
-    private async Task ClearPopupsAsync()
-    {
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_ClearPopupsAsync, "Clearing popups");
-        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearPopups.ToCoreNamespace());
-    }
 
     private async Task PopupEventReceivedAsync(AzureMapsControl.Components.Popups.PopupEventArgs eventArgs)
     {

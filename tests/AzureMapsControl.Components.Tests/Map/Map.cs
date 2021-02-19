@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using System.Runtime.Serialization;
     using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Atlas;
@@ -627,10 +626,10 @@
         [Fact]
         public async void Should_ClearMap_Async()
         {
-            var assertClearMapCallback = false;
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, new DrawingToolbarEventInvokeHelper(eventArgs => Task.CompletedTask),
                 new HtmlMarkerInvokeHelper(eventArgs => Task.CompletedTask),
-                new LayerEventInvokeHelper(eventArgs => Task.CompletedTask));
+                new LayerEventInvokeHelper(eventArgs => Task.CompletedTask),
+                new PopupInvokeHelper(eventArgs => Task.CompletedTask));
 
             await map.AddSourceAsync(new DataSource());
             await map.AddLayerAsync(new BubbleLayer());
@@ -638,7 +637,6 @@
             await map.AddPopupAsync(new Popup(new PopupOptions()));
 
             await map.ClearMapAsync();
-            Assert.True(assertClearMapCallback);
             Assert.Null(map.Sources);
             Assert.Null(map.Layers);
             Assert.Null(map.HtmlMarkers);
@@ -647,6 +645,7 @@
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), It.IsAny<object[]>()), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddLayer.ToCoreNamespace(), It.IsAny<object[]>()), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(), It.IsAny<object[]>()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddPopup.ToCoreNamespace(), It.IsAny<object[]>()), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearMap.ToCoreNamespace(), It.IsAny<object[]>()), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -699,83 +698,94 @@
         [Fact]
         public async void Should_AddPopup_Async()
         {
-            var assertAddPopup = false;
             var popup = new Popup(new PopupOptions());
-            var map = new Components.Map.Map("id", addPopupCallback: async popupCallback => assertAddPopup = popupCallback == popup);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => Task.CompletedTask));
             await map.AddPopupAsync(popup);
-            Assert.True(assertAddPopup);
+
             Assert.Contains(popup, map.Popups);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddPopup.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == popup.Id
+                && parameters[1] as PopupOptions == popup.Options
+                && parameters[2] is IEnumerable<string>
+                && parameters[3] is DotNetObjectReference<PopupInvokeHelper>
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_NotAddTwiceTheSamePopup_Async()
         {
             var popup = new Popup(new PopupOptions());
-            var map = new Components.Map.Map("id", addPopupCallback: async _ => { });
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => Task.CompletedTask));
             await map.AddPopupAsync(popup);
             await Assert.ThrowsAnyAsync<PopupAlreadyExistingException>(async () => await map.AddPopupAsync(popup));
-        }
 
-        [Fact]
-        public async void Should_RemovePopupFromPopupsCollection_Async()
-        {
-            var popup = new Popup(new PopupOptions());
-            var map = new Components.Map.Map("id", addPopupCallback: async _ => { });
-            await map.AddPopupAsync(popup);
-            map.RemovePopup(popup.Id);
-
-            Assert.DoesNotContain(popup, map.Popups);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddPopup.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == popup.Id
+                && parameters[1] as PopupOptions == popup.Options
+                && parameters[2] is IEnumerable<string>
+                && parameters[3] is DotNetObjectReference<PopupInvokeHelper>
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_RemovePopup_Async()
         {
-            var assertRemoveCallback = false;
-            var popup = new Popup(new PopupOptions());
-            var map = new Components.Map.Map("id", addPopupCallback: async _ => { }, removePopupCallback: async popupId => assertRemoveCallback = popupId == popup.Id);
+            var popup = new Popup(new PopupOptions()) {
+                JSRuntime = _jsRuntimeMock.Object
+            };
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => Task.CompletedTask));
             await map.AddPopupAsync(popup);
             await map.RemovePopupAsync(popup);
 
-            Assert.True(assertRemoveCallback);
             Assert.DoesNotContain(popup, map.Popups);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddPopup.ToCoreNamespace(), It.IsAny<object[]>()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Remove.ToPopupNamespace(), popup.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_RemovePopup_IdVersion_Async()
         {
-            var assertRemoveCallback = false;
-            var popup = new Popup(new PopupOptions());
-            var map = new Components.Map.Map("id", addPopupCallback: async _ => { }, removePopupCallback: async popupId => assertRemoveCallback = popupId == popup.Id);
+            var popup = new Popup(new PopupOptions()) {
+                JSRuntime = _jsRuntimeMock.Object
+            };
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => Task.CompletedTask));
             await map.AddPopupAsync(popup);
             await map.RemovePopupAsync(popup.Id);
 
-            Assert.True(assertRemoveCallback);
             Assert.DoesNotContain(popup, map.Popups);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddPopup.ToCoreNamespace(), It.IsAny<object[]>()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Remove.ToPopupNamespace(), popup.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_NotRemovePopup_Async()
         {
-            var assertRemoveCallback = false;
             var popup = new Popup(new PopupOptions());
-            var map = new Components.Map.Map("id", addPopupCallback: async _ => { }, removePopupCallback: async popupId => assertRemoveCallback = true);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => Task.CompletedTask));
             await map.AddPopupAsync(popup);
             await map.RemovePopupAsync(new Popup(new PopupOptions()));
 
-            Assert.False(assertRemoveCallback);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddPopup.ToCoreNamespace(), It.IsAny<object[]>()), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_ClearPopups_Async()
         {
-            var assertClearCallback = false;
             var popup = new Popup(new PopupOptions());
-            var map = new Components.Map.Map("id", addPopupCallback: async _ => { }, clearPopupsCallback: async () => assertClearCallback = true);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => Task.CompletedTask));
             await map.AddPopupAsync(popup);
             await map.ClearPopupsAsync();
 
-            Assert.True(assertClearCallback);
             Assert.Null(map.Popups);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearPopups.ToCoreNamespace()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddPopup.ToCoreNamespace(), It.IsAny<object[]>()), Times.Once);
         }
 
         [Fact]

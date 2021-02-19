@@ -16,12 +16,6 @@
         AzureMap_LayerEventReceivedAsync = 1020,
         AzureMap_MapEventReceivedAsync = 1024,
         AzureMap_ClearMapAsync = 1029,
-        AzureMap_AddPopupAsync = 1030,
-        AzureMap_Popup_OpenAsync = 1031,
-        AzureMap_Popup_CloseAsync = 1032,
-        AzureMap_Popup_RemoveAsync = 1033,
-        AzureMap_Popup_UpdateAsync = 1034,
-        AzureMap_ClearPopupsAsync = 1035,
         AzureMap_PopupEventReceivedAsync = 1036,
         MapService_AddMapAsync = 2000,
         AnimationService_Snakeline = 3000,
@@ -43,7 +37,13 @@
         Map_SetStyleOptionsAsync = 4015,
         Map_SetUserInteractionAsync = 4016,
         Map_SetTrafficAsync = 4017,
-        OverviewMapControl_UpdateAsync = 5000
+        Map_AddPopupAsync = 4018,
+        Map_ClearPopupsAsync = 4019,
+        OverviewMapControl_UpdateAsync = 5000,
+        Popup_OpenAsync = 6000,
+        Popup_CloseAsync = 6001,
+        Popup_RemoveAsync = 6002,
+        Popup_UpdateAsync = 6003,
     }
 
     internal static class Extensions

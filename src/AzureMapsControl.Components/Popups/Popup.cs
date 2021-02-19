@@ -4,20 +4,23 @@
     using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Exceptions;
+    using AzureMapsControl.Components.Logger;
+    using AzureMapsControl.Components.Runtime;
+
+    using Microsoft.Extensions.Logging;
 
     public delegate void PopupEvent(PopupEventArgs eventArgs);
+    internal delegate void PopupRemovedEvent();
 
     /// <summary>
     /// An information window anchored at a specified position on a map.
     /// </summary>
     public sealed class Popup
     {
-        internal Func<string, Task> OpenPopupCallback { get; set; }
-        internal Func<string, Task> ClosePopupCallback { get; set; }
-        internal Func<string, Task> RemoveCallback { get; set; }
-        internal Func<string, PopupOptions, Task> UpdateCallback { get; set; }
-
         private bool _isRemoved = false;
+
+        internal IMapJsRuntime JSRuntime { get; set; }
+        internal ILogger Logger { get; set; }
 
         public string Id { get; }
 
@@ -33,6 +36,8 @@
         public event PopupEvent OnDragEnd;
         public event PopupEvent OnDragStart;
         public event PopupEvent OnOpen;
+
+        internal event PopupRemovedEvent OnRemoved;
 
         public Popup(PopupOptions options) : this(Guid.NewGuid().ToString(), options) { }
 
@@ -51,13 +56,23 @@
         /// Open the popup
         /// </summary>
         /// <returns></returns>
-        public async Task OpenAsync() => await OpenPopupCallback.Invoke(Id);
+        public async Task OpenAsync()
+        {
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Popup_OpenAsync, "Opening popup");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Popup_OpenAsync, $"Id: {Id}");
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Open.ToPopupNamespace(), Id);
+        }
 
         /// <summary>
         /// Close the popup
         /// </summary>
         /// <returns></returns>
-        public async Task CloseAsync() => await ClosePopupCallback.Invoke(Id);
+        public async Task CloseAsync()
+        {
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Popup_CloseAsync, "Closing popup");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Popup_CloseAsync, $"Id: {Id}");
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Close.ToPopupNamespace(), Id);
+        }
 
         /// <summary>
         /// Remove the popup from the map
@@ -70,7 +85,11 @@
                 throw new PopupAlreadyRemovedException();
             }
 
-            await RemoveCallback.Invoke(Id);
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Popup_RemoveAsync, "Removing popup");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Popup_RemoveAsync, $"Id: {Id}");
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Remove.ToPopupNamespace(), Id);
+
+            OnRemoved?.Invoke();
             _isRemoved = true;
         }
 
@@ -82,7 +101,9 @@
         public async Task UpdateAsync(Action<PopupOptions> update)
         {
             update.Invoke(Options);
-            await UpdateCallback.Invoke(Id, Options);
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Popup_UpdateAsync, "Removing popup");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Popup_UpdateAsync, $"Id: {Id}");
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Update.ToPopupNamespace(), Id, Options);
         }
 
         internal void DispatchEvent(PopupEventArgs eventArgs)

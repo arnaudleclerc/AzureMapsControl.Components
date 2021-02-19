@@ -41,12 +41,9 @@
         private readonly DrawingToolbarEventInvokeHelper _drawingToolbarEventInvokeHelper;
         private readonly HtmlMarkerInvokeHelper _htmlMarkerInvokeHelper;
         private readonly LayerEventInvokeHelper _layerEventInvokeHelper;
+        private readonly PopupInvokeHelper _popupInvokeHelper;
 
         #region Fields
-
-        private readonly Func<Popup, Task> _addPopupCallback;
-        private readonly Func<string, Task> _removePopupCallback;
-        private readonly Func<Task> _clearPopupsCallback;
 
         private List<Layer> _layers;
         private List<Source> _sources;
@@ -137,11 +134,12 @@
         #endregion
 
         internal Map(string id,
-            IMapJsRuntime jsRuntime,
-            ILogger logger,
+            IMapJsRuntime jsRuntime = null,
+            ILogger logger = null,
             DrawingToolbarEventInvokeHelper drawingToolbarEventInvokeHelper = null,
             HtmlMarkerInvokeHelper htmlMarkerInvokeHelper = null,
-            LayerEventInvokeHelper layerEventInvokeHelper = null)
+            LayerEventInvokeHelper layerEventInvokeHelper = null,
+            PopupInvokeHelper popupInvokeHelper = null)
         {
             Id = id;
             _jsRuntime = jsRuntime;
@@ -149,17 +147,7 @@
             _drawingToolbarEventInvokeHelper = drawingToolbarEventInvokeHelper;
             _htmlMarkerInvokeHelper = htmlMarkerInvokeHelper;
             _layerEventInvokeHelper = layerEventInvokeHelper;
-        }
-
-        internal Map(string id,
-            Func<Popup, Task> addPopupCallback = null,
-            Func<string, Task> removePopupCallback = null,
-            Func<Task> clearPopupsCallback = null)
-        {
-            Id = id;
-            _addPopupCallback = addPopupCallback;
-            _removePopupCallback = removePopupCallback;
-            _clearPopupsCallback = clearPopupsCallback;
+            _popupInvokeHelper = popupInvokeHelper;
         }
 
         # region Controls
@@ -790,7 +778,12 @@
                 throw new PopupAlreadyExistingException(popup.Id);
             }
 
-            await _addPopupCallback.Invoke(popup);
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddPopupAsync, "Adding popup");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_AddPopupAsync, $"Id: {popup.Id} | Events: {string.Join('|', popup.EventActivationFlags.EnabledEvents)}");
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddPopup.ToCoreNamespace(), popup.Id, popup.Options, popup.EventActivationFlags.EnabledEvents, DotNetObjectReference.Create(_popupInvokeHelper));
+
+            popup.OnRemoved += () => RemovePopup(popup.Id);
+
             _popups.Add(popup);
         }
 
@@ -804,8 +797,7 @@
             var popup = _popups?.SingleOrDefault(p => p.Id == id);
             if (popup != null)
             {
-                await _removePopupCallback.Invoke(id);
-                RemovePopup(id);
+                await popup.RemoveAsync();
             }
         }
 
@@ -822,11 +814,12 @@
         /// <returns></returns>
         public async Task ClearPopupsAsync()
         {
-            await _clearPopupsCallback.Invoke();
             _popups = null;
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_ClearPopupsAsync, "Clearing popups");
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearPopups.ToCoreNamespace());
         }
 
-        internal void RemovePopup(string id)
+        private void RemovePopup(string id)
         {
             if (_popups != null)
             {
