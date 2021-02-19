@@ -7,10 +7,6 @@
         AzureMap_OnInitialized = 1000,
         AzureMap_OnAfterRenderAsync = 1001,
         AzureMap_AttachDataSourcesCallback = 1005,
-        AzureMap_DataSource_ImportDataFromUrlAsync = 1007,
-        AzureMap_DataSource_AddAsync = 1008,
-        AzureMap_DataSource_RemoveAsync = 1009,
-        AzureMap_DataSource_ClearAsync = 1010,
         AzureMap_DrawingToolbarEvent = 1011,
         AzureMap_HtmlMarkerEventReceivedAsync = 1015,
         AzureMap_LayerEventReceivedAsync = 1020,
@@ -44,6 +40,10 @@
         Popup_CloseAsync = 6001,
         Popup_RemoveAsync = 6002,
         Popup_UpdateAsync = 6003,
+        DataSource_AddAsync = 7000,
+        DataSource_RemoveAsync = 7001,
+        DataSource_ImportDataFromUrlAsync = 7002,
+        DataSource_ClearAsync = 7003,
     }
 
     internal static class Extensions

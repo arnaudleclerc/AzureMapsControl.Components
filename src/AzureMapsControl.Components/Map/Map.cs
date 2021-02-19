@@ -213,7 +213,7 @@
             if (source is DataSource dataSource)
             {
                 dataSource.Logger = _logger;
-                dataSource.JsRuntime = _jsRuntime;
+                dataSource.JSRuntime = _jsRuntime;
             }
         }
 

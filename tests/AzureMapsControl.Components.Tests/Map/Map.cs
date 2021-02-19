@@ -480,7 +480,7 @@
             await map.AddSourceAsync(dataSource);
 
             Assert.Single(map.Sources, dataSource);
-            Assert.Equal(_jsRuntimeMock.Object, dataSource.JsRuntime);
+            Assert.Equal(_jsRuntimeMock.Object, dataSource.JSRuntime);
             Assert.Equal(_loggerMock.Object, dataSource.Logger);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), It.Is<object[]>(parameters =>
