@@ -263,25 +263,28 @@
         /// <returns></returns>
         public async Task AddDrawingToolbarAsync(DrawingToolbarOptions drawingToolbarOptions)
         {
-            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddDrawingToolbarAsync, "Adding drawing toolbar");
-            DrawingToolbarOptions = drawingToolbarOptions;
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.AddDrawingToolbar.ToDrawingNamespace(),
-            new DrawingToolbarCreationOptions {
-                Buttons = drawingToolbarOptions.Buttons?.Select(button => button.ToString()).ToArray(),
-                ContainerId = drawingToolbarOptions.ContainerId,
-                DragHandleStyle = drawingToolbarOptions.DragHandleStyle,
-                FreehandInterval = drawingToolbarOptions.FreehandInterval,
-                InteractionType = drawingToolbarOptions.InteractionType.ToString(),
-                Mode = drawingToolbarOptions.Mode.ToString(),
-                NumColumns = drawingToolbarOptions.NumColumns,
-                Position = drawingToolbarOptions.Position.ToString(),
-                SecondaryDragHandleStyle = drawingToolbarOptions.SecondaryDragHandleStyle,
-                ShapeDraggingEnabled = drawingToolbarOptions.ShapesDraggingEnabled,
-                Style = drawingToolbarOptions.Style.ToString(),
-                Visible = drawingToolbarOptions.Visible,
-                Events = drawingToolbarOptions.Events?.EnabledEvents
-            },
-            DotNetObjectReference.Create(_drawingToolbarEventInvokeHelper));
+            if (drawingToolbarOptions != null)
+            {
+                _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddDrawingToolbarAsync, "Adding drawing toolbar");
+                DrawingToolbarOptions = drawingToolbarOptions;
+                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.AddDrawingToolbar.ToDrawingNamespace(),
+                new DrawingToolbarCreationOptions {
+                    Buttons = drawingToolbarOptions.Buttons?.Select(button => button.ToString()).ToArray(),
+                    ContainerId = drawingToolbarOptions.ContainerId,
+                    DragHandleStyle = drawingToolbarOptions.DragHandleStyle,
+                    FreehandInterval = drawingToolbarOptions.FreehandInterval,
+                    InteractionType = drawingToolbarOptions.InteractionType.ToString(),
+                    Mode = drawingToolbarOptions.Mode.ToString(),
+                    NumColumns = drawingToolbarOptions.NumColumns,
+                    Position = drawingToolbarOptions.Position.ToString(),
+                    SecondaryDragHandleStyle = drawingToolbarOptions.SecondaryDragHandleStyle,
+                    ShapeDraggingEnabled = drawingToolbarOptions.ShapesDraggingEnabled,
+                    Style = drawingToolbarOptions.Style.ToString(),
+                    Visible = drawingToolbarOptions.Visible,
+                    Events = drawingToolbarOptions.Events?.EnabledEvents
+                },
+                DotNetObjectReference.Create(_drawingToolbarEventInvokeHelper));
+            }
         }
 
         /// <summary>
@@ -367,16 +370,19 @@
         /// <returns></returns>
         public async Task AddHtmlMarkersAsync(IEnumerable<HtmlMarker> markers)
         {
-            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddHtmlMarkersAsync, "Adding html markers");
-            HtmlMarkers = (HtmlMarkers ?? Array.Empty<HtmlMarker>()).Concat(markers);
-            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddHtmlMarkersAsync, $"{markers.Count()} new html markers will be added");
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(),
-            markers.Select(marker => new HtmlMarkerCreationOptions {
-                Id = marker.Id,
-                Events = marker.EventActivationFlags?.EnabledEvents,
-                Options = marker.Options
-            }),
-            DotNetObjectReference.Create(_htmlMarkerInvokeHelper));
+            if (markers != null)
+            {
+                _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddHtmlMarkersAsync, "Adding html markers");
+                HtmlMarkers = (HtmlMarkers ?? Array.Empty<HtmlMarker>()).Concat(markers);
+                _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddHtmlMarkersAsync, $"{markers.Count()} new html markers will be added");
+                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(),
+                markers.Select(marker => new HtmlMarkerCreationOptions {
+                    Id = marker.Id,
+                    Events = marker.EventActivationFlags?.EnabledEvents,
+                    Options = marker.Options
+                }),
+                DotNetObjectReference.Create(_htmlMarkerInvokeHelper));
+            }
         }
 
         /// <summary>
@@ -782,6 +788,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_AddPopupAsync, $"Id: {popup.Id} | Events: {string.Join('|', popup.EventActivationFlags.EnabledEvents)}");
             await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddPopup.ToCoreNamespace(), popup.Id, popup.Options, popup.EventActivationFlags.EnabledEvents, DotNetObjectReference.Create(_popupInvokeHelper));
 
+            popup.JSRuntime = _jsRuntime;
             popup.OnRemoved += () => RemovePopup(popup.Id);
 
             _popups.Add(popup);
