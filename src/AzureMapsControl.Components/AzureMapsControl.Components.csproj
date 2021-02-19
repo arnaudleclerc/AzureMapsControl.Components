@@ -13,6 +13,7 @@
     <PackageLicenseUrl>https://github.com/arnaudleclerc/AzureMapsControl.Components/blob/main/LICENSE</PackageLicenseUrl>
   </PropertyGroup>
 
+
   <ItemGroup>
     <Content Remove=".eslintrc.json" />
     <Content Remove="package.json" />

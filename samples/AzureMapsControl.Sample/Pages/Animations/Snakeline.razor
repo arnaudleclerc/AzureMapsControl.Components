@@ -162,7 +162,7 @@
         _animation = await AnimationService.SnakelineAsync(line, dataSource, new Components.Animations.SnakeLineAnimationOptions
         {
             Duration = 2000,
-            Easing = "easeInCubic",
+            Easing = Components.Animations.Easing.EaseInOutCubic,
             AutoPlay = true,
             Loop = true
         });

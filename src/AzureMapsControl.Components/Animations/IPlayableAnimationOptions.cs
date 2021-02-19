@@ -23,7 +23,7 @@
         /// <summary>
         /// The easing of the animaiton.
         /// </summary>
-        string Easing { get; set; }
+        Easing Easing { get; set; }
 
         /// <summary>
         /// Specifies if the animation should loop infinitely.

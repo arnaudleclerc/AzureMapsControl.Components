@@ -7,7 +7,7 @@
         public bool? AutoPlay { get; set; }
         public bool? DisposeOnComplete { get; set; }
         public int? Duration { get; set; }
-        public string Easing { get; set; }
+        public Easing Easing { get; set; }
         public bool? Loop { get; set; }
         public bool? Reverse { get; set; }
         public decimal? SpeedMultiplier { get; set; }
