@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.Serialization;
     using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Atlas;
@@ -97,107 +98,135 @@
         [Fact]
         public async void Should_AddHtmlMarkers_Async()
         {
-            var assertHtmlMarkersCallback = false;
             var markers = new List<HtmlMarker> { new HtmlMarker(null), new HtmlMarker(null) };
-            var map = new Components.Map.Map("id", addHtmlMarkersCallback: async callbackHtmlMarkers => assertHtmlMarkersCallback = callbackHtmlMarkers == markers);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => Task.CompletedTask));
 
             await map.AddHtmlMarkersAsync(markers);
-            Assert.True(assertHtmlMarkersCallback);
             Assert.Contains(markers[0], map.HtmlMarkers);
             Assert.Contains(markers[1], map.HtmlMarkers);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] is IEnumerable<HtmlMarkerCreationOptions> && (parameters[0] as IEnumerable<HtmlMarkerCreationOptions>).Count() == 2
+                && parameters[1] is DotNetObjectReference<HtmlMarkerInvokeHelper>
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_AddHtmlMarkers_ParamsVersion_Async()
         {
-            var assertHtmlMarkersCallback = false;
             var marker1 = new HtmlMarker(null);
             var marker2 = new HtmlMarker(null);
-            var map = new Components.Map.Map("id", addHtmlMarkersCallback: async callbackHtmlMarkers => assertHtmlMarkersCallback = callbackHtmlMarkers.Count() == 2 && callbackHtmlMarkers.Contains(marker1) && callbackHtmlMarkers.Contains(marker2));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => Task.CompletedTask));
 
             await map.AddHtmlMarkersAsync(marker1, marker2);
-            Assert.True(assertHtmlMarkersCallback);
             Assert.Contains(marker1, map.HtmlMarkers);
             Assert.Contains(marker2, map.HtmlMarkers);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] is IEnumerable<HtmlMarkerCreationOptions> && (parameters[0] as IEnumerable<HtmlMarkerCreationOptions>).Count() == 2
+                && parameters[1] is DotNetObjectReference<HtmlMarkerInvokeHelper>
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_UpdateHtmlMarkers_Async()
         {
-            var assertUpdateCallback = false;
             var updates = new List<HtmlMarkerUpdate> { new HtmlMarkerUpdate(new HtmlMarker(null, null), null), new HtmlMarkerUpdate(new HtmlMarker(null, null), null) };
-            var map = new Components.Map.Map("id", updateHtmlMarkersCallback: async updatesCallback => assertUpdateCallback = updates == updatesCallback);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
 
             await map.UpdateHtmlMarkersAsync(updates);
-            Assert.True(assertUpdateCallback);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.UpdateHtmlMarkers.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters.Single() is IEnumerable<HtmlMarkerCreationOptions>
+                && (parameters.Single() as IEnumerable<HtmlMarkerCreationOptions>).Count() == updates.Count)
+            ), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_UpdateHtmlMarkers_ParamsVersion_Async()
         {
-            var assertUpdateCallback = false;
             var update1 = new HtmlMarkerUpdate(new HtmlMarker(null, null), null);
             var update2 = new HtmlMarkerUpdate(new HtmlMarker(null, null), null);
-            var map = new Components.Map.Map("id", updateHtmlMarkersCallback: async updatesCallback => assertUpdateCallback = updatesCallback.Count() == 2 && updatesCallback.Contains(update1) && updatesCallback.Contains(update2));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
 
             await map.UpdateHtmlMarkersAsync(update1, update2);
-            Assert.True(assertUpdateCallback);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.UpdateHtmlMarkers.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                            parameters.Single() is IEnumerable<HtmlMarkerCreationOptions>
+                            && (parameters.Single() as IEnumerable<HtmlMarkerCreationOptions>).Count() == 2)
+                        ), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Shoud_NotRemoveAnyHtmlMarkers_Async()
         {
-            var assertRemoveCallback = false;
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
 
             await map.RemoveHtmlMarkersAsync(new List<HtmlMarker> { new HtmlMarker(null) });
-            Assert.False(assertRemoveCallback);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Shoud_NotRemoveAnyHtmlMarkers_Null_Async()
         {
-            var assertRemoveCallback = false;
-            var map = new Components.Map.Map("id", addHtmlMarkersCallback: async markersAddCallback => { }, removeHtmlMarkersCallback: async markersRemoveCallback => assertRemoveCallback = true);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => Task.CompletedTask));
             var htmlMarker = new HtmlMarker(null);
             await map.AddHtmlMarkersAsync(htmlMarker);
 
             await map.RemoveHtmlMarkersAsync(null);
-            Assert.False(assertRemoveCallback);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] is IEnumerable<HtmlMarkerCreationOptions> && (parameters[0] as IEnumerable<HtmlMarkerCreationOptions>).Count() == 1
+                && parameters[1] is DotNetObjectReference<HtmlMarkerInvokeHelper>
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Shoud_RemoveAnyHtmlMarkers_Async()
         {
-            var assertRemoveCallback = false;
             var htmlMarker = new HtmlMarker(null);
             var htmlMarker2 = new HtmlMarker(null);
 
-            var map = new Components.Map.Map("id", addHtmlMarkersCallback: async markersAddCallback => { },
-                removeHtmlMarkersCallback: async markersRemoveCallback => assertRemoveCallback = markersRemoveCallback.Single() == htmlMarker);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => Task.CompletedTask));
             await map.AddHtmlMarkersAsync(new List<HtmlMarker> { htmlMarker, htmlMarker2 });
 
             await map.RemoveHtmlMarkersAsync(htmlMarker);
-            Assert.True(assertRemoveCallback);
             Assert.DoesNotContain(htmlMarker, map.HtmlMarkers);
             Assert.Contains(htmlMarker2, map.HtmlMarkers);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] is IEnumerable<HtmlMarkerCreationOptions> && (parameters[0] as IEnumerable<HtmlMarkerCreationOptions>).Count() == 2
+                && parameters[1] is DotNetObjectReference<HtmlMarkerInvokeHelper>
+            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveHtmlMarkers.ToCoreNamespace(), It.Is<object[]>(parameters => 
+                parameters.Single() is IEnumerable<string> && (parameters[0] as IEnumerable<string>).Single() == htmlMarker.Id)
+            ), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Shoud_RemoveAnyHtmlMarkers_ParamsVersion_Async()
         {
-            var assertRemoveCallback = false;
             var htmlMarker = new HtmlMarker(null);
             var htmlMarker2 = new HtmlMarker(null);
 
-            var map = new Components.Map.Map("id", addHtmlMarkersCallback: async markersAddCallback => { },
-                removeHtmlMarkersCallback: async markersRemoveCallback => assertRemoveCallback = markersRemoveCallback.Single() == htmlMarker);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => Task.CompletedTask));
             await map.AddHtmlMarkersAsync(htmlMarker, htmlMarker2);
 
             await map.RemoveHtmlMarkersAsync(htmlMarker);
-            Assert.True(assertRemoveCallback);
             Assert.DoesNotContain(htmlMarker, map.HtmlMarkers);
             Assert.Contains(htmlMarker2, map.HtmlMarkers);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] is IEnumerable<HtmlMarkerCreationOptions> && (parameters[0] as IEnumerable<HtmlMarkerCreationOptions>).Count() == 2
+                && parameters[1] is DotNetObjectReference<HtmlMarkerInvokeHelper>
+            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveHtmlMarkers.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters.Single() is IEnumerable<string> && (parameters[0] as IEnumerable<string>).Single() == htmlMarker.Id)
+            ), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -553,7 +582,7 @@
         public async void Should_ClearMap_Async()
         {
             var assertClearMapCallback = false;
-            var map = new Components.Map.Map("id", addHtmlMarkersCallback: async _ => { }, addLayerCallback: async (_, before) => { }, addPopupCallback: async _ => { }, clearMapCallback: async () => assertClearMapCallback = true);
+            var map = new Components.Map.Map("id", addLayerCallback: async (_, before) => { }, addPopupCallback: async _ => { }, clearMapCallback: async () => assertClearMapCallback = true);
             await map.AddSourceAsync(new DataSource());
             await map.AddLayerAsync(new BubbleLayer());
             await map.AddHtmlMarkersAsync(new HtmlMarker(null));
@@ -595,14 +624,19 @@
         [Fact]
         public async void Should_ClearHtmlMarkers_Async()
         {
-            var assertClearHtmlMarkers = false;
-            var map = new Components.Map.Map("id", addHtmlMarkersCallback: async _ => { }, clearHtmlMarkersCallback: async () => assertClearHtmlMarkers = true);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => Task.CompletedTask));
 
             await map.AddHtmlMarkersAsync(new HtmlMarker(null));
             await map.ClearHtmlMarkersAsync();
 
-            Assert.True(assertClearHtmlMarkers);
             Assert.Null(map.HtmlMarkers);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] is IEnumerable<HtmlMarkerCreationOptions> && (parameters[0] as IEnumerable<HtmlMarkerCreationOptions>).Count() == 1
+                && parameters[1] is DotNetObjectReference<HtmlMarkerInvokeHelper>
+            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearHtmlMarkers.ToCoreNamespace()), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]

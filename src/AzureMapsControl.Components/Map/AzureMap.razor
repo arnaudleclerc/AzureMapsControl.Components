@@ -581,60 +581,6 @@
         }
     }
 
-    private async Task ClearHtmlMarkersAsync()
-    {
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_ClearHtmlMarkersAsync, "Clearing html markers");
-        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearHtmlMarkers.ToCoreNamespace());
-    }
-
-    private async Task AddHtmlMarkersAsync(IEnumerable<AzureMapsControl.Components.Markers.HtmlMarker> htmlMarkers)
-    {
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_AddHtmlMarkersAsync, "Adding html markers");
-        var newHtmlMarkers = htmlMarkers?.Where(marker => marker != null);
-        if (newHtmlMarkers != null && newHtmlMarkers.Any())
-        {
-            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_AddHtmlMarkersAsync, $"{newHtmlMarkers.Count()} new html markers will be added");
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(),
-            newHtmlMarkers.Select(marker => new AzureMapsControl.Components.Markers.HtmlMarkerCreationOptions
-            {
-                Id = marker.Id,
-                Events = marker.EventActivationFlags?.EnabledEvents,
-                Options = marker.Options
-            }),
-            DotNetObjectReference.Create(_htmlMarkerEventInvokeHelper));
-        }
-    }
-
-    private async Task RemoveHtmlMarkersAsync(IEnumerable<AzureMapsControl.Components.Markers.HtmlMarker> htmlMarkers)
-    {
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_RemoveHtmlMarkersAsync, "Removing html markers");
-        var htmlMarkersToRemove = htmlMarkers?.Where(marker => marker != null && Guid.TryParse(marker.Id, out _));
-        if (htmlMarkersToRemove.Any())
-        {
-            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_RemoveHtmlMarkersAsync, $"{htmlMarkersToRemove.Count()} html markers will be removed");
-            var ids = htmlMarkersToRemove.Select(marker => marker.Id);
-            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_RemoveHtmlMarkersAsync, $"Ids: {string.Join('|', ids)}");
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveHtmlMarkers.ToCoreNamespace(), ids);
-        }
-    }
-
-    private async Task UpdateHtmlMarkersAsync(IEnumerable<AzureMapsControl.Components.Markers.HtmlMarkerUpdate> updates)
-    {
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_UpdateHtmlMarkersAsync, "Updating html markers");
-        var htmlMarkersToUpdate = updates?.Where(htmlMarker => htmlMarker?.Marker != null && htmlMarker.Options != null);
-        if (htmlMarkersToUpdate != null && htmlMarkersToUpdate.Any())
-        {
-            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_UpdateHtmlMarkersAsync, $"{htmlMarkersToUpdate.Count()} html markers will be updated");
-            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_UpdateHtmlMarkersAsync, $"Ids: {string.Join('|', htmlMarkersToUpdate.Select(h => h.Marker.Id))}");
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.UpdateHtmlMarkers.ToCoreNamespace(),
-            htmlMarkersToUpdate.Select(update => new AzureMapsControl.Components.Markers.HtmlMarkerCreationOptions
-            {
-                Id = update.Marker.Id,
-                Options = update.Options
-            }));
-        }
-    }
-
     #endregion
 
     #region Layers
@@ -698,7 +644,7 @@
                 UserInteractionOptions,
                 TrafficOptions);
 
-            await MapService.AddMapAsync(new Map(Id, JSRuntime, Logger, _drawingToolbarEventInvokeHelper)
+            await MapService.AddMapAsync(new Map(Id, JSRuntime, Logger, _drawingToolbarEventInvokeHelper, _htmlMarkerEventInvokeHelper)
             {
                 Controls = Controls,
                 HtmlMarkers = HtmlMarkers,
@@ -710,7 +656,7 @@
             });
 
             await MapService.Map.AddControlsAsync(Controls);
-            await AddHtmlMarkersAsync(HtmlMarkers);
+            await MapService.Map.AddHtmlMarkersAsync(HtmlMarkers);
             await MapService.Map.AddDrawingToolbarAsync(DrawingToolbarOptions);
         }
         await DispatchMapEventAsync(mapEvent);

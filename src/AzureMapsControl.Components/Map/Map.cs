@@ -39,17 +39,14 @@
         private readonly IMapJsRuntime _jsRuntime;
         private readonly ILogger _logger;
         private readonly DrawingToolbarEventInvokeHelper _drawingToolbarEventInvokeHelper;
+        private readonly HtmlMarkerInvokeHelper _htmlMarkerInvokeHelper;
 
         #region Fields
 
-        private readonly Func<IEnumerable<HtmlMarker>, Task> _addHtmlMarkersCallback;
-        private readonly Func<IEnumerable<HtmlMarkerUpdate>, Task> _updateHtmlMarkersCallback;
-        private readonly Func<IEnumerable<HtmlMarker>, Task> _removeHtmlMarkersCallback;
         private readonly Func<Layer, string, Task> _addLayerCallback;
         private readonly Func<IEnumerable<string>, Task> _removeLayersCallback;
         private readonly Func<Task> _clearMapCallback;
         private readonly Func<Task> _clearLayersCallback;
-        private readonly Func<Task> _clearHtmlMarkersCallback;
         private readonly Func<Popup, Task> _addPopupCallback;
         private readonly Func<string, Task> _removePopupCallback;
         private readonly Func<Task> _clearPopupsCallback;
@@ -146,23 +143,20 @@
 
         #endregion
 
-        internal Map(string id, IMapJsRuntime jsRuntime, ILogger logger, DrawingToolbarEventInvokeHelper drawingToolbarEventInvokeHelper = null)
+        internal Map(string id, IMapJsRuntime jsRuntime, ILogger logger, DrawingToolbarEventInvokeHelper drawingToolbarEventInvokeHelper = null, HtmlMarkerInvokeHelper htmlMarkerInvokeHelper = null)
         {
             Id = id;
             _jsRuntime = jsRuntime;
             _logger = logger;
             _drawingToolbarEventInvokeHelper = drawingToolbarEventInvokeHelper;
+            _htmlMarkerInvokeHelper = htmlMarkerInvokeHelper;
         }
 
         internal Map(string id,
-            Func<IEnumerable<HtmlMarker>, Task> addHtmlMarkersCallback = null,
-            Func<IEnumerable<HtmlMarkerUpdate>, Task> updateHtmlMarkersCallback = null,
-            Func<IEnumerable<HtmlMarker>, Task> removeHtmlMarkersCallback = null,
             Func<Layer, string, Task> addLayerCallback = null,
             Func<IEnumerable<string>, Task> removeLayersCallback = null,
             Func<Task> clearMapCallback = null,
             Func<Task> clearLayersCallback = null,
-            Func<Task> clearHtmlMarkersCallback = null,
             Func<Popup, Task> addPopupCallback = null,
             Func<string, Task> removePopupCallback = null,
             Func<Task> clearPopupsCallback = null,
@@ -172,14 +166,10 @@
             Func<TrafficOptions, Task> setTrafficOptions = null)
         {
             Id = id;
-            _addHtmlMarkersCallback = addHtmlMarkersCallback;
-            _updateHtmlMarkersCallback = updateHtmlMarkersCallback;
-            _removeHtmlMarkersCallback = removeHtmlMarkersCallback;
             _addLayerCallback = addLayerCallback;
             _removeLayersCallback = removeLayersCallback;
             _clearMapCallback = clearMapCallback;
             _clearLayersCallback = clearLayersCallback;
-            _clearHtmlMarkersCallback = clearHtmlMarkersCallback;
             _addPopupCallback = addPopupCallback;
             _removePopupCallback = removePopupCallback;
             _clearPopupsCallback = clearPopupsCallback;
@@ -406,8 +396,16 @@
         /// <returns></returns>
         public async Task AddHtmlMarkersAsync(IEnumerable<HtmlMarker> markers)
         {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddHtmlMarkersAsync, "Adding html markers");
             HtmlMarkers = (HtmlMarkers ?? Array.Empty<HtmlMarker>()).Concat(markers);
-            await _addHtmlMarkersCallback.Invoke(markers);
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddHtmlMarkersAsync, $"{markers.Count()} new html markers will be added");
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(),
+            markers.Select(marker => new HtmlMarkerCreationOptions {
+                Id = marker.Id,
+                Events = marker.EventActivationFlags?.EnabledEvents,
+                Options = marker.Options
+            }),
+            DotNetObjectReference.Create(_htmlMarkerInvokeHelper));
         }
 
         /// <summary>
@@ -415,14 +413,24 @@
         /// </summary>
         /// <param name="updates">HtmlMarkers to update</param>
         /// <returns></returns>
-        public async Task UpdateHtmlMarkersAsync(params HtmlMarkerUpdate[] updates) => await _updateHtmlMarkersCallback.Invoke(updates);
+        public async Task UpdateHtmlMarkersAsync(params HtmlMarkerUpdate[] updates) => await UpdateHtmlMarkersAsync(updates as IEnumerable<HtmlMarkerUpdate>);
 
         /// <summary>
         /// Update HtmlMarkers on the map
         /// </summary>
         /// <param name="updates">HtmlMarkers to update</param>
         /// <returns></returns>
-        public async Task UpdateHtmlMarkersAsync(IEnumerable<HtmlMarkerUpdate> updates) => await _updateHtmlMarkersCallback.Invoke(updates);
+        public async Task UpdateHtmlMarkersAsync(IEnumerable<HtmlMarkerUpdate> updates)
+        {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_UpdateHtmlMarkersAsync, "Updating html markers");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_UpdateHtmlMarkersAsync, $"{updates.Count()} html markers will be updated");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_UpdateHtmlMarkersAsync, $"Ids: {string.Join('|', updates.Select(h => h.Marker.Id))}");
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.UpdateHtmlMarkers.ToCoreNamespace(),
+            updates.Select(update => new AzureMapsControl.Components.Markers.HtmlMarkerCreationOptions {
+                Id = update.Marker.Id,
+                Options = update.Options
+            }));
+        }
 
         /// <summary>
         /// Remove HtmlMarkers from the map
@@ -438,10 +446,14 @@
         /// <returns></returns>
         public async Task RemoveHtmlMarkersAsync(IEnumerable<HtmlMarker> markers)
         {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_RemoveHtmlMarkersAsync, "Removing html markers");
             if (HtmlMarkers != null && markers != null)
             {
                 HtmlMarkers = HtmlMarkers.Where(marker => markers.Any(m => m != null && m.Id != marker.Id));
-                await _removeHtmlMarkersCallback.Invoke(markers);
+                _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_RemoveHtmlMarkersAsync, $"{markers.Count()} html markers will be removed");
+                var ids = markers.Select(marker => marker.Id);
+                _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_RemoveHtmlMarkersAsync, $"Ids: {string.Join('|', ids)}");
+                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveHtmlMarkers.ToCoreNamespace(), ids);
             }
         }
 
@@ -451,8 +463,9 @@
         /// <returns></returns>
         public async Task ClearHtmlMarkersAsync()
         {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_ClearHtmlMarkersAsync, "Clearing html markers");
             HtmlMarkers = null;
-            await _clearHtmlMarkersCallback.Invoke();
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearHtmlMarkers.ToCoreNamespace());
         }
 
         #endregion
