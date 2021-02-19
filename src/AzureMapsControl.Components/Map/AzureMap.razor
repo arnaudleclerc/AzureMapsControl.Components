@@ -3,13 +3,14 @@
 @using AzureMapsControl.Components.Atlas
 @using AzureMapsControl.Components.Configuration
 @using AzureMapsControl.Components.Logger
+@using AzureMapsControl.Components.Runtime
 
 @using Microsoft.JSInterop
 @using Microsoft.Extensions.Options
 
 @inject IOptions<AzureMapsConfiguration> Configuration
 @inject IMapAdderService MapService
-@inject IJSRuntime JSRuntime
+@inject IMapJsRuntime JSRuntime
 @inject Microsoft.Extensions.Logging.ILogger<AzureMap> Logger
 
 <div id="@Id"></div>
