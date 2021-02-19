@@ -6,15 +6,15 @@
     using AzureMapsControl.Components.Atlas;
     using AzureMapsControl.Components.Data;
     using AzureMapsControl.Components.Logger;
+    using AzureMapsControl.Components.Runtime;
 
     using Microsoft.Extensions.Logging;
-    using Microsoft.JSInterop;
 
     internal sealed class AnimationService : IAnimationService
     {
-        private readonly IJSRuntime _jsRuntime;
+        private readonly IMapJsRuntime _jsRuntime;
         private readonly ILogger _logger;
-        public AnimationService(IJSRuntime jsRuntime, ILogger<AnimationService> logger)
+        public AnimationService(IMapJsRuntime jsRuntime, ILogger<AnimationService> logger)
         {
             _jsRuntime = jsRuntime;
             _logger = logger;

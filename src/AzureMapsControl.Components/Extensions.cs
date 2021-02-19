@@ -6,6 +6,7 @@
     using AzureMapsControl.Components.Configuration;
     using AzureMapsControl.Components.Constants;
     using AzureMapsControl.Components.Map;
+    using AzureMapsControl.Components.Runtime;
 
     using Microsoft.Extensions.DependencyInjection;
 
@@ -24,6 +25,7 @@
                 .AddSingleton<IMapAdderService>(sp => sp.GetRequiredService<MapService>())
                 .AddSingleton<IMapService>(sp => sp.GetRequiredService<MapService>())
                 .AddScoped<IAnimationService, AnimationService>()
+                .AddScoped<IMapJsRuntime, MapJsRuntime>()
                 .AddOptions<AzureMapsConfiguration>()
                 .Configure(configure)
                 .Validate(configuration => configuration.Validate(), "The given AzureMapsConfiguration is invalid");

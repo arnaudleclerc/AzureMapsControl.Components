@@ -2,18 +2,18 @@
 {
     using System.Threading.Tasks;
 
-    using Microsoft.JSInterop;
+    using AzureMapsControl.Components.Runtime;
 
     public sealed class PlayableAnimation
     {
         private readonly string _id;
-        private readonly IJSRuntime _jsRuntime;
+        private readonly IMapJsRuntime _jsRuntime;
 
         internal string Id => _id;
 
         public IPlayableAnimationOptions Options { get; private set; }
 
-        internal PlayableAnimation(string id, IPlayableAnimationOptions options, IJSRuntime jsRuntime)
+        internal PlayableAnimation(string id, IPlayableAnimationOptions options, IMapJsRuntime jsRuntime)
         {
             _id = id;
             Options = options;
@@ -65,7 +65,7 @@
         public async Task SetOptionsAsync(IPlayableAnimationOptions options)
         {
             Options = options;
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetOptions.ToAnimationNamespace(), _id);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetOptions.ToAnimationNamespace(), _id, options);
         }
     }
 }
