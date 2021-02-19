@@ -13,7 +13,7 @@
         internal override string Type => "style";
         internal override int Order => 0;
 
-        public StyleControl(StyleControlOptions options = null, ControlPosition position = null) : base(options, position) { }
+        public StyleControl(StyleControlOptions options = null, ControlPosition position = default) : base(options, position) { }
     }
 
     internal sealed class StyleControlJsonConverter : JsonConverter<StyleControl>
@@ -26,7 +26,7 @@
             writer.WriteStartObject();
             writer.WriteString("id", value.Id);
             writer.WriteString("type", value.Type);
-            if (value.Position is not null)
+            if (value.Position.ToString() != default(ControlPosition).ToString())
             {
                 writer.WriteString("position", value.Position.ToString());
             }

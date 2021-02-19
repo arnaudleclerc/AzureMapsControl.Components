@@ -13,7 +13,7 @@
         internal override string Type => "compass";
         internal override int Order => 0;
 
-        public CompassControl(CompassControlOptions options = null, ControlPosition position = null) : base(options, position) { }
+        public CompassControl(CompassControlOptions options = null, ControlPosition position = default) : base(options, position) { }
     }
 
     internal class CompassControlJsonConverter : JsonConverter<CompassControl>
@@ -26,7 +26,7 @@
             writer.WriteStartObject();
             writer.WriteString("id", value.Id);
             writer.WriteString("type", value.Type);
-            if (value.Position is not null)
+            if (value.Position.ToString() != default(ControlPosition).ToString())
             {
                 writer.WriteString("position", value.Position.ToString());
             }

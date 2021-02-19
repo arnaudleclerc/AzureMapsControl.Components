@@ -10,7 +10,7 @@
         internal override string Type => "pitch";
         internal override int Order => 0;
 
-        public PitchControl(PitchControlOptions options = null, ControlPosition position = null) : base(options, position) { }
+        public PitchControl(PitchControlOptions options = null, ControlPosition position = default) : base(options, position) { }
     }
 
     internal class PitchControlJsonConverter : JsonConverter<PitchControl>
@@ -23,7 +23,7 @@
             writer.WriteStartObject();
             writer.WriteString("id", value.Id);
             writer.WriteString("type", value.Type);
-            if (value.Position is not null)
+            if (value.Position.ToString() != default(ControlPosition).ToString())
             {
                 writer.WriteString("position", value.Position.ToString());
             }

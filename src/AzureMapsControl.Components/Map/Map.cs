@@ -10,9 +10,13 @@
     using AzureMapsControl.Components.Drawing;
     using AzureMapsControl.Components.Exceptions;
     using AzureMapsControl.Components.Layers;
+    using AzureMapsControl.Components.Logger;
     using AzureMapsControl.Components.Markers;
     using AzureMapsControl.Components.Popups;
+    using AzureMapsControl.Components.Runtime;
     using AzureMapsControl.Components.Traffic;
+
+    using Microsoft.Extensions.Logging;
 
     public delegate void MapEvent(MapEventArgs eventArgs);
     public delegate void MapMouseEvent(MapMouseEventArgs eventArgs);
@@ -31,10 +35,11 @@
     /// </summary>
     public sealed class Map
     {
+        private readonly IMapJsRuntime _jsRuntime;
+        private readonly ILogger _logger;
 
         #region Fields
 
-        private readonly Func<IEnumerable<Control>, Task> _addControlsCallback;
         private readonly Func<IEnumerable<HtmlMarker>, Task> _addHtmlMarkersCallback;
         private readonly Func<IEnumerable<HtmlMarkerUpdate>, Task> _updateHtmlMarkersCallback;
         private readonly Func<IEnumerable<HtmlMarker>, Task> _removeHtmlMarkersCallback;
@@ -146,8 +151,14 @@
 
         #endregion
 
+        internal Map(string id, IMapJsRuntime jsRuntime, ILogger logger)
+        {
+            Id = id;
+            _jsRuntime = jsRuntime;
+            _logger = logger;
+        }
+
         internal Map(string id,
-            Func<IEnumerable<Control>, Task> addControlsCallback = null,
             Func<IEnumerable<HtmlMarker>, Task> addHtmlMarkersCallback = null,
             Func<IEnumerable<HtmlMarkerUpdate>, Task> updateHtmlMarkersCallback = null,
             Func<IEnumerable<HtmlMarker>, Task> removeHtmlMarkersCallback = null,
@@ -172,7 +183,6 @@
             Func<TrafficOptions, Task> setTrafficOptions = null)
         {
             Id = id;
-            _addControlsCallback = addControlsCallback;
             _addHtmlMarkersCallback = addHtmlMarkersCallback;
             _updateHtmlMarkersCallback = updateHtmlMarkersCallback;
             _removeHtmlMarkersCallback = removeHtmlMarkersCallback;
@@ -211,8 +221,22 @@
         /// <param name="controls">Controls to add to the map</param>
         public async Task AddControlsAsync(IEnumerable<Control> controls)
         {
-            Controls = controls;
-            await _addControlsCallback.Invoke(Controls);
+            if (controls != null && controls.Any())
+            {
+                _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddControlsAsync, "Map - AddControlsAsync");
+                Controls = controls;
+                var overviewMapControl = controls.OfType<OverviewMapControl>().FirstOrDefault();
+                if (overviewMapControl is not null)
+                {
+                    overviewMapControl.Logger = _logger;
+                    overviewMapControl.JsRuntime = _jsRuntime;
+                }
+                _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddControlsAsync, $"Adding controls", Controls);
+                _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_AddControlsAsync, $"{Controls.Count()} controls will be added: {string.Join('|', Controls.Select(co => co.Type))}");
+                //Ordering the controls is necessary if the controls contain an OverviewMapControl. This one needs to be added last, otherwise the controls added after it will be added to the overlay.
+                //Following : https://github.com/Azure-Samples/azure-maps-overview-map/issues/1
+                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddControls.ToCoreNamespace(), Controls?.OrderBy(control => control.Order));
+            }
         }
 
         #endregion

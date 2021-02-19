@@ -7,7 +7,7 @@
     /// </summary>
 
     [ExcludeFromCodeCoverage]
-    public sealed class ControlPosition
+    public struct ControlPosition
     {
         private readonly string _position;
 

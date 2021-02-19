@@ -9,7 +9,7 @@
     {
         internal override string Type => "scalebar";
         internal override int Order => 0;
-        public ScaleBarControl(ScaleBarControlOptions options = null, ControlPosition position = null) : base(options, position) { }
+        public ScaleBarControl(ScaleBarControlOptions options = null, ControlPosition position = default) : base(options, position) { }
     }
 
     internal class ScaleBarControlJsonConverter : JsonConverter<ScaleBarControl>
@@ -22,6 +22,10 @@
             writer.WriteStartObject();
             writer.WriteString("id", value.Id);
             writer.WriteString("type", value.Type);
+            if (value.Position.ToString() != default(ControlPosition).ToString())
+            {
+                writer.WriteString("position", value.Position.ToString());
+            }
             if (value.Options is not null)
             {
                 writer.WritePropertyName("options");

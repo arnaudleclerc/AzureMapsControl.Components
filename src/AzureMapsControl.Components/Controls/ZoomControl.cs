@@ -13,7 +13,7 @@
         internal override string Type => "zoom";
         internal override int Order => 0;
 
-        public ZoomControl(ZoomControlOptions options = null, ControlPosition position = null) : base(options, position) { }
+        public ZoomControl(ZoomControlOptions options = null, ControlPosition position = default) : base(options, position) { }
     }
 
     internal sealed class ZoomControlJsonConverter : JsonConverter<ZoomControl>
@@ -26,7 +26,7 @@
             writer.WriteStartObject();
             writer.WriteString("id", value.Id);
             writer.WriteString("type", value.Type);
-            if (value.Position is not null)
+            if (value.Position.ToString() != default(ControlPosition).ToString())
             {
                 writer.WriteString("position", value.Position.ToString());
             }

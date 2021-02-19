@@ -5,14 +5,20 @@
     using System.Text.Json.Serialization;
     using System.Threading.Tasks;
 
+    using AzureMapsControl.Components.Logger;
+    using AzureMapsControl.Components.Runtime;
+
+    using Microsoft.Extensions.Logging;
+
     [JsonConverter(typeof(OverviewMapControlJsonConverter))]
     public sealed class OverviewMapControl : Control<OverviewMapControlOptions>
     {
         internal override string Type => "overviewmap";
         internal override int Order => int.MaxValue;
-        internal Func<Task> UpdateCallback { get; set; }
+        internal IMapJsRuntime JsRuntime { get; set; }
+        internal ILogger Logger { get; set; }
 
-        public OverviewMapControl(OverviewMapControlOptions options, ControlPosition position) : base(options, position) { }
+        public OverviewMapControl(OverviewMapControlOptions options = null, ControlPosition position = default) : base(options, position) { }
 
         /// <summary>
         /// Update the options of the control
@@ -27,7 +33,11 @@
             }
 
             update(Options);
-            await UpdateCallback.Invoke();
+
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_AddControlsAsync, "OverviewMapControl - UpdateAsync");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.OverviewMapControl_UpdateAsync, $"Id: {Id}");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.OverviewMapControl_UpdateAsync, $"Type: {Type}");
+            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.UpdateControl.ToCoreNamespace(), this);
         }
     }
 
@@ -41,7 +51,7 @@
             writer.WriteStartObject();
             writer.WriteString("id", value.Id);
             writer.WriteString("type", value.Type);
-            if (value.Position is not null)
+            if (value.Position.ToString() != default(ControlPosition).ToString())
             {
                 writer.WriteString("position", value.Position.ToString());
             }
@@ -154,10 +164,6 @@
                     writer.WriteNumber("zoomOffset", value.Options.ZoomOffset.Value);
                 }
                 writer.WriteEndObject();
-            }
-            if (value.Position is not null)
-            {
-                writer.WriteString("position", value.Position.ToString());
             }
             writer.WriteEndObject();
         }

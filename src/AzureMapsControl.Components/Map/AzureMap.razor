@@ -440,38 +440,6 @@
 
     #endregion
 
-    #region Controls
-
-    private async Task AddControlsAsync(IEnumerable<AzureMapsControl.Components.Controls.Control> controls)
-    {
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_AddControlsAsync, "AzureMap - AddControlsAsync");
-        var newControls = controls?.Where(control => control != null);
-        if (newControls != null && newControls.Any())
-        {
-            var overviewMapControl = newControls.OfType<AzureMapsControl.Components.Controls.OverviewMapControl>()?.FirstOrDefault();
-            if(overviewMapControl is not null)
-            {
-                overviewMapControl.UpdateCallback = async () => await UpdateControlAsync(overviewMapControl);
-            }
-            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_AddControlsAsync, $"Adding controls", newControls);
-            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_AddControlsAsync, $"{newControls.Count()} controls will be added: {string.Join('|', newControls.Select(co => co.Type))}");
-            //Ordering the controls is necessary if the controls contain an OverviewMapControl. This one needs to be added last, otherwise the controls added after it will be added to the overlay.
-            //Following : https://github.com/Azure-Samples/azure-maps-overview-map/issues/1
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddControls.ToCoreNamespace(), newControls?.OrderBy(control => control.Order));
-        }
-    }
-
-    private async Task UpdateControlAsync(AzureMapsControl.Components.Controls.Control control)
-    {
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_AddControlsAsync, "AzureMap - UpdateControlAsync");
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_UpdateControlAsync, "Updating control", control);
-        Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_UpdateControlAsync, $"Id: {control.Id}");
-        Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_UpdateControlAsync, $"Type: {control.Type}");
-        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.UpdateControl.ToCoreNamespace(), control);
-    }
-
-    #endregion
-
     #region Data sources
 
     private async Task ClearSourcesAsync()
@@ -797,30 +765,7 @@
                 UserInteractionOptions,
                 TrafficOptions);
 
-            await MapService.AddMapAsync(new Map(Id,
-                AddControlsAsync,
-                AddHtmlMarkersAsync,
-                UpdateHtmlMarkersAsync,
-                RemoveHtmlMarkersAsync,
-                AddDrawingToolbarAsync,
-                UpdateDrawingToolbarAsync,
-                RemoveDrawingToolbarAsync,
-                AddLayerAsync,
-                RemoveLayersAsync,
-                AddSourceAsync,
-                RemoveSourceAsync,
-                AttachDataSourcesCallback,
-                ClearMapAsync,
-                ClearLayersAsync,
-                ClearSourcesAsync,
-                ClearHtmlMarkersAsync,
-                AddPopupAsync,
-                Popup_RemoveAsync,
-                ClearPopupsAsync,
-                SetCameraOptionsAsync,
-                SetStyleOptionsAsync,
-                SetUserInteractionAsync,
-                SetTrafficAsync)
+            await MapService.AddMapAsync(new Map(Id, JSRuntime, Logger)
             {
                 Controls = Controls,
                 HtmlMarkers = HtmlMarkers,
@@ -831,7 +776,7 @@
                 TrafficOptions = TrafficOptions
             });
 
-            await AddControlsAsync(Controls);
+            await MapService.Map.AddControlsAsync(Controls);
             await AddHtmlMarkersAsync(HtmlMarkers);
             await AddDrawingToolbarAsync(DrawingToolbarOptions);
         }

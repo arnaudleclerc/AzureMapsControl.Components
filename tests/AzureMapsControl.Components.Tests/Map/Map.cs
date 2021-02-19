@@ -12,17 +12,25 @@
     using AzureMapsControl.Components.Map;
     using AzureMapsControl.Components.Markers;
     using AzureMapsControl.Components.Popups;
+    using AzureMapsControl.Components.Runtime;
     using AzureMapsControl.Components.Traffic;
+
+    using Microsoft.Extensions.Logging;
+
+    using Moq;
 
     using Xunit;
 
     public class MapTests
     {
+        private readonly Mock<IMapJsRuntime> _jsRuntimeMock = new();
+        private readonly Mock<ILogger> _loggerMock = new();
+
         [Fact]
         public void Should_BeInitialized()
         {
             const string id = "id";
-            var map = new Components.Map.Map(id);
+            var map = new Map(id, _jsRuntimeMock.Object, _loggerMock.Object);
             Assert.Equal(id, map.Id);
             Assert.Null(map.Controls);
             Assert.Null(map.HtmlMarkers);
@@ -35,28 +43,53 @@
         [Fact]
         public async void Should_AddControls_Async()
         {
-            var assertControlsCallback = false;
             var controls = new List<Control> {
                 new CompassControl()
             };
-            var map = new Components.Map.Map("id", addControlsCallback: async callbacksControls => assertControlsCallback = callbacksControls == controls);
+
+            const string id = "id";
+            var map = new Map(id, _jsRuntimeMock.Object, _loggerMock.Object);
 
             await map.AddControlsAsync(controls);
-            Assert.True(assertControlsCallback);
             Assert.Equal(controls, map.Controls);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddControls.ToCoreNamespace(), It.Is<IOrderedEnumerable<Control>>(
+                ctrls => ctrls.Single() == controls.Single())), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_AddOrderedControls_Async()
+        {
+            var controls = new List<Control> {
+                new OverviewMapControl(),
+                new CompassControl()
+            };
+
+            const string id = "id";
+            var map = new Map(id, _jsRuntimeMock.Object, _loggerMock.Object);
+
+            await map.AddControlsAsync(controls);
+            Assert.Equal(controls, map.Controls);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddControls.ToCoreNamespace(), It.Is<IOrderedEnumerable<Control>>(
+                ctrls => ctrls.First() == controls.ElementAt(1) && ctrls.ElementAt(1) == controls.First())), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_AddControls_ParamsVersion_Async()
         {
-            var assertControlsCallback = false;
             var control = new CompassControl(position: ControlPosition.BottomLeft);
-            var map = new Components.Map.Map("id", addControlsCallback: async callbacksControls => assertControlsCallback = callbacksControls.SingleOrDefault() == control);
+            const string id = "id";
+            var map = new Map(id, _jsRuntimeMock.Object, _loggerMock.Object);
 
             await map.AddControlsAsync(control);
-            Assert.True(assertControlsCallback);
             Assert.Single(map.Controls);
             Assert.Contains(control, map.Controls);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddControls.ToCoreNamespace(), It.Is<IOrderedEnumerable<Control>>(
+                ctrls => ctrls.Single() == control)), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]

@@ -41,9 +41,10 @@
         AzureMap_Popup_UpdateAsync = 1034,
         AzureMap_ClearPopupsAsync = 1035,
         AzureMap_PopupEventReceivedAsync = 1036,
-        AzureMap_UpdateControlAsync = 1037,
         MapService_AddMapAsync = 2000,
-        AnimationService_Snakeline = 3000
+        AnimationService_Snakeline = 3000,
+        Map_AddControlsAsync = 4000,
+        OverviewMapControl_UpdateAsync = 5000
     }
 
     internal static class Extensions
