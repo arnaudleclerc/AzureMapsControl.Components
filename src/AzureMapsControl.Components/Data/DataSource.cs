@@ -6,10 +6,16 @@
     using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Atlas;
+    using AzureMapsControl.Components.Runtime;
+
+    using Microsoft.Extensions.Logging;
 
     public sealed class DataSource : Source<DataSourceOptions>
     {
         private List<Geometry> _geometries;
+
+        internal ILogger Logger { get; set; }
+        internal IMapJsRuntime JsRuntime { get; set; }
 
         internal Func<string, string, Task> ImportDataFromUrlCallback { get; set; }
         internal Func<string, IEnumerable<Geometry>, Task> AddCallback { get; set; }

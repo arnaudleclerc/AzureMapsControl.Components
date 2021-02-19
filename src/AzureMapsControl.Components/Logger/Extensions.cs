@@ -7,10 +7,7 @@
         AzureMap_OnInitialized = 1000,
         AzureMap_OnAfterRenderAsync = 1001,
         AzureMap_AddControlsAsync = 1002,
-        AzureMap_ClearSourcesAsync = 1003,
-        AzureMap_AddSourceAsync = 1004,
         AzureMap_AttachDataSourcesCallback = 1005,
-        AzureMap_RemoveSourceAsync = 1006,
         AzureMap_DataSource_ImportDataFromUrlAsync = 1007,
         AzureMap_DataSource_AddAsync = 1008,
         AzureMap_DataSource_RemoveAsync = 1009,
@@ -44,6 +41,9 @@
         MapService_AddMapAsync = 2000,
         AnimationService_Snakeline = 3000,
         Map_AddControlsAsync = 4000,
+        Map_AddSourceAsync = 4001,
+        Map_RemoveSourceAsync = 4002,
+        Map_ClearSourcesAsync = 4003,
         OverviewMapControl_UpdateAsync = 5000
     }
 

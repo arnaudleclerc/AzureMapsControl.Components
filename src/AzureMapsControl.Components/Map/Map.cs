@@ -48,9 +48,7 @@
         private readonly Func<Task> _removeDrawingToolbarCallback;
         private readonly Func<Layer, string, Task> _addLayerCallback;
         private readonly Func<IEnumerable<string>, Task> _removeLayersCallback;
-        private readonly Func<Source, Task> _addSourceCallback;
         private readonly Func<string, Task> _removeSourceCallback;
-        private readonly Action<DataSource> _attachDataSourceEventsCallback;
         private readonly Func<Task> _clearMapCallback;
         private readonly Func<Task> _clearLayersCallback;
         private readonly Func<Task> _clearSourcesCallback;
@@ -167,9 +165,7 @@
             Func<Task> removeDrawingToolbarCallback = null,
             Func<Layer, string, Task> addLayerCallback = null,
             Func<IEnumerable<string>, Task> removeLayersCallback = null,
-            Func<Source, Task> addSourceCallback = null,
             Func<string, Task> removeSourceCallback = null,
-            Action<DataSource> attachDataSourceEventsCallback = null,
             Func<Task> clearMapCallback = null,
             Func<Task> clearLayersCallback = null,
             Func<Task> clearSourcesCallback = null,
@@ -191,9 +187,7 @@
             _removeDrawingToolbarCallback = removeDrawingToolbarCallback;
             _addLayerCallback = addLayerCallback;
             _removeLayersCallback = removeLayersCallback;
-            _addSourceCallback = addSourceCallback;
             _removeSourceCallback = removeSourceCallback;
-            _attachDataSourceEventsCallback = attachDataSourceEventsCallback;
             _clearMapCallback = clearMapCallback;
             _clearLayersCallback = clearLayersCallback;
             _clearSourcesCallback = clearSourcesCallback;
@@ -248,11 +242,14 @@
         /// </summary>
         /// <param name="dataSource">Data source to add</param>
         /// <returns></returns>
-        public async Task AddSourceAsync<TSource>(TSource source) where TSource : Data.Source
+        public async Task AddSourceAsync<TSource>(TSource source) where TSource : Source
         {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddSourceAsync, "Adding source");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_AddSourceAsync, $"Id: {source.Id} | Type: {source.SourceType.ToString()}");
+
             if (_sources == null)
             {
-                _sources = new List<Data.Source>();
+                _sources = new List<Source>();
             }
 
             if (_sources.Any(ds => ds.Id == source.Id))
@@ -261,11 +258,13 @@
             }
 
             _sources.Add(source);
-            await _addSourceCallback(source);
+
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), source.Id, source.GetSourceOptions()?.GenerateJsOptions(), source.SourceType.ToString());
 
             if (source is DataSource dataSource)
             {
-                _attachDataSourceEventsCallback.Invoke(dataSource);
+                dataSource.Logger = _logger;
+                dataSource.JsRuntime = _jsRuntime;
             }
         }
 
@@ -283,10 +282,12 @@
         /// <returns></returns>
         public async Task RemoveDataSourceAsync(string id)
         {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_RemoveSourceAsync, "Removing data source");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_RemoveSourceAsync, $"Id: {id}");
             var dataSource = _sources?.SingleOrDefault(ds => ds.Id == id);
             if (dataSource != null)
             {
-                await _removeSourceCallback.Invoke(id);
+                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveSource.ToCoreNamespace(), id);
                 _sources.Remove(dataSource);
             }
         }
@@ -298,7 +299,8 @@
         public async Task ClearDataSourcesAsync()
         {
             _sources = null;
-            await _clearSourcesCallback.Invoke();
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_ClearSourcesAsync, $"Clearing sources");
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearSources.ToCoreNamespace());
         }
 
         #endregion

@@ -384,116 +384,160 @@
         [Fact]
         public async void Should_AddDataSource_Async()
         {
-            var assertaddSourceCallback = false;
-            var assertAttachEventsCallback = false;
             var dataSource = new DataSource();
 
-            var map = new Components.Map.Map("id", addSourceCallback: async dataSourceCallback => assertaddSourceCallback = Equals(dataSource, dataSourceCallback), attachDataSourceEventsCallback: async (dataSourceCallback) => assertAttachEventsCallback = Equals(dataSource, dataSourceCallback));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
             await map.AddSourceAsync(dataSource);
 
-            Assert.True(assertaddSourceCallback);
-            Assert.True(assertAttachEventsCallback);
             Assert.Single(map.Sources, dataSource);
+            Assert.Equal(_jsRuntimeMock.Object, dataSource.JsRuntime);
+            Assert.Equal(_loggerMock.Object, dataSource.Logger);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == dataSource.Id
+                && parameters[1] == null
+                && parameters[2] as string == dataSource.SourceType.ToString()
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_AddVectorTileSourceAsync()
         {
-            var assertaddSourceCallback = false;
-            var assertAttachEventsCallback = false;
             var source = new VectorTileSource();
 
-            var map = new Components.Map.Map("id", addSourceCallback: async dataSourceCallback => assertaddSourceCallback = Equals(source, dataSourceCallback), attachDataSourceEventsCallback: async (dataSourceCallback) => assertAttachEventsCallback = Equals(source, dataSourceCallback));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
             await map.AddSourceAsync(source);
 
-            Assert.True(assertaddSourceCallback);
-            Assert.False(assertAttachEventsCallback);
             Assert.Single(map.Sources, source);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == source.Id
+                && parameters[1] == null
+                && parameters[2] as string == source.SourceType.ToString()
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_NotAddDataSource_Async()
         {
-            var assertaddSourceCallback = false;
-            var assertAttachEventsCallback = false;
             var dataSource = new DataSource();
 
-            var map = new Components.Map.Map("id", addSourceCallback: async dataSourceCallback => assertaddSourceCallback = dataSource == dataSourceCallback, attachDataSourceEventsCallback: async (dataSourceCallback) => assertAttachEventsCallback = Equals(dataSource, dataSourceCallback));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
             await map.AddSourceAsync(dataSource);
             await Assert.ThrowsAnyAsync<SourceAlreadyExistingException>(async () => await map.AddSourceAsync(dataSource));
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == dataSource.Id
+                && parameters[1] == null
+                && parameters[2] as string == dataSource.SourceType.ToString()
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_RemoveDataSource_Async()
         {
-            var assertremoveSourceCallback = false;
             var dataSource = new DataSource();
             var dataSource2 = new DataSource();
-            var map = new Components.Map.Map("id", addSourceCallback: async dataSourceCallback => { }, removeSourceCallback: async removeSource => assertremoveSourceCallback = removeSource == dataSource.Id, attachDataSourceEventsCallback: async (dataSourceCallback) => { });
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
 
             await map.AddSourceAsync(dataSource);
             await map.AddSourceAsync(dataSource2);
             await map.RemoveDataSourceAsync(dataSource);
 
-            Assert.True(assertremoveSourceCallback);
             Assert.DoesNotContain(dataSource, map.Sources);
             Assert.Contains(dataSource2, map.Sources);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == dataSource.Id
+                && parameters[1] == null
+                && parameters[2] as string == dataSource.SourceType.ToString()
+            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == dataSource2.Id
+                && parameters[1] == null
+                && parameters[2] as string == dataSource2.SourceType.ToString()
+            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveSource.ToCoreNamespace(), dataSource.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_NotRemoveDataSource_Async()
         {
-            var assertremoveSourceCallback = false;
             var dataSource = new DataSource();
             var dataSource2 = new DataSource();
-            var map = new Components.Map.Map("id", addSourceCallback: async dataSourceCallback => { }, removeSourceCallback: async removeSourceCallback => { }, attachDataSourceEventsCallback: async (dataSourceCallback) => { });
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
 
             await map.AddSourceAsync(dataSource);
             await map.RemoveDataSourceAsync(dataSource2);
 
-            Assert.False(assertremoveSourceCallback);
             Assert.DoesNotContain(dataSource2, map.Sources);
             Assert.Contains(dataSource, map.Sources);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == dataSource.Id
+                && parameters[1] == null
+                && parameters[2] as string == dataSource.SourceType.ToString()
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_RemoveDataSource_ViaId_Async()
         {
-            var assertremoveSourceCallback = false;
             var dataSource = new DataSource();
             var dataSource2 = new DataSource();
-            var map = new Components.Map.Map("id", addSourceCallback: async dataSourceCallback => { }, removeSourceCallback: async removeSourceCallback => assertremoveSourceCallback = removeSourceCallback == dataSource.Id, attachDataSourceEventsCallback: async _ => { });
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
 
             await map.AddSourceAsync(dataSource);
             await map.AddSourceAsync(dataSource2);
             await map.RemoveDataSourceAsync(dataSource.Id);
 
-            Assert.True(assertremoveSourceCallback);
             Assert.DoesNotContain(dataSource, map.Sources);
             Assert.Contains(dataSource2, map.Sources);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == dataSource.Id
+                && parameters[1] == null
+                && parameters[2] as string == dataSource.SourceType.ToString()
+            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == dataSource2.Id
+                && parameters[1] == null
+                && parameters[2] as string == dataSource2.SourceType.ToString()
+            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveSource.ToCoreNamespace(), dataSource.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_NotRemoveDataSource_ViaId_Async()
         {
-            var assertremoveSourceCallback = false;
             var dataSource = new DataSource();
             var dataSource2 = new DataSource();
-            var map = new Components.Map.Map("id", addSourceCallback: async dataSourceCallback => { }, removeSourceCallback: async removeSourceCallback => { }, attachDataSourceEventsCallback: async _ => { });
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
 
             await map.AddSourceAsync(dataSource);
             await map.RemoveDataSourceAsync(dataSource2.Id);
 
-            Assert.False(assertremoveSourceCallback);
             Assert.DoesNotContain(dataSource2, map.Sources);
             Assert.Contains(dataSource, map.Sources);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == dataSource.Id
+                && parameters[1] == null
+                && parameters[2] as string == dataSource.SourceType.ToString()
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_ClearMap_Async()
         {
             var assertClearMapCallback = false;
-            var map = new Components.Map.Map("id", addHtmlMarkersCallback: async _ => { }, addLayerCallback: async (_, before) => { }, addSourceCallback: async _ => { }, addPopupCallback: async _ => { }, clearMapCallback: async () => assertClearMapCallback = true, attachDataSourceEventsCallback: async _ => { });
+            var map = new Components.Map.Map("id", addHtmlMarkersCallback: async _ => { }, addLayerCallback: async (_, before) => { }, addPopupCallback: async _ => { }, clearMapCallback: async () => assertClearMapCallback = true);
             await map.AddSourceAsync(new DataSource());
             await map.AddLayerAsync(new BubbleLayer());
             await map.AddHtmlMarkersAsync(new HtmlMarker(null));
@@ -522,13 +566,14 @@
         [Fact]
         public async void Should_ClearDataSources_Async()
         {
-            var assertClearDataSourcesCallback = false;
-            var map = new Components.Map.Map("id", addSourceCallback: async _ => { }, clearSourcesCallback: async () => assertClearDataSourcesCallback = true, attachDataSourceEventsCallback: _ => { });
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
 
             await map.AddSourceAsync(new DataSource());
             await map.ClearDataSourcesAsync();
-            Assert.True(assertClearDataSourcesCallback);
             Assert.Null(map.Sources);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), It.IsAny<object[]>()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearSources.ToCoreNamespace()), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]

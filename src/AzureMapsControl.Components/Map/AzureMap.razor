@@ -442,19 +442,6 @@
 
     #region Data sources
 
-    private async Task ClearSourcesAsync()
-    {
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_ClearSourcesAsync, $"Clearing sources");
-        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearSources.ToCoreNamespace());
-    }
-
-    private async Task AddSourceAsync(AzureMapsControl.Components.Data.Source source)
-    {
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_AddSourceAsync, "Adding source");
-        Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_AddSourceAsync, $"Id: {source.Id} | Type: {source.SourceType.ToString()}");
-        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), source.Id, source.GetSourceOptions()?.GenerateJsOptions(), source.SourceType.ToString());
-    }
-
     private void AttachDataSourcesCallback(AzureMapsControl.Components.Data.DataSource dataSource)
     {
         Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_AttachDataSourcesCallback, "Attaching callbacks to data source");
@@ -463,13 +450,6 @@
         dataSource.AddCallback = DataSource_AddAsync;
         dataSource.RemoveCallback = DataSource_RemoveAsync;
         dataSource.ClearCallback = DataSource_ClearAsync;
-    }
-
-    private async Task RemoveSourceAsync(string dataSourceId)
-    {
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_RemoveSourceAsync, "Removing data source");
-        Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_RemoveSourceAsync, $"Id: {dataSourceId}");
-        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveSource.ToCoreNamespace(), dataSourceId);
     }
 
     private async Task DataSource_ImportDataFromUrlAsync(string id, string url)
