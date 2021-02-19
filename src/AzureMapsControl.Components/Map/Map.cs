@@ -17,6 +17,7 @@
     using AzureMapsControl.Components.Traffic;
 
     using Microsoft.Extensions.Logging;
+    using Microsoft.JSInterop;
 
     public delegate void MapEvent(MapEventArgs eventArgs);
     public delegate void MapMouseEvent(MapMouseEventArgs eventArgs);
@@ -37,21 +38,17 @@
     {
         private readonly IMapJsRuntime _jsRuntime;
         private readonly ILogger _logger;
+        private readonly DrawingToolbarEventInvokeHelper _drawingToolbarEventInvokeHelper;
 
         #region Fields
 
         private readonly Func<IEnumerable<HtmlMarker>, Task> _addHtmlMarkersCallback;
         private readonly Func<IEnumerable<HtmlMarkerUpdate>, Task> _updateHtmlMarkersCallback;
         private readonly Func<IEnumerable<HtmlMarker>, Task> _removeHtmlMarkersCallback;
-        private readonly Func<DrawingToolbarOptions, Task> _addDrawingToolbarCallback;
-        private readonly Func<DrawingToolbarUpdateOptions, Task> _updateDrawingToolbarCallback;
-        private readonly Func<Task> _removeDrawingToolbarCallback;
         private readonly Func<Layer, string, Task> _addLayerCallback;
         private readonly Func<IEnumerable<string>, Task> _removeLayersCallback;
-        private readonly Func<string, Task> _removeSourceCallback;
         private readonly Func<Task> _clearMapCallback;
         private readonly Func<Task> _clearLayersCallback;
-        private readonly Func<Task> _clearSourcesCallback;
         private readonly Func<Task> _clearHtmlMarkersCallback;
         private readonly Func<Popup, Task> _addPopupCallback;
         private readonly Func<string, Task> _removePopupCallback;
@@ -149,26 +146,22 @@
 
         #endregion
 
-        internal Map(string id, IMapJsRuntime jsRuntime, ILogger logger)
+        internal Map(string id, IMapJsRuntime jsRuntime, ILogger logger, DrawingToolbarEventInvokeHelper drawingToolbarEventInvokeHelper = null)
         {
             Id = id;
             _jsRuntime = jsRuntime;
             _logger = logger;
+            _drawingToolbarEventInvokeHelper = drawingToolbarEventInvokeHelper;
         }
 
         internal Map(string id,
             Func<IEnumerable<HtmlMarker>, Task> addHtmlMarkersCallback = null,
             Func<IEnumerable<HtmlMarkerUpdate>, Task> updateHtmlMarkersCallback = null,
             Func<IEnumerable<HtmlMarker>, Task> removeHtmlMarkersCallback = null,
-            Func<DrawingToolbarOptions, Task> addDrawingToolbarCallback = null,
-            Func<DrawingToolbarUpdateOptions, Task> updateDrawingToolbarCallback = null,
-            Func<Task> removeDrawingToolbarCallback = null,
             Func<Layer, string, Task> addLayerCallback = null,
             Func<IEnumerable<string>, Task> removeLayersCallback = null,
-            Func<string, Task> removeSourceCallback = null,
             Func<Task> clearMapCallback = null,
             Func<Task> clearLayersCallback = null,
-            Func<Task> clearSourcesCallback = null,
             Func<Task> clearHtmlMarkersCallback = null,
             Func<Popup, Task> addPopupCallback = null,
             Func<string, Task> removePopupCallback = null,
@@ -182,15 +175,10 @@
             _addHtmlMarkersCallback = addHtmlMarkersCallback;
             _updateHtmlMarkersCallback = updateHtmlMarkersCallback;
             _removeHtmlMarkersCallback = removeHtmlMarkersCallback;
-            _addDrawingToolbarCallback = addDrawingToolbarCallback;
-            _updateDrawingToolbarCallback = updateDrawingToolbarCallback;
-            _removeDrawingToolbarCallback = removeDrawingToolbarCallback;
             _addLayerCallback = addLayerCallback;
             _removeLayersCallback = removeLayersCallback;
-            _removeSourceCallback = removeSourceCallback;
             _clearMapCallback = clearMapCallback;
             _clearLayersCallback = clearLayersCallback;
-            _clearSourcesCallback = clearSourcesCallback;
             _clearHtmlMarkersCallback = clearHtmlMarkersCallback;
             _addPopupCallback = addPopupCallback;
             _removePopupCallback = removePopupCallback;
@@ -314,8 +302,25 @@
         /// <returns></returns>
         public async Task AddDrawingToolbarAsync(DrawingToolbarOptions drawingToolbarOptions)
         {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddDrawingToolbarAsync, "Adding drawing toolbar");
             DrawingToolbarOptions = drawingToolbarOptions;
-            await _addDrawingToolbarCallback.Invoke(drawingToolbarOptions);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.AddDrawingToolbar.ToDrawingNamespace(),
+            new DrawingToolbarCreationOptions {
+                Buttons = drawingToolbarOptions.Buttons?.Select(button => button.ToString()).ToArray(),
+                ContainerId = drawingToolbarOptions.ContainerId,
+                DragHandleStyle = drawingToolbarOptions.DragHandleStyle,
+                FreehandInterval = drawingToolbarOptions.FreehandInterval,
+                InteractionType = drawingToolbarOptions.InteractionType.ToString(),
+                Mode = drawingToolbarOptions.Mode.ToString(),
+                NumColumns = drawingToolbarOptions.NumColumns,
+                Position = drawingToolbarOptions.Position.ToString(),
+                SecondaryDragHandleStyle = drawingToolbarOptions.SecondaryDragHandleStyle,
+                ShapeDraggingEnabled = drawingToolbarOptions.ShapesDraggingEnabled,
+                Style = drawingToolbarOptions.Style.ToString(),
+                Visible = drawingToolbarOptions.Visible,
+                Events = drawingToolbarOptions.Events?.EnabledEvents
+            },
+            DotNetObjectReference.Create(_drawingToolbarEventInvokeHelper));
         }
 
         /// <summary>
@@ -325,13 +330,22 @@
         /// <returns></returns>
         public async Task UpdateDrawingToolbarAsync(DrawingToolbarUpdateOptions drawingToolbarUpdateOptions)
         {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_UpdateDrawingToolbarAsync, "Updating drawing toolbar");
             DrawingToolbarOptions.Buttons = drawingToolbarUpdateOptions.Buttons;
             DrawingToolbarOptions.ContainerId = drawingToolbarUpdateOptions.ContainerId;
             DrawingToolbarOptions.NumColumns = drawingToolbarUpdateOptions.NumColumns;
             DrawingToolbarOptions.Position = drawingToolbarUpdateOptions.Position;
             DrawingToolbarOptions.Style = drawingToolbarUpdateOptions.Style;
             DrawingToolbarOptions.Visible = drawingToolbarUpdateOptions.Visible;
-            await _updateDrawingToolbarCallback.Invoke(drawingToolbarUpdateOptions);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.UpdateDrawingToolbar.ToDrawingNamespace(),
+                new DrawingToolbarCreationOptions {
+                    Buttons = DrawingToolbarOptions.Buttons?.Select(button => button.ToString()).ToArray(),
+                    ContainerId = DrawingToolbarOptions.ContainerId,
+                    NumColumns = DrawingToolbarOptions.NumColumns,
+                    Position = DrawingToolbarOptions.Position.ToString(),
+                    Style = DrawingToolbarOptions.Style.ToString(),
+                    Visible = DrawingToolbarOptions.Visible
+                });
         }
 
         /// <summary>
@@ -340,9 +354,10 @@
         /// <returns></returns>
         public async Task RemoveDrawingToolbarAsync()
         {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_RemoveDrawingToolbarAsync, "Removing drawing toolbar");
             if (DrawingToolbarOptions != null)
             {
-                await _removeDrawingToolbarCallback.Invoke();
+                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.RemoveDrawingToolbar.ToDrawingNamespace());
                 DrawingToolbarOptions = null;
             }
         }

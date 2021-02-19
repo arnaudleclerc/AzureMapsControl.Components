@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Atlas;
     using AzureMapsControl.Components.Controls;
@@ -16,6 +17,7 @@
     using AzureMapsControl.Components.Traffic;
 
     using Microsoft.Extensions.Logging;
+    using Microsoft.JSInterop;
 
     using Moq;
 
@@ -146,7 +148,7 @@
         public async void Shoud_NotRemoveAnyHtmlMarkers_Async()
         {
             var assertRemoveCallback = false;
-            var map = new Components.Map.Map("id", null, async markersAddCallback => { }, null, async markersRemoveCallback => assertRemoveCallback = true, null, null, null, null, null);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
 
             await map.RemoveHtmlMarkersAsync(new List<HtmlMarker> { new HtmlMarker(null) });
             Assert.False(assertRemoveCallback);
@@ -201,19 +203,22 @@
         [Fact]
         public async void Should_AddDrawingToolbar_Async()
         {
-            var assertAddDrawingToolbarCallback = false;
             var drawingToolbarOptions = new DrawingToolbarOptions();
-            var map = new Components.Map.Map("id", addDrawingToolbarCallback: async addDrawingCallback => assertAddDrawingToolbarCallback = addDrawingCallback == drawingToolbarOptions);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, new DrawingToolbarEventInvokeHelper(eventArgs => Task.CompletedTask));
             await map.AddDrawingToolbarAsync(drawingToolbarOptions);
 
-            Assert.True(assertAddDrawingToolbarCallback);
             Assert.Equal(drawingToolbarOptions, map.DrawingToolbarOptions);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.AddDrawingToolbar.ToDrawingNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] is DrawingToolbarCreationOptions
+                && parameters[1] is DotNetObjectReference<DrawingToolbarEventInvokeHelper>
+             )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_UpdateDrawingToolbar_Async()
         {
-            var assertUpdateDrawingToolbarCallback = false;
             var drawingToolbarOptions = new DrawingToolbarOptions();
             var updateDrawingToolbarOptions = new DrawingToolbarUpdateOptions {
                 Buttons = new List<DrawingButton>(),
@@ -223,42 +228,53 @@
                 Style = DrawingToolbarStyle.Dark,
                 Visible = false
             };
-            var map = new Components.Map.Map("id", addDrawingToolbarCallback: async addDrawingCallback => { }, updateDrawingToolbarCallback: async updateDrawingCallback => assertUpdateDrawingToolbarCallback = updateDrawingCallback == updateDrawingToolbarOptions);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, new DrawingToolbarEventInvokeHelper(eventArgs => Task.CompletedTask));
             await map.AddDrawingToolbarAsync(drawingToolbarOptions);
             await map.UpdateDrawingToolbarAsync(updateDrawingToolbarOptions);
 
-            Assert.True(assertUpdateDrawingToolbarCallback);
             Assert.Equal(updateDrawingToolbarOptions.Buttons, map.DrawingToolbarOptions.Buttons);
             Assert.Equal(updateDrawingToolbarOptions.ContainerId, map.DrawingToolbarOptions.ContainerId);
             Assert.Equal(updateDrawingToolbarOptions.NumColumns, map.DrawingToolbarOptions.NumColumns);
             Assert.Equal(updateDrawingToolbarOptions.Position, map.DrawingToolbarOptions.Position);
             Assert.Equal(updateDrawingToolbarOptions.Style, map.DrawingToolbarOptions.Style);
             Assert.Equal(updateDrawingToolbarOptions.Visible, map.DrawingToolbarOptions.Visible);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.AddDrawingToolbar.ToDrawingNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] is DrawingToolbarCreationOptions
+                && parameters[1] is DotNetObjectReference<DrawingToolbarEventInvokeHelper>
+             )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.UpdateDrawingToolbar.ToDrawingNamespace(), It.Is<object[]>(parameters =>
+                parameters.Single() is DrawingToolbarCreationOptions
+             )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_RemoveDrawingToolbar_Async()
         {
-            var assertRemoveDrawingToolbarCallback = false;
-            var map = new Components.Map.Map("id", addDrawingToolbarCallback: async addDrawingCallback => { }, removeDrawingToolbarCallback: async () => assertRemoveDrawingToolbarCallback = true);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, new DrawingToolbarEventInvokeHelper(eventArgs => Task.CompletedTask));
 
             await map.AddDrawingToolbarAsync(new DrawingToolbarOptions());
             await map.RemoveDrawingToolbarAsync();
 
-            Assert.True(assertRemoveDrawingToolbarCallback);
             Assert.Null(map.DrawingToolbarOptions);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.AddDrawingToolbar.ToDrawingNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] is DrawingToolbarCreationOptions
+                && parameters[1] is DotNetObjectReference<DrawingToolbarEventInvokeHelper>
+             )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.RemoveDrawingToolbar.ToDrawingNamespace()), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_NotRemoveDrawingToolbar_Async()
         {
-            var assertRemoveDrawingToolbarCallback = false;
-            var map = new Components.Map.Map("id", removeDrawingToolbarCallback: async () => assertRemoveDrawingToolbarCallback = true);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, new DrawingToolbarEventInvokeHelper(eventArgs => Task.CompletedTask));
 
             await map.RemoveDrawingToolbarAsync();
 
-            Assert.False(assertRemoveDrawingToolbarCallback);
             Assert.Null(map.DrawingToolbarOptions);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]

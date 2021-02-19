@@ -13,9 +13,6 @@
         AzureMap_DataSource_RemoveAsync = 1009,
         AzureMap_DataSource_ClearAsync = 1010,
         AzureMap_DrawingToolbarEvent = 1011,
-        AzureMap_AddDrawingToolbarAsync = 1012,
-        AzureMap_UpdateDrawingToolbarAsync = 1013,
-        AzureMap_RemoveDrawingToolbarAsync = 1014,
         AzureMap_HtmlMarkerEventReceivedAsync = 1015,
         AzureMap_ClearHtmlMarkersAsync = 1016,
         AzureMap_AddHtmlMarkersAsync = 1017,
@@ -44,6 +41,9 @@
         Map_AddSourceAsync = 4001,
         Map_RemoveSourceAsync = 4002,
         Map_ClearSourcesAsync = 4003,
+        Map_AddDrawingToolbarAsync = 4004,
+        Map_UpdateDrawingToolbarAsync = 4005,
+        Map_RemoveDrawingToolbarAsync = 4006,
         OverviewMapControl_UpdateAsync = 5000
     }
 

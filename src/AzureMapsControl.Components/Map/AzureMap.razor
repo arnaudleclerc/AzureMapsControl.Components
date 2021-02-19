@@ -558,53 +558,6 @@
         }
     }
 
-    private async Task AddDrawingToolbarAsync(AzureMapsControl.Components.Drawing.DrawingToolbarOptions drawingToolbarOptions)
-    {
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_AddDrawingToolbarAsync, "Adding drawing toolbar");
-        if (drawingToolbarOptions != null)
-        {
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.AddDrawingToolbar.ToDrawingNamespace(),
-            new AzureMapsControl.Components.Drawing.DrawingToolbarCreationOptions
-            {
-                Buttons = drawingToolbarOptions.Buttons?.Select(button => button.ToString()).ToArray(),
-                ContainerId = drawingToolbarOptions.ContainerId,
-                DragHandleStyle = drawingToolbarOptions.DragHandleStyle,
-                FreehandInterval = drawingToolbarOptions.FreehandInterval,
-                InteractionType = drawingToolbarOptions.InteractionType.ToString(),
-                Mode = drawingToolbarOptions.Mode.ToString(),
-                NumColumns = drawingToolbarOptions.NumColumns,
-                Position = drawingToolbarOptions.Position.ToString(),
-                SecondaryDragHandleStyle = drawingToolbarOptions.SecondaryDragHandleStyle,
-                ShapeDraggingEnabled = drawingToolbarOptions.ShapesDraggingEnabled,
-                Style = drawingToolbarOptions.Style.ToString(),
-                Visible = drawingToolbarOptions.Visible,
-                Events = drawingToolbarOptions.Events?.EnabledEvents
-            },
-            DotNetObjectReference.Create(_drawingToolbarEventInvokeHelper));
-        }
-    }
-
-    private async Task UpdateDrawingToolbarAsync(AzureMapsControl.Components.Drawing.DrawingToolbarUpdateOptions drawingToolbarOptions)
-    {
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_UpdateDrawingToolbarAsync, "Updating drawing toolbar");
-        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.UpdateDrawingToolbar.ToDrawingNamespace(),
-            new AzureMapsControl.Components.Drawing.DrawingToolbarCreationOptions
-            {
-                Buttons = drawingToolbarOptions.Buttons?.Select(button => button.ToString()).ToArray(),
-                ContainerId = drawingToolbarOptions.ContainerId,
-                NumColumns = drawingToolbarOptions.NumColumns,
-                Position = drawingToolbarOptions.Position.ToString(),
-                Style = drawingToolbarOptions.Style.ToString(),
-                Visible = drawingToolbarOptions.Visible
-            });
-    }
-
-    private async Task RemoveDrawingToolbarAsync()
-    {
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_RemoveDrawingToolbarAsync, "Removing drawing toolbar");
-        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.RemoveDrawingToolbar.ToDrawingNamespace());
-    }
-
     #endregion
 
     #region HTML Markers
@@ -745,7 +698,7 @@
                 UserInteractionOptions,
                 TrafficOptions);
 
-            await MapService.AddMapAsync(new Map(Id, JSRuntime, Logger)
+            await MapService.AddMapAsync(new Map(Id, JSRuntime, Logger, _drawingToolbarEventInvokeHelper)
             {
                 Controls = Controls,
                 HtmlMarkers = HtmlMarkers,
@@ -758,7 +711,7 @@
 
             await MapService.Map.AddControlsAsync(Controls);
             await AddHtmlMarkersAsync(HtmlMarkers);
-            await AddDrawingToolbarAsync(DrawingToolbarOptions);
+            await MapService.Map.AddDrawingToolbarAsync(DrawingToolbarOptions);
         }
         await DispatchMapEventAsync(mapEvent);
     }
