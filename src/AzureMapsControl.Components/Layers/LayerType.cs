@@ -2,8 +2,7 @@
 {
     using System.Diagnostics.CodeAnalysis;
 
-    [ExcludeFromCodeCoverage]
-    internal sealed class LayerType
+    internal struct LayerType
     {
         private readonly string _type;
 

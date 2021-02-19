@@ -309,121 +309,167 @@
         [Fact]
         public async void Should_AddALayer_Async()
         {
-            var assertAddLayerCallback = false;
             var layer = new BubbleLayer();
-            var map = new Components.Map.Map("id", addLayerCallback: async (layerCallback, beforeCallback) => assertAddLayerCallback = layerCallback == layer && beforeCallback == null);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => Task.CompletedTask));
 
             await map.AddLayerAsync(layer);
-            Assert.True(assertAddLayerCallback);
             Assert.Contains(layer, map.Layers);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddLayer.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == layer.Id
+                && parameters[1] == null
+                && parameters[2] as string == layer.Type.ToString()
+                && parameters[3] == null
+                && parameters[4] is IEnumerable<string> && (parameters[4] as IEnumerable<string>).Count() == 0
+                && parameters[5] is DotNetObjectReference<LayerEventInvokeHelper>
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_AddALayerWithBefore_Async()
         {
-            var assertAddLayerCallback = false;
             var layer = new BubbleLayer();
             const string before = "before";
-            var map = new Components.Map.Map("id", addLayerCallback: async (layerCallback, beforeCallback) => assertAddLayerCallback = layerCallback == layer && beforeCallback == before);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => Task.CompletedTask));
 
             await map.AddLayerAsync(layer, before);
-            Assert.True(assertAddLayerCallback);
             Assert.Contains(layer, map.Layers);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddLayer.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == layer.Id
+                && parameters[1] as string == before
+                && parameters[2] as string == layer.Type.ToString()
+                && parameters[3] == null
+                && parameters[4] is IEnumerable<string> && (parameters[4] as IEnumerable<string>).Count() == 0
+                && parameters[5] is DotNetObjectReference<LayerEventInvokeHelper>
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_NotAddLayerWithSameId_Async()
         {
             var layer = new BubbleLayer();
-            var map = new Components.Map.Map("id", addLayerCallback: async (layerCallback, beforeCallback) => { });
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => Task.CompletedTask));
 
             await map.AddLayerAsync(layer);
             await Assert.ThrowsAnyAsync<LayerAlreadyAddedException>(async () => await map.AddLayerAsync(layer));
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddLayer.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == layer.Id
+                && parameters[1] == null
+                && parameters[2] as string == layer.Type.ToString()
+                && parameters[3] == null
+                && parameters[4] is IEnumerable<string> && (parameters[4] as IEnumerable<string>).Count() == 0
+                && parameters[5] is DotNetObjectReference<LayerEventInvokeHelper>
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_RemoveOneLayer_Async()
         {
-            var assertRemoveLayerCallback = false;
             var layer1 = new BubbleLayer();
             var layer2 = new BubbleLayer();
 
-            var map = new Components.Map.Map("id", addLayerCallback: async (layerCallback, beforeCallback) => { }, removeLayersCallback: async layers => assertRemoveLayerCallback = layers.Single() == layer1.Id);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => Task.CompletedTask));
             await map.AddLayerAsync(layer1);
             await map.AddLayerAsync(layer2);
             await map.RemoveLayersAsync(layer1);
 
-            Assert.True(assertRemoveLayerCallback);
             Assert.DoesNotContain(layer1, map.Layers);
             Assert.Contains(layer2, map.Layers);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddLayer.ToCoreNamespace(), It.IsAny<object[]>()), Times.Exactly(2));
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveLayers.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] is IEnumerable<string>
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_RemoveMultipleLayers_Async()
         {
-            var assertRemoveLayerCallback = false;
             var layer1 = new BubbleLayer();
             var layer2 = new BubbleLayer();
 
-            var map = new Components.Map.Map("id", addLayerCallback: async (layerCallback, beforeCallback) => { }, removeLayersCallback: async layers => assertRemoveLayerCallback = layers.Contains(layer1.Id) && layers.Contains(layer2.Id));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => Task.CompletedTask));
             await map.AddLayerAsync(layer1);
             await map.AddLayerAsync(layer2);
             await map.RemoveLayersAsync(new List<Layer> { layer1, layer2 });
 
-            Assert.True(assertRemoveLayerCallback);
             Assert.DoesNotContain(layer1, map.Layers);
             Assert.DoesNotContain(layer2, map.Layers);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddLayer.ToCoreNamespace(), It.IsAny<object[]>()), Times.Exactly(2));
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveLayers.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] is IEnumerable<string>
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_RemoveMultipleLayers_ParamsVersion_Async()
         {
-            var assertRemoveLayerCallback = false;
             var layer1 = new BubbleLayer();
             var layer2 = new BubbleLayer();
 
-            var map = new Components.Map.Map("id", addLayerCallback: async (layerCallback, beforeCallback) => { }, removeLayersCallback: async layers => assertRemoveLayerCallback = layers.Contains(layer1.Id) && layers.Contains(layer2.Id));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => Task.CompletedTask));
             await map.AddLayerAsync(layer1);
             await map.AddLayerAsync(layer2);
             await map.RemoveLayersAsync(layer1, layer2);
 
-            Assert.True(assertRemoveLayerCallback);
             Assert.DoesNotContain(layer1, map.Layers);
             Assert.DoesNotContain(layer2, map.Layers);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddLayer.ToCoreNamespace(), It.IsAny<object[]>()), Times.Exactly(2));
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveLayers.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] is IEnumerable<string>
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_RemoveMultipleLayers_ViaId_Async()
         {
-            var assertRemoveLayerCallback = false;
             var layer1 = new BubbleLayer();
             var layer2 = new BubbleLayer();
 
-            var map = new Components.Map.Map("id", addLayerCallback: async (layerCallback, beforeCallback) => { }, removeLayersCallback: async layers => assertRemoveLayerCallback = layers.Contains(layer1.Id) && layers.Contains(layer2.Id));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => Task.CompletedTask));
             await map.AddLayerAsync(layer1);
             await map.AddLayerAsync(layer2);
             await map.RemoveLayersAsync(new List<string> { layer1.Id, layer2.Id });
 
-            Assert.True(assertRemoveLayerCallback);
             Assert.DoesNotContain(layer1, map.Layers);
             Assert.DoesNotContain(layer2, map.Layers);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddLayer.ToCoreNamespace(), It.IsAny<object[]>()), Times.Exactly(2));
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveLayers.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] is IEnumerable<string>
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_RemoveMultipleLayers_ViaId_ParamsVersion_Async()
         {
-            var assertRemoveLayerCallback = false;
             var layer1 = new BubbleLayer();
             var layer2 = new BubbleLayer();
 
-            var map = new Components.Map.Map("id", addLayerCallback: async (layerCallback, beforeCallback) => { }, removeLayersCallback: async layers => assertRemoveLayerCallback = layers.Contains(layer1.Id) && layers.Contains(layer2.Id));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => Task.CompletedTask));
             await map.AddLayerAsync(layer1);
             await map.AddLayerAsync(layer2);
             await map.RemoveLayersAsync(layer1.Id, layer2.Id);
 
-            Assert.True(assertRemoveLayerCallback);
             Assert.DoesNotContain(layer1, map.Layers);
             Assert.DoesNotContain(layer2, map.Layers);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddLayer.ToCoreNamespace(), It.IsAny<object[]>()), Times.Exactly(2));
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveLayers.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] is IEnumerable<string>
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -582,7 +628,7 @@
         public async void Should_ClearMap_Async()
         {
             var assertClearMapCallback = false;
-            var map = new Components.Map.Map("id", addLayerCallback: async (_, before) => { }, addPopupCallback: async _ => { }, clearMapCallback: async () => assertClearMapCallback = true);
+            var map = new Components.Map.Map("id", addPopupCallback: async _ => { }, clearMapCallback: async () => assertClearMapCallback = true);
             await map.AddSourceAsync(new DataSource());
             await map.AddLayerAsync(new BubbleLayer());
             await map.AddHtmlMarkersAsync(new HtmlMarker(null));
@@ -599,13 +645,15 @@
         [Fact]
         public async void Should_ClearLayers_Async()
         {
-            var assertClearLayersCallback = false;
-            var map = new Components.Map.Map("id", addLayerCallback: async (_, before) => { }, clearLayersCallback: async () => assertClearLayersCallback = true);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => Task.CompletedTask));
             await map.AddLayerAsync(new BubbleLayer());
 
             await map.ClearLayersAsync();
-            Assert.True(assertClearLayersCallback);
             Assert.Null(map.Layers);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddLayer.ToCoreNamespace(), It.IsAny<object[]>()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearLayers.ToCoreNamespace()), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]

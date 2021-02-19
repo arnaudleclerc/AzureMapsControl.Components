@@ -15,9 +15,6 @@
         AzureMap_DrawingToolbarEvent = 1011,
         AzureMap_HtmlMarkerEventReceivedAsync = 1015,
         AzureMap_LayerEventReceivedAsync = 1020,
-        AzureMap_ClearLayersAsync = 1021,
-        AzureMap_AddLayerAsync = 1022,
-        AzureMap_RemoveLayersAsync = 1023,
         AzureMap_MapEventReceivedAsync = 1024,
         AzureMap_SetCameraOptionsAsync = 1025,
         AzureMap_SetStyleOptionsAsync = 1026,
@@ -44,6 +41,9 @@
         Map_UpdateHtmlMarkersAsync = 4008,
         Map_RemoveHtmlMarkersAsync = 4009,
         Map_ClearHtmlMarkersAsync = 4010,
+        Map_AddLayerAsync = 4011,
+        Map_RemoveLayersAsync = 4012,
+        Map_ClearLayersAsync = 4013,
         OverviewMapControl_UpdateAsync = 5000
     }
 

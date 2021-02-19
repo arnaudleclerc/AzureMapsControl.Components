@@ -600,33 +600,6 @@
         }
     }
 
-    private async Task ClearLayersAsync()
-    {
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_ClearLayersAsync, "Clearing layers");
-        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearLayers.ToCoreNamespace());
-    }
-
-    private async Task AddLayerAsync(AzureMapsControl.Components.Layers.Layer layer, string before)
-    {
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_AddLayerAsync, "Adding layer");
-        Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_AddLayerAsync, $"Id: {layer.Id} | Type: {layer.Type} | Events: {string.Join('|', layer.EventActivationFlags.EnabledEvents)} | Before: {before}");
-        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddLayer.ToCoreNamespace(),
-            layer.Id,
-            before,
-            layer.Type.ToString(),
-            layer.GetLayerOptions()?.GenerateJsOptions(),
-            layer.EventActivationFlags.EnabledEvents,
-            DotNetObjectReference.Create(_layerEventInvokeHelper));
-    }
-
-    private async Task RemoveLayersAsync(IEnumerable<string> layerIds)
-    {
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_RemoveLayersAsync, "Removing layers");
-        Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_RemoveLayersAsync, $"Ids: {string.Join('|', layerIds)}");
-
-        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveLayers.ToCoreNamespace(), layerIds);
-    }
-
     #endregion
 
     #region Map
@@ -644,7 +617,7 @@
                 UserInteractionOptions,
                 TrafficOptions);
 
-            await MapService.AddMapAsync(new Map(Id, JSRuntime, Logger, _drawingToolbarEventInvokeHelper, _htmlMarkerEventInvokeHelper)
+            await MapService.AddMapAsync(new Map(Id, JSRuntime, Logger, _drawingToolbarEventInvokeHelper, _htmlMarkerEventInvokeHelper, _layerEventInvokeHelper)
             {
                 Controls = Controls,
                 HtmlMarkers = HtmlMarkers,

@@ -40,13 +40,11 @@
         private readonly ILogger _logger;
         private readonly DrawingToolbarEventInvokeHelper _drawingToolbarEventInvokeHelper;
         private readonly HtmlMarkerInvokeHelper _htmlMarkerInvokeHelper;
+        private readonly LayerEventInvokeHelper _layerEventInvokeHelper;
 
         #region Fields
 
-        private readonly Func<Layer, string, Task> _addLayerCallback;
-        private readonly Func<IEnumerable<string>, Task> _removeLayersCallback;
         private readonly Func<Task> _clearMapCallback;
-        private readonly Func<Task> _clearLayersCallback;
         private readonly Func<Popup, Task> _addPopupCallback;
         private readonly Func<string, Task> _removePopupCallback;
         private readonly Func<Task> _clearPopupsCallback;
@@ -143,20 +141,23 @@
 
         #endregion
 
-        internal Map(string id, IMapJsRuntime jsRuntime, ILogger logger, DrawingToolbarEventInvokeHelper drawingToolbarEventInvokeHelper = null, HtmlMarkerInvokeHelper htmlMarkerInvokeHelper = null)
+        internal Map(string id,
+            IMapJsRuntime jsRuntime,
+            ILogger logger,
+            DrawingToolbarEventInvokeHelper drawingToolbarEventInvokeHelper = null,
+            HtmlMarkerInvokeHelper htmlMarkerInvokeHelper = null,
+            LayerEventInvokeHelper layerEventInvokeHelper = null)
         {
             Id = id;
             _jsRuntime = jsRuntime;
             _logger = logger;
             _drawingToolbarEventInvokeHelper = drawingToolbarEventInvokeHelper;
             _htmlMarkerInvokeHelper = htmlMarkerInvokeHelper;
+            _layerEventInvokeHelper = layerEventInvokeHelper;
         }
 
         internal Map(string id,
-            Func<Layer, string, Task> addLayerCallback = null,
-            Func<IEnumerable<string>, Task> removeLayersCallback = null,
             Func<Task> clearMapCallback = null,
-            Func<Task> clearLayersCallback = null,
             Func<Popup, Task> addPopupCallback = null,
             Func<string, Task> removePopupCallback = null,
             Func<Task> clearPopupsCallback = null,
@@ -166,10 +167,7 @@
             Func<TrafficOptions, Task> setTrafficOptions = null)
         {
             Id = id;
-            _addLayerCallback = addLayerCallback;
-            _removeLayersCallback = removeLayersCallback;
             _clearMapCallback = clearMapCallback;
-            _clearLayersCallback = clearLayersCallback;
             _addPopupCallback = addPopupCallback;
             _removePopupCallback = removePopupCallback;
             _clearPopupsCallback = clearPopupsCallback;
@@ -500,7 +498,16 @@
             }
 
             _layers.Add(layer);
-            await _addLayerCallback.Invoke(layer, before);
+
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddLayerAsync, "Adding layer");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_AddLayerAsync, $"Id: {layer.Id} | Type: {layer.Type} | Events: {string.Join('|', layer.EventActivationFlags.EnabledEvents)} | Before: {before}");
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddLayer.ToCoreNamespace(),
+                layer.Id,
+                before,
+                layer.Type.ToString(),
+                layer.GetLayerOptions()?.GenerateJsOptions(),
+                layer.EventActivationFlags.EnabledEvents,
+                DotNetObjectReference.Create(_layerEventInvokeHelper));
         }
 
         /// <summary>
@@ -531,10 +538,13 @@
         /// <returns></returns>
         public async Task RemoveLayersAsync(IEnumerable<string> layerIds)
         {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_RemoveLayersAsync, "Removing layers");
             var layers = _layers?.Where(l => layerIds.Contains(l.Id));
             if (layers.Any())
             {
-                await _removeLayersCallback.Invoke(layers.Select(l => l.Id));
+                var layerIdsToRemove = layers.Select(l => l.Id);
+                _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_RemoveLayersAsync, $"Ids: {string.Join('|', layerIds)}");
+                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveLayers.ToCoreNamespace(), layerIdsToRemove);
                 _layers.RemoveAll(l => layerIds.Contains(l.Id));
             }
         }
@@ -546,7 +556,8 @@
         public async Task ClearLayersAsync()
         {
             _layers = null;
-            await _clearLayersCallback.Invoke();
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_ClearLayersAsync, "Clearing layers");
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearLayers.ToCoreNamespace());
         }
 
         #endregion
