@@ -44,14 +44,9 @@
 
         #region Fields
 
-        private readonly Func<Task> _clearMapCallback;
         private readonly Func<Popup, Task> _addPopupCallback;
         private readonly Func<string, Task> _removePopupCallback;
         private readonly Func<Task> _clearPopupsCallback;
-        private readonly Func<CameraOptions, Task> _setCameraCallback;
-        private readonly Func<StyleOptions, Task> _setStyleCallback;
-        private readonly Func<UserInteractionOptions, Task> _setUserInteractionCallback;
-        private readonly Func<TrafficOptions, Task> _setTrafficOptions;
 
         private List<Layer> _layers;
         private List<Source> _sources;
@@ -157,24 +152,14 @@
         }
 
         internal Map(string id,
-            Func<Task> clearMapCallback = null,
             Func<Popup, Task> addPopupCallback = null,
             Func<string, Task> removePopupCallback = null,
-            Func<Task> clearPopupsCallback = null,
-            Func<CameraOptions, Task> setCameraCallback = null,
-            Func<StyleOptions, Task> setStyleCallback = null,
-            Func<UserInteractionOptions, Task> setUserInteractionCallback = null,
-            Func<TrafficOptions, Task> setTrafficOptions = null)
+            Func<Task> clearPopupsCallback = null)
         {
             Id = id;
-            _clearMapCallback = clearMapCallback;
             _addPopupCallback = addPopupCallback;
             _removePopupCallback = removePopupCallback;
             _clearPopupsCallback = clearPopupsCallback;
-            _setCameraCallback = setCameraCallback;
-            _setStyleCallback = setStyleCallback;
-            _setUserInteractionCallback = setUserInteractionCallback;
-            _setTrafficOptions = setTrafficOptions;
         }
 
         # region Controls
@@ -574,7 +559,8 @@
             _layers = null;
             HtmlMarkers = null;
             _popups = null;
-            await _clearMapCallback.Invoke();
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_ClearMapAsync, "Clearing map");
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearMap.ToCoreNamespace());
         }
 
         /// <summary>
@@ -589,7 +575,8 @@
                 CameraOptions = new CameraOptions();
             }
             configure.Invoke(CameraOptions);
-            await _setCameraCallback.Invoke(CameraOptions);
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_SetCameraOptionsAsync, "Setting camera options");
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCameraOptions.ToCoreNamespace(), CameraOptions);
         }
 
         /// <summary>
@@ -604,7 +591,8 @@
                 StyleOptions = new StyleOptions();
             }
             configure.Invoke(StyleOptions);
-            await _setStyleCallback.Invoke(StyleOptions);
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_SetStyleOptionsAsync, "Setting style options");
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetStyleOptions.ToCoreNamespace(), StyleOptions);
         }
 
         /// <summary>
@@ -619,7 +607,8 @@
                 UserInteractionOptions = new UserInteractionOptions();
             }
             configure.Invoke(UserInteractionOptions);
-            await _setUserInteractionCallback.Invoke(UserInteractionOptions);
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_SetUserInteractionAsync, "Setting user interaction options");
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetUserInteraction.ToCoreNamespace(), UserInteractionOptions);
         }
 
         /// <summary>
@@ -634,7 +623,8 @@
                 TrafficOptions = new TrafficOptions();
             }
             configure.Invoke(TrafficOptions);
-            await _setTrafficOptions.Invoke(TrafficOptions);
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_SetTrafficAsync, "Setting traffic options");
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetTraffic.ToCoreNamespace(), TrafficOptions);
         }
 
         internal void DispatchEvent(MapJsEventArgs eventArgs)

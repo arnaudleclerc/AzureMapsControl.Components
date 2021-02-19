@@ -200,7 +200,7 @@
                 parameters[0] is IEnumerable<HtmlMarkerCreationOptions> && (parameters[0] as IEnumerable<HtmlMarkerCreationOptions>).Count() == 2
                 && parameters[1] is DotNetObjectReference<HtmlMarkerInvokeHelper>
             )), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveHtmlMarkers.ToCoreNamespace(), It.Is<object[]>(parameters => 
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveHtmlMarkers.ToCoreNamespace(), It.Is<object[]>(parameters =>
                 parameters.Single() is IEnumerable<string> && (parameters[0] as IEnumerable<string>).Single() == htmlMarker.Id)
             ), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
@@ -628,7 +628,10 @@
         public async void Should_ClearMap_Async()
         {
             var assertClearMapCallback = false;
-            var map = new Components.Map.Map("id", addPopupCallback: async _ => { }, clearMapCallback: async () => assertClearMapCallback = true);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, new DrawingToolbarEventInvokeHelper(eventArgs => Task.CompletedTask),
+                new HtmlMarkerInvokeHelper(eventArgs => Task.CompletedTask),
+                new LayerEventInvokeHelper(eventArgs => Task.CompletedTask));
+
             await map.AddSourceAsync(new DataSource());
             await map.AddLayerAsync(new BubbleLayer());
             await map.AddHtmlMarkersAsync(new HtmlMarker(null));
@@ -640,6 +643,12 @@
             Assert.Null(map.Layers);
             Assert.Null(map.HtmlMarkers);
             Assert.Null(map.Popups);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), It.IsAny<object[]>()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddLayer.ToCoreNamespace(), It.IsAny<object[]>()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(), It.IsAny<object[]>()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearMap.ToCoreNamespace(), It.IsAny<object[]>()), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -772,109 +781,125 @@
         [Fact]
         public async void Should_UpdateCameraOptions_Async()
         {
-            var assertOptionsCallback = false;
             var center = new Position(10, 10);
             var initialCameraOptions = new CameraOptions {
                 Duration = 10
             };
-            var map = new Map("id", setCameraCallback: async options => assertOptionsCallback = options.Center == center && options.Duration == initialCameraOptions.Duration) {
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object) {
                 CameraOptions = initialCameraOptions
             };
 
             await map.SetCameraOptionsAsync(options => options.Center = center);
-            Assert.True(assertOptionsCallback);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCameraOptions.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                (parameters[0] as CameraOptions).Duration == 10 && (parameters[0] as CameraOptions).Center.Longitude == 10 && (parameters[0] as CameraOptions).Center.Latitude == 10
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_UpdateCameraOptions_NoCameraOptionsDefined_Async()
         {
-            var assertOptionsCallback = false;
             var center = new Position(10, 10);
-            var map = new Map("id", setCameraCallback: async options => assertOptionsCallback = options.Center == center);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
 
             await map.SetCameraOptionsAsync(options => options.Center = center);
-            Assert.True(assertOptionsCallback);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCameraOptions.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                (parameters[0] as CameraOptions).Center.Longitude == 10 && (parameters[0] as CameraOptions).Center.Latitude == 10
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_UpdateStyleOptions_Async()
         {
-            var assertOptionsCallback = false;
             var language = "fr";
             var initialStyleOptions = new StyleOptions {
                 AutoResize = true
             };
-            var map = new Map("id", setStyleCallback: async options => assertOptionsCallback = options.AutoResize == initialStyleOptions.AutoResize && options.Language == language) {
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object) {
                 StyleOptions = initialStyleOptions
             };
 
             await map.SetStyleOptionsAsync(options => options.Language = language);
-            Assert.True(assertOptionsCallback);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetStyleOptions.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                (parameters[0] as StyleOptions).AutoResize && (parameters[0] as StyleOptions).Language == "fr"
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_UpdateStyleOptions_NoStyleOptionsDefined_Async()
         {
-            var assertOptionsCallback = false;
             var language = "fr";
-            var map = new Map("id", setStyleCallback: async options => assertOptionsCallback = options.Language == language);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
 
             await map.SetStyleOptionsAsync(options => options.Language = language);
-            Assert.True(assertOptionsCallback);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetStyleOptions.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                (parameters[0] as StyleOptions).Language == "fr"
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_UpdateUserInteraction_Async()
         {
-            var assertOptionsCallback = false;
             var initialUserInteractionOptions = new UserInteractionOptions {
                 BoxZoomInteraction = true
             };
             var dblClickZoomInteraction = true;
-            var map = new Map("id", setUserInteractionCallback: async options => assertOptionsCallback = options.BoxZoomInteraction == initialUserInteractionOptions.BoxZoomInteraction && options.DblclickZoomInteraction == dblClickZoomInteraction) {
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object) {
                 UserInteractionOptions = initialUserInteractionOptions
             };
 
             await map.SetUserInteractionAsync(options => options.DblclickZoomInteraction = dblClickZoomInteraction);
-            Assert.True(assertOptionsCallback);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetUserInteraction.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                (parameters[0] as UserInteractionOptions).BoxZoomInteraction.GetValueOrDefault() && (parameters[0] as UserInteractionOptions).DblclickZoomInteraction.GetValueOrDefault()
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_UpdateUserInteraction_NoUserInteractionDefined_Async()
         {
-            var assertOptionsCallback = false;
             var dblClickZoomInteraction = true;
-            var map = new Map("id", setUserInteractionCallback: async options => assertOptionsCallback = options.DblclickZoomInteraction == dblClickZoomInteraction);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
 
             await map.SetUserInteractionAsync(options => options.DblclickZoomInteraction = dblClickZoomInteraction);
-            Assert.True(assertOptionsCallback);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetUserInteraction.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                (parameters[0] as UserInteractionOptions).DblclickZoomInteraction.GetValueOrDefault()
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_UpdateTrafficInteraction_Async()
         {
-            var assertOptionsCallback = false;
             var initialTrafficOptions = new TrafficOptions {
                 Flow = TrafficFlow.Absolute
             };
             var incidents = true;
-            var map = new Map("id", setTrafficOptions: async options => assertOptionsCallback = options.Flow == initialTrafficOptions.Flow && options.Incidents == incidents) {
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object) {
                 TrafficOptions = initialTrafficOptions
             };
 
             await map.SetTrafficOptionsAsync(options => options.Incidents = incidents);
-            Assert.True(assertOptionsCallback);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetTraffic.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                (parameters[0] as TrafficOptions).Flow.ToString() == TrafficFlow.Absolute.ToString() && (parameters[0] as TrafficOptions).Incidents.GetValueOrDefault()
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async void Should_UpdateTrafficInteraction_NoTrafficOptionsDefined_Async()
         {
-            var assertOptionsCallback = false;
             var incidents = true;
-            var map = new Map("id", setTrafficOptions: async options => assertOptionsCallback = options.Incidents == incidents);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
 
             await map.SetTrafficOptionsAsync(options => options.Incidents = incidents);
-            Assert.True(assertOptionsCallback);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetTraffic.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                (parameters[0] as TrafficOptions).Incidents.GetValueOrDefault()
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]

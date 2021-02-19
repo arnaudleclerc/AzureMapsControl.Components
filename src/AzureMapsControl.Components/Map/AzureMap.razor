@@ -442,16 +442,6 @@
 
     #region Data sources
 
-    private void AttachDataSourcesCallback(AzureMapsControl.Components.Data.DataSource dataSource)
-    {
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_AttachDataSourcesCallback, "Attaching callbacks to data source");
-        Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_AttachDataSourcesCallback, $"Id: {dataSource.Id} | Type: {dataSource.SourceType.ToString()}");
-        dataSource.ImportDataFromUrlCallback = DataSource_ImportDataFromUrlAsync;
-        dataSource.AddCallback = DataSource_AddAsync;
-        dataSource.RemoveCallback = DataSource_RemoveAsync;
-        dataSource.ClearCallback = DataSource_ClearAsync;
-    }
-
     private async Task DataSource_ImportDataFromUrlAsync(string id, string url)
     {
         Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_DataSource_ImportDataFromUrlAsync, "Importing data from url into data source");
@@ -633,36 +623,6 @@
             await MapService.Map.AddDrawingToolbarAsync(DrawingToolbarOptions);
         }
         await DispatchMapEventAsync(mapEvent);
-    }
-
-    private async Task SetCameraOptionsAsync(CameraOptions options)
-    {
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_SetCameraOptionsAsync, "Setting camera options");
-        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCameraOptions.ToCoreNamespace(), options);
-    }
-
-    private async Task SetStyleOptionsAsync(StyleOptions options)
-    {
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_SetStyleOptionsAsync, "Setting style options");
-        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetStyleOptions.ToCoreNamespace(), options);
-    }
-
-    private async Task SetUserInteractionAsync(UserInteractionOptions options)
-    {
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_SetUserInteractionAsync, "Setting user interaction options");
-        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetUserInteraction.ToCoreNamespace(), options);
-    }
-
-    private async Task SetTrafficAsync(AzureMapsControl.Components.Traffic.TrafficOptions options)
-    {
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_SetTrafficAsync, "Setting traffic options");
-        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetTraffic.ToCoreNamespace(), options);
-    }
-
-    private async Task ClearMapAsync()
-    {
-        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_ClearMapAsync, "Clearing map");
-        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearMap.ToCoreNamespace());
     }
 
     private async Task DispatchMapEventAsync(MapJsEventArgs mapEvent)

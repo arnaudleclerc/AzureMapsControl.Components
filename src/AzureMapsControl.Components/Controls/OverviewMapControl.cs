@@ -34,7 +34,7 @@
 
             update(Options);
 
-            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_AddControlsAsync, "OverviewMapControl - UpdateAsync");
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.OverviewMapControl_UpdateAsync, "OverviewMapControl - UpdateAsync");
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.OverviewMapControl_UpdateAsync, $"Id: {Id}");
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.OverviewMapControl_UpdateAsync, $"Type: {Type}");
             await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.UpdateControl.ToCoreNamespace(), this);

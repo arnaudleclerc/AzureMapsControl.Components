@@ -6,7 +6,6 @@
     {
         AzureMap_OnInitialized = 1000,
         AzureMap_OnAfterRenderAsync = 1001,
-        AzureMap_AddControlsAsync = 1002,
         AzureMap_AttachDataSourcesCallback = 1005,
         AzureMap_DataSource_ImportDataFromUrlAsync = 1007,
         AzureMap_DataSource_AddAsync = 1008,
@@ -16,10 +15,6 @@
         AzureMap_HtmlMarkerEventReceivedAsync = 1015,
         AzureMap_LayerEventReceivedAsync = 1020,
         AzureMap_MapEventReceivedAsync = 1024,
-        AzureMap_SetCameraOptionsAsync = 1025,
-        AzureMap_SetStyleOptionsAsync = 1026,
-        AzureMap_SetUserInteractionAsync = 1027,
-        AzureMap_SetTrafficAsync = 1028,
         AzureMap_ClearMapAsync = 1029,
         AzureMap_AddPopupAsync = 1030,
         AzureMap_Popup_OpenAsync = 1031,
@@ -44,6 +39,10 @@
         Map_AddLayerAsync = 4011,
         Map_RemoveLayersAsync = 4012,
         Map_ClearLayersAsync = 4013,
+        Map_SetCameraOptionsAsync = 4014,
+        Map_SetStyleOptionsAsync = 4015,
+        Map_SetUserInteractionAsync = 4016,
+        Map_SetTrafficAsync = 4017,
         OverviewMapControl_UpdateAsync = 5000
     }
 

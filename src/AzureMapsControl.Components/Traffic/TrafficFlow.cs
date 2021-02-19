@@ -1,14 +1,10 @@
 ﻿namespace AzureMapsControl.Components.Traffic
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-
     /// <summary>
     /// Type of traffic flow to display
     /// </summary>
 
-    [ExcludeFromCodeCoverage]
-    public sealed class TrafficFlow
+    public struct TrafficFlow
     {
         private readonly string _flow;
 
@@ -33,17 +29,12 @@
 
         internal static TrafficFlow FromString(string type)
         {
-            switch (type)
-            {
-                case "absolute":
-                    return Absolute;
-                case "relative":
-                    return Relative;
-                case "relative-delay":
-                    return RelativeDelay;
-                default:
-                    return None;
-            }
+            return type switch {
+                "absolute" => Absolute,
+                "relative" => Relative,
+                "relative-delay" => RelativeDelay,
+                _ => None,
+            };
         }
 
         public override string ToString() => _flow;
