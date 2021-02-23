@@ -19,20 +19,32 @@ export class Animation {
     }
 
     public static moveAlongPath(animationId: string,
-        lineId: string,
+        line: string | azmaps.data.Position[],
         lineSourceId: string,
-        pinId: string,
+        pin: string,
         pinSourceId: string,
         options: azanimations.PathAnimationOptions | azanimations.MapPathAnimationOptions): void {
         const map = Core.getMap();
-        const lineSource = map.sources.getById(lineSourceId) as azmaps.source.DataSource;
-        const pinSource = map.sources.getById(pinSourceId) as azmaps.source.DataSource;
 
-        const line = lineSource.getShapeById(lineId);
-        const pin = pinSource.getShapeById(pinId);
+        let path: azmaps.data.Position[] | azmaps.data.LineString | azmaps.Shape = null;
+        if (typeof line === 'string') {
+            const lineSource = map.sources.getById(lineSourceId) as azmaps.source.DataSource;
+            path = lineSource.getShapeById(line);
+        } else {
+            path = line;
+        }
+
+        let shape: azmaps.Shape | azmaps.HtmlMarker = null;
+        if (pinSourceId) {
+            const pinSource = map.sources.getById(pinSourceId) as azmaps.source.DataSource;
+            shape = pinSource.getShapeById(pin);
+        } else {
+            shape = map.markers.getMarkers().find(marker => (marker as any).amc.id === pin);
+        }
+
         this._animations.set(
             animationId,
-            azanimations.animations.moveAlongPath(line, pin, options)
+            azanimations.animations.moveAlongPath(path, shape, options)
         );
     }
 
