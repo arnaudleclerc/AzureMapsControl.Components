@@ -7,7 +7,7 @@
 
     [JsonConverter(typeof(PitchAlignmentJsonConverter))]
     [ExcludeFromCodeCoverage]
-    public sealed class PitchAlignment
+    public struct PitchAlignment
     {
         private readonly string _type;
 
@@ -41,7 +41,7 @@
                     return ViewPort;
 
                 default:
-                    return null;
+                    return default;
             }
         }
     }

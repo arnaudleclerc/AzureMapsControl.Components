@@ -27,6 +27,7 @@
                 internal const string Stop = "stop";
                 internal const string SetOptions = "setOptions";
                 internal const string Snakeline = "snakeline";
+                internal const string MoveAlongPath = "moveAlongPath";
             }
 
             internal static class Core
@@ -52,6 +53,7 @@
                 internal const string SetUserInteraction = "setUserInteraction";
                 internal const string UpdateControl = "updateControl";
                 internal const string UpdateHtmlMarkers = "updateHtmlMarkers";
+                internal const string CreateImageFromTemplate = "createImageFromTemplate";
             }
 
             internal static class Drawing

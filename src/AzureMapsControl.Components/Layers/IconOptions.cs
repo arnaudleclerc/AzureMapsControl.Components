@@ -46,6 +46,11 @@
         public PitchAlignment PitchAlignment { get; set; }
 
         /// <summary>
+        /// The amount to rotate the icon clockwise in degrees
+        /// </summary>
+        public ExpressionOrNumber Rotation { get; set; }
+
+        /// <summary>
         /// In combination with the placement property of a SymbolLayerOptions this determines the rotation behavior of icons.
         /// </summary>
         public PitchAlignment RotationAlignment { get; set; }

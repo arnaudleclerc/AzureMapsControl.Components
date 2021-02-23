@@ -836,5 +836,34 @@
         }
 
         #endregion
+
+        /// <summary>
+        /// Creates and adds an image to the maps image sprite. Provide the name of the built-in template to use, and a color to apply.
+        /// Optionally, specifiy a secondary color if the template supports one. A scale can also be specified.
+        /// This will allow the SVG to be scaled before it is converted into an image and thus look much better when scaled up.
+        /// </summary>
+        /// <param name="id">The image's id. If the specified id matches the id of a previously added image the new image will be ignored.</param>
+        /// <param name="templateName">The name of the template to use.</param>
+        /// <param name="color">The primary color value</param>
+        /// <param name="secondaryColor">A secondary color value</param>
+        /// <param name="scale">Specifies how much to scale the template. For best results, scale the icon to the maximum size you want to display it on the map, then use the symbol layers icon size option to scale down if needed. This will reduce blurriness due to scaling.</param>
+        /// <returns></returns>
+        public async Task CreateImageFromTemplateAsync(string id, string templateName, string color = null, string secondaryColor = null, decimal? scale = null)
+        {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_CreateImageFromTemplate, "Creating image from template");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_CreateImageFromTemplate, "Id", id);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_CreateImageFromTemplate, "Template name", templateName);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_CreateImageFromTemplate, "Color", color);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_CreateImageFromTemplate, "Secondary color", secondaryColor);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_CreateImageFromTemplate, "Scale", scale);
+
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.CreateImageFromTemplate.ToCoreNamespace(), new MapImageTemplate {
+                Id = id,
+                TemplateName = templateName,
+                Color = color,
+                SecondaryColor = secondaryColor,
+                Scale = scale
+            });
+        }
     }
 }

@@ -11,14 +11,13 @@
 </style>
 
 @using AzureMapsControl.Components.Map
-<div class="animations-btns">
-    <button class="btn btn-primary" @onclick="DisposeAsync">Dispose</button>
-    <button class="btn btn-primary" @onclick="PauseAsync">Pause</button>
-    <button class="btn btn-primary" @onclick="PlayAsync">Play</button>
-    <button class="btn btn-primary" @onclick="ResetAsync">Reset</button>
-    <button class="btn btn-primary" @onclick="SeekAsync">Seek 0.5</button>
-    <button class="btn btn-primary" @onclick="StopAsync">Stop</button>
-</div>
+@using AzureMapsControl.Sample.Animations 
+<AnimationBar OnDispose="DisposeAsync"
+              OnPause="PauseAsync"
+              OnPlay="PlayAsync"
+              OnReset="ResetAsync"
+              OnSeek="SeekAsync"
+              OnStop="StopAsync"></AnimationBar>
 <AzureMap Id="map"
           CameraOptions="new CameraOptions { Center = new Components.Atlas.Position(11.581990, 48.143534), Zoom = 14 }"
           StyleOptions="StyleOptions"
@@ -35,7 +34,7 @@
         Style = MapStyle.GrayscaleDark
     };
 
-    public async Task DisposeAsync(MouseEventArgs e)
+    public async Task DisposeAsync()
     {
         if (_animation is not null)
         {
@@ -43,7 +42,7 @@
         }
     }
 
-    public async Task PauseAsync(MouseEventArgs e)
+    public async Task PauseAsync()
     {
         if (_animation is not null)
         {
@@ -51,7 +50,7 @@
         }
     }
 
-    public async Task PlayAsync(MouseEventArgs e)
+    public async Task PlayAsync()
     {
         if (_animation is not null)
         {
@@ -59,7 +58,7 @@
         }
     }
 
-    public async Task ResetAsync(MouseEventArgs e)
+    public async Task ResetAsync()
     {
         if (_animation is not null)
         {
@@ -67,7 +66,7 @@
         }
     }
 
-    public async Task SeekAsync(MouseEventArgs e)
+    public async Task SeekAsync()
     {
         if (_animation is not null)
         {
@@ -75,7 +74,7 @@
         }
     }
 
-    public async Task StopAsync(MouseEventArgs e)
+    public async Task StopAsync()
     {
         if (_animation is not null)
         {

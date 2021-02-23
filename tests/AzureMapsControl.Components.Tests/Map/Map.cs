@@ -1449,5 +1449,22 @@
             map.DispatchDrawingToolbarEvent(jsEventArgs);
             Assert.True(assertEvent);
         }
+
+        [Fact]
+        public async void Should_CreateImageFromTemplateAsync()
+        {
+            var map = new Map("id", _jsRuntimeMock.Object);
+            await map.CreateImageFromTemplateAsync("imageId", "templateName", "color", "secondaryColor", 1m);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.CreateImageFromTemplate.ToCoreNamespace(), It.Is<object[]>(parameters => 
+                parameters[0] is MapImageTemplate
+                && ((MapImageTemplate)parameters[0]).Id == "imageId"
+                && ((MapImageTemplate)parameters[0]).TemplateName == "templateName"
+                && ((MapImageTemplate)parameters[0]).Color == "color"
+                && ((MapImageTemplate)parameters[0]).SecondaryColor == "secondaryColor"
+                && ((MapImageTemplate)parameters[0]).Scale == 1m
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
     }
 }

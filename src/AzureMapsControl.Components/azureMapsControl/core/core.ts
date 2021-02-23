@@ -9,6 +9,7 @@ import { Control } from '../controls';
 import * as scalebar from 'azure-maps-control-scalebar';
 import * as overviewmap from 'azure-maps-control-overviewmap';
 import { HtmlMarkerEventArgs, HtmlMarkerOptions, toMarkerEvent } from '../html-markers';
+import { MapImageTemplate } from './map-image-template';
 
 export class Core {
     private static readonly _popups: Map<string, azmaps.Popup> = new Map<string, azmaps.Popup>();
@@ -412,5 +413,15 @@ export class Core {
 
             this._map.markers.getMarkers().find(marker => (marker as any).amc.id === htmlMarkerOption.id).setOptions(options);
         });
+    }
+
+    public static createImageFromTemplate(imageTemplate: MapImageTemplate): void {
+        this._map.imageSprite.createFromTemplate(
+            imageTemplate.id,
+            imageTemplate.templateName,
+            imageTemplate.color,
+            imageTemplate.secondaryColor,
+            imageTemplate.scale
+        );
     }
 }

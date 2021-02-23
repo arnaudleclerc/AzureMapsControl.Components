@@ -18,6 +18,24 @@ export class Animation {
         );
     }
 
+    public static moveAlongPath(animationId: string,
+        lineId: string,
+        lineSourceId: string,
+        pinId: string,
+        pinSourceId: string,
+        options: azanimations.PathAnimationOptions | azanimations.MapPathAnimationOptions): void {
+        const map = Core.getMap();
+        const lineSource = map.sources.getById(lineSourceId) as azmaps.source.DataSource;
+        const pinSource = map.sources.getById(pinSourceId) as azmaps.source.DataSource;
+
+        const line = lineSource.getShapeById(lineId);
+        const pin = pinSource.getShapeById(pinId);
+        this._animations.set(
+            animationId,
+            azanimations.animations.moveAlongPath(line, pin, options)
+        );
+    }
+
 
     public static dispose(animationId: string): void {
         if (this._animations.has(animationId)) {
