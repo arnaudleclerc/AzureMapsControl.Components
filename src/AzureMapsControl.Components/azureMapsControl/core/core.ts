@@ -138,8 +138,7 @@ export class Core {
                         pixel: e.pixel,
                         pixels: e.pixels,
                         position: e.position,
-                        positions: e.positions,
-                        shapes: e.shapes
+                        positions: e.positions
                     });
                 });
             });
@@ -199,7 +198,6 @@ export class Core {
                     eventHelper.invokeMethodAsync('NotifyEventAsync', {
                         type: value,
                         layerId: mouseEvent.layerId,
-                        shapes: mouseEvent.shapes,
                         pixel: mouseEvent.pixel,
                         position: mouseEvent.position
                     });
@@ -251,8 +249,7 @@ export class Core {
                         pixel: touchEvent.pixel,
                         pixels: touchEvent.pixels,
                         position: touchEvent.position,
-                        positions: touchEvent.positions,
-                        shapes: touchEvent.shapes ?? null
+                        positions: touchEvent.positions
                     });
                 });
             });

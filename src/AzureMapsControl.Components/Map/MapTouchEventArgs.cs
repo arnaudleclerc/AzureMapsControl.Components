@@ -13,7 +13,6 @@
         public IEnumerable<Pixel> Pixels { get; }
         public Position Position { get; }
         public IEnumerable<Position> Positions { get; }
-        public IEnumerable<Feature> Shapes { get; }
 
         internal MapTouchEventArgs(Map map, MapJsEventArgs eventArgs) : base(map, eventArgs.Type)
         {
@@ -22,7 +21,6 @@
             Pixels = eventArgs.Pixels;
             Position = eventArgs.Position;
             Positions = eventArgs.Positions;
-            Shapes = eventArgs.Shapes;
         }
     }
 }

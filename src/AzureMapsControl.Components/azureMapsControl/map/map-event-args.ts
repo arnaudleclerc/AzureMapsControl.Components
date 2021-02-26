@@ -12,7 +12,6 @@ export interface MapEventArgs extends EventArgs {
     pixels?: azmaps.Pixel[];
     position?: azmaps.data.Position;
     positions?: azmaps.data.Position[];
-    shapes?: (azmaps.data.Feature<azmaps.data.Geometry, any> | azmaps.Shape)[];
     source?: { id: string };
     sourceDataType?: string;
     style?: string;
