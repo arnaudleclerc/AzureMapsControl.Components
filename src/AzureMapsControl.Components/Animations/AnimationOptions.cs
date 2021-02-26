@@ -1,6 +1,6 @@
 ﻿namespace AzureMapsControl.Components.Animations
 {
-    public struct AnimationOptions : IAnimationOptions
+    public struct AnimationOptions : IAnimationOptions, IDisposableAnimationOptions, IDurationAnimationOptions
     {
         public bool? AutoPlay { get; set; }
         public bool? DisposeOnComplete { get; set; }

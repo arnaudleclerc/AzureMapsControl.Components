@@ -2,7 +2,8 @@
 {
     using System.Threading.Tasks;
 
-    public interface IUpdatableAnimation : IAnimation
+    public interface IUpdatableAnimation<TOptions> : IPausableAnimation
+        where TOptions: IAnimationOptions
     {
         /// <summary>
         /// Advances the animation to specific step. 
@@ -16,6 +17,6 @@
         /// </summary>
         /// <param name="options">Options to update the animation with</param>
         /// <returns></returns>
-        Task SetOptionsAsync(IAnimationOptions options);
+        Task SetOptionsAsync(TOptions options);
     }
 }

@@ -37,10 +37,10 @@
             var options = new SnakeLineAnimationOptions();
 
             var result = await _animationService.SnakelineAsync(line, source, options);
-            Assert.IsType<UpdatableAnimation>(result);
-            Assert.NotNull((result as UpdatableAnimation).Id);
+            Assert.IsType<SnakeLineAnimation>(result);
+            Assert.NotNull((result as SnakeLineAnimation).Id);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Snakeline.ToAnimationNamespace(), (result as UpdatableAnimation).Id, line.Id, source.Id, options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Snakeline.ToAnimationNamespace(), (result as SnakeLineAnimation).Id, line.Id, source.Id, options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -54,10 +54,10 @@
             var options = new MoveAlongPathAnimationOptions();
 
             var result = await _animationService.MoveAlongPathAsync(line, lineSource, pin, pinSource, options);
-            Assert.IsType<UpdatableAnimation>(result);
-            Assert.NotNull((result as UpdatableAnimation).Id);
+            Assert.IsType<MoveAlongPathAnimation>(result);
+            Assert.NotNull((result as MoveAlongPathAnimation).Id);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), (result as UpdatableAnimation).Id, line.Id, lineSource.Id, pin.Id, pinSource.Id, options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), (result as MoveAlongPathAnimation).Id, line.Id, lineSource.Id, pin.Id, pinSource.Id, options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -70,10 +70,10 @@
             var options = new MoveAlongPathAnimationOptions();
 
             var result = await _animationService.MoveAlongPathAsync(line, lineSource, pin, options);
-            Assert.IsType<UpdatableAnimation>(result);
-            Assert.NotNull((result as UpdatableAnimation).Id);
+            Assert.IsType<MoveAlongPathAnimation>(result);
+            Assert.NotNull((result as MoveAlongPathAnimation).Id);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), (result as UpdatableAnimation).Id, line.Id, lineSource.Id, pin.Id, null, options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), (result as MoveAlongPathAnimation).Id, line.Id, lineSource.Id, pin.Id, null, options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -86,10 +86,10 @@
             var options = new MoveAlongPathAnimationOptions();
 
             var result = await _animationService.MoveAlongPathAsync(line, pin, pinSource, options);
-            Assert.IsType<UpdatableAnimation>(result);
-            Assert.NotNull((result as UpdatableAnimation).Id);
+            Assert.IsType<MoveAlongPathAnimation>(result);
+            Assert.NotNull((result as MoveAlongPathAnimation).Id);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), (result as UpdatableAnimation).Id, line, null, pin.Id, pinSource.Id, options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), (result as MoveAlongPathAnimation).Id, line, null, pin.Id, pinSource.Id, options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -101,10 +101,10 @@
             var options = new MoveAlongPathAnimationOptions();
 
             var result = await _animationService.MoveAlongPathAsync(line, pin, options);
-            Assert.IsType<UpdatableAnimation>(result);
-            Assert.NotNull((result as UpdatableAnimation).Id);
+            Assert.IsType<MoveAlongPathAnimation>(result);
+            Assert.NotNull((result as MoveAlongPathAnimation).Id);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), (result as UpdatableAnimation).Id, line, null, pin.Id, null, options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), (result as MoveAlongPathAnimation).Id, line, null, pin.Id, null, options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -115,10 +115,10 @@
             var options = new MovingDashLineOptions();
 
             var result = await _animationService.FlowingDashedLineAsync(layer, options);
-            Assert.IsType<Animation>(result);
-            Assert.NotNull((result as Animation).Id);
+            Assert.IsType<FlowingDashedLineAnimation>(result);
+            Assert.NotNull((result as FlowingDashedLineAnimation).Id);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.FlowingDashedLine.ToAnimationNamespace(), (result as Animation).Id, layer.Id, options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.FlowingDashedLine.ToAnimationNamespace(), (result as FlowingDashedLineAnimation).Id, layer.Id, options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -133,13 +133,13 @@
             var options = new AnimationOptions();
 
             var result = await _animationService.DropMarkersAsync(new[] { marker1, marker2 }, height, options);
-            Assert.IsType<UpdatableAnimation>(result);
-            Assert.NotNull((result as Animation).Id);
+            Assert.IsType<DropMarkersAnimation>(result);
+            Assert.NotNull((result as DropMarkersAnimation).Id);
             Assert.Contains(_mapServiceMock.Object.Map.HtmlMarkers, marker => marker.Id == marker1.Id && marker.Options == marker1.Options);
             Assert.Contains(_mapServiceMock.Object.Map.HtmlMarkers, marker => marker.Id == marker2.Id && marker.Options == marker2.Options);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.DropMarkers.ToAnimationNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == (result as Animation).Id
+                parameters[0] as string == (result as DropMarkersAnimation).Id
                 && parameters[1] is IEnumerable<HtmlMarkerCreationOptions>
                 && (parameters[1] as IEnumerable<HtmlMarkerCreationOptions>).Any(marker => marker.Id == marker1.Id && marker.Options == marker1.Options)
                 && (parameters[1] as IEnumerable<HtmlMarkerCreationOptions>).Any(marker => marker.Id == marker2.Id && marker.Options == marker2.Options)
@@ -160,13 +160,13 @@
             var options = new AnimationOptions();
 
             var result = await _animationService.DropMarkerAsync(marker1, height, options);
-            Assert.IsType<UpdatableAnimation>(result);
-            Assert.NotNull((result as Animation).Id);
+            Assert.IsType<DropMarkersAnimation>(result);
+            Assert.NotNull((result as DropMarkersAnimation).Id);
 
             Assert.Contains(_mapServiceMock.Object.Map.HtmlMarkers, marker => marker.Id == marker1.Id && marker.Options == marker1.Options);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.DropMarkers.ToAnimationNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == (result as Animation).Id
+                parameters[0] as string == (result as DropMarkersAnimation).Id
                 && parameters[1] is IEnumerable<HtmlMarkerCreationOptions>
                 && (parameters[1] as IEnumerable<HtmlMarkerCreationOptions>).Any(marker => marker.Id == marker1.Id && marker.Options == marker1.Options)
                 && parameters[2] as decimal? == height

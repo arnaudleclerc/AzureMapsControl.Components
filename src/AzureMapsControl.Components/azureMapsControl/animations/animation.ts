@@ -6,7 +6,7 @@ import { HtmlMarkerEventArgs, HtmlMarkerOptions } from '../html-markers';
 
 export class Animation {
 
-    private static readonly _animations = new Map<string, azanimations.IPlayableAnimation>();
+    private static readonly _animations = new Map<string, azanimations.IPlayableAnimation | azanimations.animations.GroupAnimation>();
 
     public static snakeline(animationId: string,
         lineId: string,
@@ -82,6 +82,22 @@ export class Animation {
         );
     }
 
+    public static groupAnimations(groupAnimationId: string,
+        animationsIds: string[],
+        options: azanimations.GroupAnimationOptions): void {
+
+        const animations: (azanimations.IPlayableAnimation | azanimations.animations.GroupAnimation)[] = [];
+        animationsIds.forEach(animationId => {
+            if (this._animations.has(animationId)) {
+                animations.push(this._animations.get(animationId));
+            }
+        });
+        this._animations.set(
+            groupAnimationId,
+            new azanimations.animations.GroupAnimation(animations, options)
+        );
+    }
+
     public static dispose(animationId: string): void {
         if (this._animations.has(animationId)) {
             const animation = this._animations.get(animationId);
@@ -93,7 +109,9 @@ export class Animation {
     public static pause(animationId: string): void {
         if (this._animations.has(animationId)) {
             const animation = this._animations.get(animationId);
-            animation.pause();
+            if (animation as azanimations.IPlayableAnimation !== null) {
+                (animation as azanimations.IPlayableAnimation).pause();
+            }
         }
     }
 

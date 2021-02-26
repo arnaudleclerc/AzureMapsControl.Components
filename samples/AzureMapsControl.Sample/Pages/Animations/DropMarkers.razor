@@ -20,7 +20,7 @@
           OnClick="OnMapClick" />
 
 @code  {
-    private Components.Animations.IUpdatableAnimation _animation;
+    private Components.Animations.IDropMarkersAnimation _animation;
 
     public StyleOptions StyleOptions = new StyleOptions
     {
@@ -86,7 +86,7 @@
 
         if(_animation == null)
         {
-            _animation = await AnimationService.DropMarkersAsync(markers, options: new Components.Animations.AnimationOptions
+            _animation = await AnimationService.DropMarkersAsync(markers, options: new Components.Animations.DropMarkersAnimationOptions
             {
                 Easing = AzureMapsControl.Components.Animations.Easing.EaseOutBounce,
                 Duration = 1000,

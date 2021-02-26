@@ -11,16 +11,6 @@
         bool? AutoPlay { get; set; }
 
         /// <summary>
-        /// Specifies if the animation should dispose itself once it has completed
-        /// </summary>
-        bool? DisposeOnComplete { get; set; }
-
-        /// <summary>
-        /// The duration of the animation in ms
-        /// </summary>
-        int? Duration { get; set; }
-
-        /// <summary>
         /// The easing of the animaiton.
         /// </summary>
         Easing Easing { get; set; }

@@ -11,12 +11,6 @@
         Task DisposeAsync();
 
         /// <summary>
-        /// Pauses the animation.
-        /// </summary>
-        /// <returns></returns>
-        Task PauseAsync();
-
-        /// <summary>
         /// Plays the animation.
         /// </summary>
         /// <returns></returns>
