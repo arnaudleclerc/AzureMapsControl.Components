@@ -85,5 +85,13 @@
         /// <param name="options">Options for the animation.</param>
         /// <returns></returns>
         Task<IDropMarkersAnimation> DropMarkerAsync(HtmlMarker marker, decimal? height = null, DropMarkersAnimationOptions options = default);
+
+        /// <summary>
+        /// Group animations
+        /// </summary>
+        /// <param name="animations">Animations to group</param>
+        /// <param name="options">Options for the animation</param>
+        /// <returns>Animation</returns>
+        Task<IGroupAnimation> GroupAnimationAsync(IEnumerable<IAnimation> animations, GroupAnimationOptions options = default);
     }
 }

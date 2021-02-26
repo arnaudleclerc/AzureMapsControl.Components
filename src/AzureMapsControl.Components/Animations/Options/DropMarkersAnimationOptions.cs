@@ -1,6 +1,6 @@
 ﻿namespace AzureMapsControl.Components.Animations.Options
 {
-    public struct DropMarkersAnimationOptions : IDisposableAnimationOptions, IDurationAnimationOptions, IAnimationOptions
+    public struct DropMarkersAnimationOptions : IDisposableAnimationOptions, IDurationAnimationOptions, IPlayableAnimationOptions, IAnimationOptions
     {
         /// <summary>
         /// <inheritdoc/>

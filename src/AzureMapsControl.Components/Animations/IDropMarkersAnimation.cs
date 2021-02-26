@@ -2,7 +2,7 @@
 {
     using AzureMapsControl.Components.Animations.Options;
 
-    public interface IDropMarkersAnimation : IUpdatableAnimation<DropMarkersAnimationOptions>
+    public interface IDropMarkersAnimation : IUpdatableAnimation<DropMarkersAnimationOptions>, ISeekAnimation, IPausableAnimation, IAnimation
     {
     }
 }

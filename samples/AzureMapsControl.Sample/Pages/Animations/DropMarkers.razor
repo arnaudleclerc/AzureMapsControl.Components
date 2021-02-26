@@ -27,54 +27,6 @@
         Style = MapStyle.GrayscaleDark
     };
 
-    public async Task DisposeAsync()
-    {
-        if (_animation is not null)
-        {
-            await _animation.DisposeAsync();
-        }
-    }
-
-    public async Task PauseAsync()
-    {
-        if (_animation is not null)
-        {
-            await _animation.PauseAsync();
-        }
-    }
-
-    public async Task PlayAsync()
-    {
-        if (_animation is not null)
-        {
-            await _animation.PlayAsync();
-        }
-    }
-
-    public async Task ResetAsync()
-    {
-        if (_animation is not null)
-        {
-            await _animation.ResetAsync();
-        }
-    }
-
-    public async Task SeekAsync()
-    {
-        if (_animation is not null)
-        {
-            await _animation.SeekAsync(0.5m);
-        }
-    }
-
-    public async Task StopAsync()
-    {
-        if (_animation is not null)
-        {
-            await _animation.StopAsync();
-        }
-    }
-
     public async Task OnMapClick(MapMouseEventArgs eventArgs)
     {
         var random = new Random();

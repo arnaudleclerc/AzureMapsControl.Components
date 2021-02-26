@@ -2,7 +2,7 @@
 {
     using AzureMapsControl.Components.Animations.Options;
 
-    public interface ISnakeLineAnimation : IUpdatableAnimation<SnakeLineAnimationOptions>
+    public interface ISnakeLineAnimation : IUpdatableAnimation<SnakeLineAnimationOptions>, IPausableAnimation, ISeekAnimation, IAnimation
     {
     }
 }

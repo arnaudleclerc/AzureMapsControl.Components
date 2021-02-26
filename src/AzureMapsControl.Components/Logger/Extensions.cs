@@ -18,6 +18,7 @@
         AnimationService_MoveAlongPath = 3001,
         AnimationService_FlowingDashedLine = 3002,
         AnimationService_DropMarkers = 3003,
+        AnimationService_GroupAnimations = 3004,
         Map_AddControlsAsync = 4000,
         Map_AddSourceAsync = 4001,
         Map_RemoveSourceAsync = 4002,

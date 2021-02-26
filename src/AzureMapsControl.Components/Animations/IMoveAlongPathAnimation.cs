@@ -2,7 +2,7 @@
 {
     using AzureMapsControl.Components.Animations.Options;
 
-    public interface IMoveAlongPathAnimation : IUpdatableAnimation<MoveAlongPathAnimationOptions>
+    public interface IMoveAlongPathAnimation : IUpdatableAnimation<MoveAlongPathAnimationOptions>, ISeekAnimation, IPausableAnimation, IAnimation
     {
     }
 }

@@ -5,6 +5,11 @@
     public interface IAnimation
     {
         /// <summary>
+        /// Id of the animation
+        /// </summary>
+        public string Id { get; }
+
+        /// <summary>
         /// Disposes the animation
         /// </summary>
         /// <returns></returns>

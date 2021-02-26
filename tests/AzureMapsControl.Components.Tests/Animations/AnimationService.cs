@@ -145,7 +145,7 @@
                 && (parameters[1] as IEnumerable<HtmlMarkerCreationOptions>).Any(marker => marker.Id == marker1.Id && marker.Options == marker1.Options)
                 && (parameters[1] as IEnumerable<HtmlMarkerCreationOptions>).Any(marker => marker.Id == marker2.Id && marker.Options == marker2.Options)
                 && parameters[2] as decimal? == height
-                && parameters[3] is AnimationOptions
+                && parameters[3] is DropMarkersAnimationOptions
                 && parameters[4] is DotNetObjectReference<HtmlMarkerInvokeHelper>
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
@@ -171,8 +171,29 @@
                 && parameters[1] is IEnumerable<HtmlMarkerCreationOptions>
                 && (parameters[1] as IEnumerable<HtmlMarkerCreationOptions>).Any(marker => marker.Id == marker1.Id && marker.Options == marker1.Options)
                 && parameters[2] as decimal? == height
-                && parameters[3] is AnimationOptions
+                && parameters[3] is DropMarkersAnimationOptions
                 && parameters[4] is DotNetObjectReference<HtmlMarkerInvokeHelper>
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_GroupAnimations_Async()
+        {
+            var animation1 = new SnakeLineAnimation("id", _jsRuntimeMock.Object);
+            var animation2 = new DropMarkersAnimation("markerAnimation", _jsRuntimeMock.Object);
+            var options = new GroupAnimationOptions();
+
+            var result = await _animationService.GroupAnimationAsync(new Animation[] { animation1, animation2 }, options);
+            Assert.IsType<GroupAnimation>(result);
+            Assert.NotNull((result as GroupAnimation).Id);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.GroupAnimations.ToAnimationNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string== (result as GroupAnimation).Id
+                && parameters[1] is IEnumerable<string>
+                && (parameters[1] as IEnumerable<string>).Contains(animation1.Id)
+                && (parameters[1] as IEnumerable<string>).Contains(animation2.Id)
+                && parameters[2] is GroupAnimationOptions
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }

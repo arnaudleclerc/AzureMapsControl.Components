@@ -1,0 +1,65 @@
+﻿@page "/Animations/GroupAnimations"
+@inject Components.Animations.IAnimationService AnimationService
+
+<style>
+    .animations-btns {
+        position: absolute;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+    }
+</style>
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          CameraOptions="new CameraOptions { Center = new Components.Atlas.Position(-122.33825, 47.53945), Zoom = 7 }"
+          StyleOptions="StyleOptions"
+          EventActivationFlags="MapEventActivationFlags
+                                .None()
+                                .Enable(MapEventType.Click)"
+          OnClick="OnMapClick" />
+
+@code  {
+    private Components.Animations.IGroupAnimation _animation;
+
+    public StyleOptions StyleOptions = new StyleOptions
+    {
+        Style = MapStyle.GrayscaleDark
+    };
+
+    public async Task OnMapClick(MapMouseEventArgs eventArgs)
+    {
+        var random = new Random();
+        var animations = new List<AzureMapsControl.Components.Animations.IAnimation>();
+
+        for(var i = 0; i < 15; i++)
+        {
+            var marker = new AzureMapsControl.Components.Markers.HtmlMarker(new Components.Markers.HtmlMarkerOptions
+            {
+                Position = new Components.Atlas.Position(-122.3 + (random.NextDouble() * 2 - 1), 47.5 + (random.NextDouble() * 2 - 1))
+            });
+            var animation = await AnimationService.DropMarkerAsync(marker, 200, new Components.Animations.Options.DropMarkersAnimationOptions
+            {
+                Easing = AzureMapsControl.Components.Animations.Options.Easing.EaseOutBounce,
+                Duration = 1000
+            });
+            animations.Add(animation);
+        }
+
+
+        if (_animation == null)
+        {
+            _animation = await AnimationService.GroupAnimationAsync(animations, new Components.Animations.Options.GroupAnimationOptions
+            {
+                AutoPlay = true,
+                Interval = 100,
+                PlayType = AzureMapsControl.Components.Animations.Options.PlayType.Interval
+            });
+        }
+        else
+        {
+            await _animation.ResetAsync();
+            await _animation.PlayAsync();
+        }
+    }
+}

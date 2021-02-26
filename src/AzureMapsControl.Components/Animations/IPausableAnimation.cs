@@ -2,7 +2,7 @@
 {
     using System.Threading.Tasks;
 
-    public interface IPausableAnimation : IAnimation
+    public interface IPausableAnimation
     {
         /// <summary>
         /// Pauses the animation.

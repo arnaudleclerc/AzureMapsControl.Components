@@ -1,6 +1,6 @@
 ﻿namespace AzureMapsControl.Components.Animations
 {
-    public interface IFlowingDashedLineAnimation : IPausableAnimation
+    public interface IFlowingDashedLineAnimation : IPausableAnimation, IAnimation
     {
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace AzureMapsControl.Components.Animations.Options
 {
-    public interface IPathAnimationOptions : IAnimationOptions, IDisposableAnimationOptions, IDurationAnimationOptions
+    public interface IPathAnimationOptions
     {
         /// <summary>
         /// Specifies if metadata should be captured as properties of the shape. Potential metadata properties that may be captured: _heading

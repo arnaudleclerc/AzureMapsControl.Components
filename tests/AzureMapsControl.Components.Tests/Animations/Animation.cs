@@ -24,6 +24,7 @@
                     "flowingdashed" => new FlowingDashedLineAnimation(id, runtime),
                     "movealongpath" => new MoveAlongPathAnimation(id, runtime),
                     "snakeline" => new SnakeLineAnimation(id, runtime),
+                    "group" => new GroupAnimation(id, runtime),
                     _ => throw new NotSupportedException(type),
                 };
             }
@@ -34,7 +35,8 @@
                 new object[] { "dropmarkers" },
                 new object[] { "flowingdashed" },
                 new object[] { "movealongpath" },
-                new object[] { "snakeline" }
+                new object[] { "snakeline" },
+                new object[] { "group" },
             };
 
         public static IEnumerable<object[]> AllSeekAnimationsTypes =>
@@ -44,12 +46,13 @@
                 new object[] { "snakeline" }
             };
 
-        public static IEnumerable<object[]> AllSetOptionsAnimationsTypes =>
-            new List<object[]> {
+        public static IEnumerable<object[]> AllPauseAnimationsTypes =>
+                   new List<object[]> {
                 new object[] { "dropmarkers" },
+                new object[] { "flowingdashed" },
                 new object[] { "movealongpath" },
                 new object[] { "snakeline" }
-            };
+        };
 
         [Theory]
         [MemberData(nameof(AllAnimationsTypes))]
@@ -73,7 +76,7 @@
         }
 
         [Theory]
-        [MemberData(nameof(AllAnimationsTypes))]
+        [MemberData(nameof(AllPauseAnimationsTypes))]
         public async void Should_PauseAsync(string animationType)
         {
             var id = "id";
@@ -130,20 +133,6 @@
             await animation.StopAsync();
 
             _jsRuntime.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Stop.ToAnimationNamespace(), id), Times.Once);
-            _jsRuntime.VerifyNoOtherCalls();
-        }
-
-        [Theory]
-        [MemberData(nameof(AllSetOptionsAnimationsTypes))]
-        public async void Should_SetOptionsAsync(string animationType)
-        {
-            var id = "id";
-            var animation = AnimationFactory.GetAnimation(animationType, id, _jsRuntime.Object);
-
-            var newOptions = new Mock<IAnimationOptions>();
-            await (animation as Animation<IAnimationOptions>).SetOptionsAsync(newOptions.Object);
-
-            _jsRuntime.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetOptions.ToAnimationNamespace(), id, newOptions.Object), Times.Once);
             _jsRuntime.VerifyNoOtherCalls();
         }
     }

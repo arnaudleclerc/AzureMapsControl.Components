@@ -116,5 +116,15 @@
         }
 
         public async Task<IDropMarkersAnimation> DropMarkerAsync(HtmlMarker marker, decimal? height = null, DropMarkersAnimationOptions options = default) => await DropMarkersAsync(new [] { marker }, height, options);
+
+        public async Task<IGroupAnimation> GroupAnimationAsync(IEnumerable<IAnimation> animations, GroupAnimationOptions options = default)
+        {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_GroupAnimations, "Calling GroupAnimationAsync");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_GroupAnimations, "Animations", animations);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_GroupAnimations, "Options", options);
+            var animation = new GroupAnimation(Guid.NewGuid().ToString(), _jsRuntime);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.GroupAnimations.ToAnimationNamespace(), animation.Id, animations.Select(a => a.Id), options);
+            return animation;
+        }
     }
 }

@@ -1,18 +1,22 @@
 ﻿namespace AzureMapsControl.Components.Animations
 {
+    using System.Dynamic;
     using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Animations.Options;
     using AzureMapsControl.Components.Runtime;
 
-    internal abstract class Animation
+    internal abstract class Animation : IAnimation
     {
-        internal readonly string Id;
+        private readonly string _id;
+
         internal readonly IMapJsRuntime JsRuntime;
+
+        public string Id => _id;
 
         internal Animation(string id, IMapJsRuntime jsRuntime)
         {
-            Id = id;
+            _id = id;
             JsRuntime = jsRuntime;
         }
 
