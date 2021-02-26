@@ -1,4 +1,4 @@
-﻿namespace AzureMapsControl.Components.Animations
+﻿namespace AzureMapsControl.Components.Animations.Options
 {
     public struct SnakeLineAnimationOptions : IPathAnimationOptions, IMapPathAnimationOptions
     {

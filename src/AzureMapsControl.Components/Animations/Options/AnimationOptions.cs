@@ -1,4 +1,4 @@
-﻿namespace AzureMapsControl.Components.Animations
+﻿namespace AzureMapsControl.Components.Animations.Options
 {
     public struct AnimationOptions : IAnimationOptions, IDisposableAnimationOptions, IDurationAnimationOptions
     {

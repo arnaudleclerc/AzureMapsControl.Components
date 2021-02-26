@@ -1,4 +1,4 @@
-﻿namespace AzureMapsControl.Components.Animations
+﻿namespace AzureMapsControl.Components.Animations.Options
 {
     /// <summary>
     /// Base animation options

@@ -86,9 +86,9 @@
 
         if(_animation == null)
         {
-            _animation = await AnimationService.DropMarkersAsync(markers, options: new Components.Animations.DropMarkersAnimationOptions
+            _animation = await AnimationService.DropMarkersAsync(markers, options: new Components.Animations.Options.DropMarkersAnimationOptions
             {
-                Easing = AzureMapsControl.Components.Animations.Easing.EaseOutBounce,
+                Easing = AzureMapsControl.Components.Animations.Options.Easing.EaseOutBounce,
                 Duration = 1000,
                 AutoPlay = true
             });

@@ -1,10 +1,10 @@
 ﻿namespace AzureMapsControl.Components.Tests.Animations
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
 
     using AzureMapsControl.Components.Animations;
+    using AzureMapsControl.Components.Animations.Options;
     using AzureMapsControl.Components.Runtime;
 
     using Moq;
@@ -29,7 +29,7 @@
             }
         }
 
-        public static IEnumerable<object[]> AllAnimationsTypes => 
+        public static IEnumerable<object[]> AllAnimationsTypes =>
             new List<object[]> {
                 new object[] { "dropmarkers" },
                 new object[] { "flowingdashed" },

@@ -93,7 +93,7 @@
             }
         };
         await eventArgs.Map.AddLayerAsync(layer);
-        _animation = await AnimationService.FlowingDashedLineAsync(layer, new Components.Animations.MovingDashLineOptions
+        _animation = await AnimationService.FlowingDashedLineAsync(layer, new Components.Animations.Options.MovingDashLineOptions
         {
             AutoPlay = true,
             Loop = true,

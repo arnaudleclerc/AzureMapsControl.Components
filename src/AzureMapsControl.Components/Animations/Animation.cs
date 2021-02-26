@@ -2,6 +2,7 @@
 {
     using System.Threading.Tasks;
 
+    using AzureMapsControl.Components.Animations.Options;
     using AzureMapsControl.Components.Runtime;
 
     internal abstract class Animation

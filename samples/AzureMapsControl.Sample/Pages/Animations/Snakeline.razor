@@ -158,10 +158,10 @@
 
         await events.Map.AddLayerAsync(layer);
 
-        _animation = await AnimationService.SnakelineAsync(line, dataSource, new Components.Animations.SnakeLineAnimationOptions
+        _animation = await AnimationService.SnakelineAsync(line, dataSource, new Components.Animations.Options.SnakeLineAnimationOptions
         {
             Duration = 2000,
-            Easing = Components.Animations.Easing.EaseInOutCubic,
+            Easing = Components.Animations.Options.Easing.EaseInOutCubic,
             AutoPlay = true,
             Loop = true
         });

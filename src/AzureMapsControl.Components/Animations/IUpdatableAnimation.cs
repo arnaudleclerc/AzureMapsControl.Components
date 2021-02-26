@@ -2,6 +2,8 @@
 {
     using System.Threading.Tasks;
 
+    using AzureMapsControl.Components.Animations.Options;
+
     public interface IUpdatableAnimation<TOptions> : IPausableAnimation
         where TOptions: IAnimationOptions
     {

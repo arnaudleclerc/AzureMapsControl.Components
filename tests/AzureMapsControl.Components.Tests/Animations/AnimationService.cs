@@ -5,6 +5,7 @@
     using System.Linq;
 
     using AzureMapsControl.Components.Animations;
+    using AzureMapsControl.Components.Animations.Options;
     using AzureMapsControl.Components.Atlas;
     using AzureMapsControl.Components.Data;
     using AzureMapsControl.Components.Layers;
@@ -130,7 +131,7 @@
             var marker1 = new HtmlMarker(new HtmlMarkerOptions());
             var marker2 = new HtmlMarker(new HtmlMarkerOptions());
             var height = 1m;
-            var options = new AnimationOptions();
+            var options = new DropMarkersAnimationOptions();
 
             var result = await _animationService.DropMarkersAsync(new[] { marker1, marker2 }, height, options);
             Assert.IsType<DropMarkersAnimation>(result);
@@ -157,7 +158,7 @@
             _mapServiceMock.Setup(mapService => mapService.Map).Returns(map);
             var marker1 = new HtmlMarker(new HtmlMarkerOptions());
             var height = 1m;
-            var options = new AnimationOptions();
+            var options = new DropMarkersAnimationOptions();
 
             var result = await _animationService.DropMarkerAsync(marker1, height, options);
             Assert.IsType<DropMarkersAnimation>(result);

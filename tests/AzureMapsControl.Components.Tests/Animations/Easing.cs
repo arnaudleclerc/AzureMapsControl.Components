@@ -1,7 +1,6 @@
 ﻿namespace AzureMapsControl.Components.Tests.Animations
 {
-
-    using AzureMapsControl.Components.Animations;
+    using AzureMapsControl.Components.Animations.Options;
 
     using Xunit;
 

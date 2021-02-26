@@ -3,6 +3,7 @@
     using System;
     using System.Threading.Tasks;
 
+    using AzureMapsControl.Components.Animations.Options;
     using AzureMapsControl.Components.Runtime;
 
     internal sealed class FlowingDashedLineAnimation : Animation<MovingDashLineOptions>, IFlowingDashedLineAnimation

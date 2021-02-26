@@ -146,7 +146,7 @@
         var pin = new AzureMapsControl.Components.Atlas.Point(new Components.Atlas.Position(-122.34758, 47.62155));
         await pinSource.AddAsync(pin);
 
-        _animation = await AnimationService.MoveAlongPathAsync(line, lineSource, pin, pinSource, new Components.Animations.MoveAlongPathAnimationOptions
+        _animation = await AnimationService.MoveAlongPathAsync(line, lineSource, pin, pinSource, new Components.Animations.Options.MoveAlongPathAnimationOptions
         {
             CaptureMetadata = true,
             Duration = 4000,

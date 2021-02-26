@@ -1,7 +1,6 @@
-﻿namespace AzureMapsControl.Components.Animations
+﻿namespace AzureMapsControl.Components.Animations.Options
 {
     using System;
-    using System.Runtime.CompilerServices;
     using System.Text.Json;
     using System.Text.Json.Serialization;
 

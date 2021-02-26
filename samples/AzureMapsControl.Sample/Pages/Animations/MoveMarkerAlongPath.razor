@@ -117,7 +117,7 @@
 
         await eventArgs.Map.AddHtmlMarkersAsync(marker);
 
-        _animation = await AnimationService.MoveAlongPathAsync(line, lineSource, marker, new Components.Animations.MoveAlongPathAnimationOptions
+        _animation = await AnimationService.MoveAlongPathAsync(line, lineSource, marker, new Components.Animations.Options.MoveAlongPathAnimationOptions
         {
             CaptureMetadata = true,
             Duration = 2000
