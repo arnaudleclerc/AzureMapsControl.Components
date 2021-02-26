@@ -4,7 +4,7 @@ import { Core } from '../core';
 
 export class Animation {
 
-    private static readonly _animations = new Map<string, azanimations.animations.PlayableAnimation>();
+    private static readonly _animations = new Map<string, azanimations.IPlayableAnimation>();
 
     public static snakeline(animationId: string,
         lineId: string,
@@ -48,6 +48,16 @@ export class Animation {
         );
     }
 
+    public static flowingDashedLine(animationId: string,
+        lineLayerId: string,
+        options: azanimations.MovingDashLineOptions): void {
+
+        const layer = Core.getMap().layers.getLayerById(lineLayerId) as azmaps.layer.LineLayer;
+        this._animations.set(
+            animationId,
+            azanimations.animations.flowingDashedLine(layer, options)
+        )
+    }
 
     public static dispose(animationId: string): void {
         if (this._animations.has(animationId)) {
@@ -81,7 +91,9 @@ export class Animation {
     public static seek(animationId: string, progress: number): void {
         if (this._animations.has(animationId)) {
             const animation = this._animations.get(animationId);
-            animation.seek(progress);
+            if (animation as azanimations.animations.PlayableAnimation !== null) {
+                (animation as azanimations.animations.PlayableAnimation).seek(progress);
+            }
         }
     }
 
@@ -95,7 +107,9 @@ export class Animation {
     public static setOptions(animationId: string, options: azanimations.PlayableAnimationOptions): void {
         if (this._animations.has(animationId)) {
             const animation = this._animations.get(animationId);
-            animation.setOptions(options);
+            if (animation as azanimations.animations.PlayableAnimation !== null) {
+                (animation as azanimations.animations.PlayableAnimation).setOptions(options);
+            }
         }
     }
 

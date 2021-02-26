@@ -16,6 +16,7 @@
         MapService_AddMapAsync = 2000,
         AnimationService_Snakeline = 3000,
         AnimationService_MoveAlongPath = 3001,
+        AnimationService_FlowingDashedLine = 3002,
         Map_AddControlsAsync = 4000,
         Map_AddSourceAsync = 4001,
         Map_RemoveSourceAsync = 4002,

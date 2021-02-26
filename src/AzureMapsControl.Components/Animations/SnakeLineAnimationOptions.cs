@@ -1,6 +1,6 @@
 ﻿namespace AzureMapsControl.Components.Animations
 {
-    public sealed class SnakeLineAnimationOptions : IPathAnimationOptions, IMapPathAnimationOptions
+    public struct SnakeLineAnimationOptions : IPathAnimationOptions, IMapPathAnimationOptions
     {
         public bool? CaptureMetadata { get; set; }
         public bool? Geodesic { get; set; }

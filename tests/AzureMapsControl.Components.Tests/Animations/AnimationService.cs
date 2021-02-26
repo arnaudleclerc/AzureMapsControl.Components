@@ -5,6 +5,7 @@
     using AzureMapsControl.Components.Animations;
     using AzureMapsControl.Components.Atlas;
     using AzureMapsControl.Components.Data;
+    using AzureMapsControl.Components.Layers;
     using AzureMapsControl.Components.Markers;
     using AzureMapsControl.Components.Runtime;
 
@@ -31,10 +32,10 @@
             var options = new SnakeLineAnimationOptions();
 
             var result = await _animationService.SnakelineAsync(line, source, options);
-            Assert.NotNull(result.Id);
-            Assert.Equal(options, result.Options);
+            Assert.IsType<UpdatableAnimation>(result);
+            Assert.NotNull((result as UpdatableAnimation).Id);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Snakeline.ToAnimationNamespace(), result.Id, line.Id, source.Id, options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Snakeline.ToAnimationNamespace(), (result as UpdatableAnimation).Id, line.Id, source.Id, options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -48,10 +49,10 @@
             var options = new MoveAlongPathAnimationOptions();
 
             var result = await _animationService.MoveAlongPathAsync(line, lineSource, pin, pinSource, options);
-            Assert.NotNull(result.Id);
-            Assert.Equal(options, result.Options);
+            Assert.IsType<UpdatableAnimation>(result);
+            Assert.NotNull((result as UpdatableAnimation).Id);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), result.Id, line.Id, lineSource.Id, pin.Id, pinSource.Id, options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), (result as UpdatableAnimation).Id, line.Id, lineSource.Id, pin.Id, pinSource.Id, options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -64,10 +65,10 @@
             var options = new MoveAlongPathAnimationOptions();
 
             var result = await _animationService.MoveAlongPathAsync(line, lineSource, pin, options);
-            Assert.NotNull(result.Id);
-            Assert.Equal(options, result.Options);
+            Assert.IsType<UpdatableAnimation>(result);
+            Assert.NotNull((result as UpdatableAnimation).Id);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), result.Id, line.Id, lineSource.Id, pin.Id, null, options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), (result as UpdatableAnimation).Id, line.Id, lineSource.Id, pin.Id, null, options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -80,10 +81,10 @@
             var options = new MoveAlongPathAnimationOptions();
 
             var result = await _animationService.MoveAlongPathAsync(line, pin, pinSource, options);
-            Assert.NotNull(result.Id);
-            Assert.Equal(options, result.Options);
-
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), result.Id, line, null, pin.Id, pinSource.Id, options), Times.Once);
+            Assert.IsType<UpdatableAnimation>(result);
+            Assert.NotNull((result as UpdatableAnimation).Id);
+            
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), (result as UpdatableAnimation).Id, line, null, pin.Id, pinSource.Id, options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -95,10 +96,24 @@
             var options = new MoveAlongPathAnimationOptions();
 
             var result = await _animationService.MoveAlongPathAsync(line, pin, options);
-            Assert.NotNull(result.Id);
-            Assert.Equal(options, result.Options);
+            Assert.IsType<UpdatableAnimation>(result);
+            Assert.NotNull((result as UpdatableAnimation).Id);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), result.Id, line, null, pin.Id, null, options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), (result as UpdatableAnimation).Id, line, null, pin.Id, null, options), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_FlowingDashedLine_Async()
+        {
+            var layer = new LineLayer();
+            var options = new MovingDashLineOptions();
+
+            var result = await _animationService.FlowingDashedLineAsync(layer, options);
+            Assert.IsType<Animation>(result);
+            Assert.NotNull((result as Animation).Id);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.FlowingDashedLine.ToAnimationNamespace(), (result as Animation).Id, layer.Id, options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
     }

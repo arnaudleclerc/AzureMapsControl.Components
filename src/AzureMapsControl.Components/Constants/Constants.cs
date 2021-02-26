@@ -28,6 +28,7 @@
                 internal const string SetOptions = "setOptions";
                 internal const string Snakeline = "snakeline";
                 internal const string MoveAlongPath = "moveAlongPath";
+                internal const string FlowingDashedLine = "flowingDashedLine";
             }
 
             internal static class Core

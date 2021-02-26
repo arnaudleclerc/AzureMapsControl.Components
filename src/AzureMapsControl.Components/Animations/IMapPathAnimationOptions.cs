@@ -1,6 +1,6 @@
 ﻿namespace AzureMapsControl.Components.Animations
 {
-    public interface IMapPathAnimationOptions : IPlayableAnimationOptions
+    public interface IMapPathAnimationOptions : IAnimationOptions
     {
         /// <summary>
         /// A pitch value to set on the map. By default this is not set.

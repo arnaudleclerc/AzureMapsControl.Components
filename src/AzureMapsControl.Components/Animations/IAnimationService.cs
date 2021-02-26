@@ -5,6 +5,7 @@
 
     using AzureMapsControl.Components.Atlas;
     using AzureMapsControl.Components.Data;
+    using AzureMapsControl.Components.Layers;
     using AzureMapsControl.Components.Markers;
 
     public interface IAnimationService
@@ -16,7 +17,7 @@
         /// <param name="source">DataSource the given line string is attached to</param>
         /// <param name="options">Options for the animation.</param>
         /// <returns>Animation</returns>
-        Task<PlayableAnimation> SnakelineAsync(LineString line, DataSource source, SnakeLineAnimationOptions options = null);
+        Task<IUpdatableAnimation> SnakelineAsync(LineString line, DataSource source, SnakeLineAnimationOptions options = default);
 
         /// <summary>
         /// Animates a map and/or a Point shape, or marker along a path.
@@ -26,8 +27,8 @@
         /// <param name="pin">A point to animate along the path</param>
         /// <param name="pinSource">The data source the given point is attached to</param>
         /// <param name="options">Options for the animation</param>
-        /// <returns></returns>
-        Task<PlayableAnimation> MoveAlongPathAsync(LineString path, DataSource pathSource, Point pin, DataSource pinSource, MoveAlongPathAnimationOptions options = null);
+        /// <returns>Animation</returns>
+        Task<IUpdatableAnimation> MoveAlongPathAsync(LineString path, DataSource pathSource, Point pin, DataSource pinSource, MoveAlongPathAnimationOptions options = default);
 
         /// <summary>
         /// Animates a map and/or a Point shape, or marker along a path.
@@ -36,8 +37,8 @@
         /// <param name="lineSource">The data source the given line is attached to</param>
         /// <param name="pin">An HTML Marker to animate along the path</param>
         /// <param name="options">Options for the animation</param>
-        /// <returns></returns>
-        Task<PlayableAnimation> MoveAlongPathAsync(LineString path, DataSource pathSource, HtmlMarker pin, MoveAlongPathAnimationOptions options = null);
+        /// <returns>Animation</returns>
+        Task<IUpdatableAnimation> MoveAlongPathAsync(LineString path, DataSource pathSource, HtmlMarker pin, MoveAlongPathAnimationOptions options = default);
 
         /// <summary>
         /// Animates a map and/or a Point shape, or marker along a path.
@@ -46,8 +47,8 @@
         /// <param name="pin">A point to animate along the path</param>
         /// <param name="pinSource">The data source the given point is attached to</param>
         /// <param name="options">Options for the animation</param>
-        /// <returns></returns>
-        Task<PlayableAnimation> MoveAlongPathAsync(IEnumerable<Position> path, Point pin, DataSource pinSource, MoveAlongPathAnimationOptions options = null);
+        /// <returns>Animation</returns>
+        Task<IUpdatableAnimation> MoveAlongPathAsync(IEnumerable<Position> path, Point pin, DataSource pinSource, MoveAlongPathAnimationOptions options = default);
 
         /// <summary>
         /// Animates a map and/or a Point shape, or marker along a path.
@@ -55,7 +56,15 @@
         /// <param name="path">The path to animate the point along.</param>
         /// <param name="pin">A point to animate along the path</param>
         /// <param name="options">Options for the animation</param>
-        /// <returns></returns>
-        Task<PlayableAnimation> MoveAlongPathAsync(IEnumerable<Position> path, HtmlMarker pin, MoveAlongPathAnimationOptions options = null);
+        /// <returns>Animation</returns>
+        Task<IUpdatableAnimation> MoveAlongPathAsync(IEnumerable<Position> path, HtmlMarker pin, MoveAlongPathAnimationOptions options = default);
+
+        /// <summary>
+        /// Animates the dash-array of a line layer to make it appear to flow. 
+        /// </summary>
+        /// <param name="layer">LineLayer to animate</param>
+        /// <param name="options">Options of the animations</param>
+        /// <returns>Animation</returns>
+        Task<IAnimation> FlowingDashedLineAsync(LineLayer layer, MovingDashLineOptions options = default);
     }
 }

@@ -6,6 +6,7 @@
 
     using AzureMapsControl.Components.Atlas;
     using AzureMapsControl.Components.Data;
+    using AzureMapsControl.Components.Layers;
     using AzureMapsControl.Components.Logger;
     using AzureMapsControl.Components.Markers;
     using AzureMapsControl.Components.Runtime;
@@ -22,7 +23,7 @@
             _logger = logger;
         }
 
-        public async Task<PlayableAnimation> MoveAlongPathAsync(LineString path, DataSource pathSource, Point pin, DataSource pinSource, MoveAlongPathAnimationOptions options = null)
+        public async Task<IUpdatableAnimation> MoveAlongPathAsync(LineString path, DataSource pathSource, Point pin, DataSource pinSource, MoveAlongPathAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_MoveAlongPath, "Calling MoveAlongPath");
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "PathId", path.Id);
@@ -31,12 +32,12 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "PinSourceId", pinSource.Id);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "Options", options);
 
-            var animation = new PlayableAnimation(Guid.NewGuid().ToString(), options, _jsRuntime);
+            var animation = new UpdatableAnimation(Guid.NewGuid().ToString(), _jsRuntime);
             await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), animation.Id, path.Id, pathSource.Id, pin.Id, pinSource.Id, options);
             return animation;
         }
 
-        public async Task<PlayableAnimation> MoveAlongPathAsync(LineString path, DataSource pathSource, HtmlMarker pin, MoveAlongPathAnimationOptions options = null)
+        public async Task<IUpdatableAnimation> MoveAlongPathAsync(LineString path, DataSource pathSource, HtmlMarker pin, MoveAlongPathAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_MoveAlongPath, "Calling MoveAlongPath");
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "PathId", path.Id);
@@ -44,12 +45,12 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "PinId", pin.Id);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "Options", options);
 
-            var animation = new PlayableAnimation(Guid.NewGuid().ToString(), options, _jsRuntime);
+            var animation = new UpdatableAnimation(Guid.NewGuid().ToString(), _jsRuntime);
             await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), animation.Id, path.Id, pathSource.Id, pin.Id, null, options);
             return animation;
         }
 
-        public async Task<PlayableAnimation> MoveAlongPathAsync(IEnumerable<Position> path, Point pin, DataSource pinSource, MoveAlongPathAnimationOptions options = null)
+        public async Task<IUpdatableAnimation> MoveAlongPathAsync(IEnumerable<Position> path, Point pin, DataSource pinSource, MoveAlongPathAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_MoveAlongPath, "Calling MoveAlongPath");
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "Path", path);
@@ -57,31 +58,41 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "PinSourceId", pinSource.Id);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "Options", options);
 
-            var animation = new PlayableAnimation(Guid.NewGuid().ToString(), options, _jsRuntime);
+            var animation = new UpdatableAnimation(Guid.NewGuid().ToString(), _jsRuntime);
             await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), animation.Id, path, null, pin.Id, pinSource.Id, options);
             return animation;
         }
 
-        public async Task<PlayableAnimation> MoveAlongPathAsync(IEnumerable<Position> path, HtmlMarker pin, MoveAlongPathAnimationOptions options = null)
+        public async Task<IUpdatableAnimation> MoveAlongPathAsync(IEnumerable<Position> path, HtmlMarker pin, MoveAlongPathAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_MoveAlongPath, "Calling MoveAlongPath");
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "Path", path);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "PinId", pin.Id);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "Options", options);
 
-            var animation = new PlayableAnimation(Guid.NewGuid().ToString(), options, _jsRuntime);
+            var animation = new UpdatableAnimation(Guid.NewGuid().ToString(), _jsRuntime);
             await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), animation.Id, path, null, pin.Id, null, options);
             return animation;
         }
 
-        public async Task<PlayableAnimation> SnakelineAsync(LineString line, DataSource source, SnakeLineAnimationOptions options = null)
+        public async Task<IUpdatableAnimation> SnakelineAsync(LineString line, DataSource source, SnakeLineAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_Snakeline, "Calling Snakeline");
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Snakeline, "LineId", line.Id);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Snakeline, "SourceId", source.Id);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Snakeline, "Options", options);
-            var animation = new PlayableAnimation(Guid.NewGuid().ToString(), options, _jsRuntime);
+            var animation = new UpdatableAnimation(Guid.NewGuid().ToString(), _jsRuntime);
             await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Snakeline.ToAnimationNamespace(), animation.Id, line.Id, source.Id, options);
+            return animation;
+        }
+
+        public async Task<IAnimation> FlowingDashedLineAsync(LineLayer layer, MovingDashLineOptions options = default)
+        {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_FlowingDashedLine, "Calling Snakeline");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_FlowingDashedLine, "LayerId", layer.Id);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_FlowingDashedLine, "Options", options);
+            var animation = new Animation(Guid.NewGuid().ToString(), _jsRuntime);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.FlowingDashedLine.ToAnimationNamespace(), animation.Id, layer.Id, options);
             return animation;
         }
     }

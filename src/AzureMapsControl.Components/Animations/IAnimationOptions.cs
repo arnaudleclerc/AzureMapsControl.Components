@@ -3,7 +3,7 @@
     /// <summary>
     /// Base animation options
     /// </summary>
-    public interface IPlayableAnimationOptions
+    public interface IAnimationOptions
     {
         /// <summary>
         /// Specifies if the animation should start automatically or wait for the play function to be called

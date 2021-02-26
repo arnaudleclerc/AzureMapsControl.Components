@@ -1,4 +1,4 @@
-﻿@page "/Animations/MoveAlongPath"
+﻿@page "/Animations/MoveMarkerAlongPath"
 @inject Components.Animations.IAnimationService AnimationService
 
 <style>
@@ -19,7 +19,7 @@
               OnSeek="SeekAsync"
               OnStop="StopAsync"></AnimationBar>
 <AzureMap Id="map"
-          CameraOptions="new CameraOptions { Center = new Components.Atlas.Position(-122.345, 47.615), Zoom = 14 }"
+          CameraOptions="new CameraOptions { Center = new Components.Atlas.Position(-122.3378, 47.6129), Zoom = 13 }"
           StyleOptions="StyleOptions"
           EventActivationFlags="MapEventActivationFlags
                                 .None()
@@ -84,12 +84,9 @@
 
     public async Task OnMapReady(MapEventArgs eventArgs)
     {
-        await eventArgs.Map.CreateImageFromTemplateAsync("arrow-icon", "marker-arrow", "teal", "#fff");
         var lineSource = new AzureMapsControl.Components.Data.DataSource();
-        var pinSource = new AzureMapsControl.Components.Data.DataSource();
 
         await eventArgs.Map.AddSourceAsync(lineSource);
-        await eventArgs.Map.AddSourceAsync(pinSource);
 
         var lineLayer = new AzureMapsControl.Components.Layers.LineLayer
         {
@@ -111,49 +108,19 @@
         });
         await lineSource.AddAsync(line);
 
-        var symbolLayer = new AzureMapsControl.Components.Layers.SymbolLayer
-        {
-            Options = new Components.Layers.SymbolLayerOptions
+        var marker = new AzureMapsControl.Components.Markers.HtmlMarker(
+            new Components.Markers.HtmlMarkerOptions
             {
-                Source = pinSource.Id,
-                IconOptions = new Components.Layers.IconOptions
-                {
-                    Image = new Components.Atlas.ExpressionOrString("arrow-icon"),
-                    Anchor = new Components.Atlas.ExpressionOrString("center"),
-                    Rotation = new Components.Atlas.ExpressionOrNumber(new AzureMapsControl.Components.Atlas.Expression[]
-                    {
-                        new AzureMapsControl.Components.Atlas.ExpressionOrString("+"),
-                        new AzureMapsControl.Components.Atlas.ExpressionOrNumber(180),
-                        new Components.Atlas.Expression(new AzureMapsControl.Components.Atlas.Expression[]
-                    {
-                            new AzureMapsControl.Components.Atlas.ExpressionOrString("get"),
-                            new AzureMapsControl.Components.Atlas.ExpressionOrString("heading")
-                        })
-                        }),
-                    RotationAlignment = AzureMapsControl.Components.Atlas.PitchAlignment.Map,
-                    IgnorePlacement = true,
-                    AllowOverlap = true
-                },
-                TextOptions = new Components.Layers.TextOptions
-                {
-                    IgnorePlacement = true,
-                    AllowOverlap = true
-                }
+                Position = new Components.Atlas.Position(-122.33825, 47.53945)
             }
-        };
-        await eventArgs.Map.AddLayerAsync(symbolLayer);
+        );
 
-        var pin = new AzureMapsControl.Components.Atlas.Point(new Components.Atlas.Position(-122.34758, 47.62155));
-        await pinSource.AddAsync(pin);
+        await eventArgs.Map.AddHtmlMarkersAsync(marker);
 
-        _animation = await AnimationService.MoveAlongPathAsync(line, lineSource, pin, pinSource, new Components.Animations.MoveAlongPathAnimationOptions
+        _animation = await AnimationService.MoveAlongPathAsync(line, lineSource, marker, new Components.Animations.MoveAlongPathAnimationOptions
         {
             CaptureMetadata = true,
-            Duration = 4000,
-            RotationOffset = 0,
-            Zoom = 15,
-            Pitch = 45,
-            Rotate = true
+            Duration = 2000
         });
     }
 }

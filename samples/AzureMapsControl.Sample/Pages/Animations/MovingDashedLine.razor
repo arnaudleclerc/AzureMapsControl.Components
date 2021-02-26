@@ -1,0 +1,104 @@
+﻿@page "/Animations/MovingDashedLine"
+@inject Components.Animations.IAnimationService AnimationService
+
+<style>
+    .animations-btns {
+        position: absolute;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+    }
+</style>
+
+@using AzureMapsControl.Components.Map
+@using AzureMapsControl.Sample.Animations
+<AnimationBar OnDispose="DisposeAsync"
+              OnPause="PauseAsync"
+              OnPlay="PlayAsync"
+              OnReset="ResetAsync"
+              OnStop="StopAsync"></AnimationBar>
+<AzureMap Id="map"
+          CameraOptions="new CameraOptions { Center = new Components.Atlas.Position(-122.3378, 47.6129), Zoom = 13 }"
+          StyleOptions="StyleOptions"
+          EventActivationFlags="MapEventActivationFlags
+                                .None()
+                                .Enable(MapEventType.Ready)"
+          OnReady="OnMapReady" />
+
+@code  {
+    private Components.Animations.IAnimation _animation;
+
+    public StyleOptions StyleOptions = new StyleOptions
+    {
+        Style = MapStyle.GrayscaleDark
+    };
+
+    public async Task DisposeAsync()
+    {
+        if (_animation is not null)
+        {
+            await _animation.DisposeAsync();
+        }
+    }
+
+    public async Task PauseAsync()
+    {
+        if (_animation is not null)
+        {
+            await _animation.PauseAsync();
+        }
+    }
+
+    public async Task PlayAsync()
+    {
+        if (_animation is not null)
+        {
+            await _animation.PlayAsync();
+        }
+    }
+
+    public async Task ResetAsync()
+    {
+        if (_animation is not null)
+        {
+            await _animation.ResetAsync();
+        }
+    }
+
+    public async Task StopAsync()
+    {
+        if (_animation is not null)
+        {
+            await _animation.StopAsync();
+        }
+    }
+
+    public async Task OnMapReady(MapEventArgs eventArgs)
+    {
+        var dataSource = new AzureMapsControl.Components.Data.DataSource();
+        await eventArgs.Map.AddSourceAsync(dataSource);
+        await dataSource.AddAsync(new AzureMapsControl.Components.Atlas.LineString(new[]
+        {
+            new AzureMapsControl.Components.Atlas.Position(-122.34758, 47.62155),
+            new Components.Atlas.Position(-122.34764, 47.61859),
+            new Components.Atlas.Position(-122.33787, 47.61295),
+            new Components.Atlas.Position(-122.34217, 47.60964)
+        }));
+        var layer = new AzureMapsControl.Components.Layers.LineLayer
+        {
+            Options = new Components.Layers.LineLayerOptions
+            {
+                Source = dataSource.Id,
+                StrokeWidth = new Components.Atlas.ExpressionOrNumber(4)
+            }
+        };
+        await eventArgs.Map.AddLayerAsync(layer);
+        _animation = await AnimationService.FlowingDashedLineAsync(layer, new Components.Animations.MovingDashLineOptions
+        {
+            AutoPlay = true,
+            Loop = true,
+            Reverse = false
+        });
+
+    }
+}
