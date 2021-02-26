@@ -41,7 +41,6 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    && args.Shapes == eventArgs.Shapes
                     && args.Type == eventArgs.Type;
             };
             layer.DispatchEvent(map, eventArgs);
@@ -60,7 +59,6 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    && args.Shapes == eventArgs.Shapes
                     && args.Type == eventArgs.Type;
             };
             layer.DispatchEvent(map, eventArgs);
@@ -79,7 +77,6 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    && args.Shapes == eventArgs.Shapes
                     && args.Type == eventArgs.Type;
             };
             layer.DispatchEvent(map, eventArgs);
@@ -126,7 +123,6 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    && args.Shapes == eventArgs.Shapes
                     && args.Type == eventArgs.Type;
             };
             layer.DispatchEvent(map, eventArgs);
@@ -145,7 +141,6 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    && args.Shapes == eventArgs.Shapes
                     && args.Type == eventArgs.Type;
             };
             layer.DispatchEvent(map, eventArgs);
@@ -164,7 +159,6 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    && args.Shapes == eventArgs.Shapes
                     && args.Type == eventArgs.Type;
             };
             layer.DispatchEvent(map, eventArgs);
@@ -183,7 +177,6 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    && args.Shapes == eventArgs.Shapes
                     && args.Type == eventArgs.Type;
             };
             layer.DispatchEvent(map, eventArgs);
@@ -202,7 +195,6 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    && args.Shapes == eventArgs.Shapes
                     && args.Type == eventArgs.Type;
             };
             layer.DispatchEvent(map, eventArgs);
@@ -221,7 +213,6 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    && args.Shapes == eventArgs.Shapes
                     && args.Type == eventArgs.Type;
             };
             layer.DispatchEvent(map, eventArgs);
@@ -240,7 +231,6 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    && args.Shapes == eventArgs.Shapes
                     && args.Type == eventArgs.Type;
             };
             layer.DispatchEvent(map, eventArgs);
@@ -259,7 +249,6 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    && args.Shapes == eventArgs.Shapes
                     && args.Pixels == eventArgs.Pixels
                     && args.Positions == eventArgs.Positions
                     && args.Type == eventArgs.Type;
@@ -280,7 +269,6 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    && args.Shapes == eventArgs.Shapes
                     && args.Pixels == eventArgs.Pixels
                     && args.Positions == eventArgs.Positions
                     && args.Type == eventArgs.Type;
@@ -301,7 +289,6 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    && args.Shapes == eventArgs.Shapes
                     && args.Pixels == eventArgs.Pixels
                     && args.Positions == eventArgs.Positions
                     && args.Type == eventArgs.Type;
@@ -322,7 +309,6 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    && args.Shapes == eventArgs.Shapes
                     && args.Pixels == eventArgs.Pixels
                     && args.Positions == eventArgs.Positions
                     && args.Type == eventArgs.Type;
