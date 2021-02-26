@@ -1,0 +1,100 @@
+﻿@page "/Animations/DropMarkers"
+@inject Components.Animations.IAnimationService AnimationService
+
+<style>
+    .animations-btns {
+        position: absolute;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+    }
+</style>
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          CameraOptions="new CameraOptions { Center = new Components.Atlas.Position(-122.33825, 47.53945), Zoom = 7 }"
+          StyleOptions="StyleOptions"
+          EventActivationFlags="MapEventActivationFlags
+                                .None()
+                                .Enable(MapEventType.Click)"
+          OnClick="OnMapClick" />
+
+@code  {
+    private Components.Animations.IUpdatableAnimation _animation;
+
+    public StyleOptions StyleOptions = new StyleOptions
+    {
+        Style = MapStyle.GrayscaleDark
+    };
+
+    public async Task DisposeAsync()
+    {
+        if (_animation is not null)
+        {
+            await _animation.DisposeAsync();
+        }
+    }
+
+    public async Task PauseAsync()
+    {
+        if (_animation is not null)
+        {
+            await _animation.PauseAsync();
+        }
+    }
+
+    public async Task PlayAsync()
+    {
+        if (_animation is not null)
+        {
+            await _animation.PlayAsync();
+        }
+    }
+
+    public async Task ResetAsync()
+    {
+        if (_animation is not null)
+        {
+            await _animation.ResetAsync();
+        }
+    }
+
+    public async Task SeekAsync()
+    {
+        if (_animation is not null)
+        {
+            await _animation.SeekAsync(0.5m);
+        }
+    }
+
+    public async Task StopAsync()
+    {
+        if (_animation is not null)
+        {
+            await _animation.StopAsync();
+        }
+    }
+
+    public async Task OnMapClick(MapMouseEventArgs eventArgs)
+    {
+        var random = new Random();
+        var markers = new AzureMapsControl.Components.Markers.HtmlMarker[15]
+            .Select(_ => new AzureMapsControl.Components.Markers.HtmlMarker(new Components.Markers.HtmlMarkerOptions
+            {
+                Position = new Components.Atlas.Position(-122.3 + (random.NextDouble() * 2 - 1), 47.5 + (random.NextDouble() * 2 - 1))
+            }));
+
+        if(_animation == null)
+        {
+            _animation = await AnimationService.DropMarkersAsync(markers, options: new Components.Animations.AnimationOptions
+            {
+                Easing = AzureMapsControl.Components.Animations.Easing.EaseOutBounce,
+                Duration = 1000,
+                AutoPlay = true
+            });
+        } else
+        {
+            await _animation.PlayAsync();
+        }
+    }
+}

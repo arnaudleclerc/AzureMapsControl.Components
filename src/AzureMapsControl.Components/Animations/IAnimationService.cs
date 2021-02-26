@@ -66,5 +66,23 @@
         /// <param name="options">Options of the animations</param>
         /// <returns>Animation</returns>
         Task<IAnimation> FlowingDashedLineAsync(LineLayer layer, MovingDashLineOptions options = default);
+
+        /// <summary>
+        /// Adds an offset to HtmlMarkers to animate its y value to simulate dropping. Animation modifies `pixelOffset` value of HtmlMarkers.
+        /// </summary>
+        /// <param name="markers">HtmlMarkers to drop in.</param>
+        /// <param name="height">The height at which to drop the shape from.</param>
+        /// <param name="options">Options for the animation.</param>
+        /// <returns></returns>
+        Task<IUpdatableAnimation> DropMarkersAsync(IEnumerable<HtmlMarker> markers, decimal? height = null, AnimationOptions options = default);
+
+        /// <summary>
+        /// Adds an offset to an HtmlMarker to animate its y value to simulate dropping. Animation modifies `pixelOffset` value of HtmlMarker.
+        /// </summary>
+        /// <param name="markers">HtmlMarkers to drop in.</param>
+        /// <param name="height">The height at which to drop the shape from.</param>
+        /// <param name="options">Options for the animation.</param>
+        /// <returns></returns>
+        Task<IUpdatableAnimation> DropMarkerAsync(HtmlMarker marker, decimal? height = null, AnimationOptions options = default);
     }
 }

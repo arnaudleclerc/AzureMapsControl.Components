@@ -51,20 +51,7 @@ export class Core {
 
     public static addHtmlMarkers(htmlMarkerOptions: HtmlMarkerOptions[], eventHelper: EventHelper<HtmlMarkerEventArgs>): void {
         htmlMarkerOptions.forEach(htmlMarkerOption => {
-            const marker = new azmaps.HtmlMarker({
-                anchor: htmlMarkerOption.options.anchor,
-                color: htmlMarkerOption.options.color,
-                draggable: htmlMarkerOption.options.draggable,
-                htmlContent: htmlMarkerOption.options.htmlContent,
-                pixelOffset: htmlMarkerOption.options.pixelOffset,
-                position: htmlMarkerOption.options.position,
-                secondaryColor: htmlMarkerOption.options.secondaryColor,
-                text: htmlMarkerOption.options.text,
-                visible: htmlMarkerOption.options.visible
-            });
-            (marker as any).amc = {
-                id: htmlMarkerOption.id
-            };
+            const marker = this.getHtmlMarkerFromOptions(htmlMarkerOption);
             if (htmlMarkerOption.events) {
                 htmlMarkerOption.events.forEach(htmlMarkerEvent => {
                     this._map.events.add(htmlMarkerEvent as any, marker, event => {
@@ -73,6 +60,32 @@ export class Core {
                 });
             }
             this._map.markers.add(marker);
+        });
+    }
+
+    public static getHtmlMarkerFromOptions(htmlMarkerOptions: HtmlMarkerOptions): azmaps.HtmlMarker {
+        const marker = new azmaps.HtmlMarker({
+            anchor: htmlMarkerOptions.options.anchor,
+            color: htmlMarkerOptions.options.color,
+            draggable: htmlMarkerOptions.options.draggable,
+            htmlContent: htmlMarkerOptions.options.htmlContent,
+            pixelOffset: htmlMarkerOptions.options.pixelOffset,
+            position: htmlMarkerOptions.options.position,
+            secondaryColor: htmlMarkerOptions.options.secondaryColor,
+            text: htmlMarkerOptions.options.text,
+            visible: htmlMarkerOptions.options.visible
+        });
+        (marker as any).amc = {
+            id: htmlMarkerOptions.id
+        };
+        return marker;
+    }
+
+    public static attachEventsToHtmlMarker(marker: azmaps.HtmlMarker, events: string[], eventHelper: EventHelper<HtmlMarkerEventArgs>): void {
+        events.forEach(htmlMarkerEvent => {
+            this._map.events.add(htmlMarkerEvent as any, marker, event => {
+                eventHelper.invokeMethodAsync('NotifyEventAsync', toMarkerEvent(event, (marker as any).amc.id));
+            });
         });
     }
 

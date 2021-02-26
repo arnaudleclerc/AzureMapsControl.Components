@@ -375,14 +375,20 @@
                 _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddHtmlMarkersAsync, "Adding html markers");
                 HtmlMarkers = (HtmlMarkers ?? Array.Empty<HtmlMarker>()).Concat(markers);
                 _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddHtmlMarkersAsync, $"{markers.Count()} new html markers will be added");
+                var parameters = GetHtmlMarkersCreationParameters(markers);
                 await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(),
-                markers.Select(marker => new HtmlMarkerCreationOptions {
-                    Id = marker.Id,
-                    Events = marker.EventActivationFlags?.EnabledEvents,
-                    Options = marker.Options
-                }),
-                DotNetObjectReference.Create(_htmlMarkerInvokeHelper));
+                parameters.MarkerOptions,
+                parameters.InvokeHelper);
             }
+        }
+
+        internal (IEnumerable<HtmlMarkerCreationOptions> MarkerOptions, DotNetObjectReference<HtmlMarkerInvokeHelper> InvokeHelper) GetHtmlMarkersCreationParameters(IEnumerable<HtmlMarker> markers)
+        {
+            return (markers.Select(marker => new HtmlMarkerCreationOptions {
+                Id = marker.Id,
+                Events = marker.EventActivationFlags?.EnabledEvents,
+                Options = marker.Options
+            }), DotNetObjectReference.Create(_htmlMarkerInvokeHelper));
         }
 
         /// <summary>
@@ -403,7 +409,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_UpdateHtmlMarkersAsync, $"{updates.Count()} html markers will be updated");
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_UpdateHtmlMarkersAsync, $"Ids: {string.Join('|', updates.Select(h => h.Marker.Id))}");
             await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.UpdateHtmlMarkers.ToCoreNamespace(),
-            updates.Select(update => new AzureMapsControl.Components.Markers.HtmlMarkerCreationOptions {
+            updates.Select(update => new HtmlMarkerCreationOptions {
                 Id = update.Marker.Id,
                 Options = update.Options
             }));

@@ -1,6 +1,8 @@
 import * as azmaps from 'azure-maps-control';
 import * as azanimations from 'azure-maps-control-animations';
 import { Core } from '../core';
+import { EventHelper } from '../events';
+import { HtmlMarkerEventArgs, HtmlMarkerOptions } from '../html-markers';
 
 export class Animation {
 
@@ -57,6 +59,27 @@ export class Animation {
             animationId,
             azanimations.animations.flowingDashedLine(layer, options)
         )
+    }
+
+    public static dropMarkers(animationId: string,
+        markerOptions: HtmlMarkerOptions[],
+        height: number,
+        options: azanimations.PlayableAnimationOptions,
+        eventInvokeHelper: EventHelper<HtmlMarkerEventArgs>): void {
+        const map = Core.getMap();
+        const markers: azmaps.HtmlMarker[] = [];
+        markerOptions.forEach(markerOption => {
+            const marker = Core.getHtmlMarkerFromOptions(markerOption);
+            markers.push(marker);
+            if (markerOption.events) {
+                Core.attachEventsToHtmlMarker(marker, markerOption.events, eventInvokeHelper);
+            }
+        });
+
+        this._animations.set(
+            animationId,
+            azanimations.animations.dropMarkers(markers, map, height, options)
+        );
     }
 
     public static dispose(animationId: string): void {

@@ -2,12 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Atlas;
     using AzureMapsControl.Components.Data;
     using AzureMapsControl.Components.Layers;
     using AzureMapsControl.Components.Logger;
+    using AzureMapsControl.Components.Map;
     using AzureMapsControl.Components.Markers;
     using AzureMapsControl.Components.Runtime;
 
@@ -17,10 +19,13 @@
     {
         private readonly IMapJsRuntime _jsRuntime;
         private readonly ILogger _logger;
-        public AnimationService(IMapJsRuntime jsRuntime, ILogger<AnimationService> logger)
+        private readonly IMapService _mapService;
+
+        public AnimationService(IMapJsRuntime jsRuntime, ILogger<AnimationService> logger, IMapService mapService)
         {
             _jsRuntime = jsRuntime;
             _logger = logger;
+            _mapService = mapService;
         }
 
         public async Task<IUpdatableAnimation> MoveAlongPathAsync(LineString path, DataSource pathSource, Point pin, DataSource pinSource, MoveAlongPathAnimationOptions options = default)
@@ -95,5 +100,20 @@
             await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.FlowingDashedLine.ToAnimationNamespace(), animation.Id, layer.Id, options);
             return animation;
         }
+
+        public async Task<IUpdatableAnimation> DropMarkersAsync(IEnumerable<HtmlMarker> markers, decimal? height = null, AnimationOptions options = default)
+        {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_DropMarkers, "Calling DropMarkersAsync");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_DropMarkers, "Markers", markers);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_DropMarkers, "Height", height);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_DropMarkers, "Options", options);
+            _mapService.Map.HtmlMarkers = (_mapService.Map.HtmlMarkers ?? Array.Empty<HtmlMarker>()).Concat(markers);
+            var parameters = _mapService.Map.GetHtmlMarkersCreationParameters(markers);
+            var animation = new UpdatableAnimation(Guid.NewGuid().ToString(), _jsRuntime);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.DropMarkers.ToAnimationNamespace(), animation.Id, parameters.MarkerOptions, height, options, parameters.InvokeHelper);
+            return animation;
+        }
+
+        public async Task<IUpdatableAnimation> DropMarkerAsync(HtmlMarker marker, decimal? height = null, AnimationOptions options = default) => await DropMarkersAsync(new [] { marker }, height, options);
     }
 }
