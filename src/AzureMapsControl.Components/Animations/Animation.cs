@@ -1,6 +1,5 @@
 ﻿namespace AzureMapsControl.Components.Animations
 {
-    using System.Dynamic;
     using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Animations.Options;
@@ -13,6 +12,7 @@
         internal readonly IMapJsRuntime JsRuntime;
 
         public string Id => _id;
+        public bool Disposed { get; internal set; }
 
         internal Animation(string id, IMapJsRuntime jsRuntime)
         {
@@ -24,38 +24,71 @@
         /// Disposes the animation
         /// </summary>
         /// <returns></returns>
-        public virtual async Task DisposeAsync() => await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Dispose.ToAnimationNamespace(), Id);
+        public virtual async Task DisposeAsync()
+        {
+            EnsureNotDisposed();
+            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Dispose.ToAnimationNamespace(), Id);
+            Disposed = true;
+        }
 
         /// <summary>
         /// Pauses the animation.
         /// </summary>
         /// <returns></returns>
-        public virtual async Task PauseAsync() => await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Pause.ToAnimationNamespace(), Id);
+        public virtual async Task PauseAsync()
+        {
+            EnsureNotDisposed();
+            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Pause.ToAnimationNamespace(), Id);
+        }
 
         /// <summary>
         /// Plays the animation.
         /// </summary>
         /// <returns></returns>
-        public virtual async Task PlayAsync() => await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Play.ToAnimationNamespace(), Id);
+        public virtual async Task PlayAsync()
+        {
+            EnsureNotDisposed();
+            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Play.ToAnimationNamespace(), Id);
+        }
 
         /// <summary>
         /// Stops the animation and jumps back to the beginning of the animation. 
         /// </summary>
         /// <returns></returns>
-        public virtual async Task ResetAsync() => await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Reset.ToAnimationNamespace(), Id);
+        public virtual async Task ResetAsync()
+        {
+            EnsureNotDisposed();
+            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Reset.ToAnimationNamespace(), Id);
+        }
 
         /// <summary>
         /// Stops the animation and jumps back to the end of the animation. 
         /// </summary>
         /// <returns></returns>
-        public virtual async Task StopAsync() => await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Stop.ToAnimationNamespace(), Id);
+        public virtual async Task StopAsync()
+        {
+            EnsureNotDisposed();
+            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Stop.ToAnimationNamespace(), Id);
+        }
 
         /// <summary>
         /// Advances the animation to specific step. 
         /// </summary>
         /// <param name="progress">The progress of the animation to advance to. A value between 0 and 1.</param>
         /// <returns></returns>
-        public virtual async Task SeekAsync(decimal progress) => await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Seek.ToAnimationNamespace(), Id, progress);
+        public virtual async Task SeekAsync(decimal progress)
+        {
+            EnsureNotDisposed();
+            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Seek.ToAnimationNamespace(), Id, progress);
+        }
+
+        protected void EnsureNotDisposed()
+        {
+            if (Disposed)
+            {
+                throw new AnimationDisposedException();
+            }
+        }
     }
 
     internal abstract class Animation<TOptions> : Animation
@@ -70,6 +103,10 @@
         /// </summary>
         /// <param name="options">Options to update the animation with</param>
         /// <returns></returns>
-        public virtual async Task SetOptionsAsync(TOptions options) => await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetOptions.ToAnimationNamespace(), Id, options);
+        public virtual async Task SetOptionsAsync(TOptions options)
+        {
+            EnsureNotDisposed();
+            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetOptions.ToAnimationNamespace(), Id, options);
+        }
     }
 }

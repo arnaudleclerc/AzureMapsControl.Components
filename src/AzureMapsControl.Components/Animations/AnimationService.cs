@@ -40,6 +40,7 @@
 
             var animation = new MoveAlongPathAnimation(Guid.NewGuid().ToString(), _jsRuntime);
             await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), animation.Id, path.Id, pathSource.Id, pin.Id, pinSource.Id, options);
+            animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
 
@@ -53,6 +54,7 @@
 
             var animation = new MoveAlongPathAnimation(Guid.NewGuid().ToString(), _jsRuntime);
             await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), animation.Id, path.Id, pathSource.Id, pin.Id, null, options);
+            animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
 
@@ -66,6 +68,7 @@
 
             var animation = new MoveAlongPathAnimation(Guid.NewGuid().ToString(), _jsRuntime);
             await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), animation.Id, path, null, pin.Id, pinSource.Id, options);
+            animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
 
@@ -78,6 +81,7 @@
 
             var animation = new MoveAlongPathAnimation(Guid.NewGuid().ToString(), _jsRuntime);
             await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), animation.Id, path, null, pin.Id, null, options);
+            animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
 
@@ -90,6 +94,7 @@
 
             var animation = new SnakeLineAnimation(Guid.NewGuid().ToString(), _jsRuntime);
             await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Snakeline.ToAnimationNamespace(), animation.Id, line.Id, source.Id, options);
+            animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
 
@@ -115,6 +120,7 @@
             var parameters = _mapService.Map.GetHtmlMarkersCreationParameters(markers);
             var animation = new DropMarkersAnimation(Guid.NewGuid().ToString(), _jsRuntime);
             await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.DropMarkers.ToAnimationNamespace(), animation.Id, parameters.MarkerOptions, height, options, parameters.InvokeHelper);
+            animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
 
@@ -141,6 +147,7 @@
 
             var animation = new DropAnimation(Guid.NewGuid().ToString(), _jsRuntime);
             await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Drop.ToAnimationNamespace(), animation.Id, points, source.Id, height, options);
+            animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
 

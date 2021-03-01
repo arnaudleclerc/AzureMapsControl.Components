@@ -15,10 +15,11 @@ export class Animation {
         options: azanimations.PathAnimationOptions | azanimations.MapPathAnimationOptions): void {
         const source = Core.getMap().sources.getById(dataSourceId) as azmaps.source.DataSource;
         const shape = source.getShapeById(lineId);
-        this._animations.set(
-            animationId,
-            azanimations.animations.snakeline(shape, options)
-        );
+        const animation = azanimations.animations.snakeline(shape, options);
+
+        if (!options.disposeOnComplete) {
+            this._animations.set(animationId, animation);
+        }
     }
 
     public static moveAlongPath(animationId: string,
@@ -45,10 +46,11 @@ export class Animation {
             shape = map.markers.getMarkers().find(marker => (marker as any).amc.id === pin);
         }
 
-        this._animations.set(
-            animationId,
-            azanimations.animations.moveAlongPath(path, shape, options)
-        );
+        const animation = azanimations.animations.moveAlongPath(path, shape, options);
+
+        if (!options.disposeOnComplete) {
+            this._animations.set(animationId, animation);
+        }
     }
 
     public static flowingDashedLine(animationId: string,
@@ -56,10 +58,11 @@ export class Animation {
         options: azanimations.MovingDashLineOptions): void {
 
         const layer = Core.getMap().layers.getLayerById(lineLayerId) as azmaps.layer.LineLayer;
+
         this._animations.set(
             animationId,
             azanimations.animations.flowingDashedLine(layer, options)
-        )
+        );
     }
 
     public static dropMarkers(animationId: string,
@@ -77,10 +80,11 @@ export class Animation {
             }
         });
 
-        this._animations.set(
-            animationId,
-            azanimations.animations.dropMarkers(markers, map, height, options)
-        );
+        const animation = azanimations.animations.dropMarkers(markers, map, height, options);
+
+        if (!options.disposeOnComplete) {
+            this._animations.set(animationId, animation);
+        }
     }
 
     public static groupAnimations(groupAnimationId: string,
@@ -108,10 +112,11 @@ export class Animation {
         const map = Core.getMap();
         const source = map.sources.getById(datasourceId) as azmaps.source.DataSource;
 
-        this._animations.set(
-            animationId,
-            azanimations.animations.drop(shapes, source, height, options)
-        );
+        const animation = azanimations.animations.drop(shapes, source, height, options);
+
+        if (!options.disposeOnComplete) {
+            this._animations.set(animationId, animation);
+        }
     }
 
     public static dispose(animationId: string): void {

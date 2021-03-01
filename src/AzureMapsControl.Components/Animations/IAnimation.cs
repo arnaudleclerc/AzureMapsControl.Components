@@ -10,6 +10,11 @@
         public string Id { get; }
 
         /// <summary>
+        /// Indicates if the animation is disposed.
+        /// </summary>
+        public bool Disposed { get; }
+
+        /// <summary>
         /// Disposes the animation
         /// </summary>
         /// <returns></returns>
