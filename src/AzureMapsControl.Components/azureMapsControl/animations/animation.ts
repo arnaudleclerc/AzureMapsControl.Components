@@ -2,6 +2,7 @@ import * as azmaps from 'azure-maps-control';
 import * as azanimations from 'azure-maps-control-animations';
 import { Core } from '../core';
 import { EventHelper } from '../events';
+import { Geometry } from '../geometries';
 import { HtmlMarkerEventArgs, HtmlMarkerOptions } from '../html-markers';
 
 export class Animation {
@@ -95,6 +96,21 @@ export class Animation {
         this._animations.set(
             groupAnimationId,
             new azanimations.animations.GroupAnimation(animations, options)
+        );
+    }
+
+    public static drop(animationId: string,
+        shapes: Geometry[],
+        datasourceId: string,
+        height: number,
+        options: azanimations.PlayableAnimationOptions): void {
+
+        const map = Core.getMap();
+        const source = map.sources.getById(datasourceId) as azmaps.source.DataSource;
+
+        this._animations.set(
+            animationId,
+            azanimations.animations.drop(shapes, source, height, options)
         );
     }
 

@@ -189,12 +189,53 @@
             Assert.NotNull((result as GroupAnimation).Id);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.GroupAnimations.ToAnimationNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string== (result as GroupAnimation).Id
+                parameters[0] as string == (result as GroupAnimation).Id
                 && parameters[1] is IEnumerable<string>
                 && (parameters[1] as IEnumerable<string>).Contains(animation1.Id)
                 && (parameters[1] as IEnumerable<string>).Contains(animation2.Id)
                 && parameters[2] is GroupAnimationOptions
             )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_DropMultiple_Async()
+        {
+            var point = new Point();
+            var point2 = new Point();
+            var points = new[] { point, point2 };
+            var datasource = new DataSource();
+            var options = new DropAnimationOptions();
+            var height = 1m;
+
+            var result = await _animationService.DropAsync(points, datasource, height, options);
+            Assert.IsType<DropAnimation>(result);
+            Assert.NotNull((result as DropAnimation).Id);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Drop.ToAnimationNamespace(), (result as DropAnimation).Id, points, datasource.Id, height, options), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_Drop_Async()
+        {
+            var point = new Point();
+            var datasource = new DataSource();
+            var options = new DropAnimationOptions();
+            var height = 1m;
+
+            var result = await _animationService.DropAsync(point, datasource, height, options);
+            Assert.IsType<DropAnimation>(result);
+            Assert.NotNull((result as DropAnimation).Id);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Drop.ToAnimationNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == (result as DropAnimation).Id
+                && parameters[1] is IEnumerable<Point>
+                && (parameters[1] as IEnumerable<Point>).Contains(point)
+                && parameters[2] as string == datasource.Id
+                && parameters[3] as decimal? == height
+                && parameters[4] is DropAnimationOptions
+             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
     }

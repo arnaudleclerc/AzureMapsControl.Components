@@ -93,5 +93,25 @@
         /// <param name="options">Options for the animation</param>
         /// <returns>Animation</returns>
         Task<IGroupAnimation> GroupAnimationAsync(IEnumerable<IAnimation> animations, GroupAnimationOptions options = default);
+
+        /// <summary>
+        /// Adds an offset array property to point shapes and animates its y value to simulate dropping.
+        /// </summary>
+        /// <param name="points">A one or more point geometries to drop in</param>
+        /// <param name="source">The data source to drop the point shapes into.</param>
+        /// <param name="height">The height at which to drop the shape from</param>
+        /// <param name="options">Options for the animation</param>
+        /// <returns></returns>
+        Task<IDropAnimation> DropAsync(IEnumerable<Point> points, DataSource source, decimal? height = null, DropAnimationOptions options = default);
+
+        /// <summary>
+        /// Adds an offset array property to a point shape and animates its y value to simulate dropping.
+        /// </summary>
+        /// <param name="point">A point to drop in</param>
+        /// <param name="source">The data source to drop the point shapes into.</param>
+        /// <param name="height">The height at which to drop the shape from</param>
+        /// <param name="options">Options for the animation</param>
+        /// <returns></returns>
+        Task<IDropAnimation> DropAsync(Point point, DataSource source, decimal? height = null, DropAnimationOptions options = default);
     }
 }

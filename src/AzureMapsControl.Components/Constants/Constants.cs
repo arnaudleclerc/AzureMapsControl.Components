@@ -31,6 +31,7 @@
                 internal const string FlowingDashedLine = "flowingDashedLine";
                 internal const string DropMarkers = "dropMarkers";
                 internal const string GroupAnimations = "groupAnimations";
+                internal const string Drop = "drop";
             }
 
             internal static class Core
