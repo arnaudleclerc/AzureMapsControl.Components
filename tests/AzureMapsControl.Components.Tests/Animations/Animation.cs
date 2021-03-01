@@ -4,7 +4,6 @@
     using System.Collections.Generic;
 
     using AzureMapsControl.Components.Animations;
-    using AzureMapsControl.Components.Animations.Options;
     using AzureMapsControl.Components.Runtime;
 
     using Moq;
@@ -25,6 +24,7 @@
                     "movealongpath" => new MoveAlongPathAnimation(id, runtime),
                     "snakeline" => new SnakeLineAnimation(id, runtime),
                     "group" => new GroupAnimation(id, runtime),
+                    "drop" => new DropAnimation(id, runtime),
                     _ => throw new NotSupportedException(type),
                 };
             }
@@ -37,13 +37,15 @@
                 new object[] { "movealongpath" },
                 new object[] { "snakeline" },
                 new object[] { "group" },
+                new object[] { "drop" },
             };
 
         public static IEnumerable<object[]> AllSeekAnimationsTypes =>
             new List<object[]> {
                 new object[] { "dropmarkers" },
                 new object[] { "movealongpath" },
-                new object[] { "snakeline" }
+                new object[] { "snakeline" },
+                new object[] { "drop" },
             };
 
         public static IEnumerable<object[]> AllPauseAnimationsTypes =>
@@ -51,7 +53,8 @@
                 new object[] { "dropmarkers" },
                 new object[] { "flowingdashed" },
                 new object[] { "movealongpath" },
-                new object[] { "snakeline" }
+                new object[] { "snakeline" },
+                new object[] { "drop" },
         };
 
         [Theory]
