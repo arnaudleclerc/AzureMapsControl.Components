@@ -64,6 +64,7 @@
             var id = "id";
             var animation = AnimationFactory.GetAnimation(animationType, id, _jsRuntime.Object);
             Assert.Equal(id, animation.Id);
+            Assert.False(animation.Disposed);
         }
 
         [Theory]
@@ -73,8 +74,22 @@
             var id = "id";
             var animation = AnimationFactory.GetAnimation(animationType, id, _jsRuntime.Object);
             await animation.DisposeAsync();
+            Assert.True(animation.Disposed);
 
             _jsRuntime.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Dispose.ToAnimationNamespace(), id), Times.Once);
+            _jsRuntime.VerifyNoOtherCalls();
+        }
+
+        [Theory]
+        [MemberData(nameof(AllAnimationsTypes))]
+        public async void Should_ThrowAnimationDisposedException_DisposeAsync(string animationType)
+        {
+            var id = "id";
+            var animation = AnimationFactory.GetAnimation(animationType, id, _jsRuntime.Object);
+            animation.Disposed = true;
+            await Assert.ThrowsAsync<AnimationDisposedException>(async () => await animation.DisposeAsync());
+
+            _jsRuntime.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Dispose.ToAnimationNamespace(), id), Times.Never);
             _jsRuntime.VerifyNoOtherCalls();
         }
 
@@ -87,6 +102,19 @@
             await animation.PauseAsync();
 
             _jsRuntime.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Pause.ToAnimationNamespace(), id), Times.Once);
+            _jsRuntime.VerifyNoOtherCalls();
+        }
+
+        [Theory]
+        [MemberData(nameof(AllPauseAnimationsTypes))]
+        public async void Should_ThrowAnimationDisposedException_PauseAsync(string animationType)
+        {
+            var id = "id";
+            var animation = AnimationFactory.GetAnimation(animationType, id, _jsRuntime.Object);
+            animation.Disposed = true;
+            await Assert.ThrowsAsync<AnimationDisposedException>(async() => await animation.PauseAsync());
+
+            _jsRuntime.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Pause.ToAnimationNamespace(), id), Times.Never);
             _jsRuntime.VerifyNoOtherCalls();
         }
 
@@ -104,6 +132,19 @@
 
         [Theory]
         [MemberData(nameof(AllAnimationsTypes))]
+        public async void Should_ThrowAnimationDisposedException_PlayAsync(string animationType)
+        {
+            var id = "id";
+            var animation = AnimationFactory.GetAnimation(animationType, id, _jsRuntime.Object);
+            animation.Disposed = true;
+            await Assert.ThrowsAsync<AnimationDisposedException>(async () => await animation.PlayAsync());
+
+            _jsRuntime.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Play.ToAnimationNamespace(), id), Times.Never);
+            _jsRuntime.VerifyNoOtherCalls();
+        }
+
+        [Theory]
+        [MemberData(nameof(AllAnimationsTypes))]
         public async void Should_ResetAsync(string animationType)
         {
             var id = "id";
@@ -115,15 +156,42 @@
         }
 
         [Theory]
+        [MemberData(nameof(AllAnimationsTypes))]
+        public async void Should_ThrowAnimationDisposedException_ResetAsync(string animationType)
+        {
+            var id = "id";
+            var animation = AnimationFactory.GetAnimation(animationType, id, _jsRuntime.Object);
+            animation.Disposed = true;
+            await Assert.ThrowsAsync<AnimationDisposedException>(async () => await animation.ResetAsync());
+
+            _jsRuntime.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Reset.ToAnimationNamespace(), id), Times.Never);
+            _jsRuntime.VerifyNoOtherCalls();
+        }
+
+        [Theory]
         [MemberData(nameof(AllSeekAnimationsTypes))]
         public async void Should_SeekAsync(string animationType)
         {
             var id = "id";
             var animation = AnimationFactory.GetAnimation(animationType, id, _jsRuntime.Object);
             var seek = 0.5m;
-            await (animation as Animation).SeekAsync(seek);
+            await animation.SeekAsync(seek);
 
             _jsRuntime.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Seek.ToAnimationNamespace(), id, seek), Times.Once);
+            _jsRuntime.VerifyNoOtherCalls();
+        }
+
+        [Theory]
+        [MemberData(nameof(AllSeekAnimationsTypes))]
+        public async void Should_ThrowAnimationDisposedException_SeekAsync(string animationType)
+        {
+            var id = "id";
+            var animation = AnimationFactory.GetAnimation(animationType, id, _jsRuntime.Object);
+            var seek = 0.5m;
+            animation.Disposed = true;
+            await Assert.ThrowsAsync<AnimationDisposedException>(async () => await animation.SeekAsync(seek));
+
+            _jsRuntime.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Seek.ToAnimationNamespace(), id, seek), Times.Never);
             _jsRuntime.VerifyNoOtherCalls();
         }
 
@@ -136,6 +204,19 @@
             await animation.StopAsync();
 
             _jsRuntime.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Stop.ToAnimationNamespace(), id), Times.Once);
+            _jsRuntime.VerifyNoOtherCalls();
+        }
+
+        [Theory]
+        [MemberData(nameof(AllAnimationsTypes))]
+        public async void Should_ThrowAnimationDisposedException_StopAsync(string animationType)
+        {
+            var id = "id";
+            var animation = AnimationFactory.GetAnimation(animationType, id, _jsRuntime.Object);
+            animation.Disposed = true;
+            await Assert.ThrowsAsync<AnimationDisposedException>(async () => await animation.StopAsync());
+
+            _jsRuntime.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Stop.ToAnimationNamespace(), id), Times.Never);
             _jsRuntime.VerifyNoOtherCalls();
         }
     }
