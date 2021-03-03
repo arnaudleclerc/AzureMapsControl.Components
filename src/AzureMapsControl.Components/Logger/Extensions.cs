@@ -20,6 +20,7 @@
         AnimationService_DropMarkers = 3003,
         AnimationService_GroupAnimations = 3004,
         AnimationService_Drop = 3005,
+        AnimationService_SetCoordinates = 3006,
         Map_AddControlsAsync = 4000,
         Map_AddSourceAsync = 4001,
         Map_RemoveSourceAsync = 4002,

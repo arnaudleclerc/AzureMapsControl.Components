@@ -119,6 +119,24 @@ export class Animation {
         }
     }
 
+    public static setCoordinates(animationId: string,
+        shapeId: string,
+        datasourceId: string,
+        newCoordinates: azmaps.data.Position | azmaps.data.Position[] | azmaps.data.Position[][] | azmaps.data.Position[][][],
+        options?: azanimations.PathAnimationOptions | azanimations.MapPathAnimationOptions): void {
+
+        const map = Core.getMap();
+
+        const shape = datasourceId ?
+            (map.sources.getById(datasourceId) as azmaps.source.DataSource).getShapeById(shapeId)
+            : map.markers.getMarkers().find(marker => (marker as any).amc && (marker as any).amc.id === shapeId);
+
+        const animation = azanimations.animations.setCoordinates(shape, newCoordinates, options);
+        if (!options.disposeOnComplete) {
+            this._animations.set(animationId, animation);
+        }
+    }
+
     public static dispose(animationId: string): void {
         if (this._animations.has(animationId)) {
             const animation = this._animations.get(animationId);

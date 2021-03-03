@@ -5,14 +5,13 @@
     using System.Diagnostics.CodeAnalysis;
 
     [ExcludeFromCodeCoverage]
-    public sealed class Polygon : Geometry
+    public sealed class Polygon : Geometry<IEnumerable<IEnumerable<Position>>>
     {
-        public IEnumerable<IEnumerable<Position>> Coordinates { get; set; }
         public BoundingBox BBox { get; set; }
 
         public Polygon() : base() { }
 
-        public Polygon(IEnumerable<IEnumerable<Position>> coordinates) : base(Guid.NewGuid().ToString()) => Coordinates = coordinates;
+        public Polygon(IEnumerable<IEnumerable<Position>> coordinates) : base(coordinates) { }
 
         public Polygon(IEnumerable<IEnumerable<Position>> coordinates, BoundingBox bbox) : this(coordinates) => BBox = bbox;
 

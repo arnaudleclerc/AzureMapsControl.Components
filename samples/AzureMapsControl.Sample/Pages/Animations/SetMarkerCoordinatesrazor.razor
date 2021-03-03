@@ -1,0 +1,111 @@
+﻿@page "/Animations/SetMarkerCoordinates"
+@inject Components.Animations.IAnimationService AnimationService
+
+<style>
+    .animations-btns {
+        position: absolute;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+    }
+</style>
+
+@using AzureMapsControl.Components.Map
+@using AzureMapsControl.Sample.Animations
+<AnimationBar OnDispose="DisposeAsync"
+              OnPause="PauseAsync"
+              OnPlay="PlayAsync"
+              OnReset="ResetAsync"
+              OnSeek="SeekAsync"
+              OnStop="StopAsync"></AnimationBar>
+<AzureMap Id="map"
+          CameraOptions="new CameraOptions { Center = new Components.Atlas.Position(-121.69281, 47.019588), Zoom = 7 }"
+          StyleOptions="StyleOptions"
+          EventActivationFlags="MapEventActivationFlags
+                                .None()
+                                .Enable(MapEventType.Ready, MapEventType.Click)"
+          OnReady="OnMapReady"
+          OnClick="OnMapClick" />
+
+@code  {
+    private Components.Animations.ISetCoordinatesAnimation _animation;
+    private AzureMapsControl.Components.Markers.HtmlMarker _marker;
+
+    public StyleOptions StyleOptions = new StyleOptions
+    {
+        Style = MapStyle.GrayscaleDark
+    };
+
+    public async Task DisposeAsync()
+    {
+        if (_animation is not null)
+        {
+            await _animation.DisposeAsync();
+        }
+    }
+
+    public async Task PauseAsync()
+    {
+        if (_animation is not null)
+        {
+            await _animation.PauseAsync();
+        }
+    }
+
+    public async Task PlayAsync()
+    {
+        if (_animation is not null)
+        {
+            await _animation.PlayAsync();
+        }
+    }
+
+    public async Task ResetAsync()
+    {
+        if (_animation is not null)
+        {
+            await _animation.ResetAsync();
+        }
+    }
+
+    public async Task SeekAsync()
+    {
+        if (_animation is not null)
+        {
+            await _animation.SeekAsync(0.5m);
+        }
+    }
+
+    public async Task StopAsync()
+    {
+        if (_animation is not null)
+        {
+            await _animation.StopAsync();
+        }
+    }
+
+    public async Task OnMapReady(MapEventArgs eventArgs)
+    {
+        _marker = new Components.Markers.HtmlMarker(new Components.Markers.HtmlMarkerOptions
+        {
+            Position = new Components.Atlas.Position(-122.33825, 47.53945)
+        });
+
+        await eventArgs.Map.AddHtmlMarkersAsync(_marker);
+    }
+
+    public async Task OnMapClick(MapMouseEventArgs eventArgs)
+    {
+        if (_animation != null)
+        {
+            await _animation.DisposeAsync();
+        }
+
+        _animation = await AnimationService.SetCoordinatesAsync(_marker, eventArgs.Position, new Components.Animations.Options.SetCoordinatesAnimationOptions
+        {
+            AutoPlay = true,
+            Duration = 2000,
+            Easing = AzureMapsControl.Components.Animations.Options.Easing.EaseInElastic
+        });
+    }
+}

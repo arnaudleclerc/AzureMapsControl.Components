@@ -32,6 +32,7 @@
                 internal const string DropMarkers = "dropMarkers";
                 internal const string GroupAnimations = "groupAnimations";
                 internal const string Drop = "drop";
+                internal const string SetCoordinates = "setCoordinates";
             }
 
             internal static class Core

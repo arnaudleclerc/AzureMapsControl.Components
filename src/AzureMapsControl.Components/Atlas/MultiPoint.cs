@@ -5,14 +5,13 @@
     using System.Diagnostics.CodeAnalysis;
 
     [ExcludeFromCodeCoverage]
-    public sealed class MultiPoint : Geometry
+    public sealed class MultiPoint : Geometry<IEnumerable<Position>>
     {
-        public IEnumerable<Position> Coordinates { get; set; }
         public BoundingBox Bbox { get; set; }
 
         public MultiPoint() : base() { }
 
-        public MultiPoint(IEnumerable<Position> coordinates) : base(Guid.NewGuid().ToString()) => Coordinates = coordinates;
+        public MultiPoint(IEnumerable<Position> coordinates) : base(coordinates) { }
 
         public MultiPoint(IEnumerable<Position> coordinates, BoundingBox bbox) : this(coordinates) => Bbox = bbox;
 

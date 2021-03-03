@@ -25,6 +25,7 @@
                     "snakeline" => new SnakeLineAnimation(id, runtime),
                     "group" => new GroupAnimation(id, runtime),
                     "drop" => new DropAnimation(id, runtime),
+                    "setcoordinates" => new SetCoordinatesAnimation(id, runtime),
                     _ => throw new NotSupportedException(type),
                 };
             }
@@ -38,6 +39,7 @@
                 new object[] { "snakeline" },
                 new object[] { "group" },
                 new object[] { "drop" },
+                new object[] { "setcoordinates" },
             };
 
         public static IEnumerable<object[]> AllSeekAnimationsTypes =>
@@ -46,6 +48,7 @@
                 new object[] { "movealongpath" },
                 new object[] { "snakeline" },
                 new object[] { "drop" },
+                new object[] { "setcoordinates" },
             };
 
         public static IEnumerable<object[]> AllPauseAnimationsTypes =>
@@ -55,6 +58,7 @@
                 new object[] { "movealongpath" },
                 new object[] { "snakeline" },
                 new object[] { "drop" },
+                new object[] { "setcoordinates" },
         };
 
         [Theory]

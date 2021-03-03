@@ -101,7 +101,7 @@
         /// <param name="source">The data source to drop the point shapes into.</param>
         /// <param name="height">The height at which to drop the shape from</param>
         /// <param name="options">Options for the animation</param>
-        /// <returns></returns>
+        /// <returns>Animation</returns>
         Task<IDropAnimation> DropAsync(IEnumerable<Point> points, DataSource source, decimal? height = null, DropAnimationOptions options = default);
 
         /// <summary>
@@ -111,7 +111,27 @@
         /// <param name="source">The data source to drop the point shapes into.</param>
         /// <param name="height">The height at which to drop the shape from</param>
         /// <param name="options">Options for the animation</param>
-        /// <returns></returns>
+        /// <returns>Animation</returns>
         Task<IDropAnimation> DropAsync(Point point, DataSource source, decimal? height = null, DropAnimationOptions options = default);
+
+        /// <summary>
+        /// Animates the update of coordinates on a shape. Shapes will stay the same type. Only base animation options supported for geometries other than Point. 
+        /// </summary>
+        /// <typeparam name="TPosition">Dimension of the shape</typeparam>
+        /// <param name="geometry">The shape to animate.</param>
+        /// <param name="source">Datasource the geometry is attached to</param>
+        /// <param name="newCoordinates">The new coordinates of the shape.</param>
+        /// <param name="options">Options for the animation</param>
+        /// <returns>Animation</returns>
+        Task<ISetCoordinatesAnimation> SetCoordinatesAsync<TPosition>(Geometry<TPosition> geometry, DataSource source, TPosition newCoordinates, SetCoordinatesAnimationOptions options = default);
+
+        /// <summary>
+        /// Animates the update of coordinates on a HtmlMarker.
+        /// </summary>
+        /// <param name="marker">The marker to animate.</param>
+        /// <param name="newCoordinates">The new coordinates of the marker.</param>
+        /// <param name="options">Options for the animation.</param>
+        /// <returns>Animation</returns>
+        Task<ISetCoordinatesAnimation> SetCoordinatesAsync(HtmlMarker marker, Position newCoordinates, SetCoordinatesAnimationOptions options = default);
     }
 }

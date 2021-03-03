@@ -283,5 +283,46 @@
              )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async void Should_SetCoordinatesAsync(bool disposeOnComplete)
+        {
+            var point = new Point();
+            var datasource = new DataSource();
+            var options = new SetCoordinatesAnimationOptions {
+                DisposeOnComplete = disposeOnComplete
+            };
+            var newCoordinates = new Position();
+
+            var result = await _animationService.SetCoordinatesAsync(point, datasource, newCoordinates, options);
+            Assert.IsType<SetCoordinatesAnimation>(result);
+            Assert.NotNull(result.Id);
+            Assert.Equal(disposeOnComplete, result.Disposed);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetCoordinates.ToAnimationNamespace(), result.Id, point.Id, datasource.Id, newCoordinates, options), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async void Should_SetCoordinates_HtmlMarker_Async(bool disposeOnComplete)
+        {
+            var marker = new HtmlMarker(new HtmlMarkerOptions());
+            var options = new SetCoordinatesAnimationOptions {
+                DisposeOnComplete = disposeOnComplete
+            };
+            var newCoordinates = new Position();
+
+            var result = await _animationService.SetCoordinatesAsync(marker, newCoordinates, options);
+            Assert.IsType<SetCoordinatesAnimation>(result);
+            Assert.NotNull(result.Id);
+            Assert.Equal(disposeOnComplete, result.Disposed);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetCoordinates.ToAnimationNamespace(), result.Id, marker.Id, null, newCoordinates, options), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
     }
 }

@@ -139,11 +139,11 @@
 
         public async Task<IDropAnimation> DropAsync(IEnumerable<Point> points, DataSource source, decimal? height = null, DropAnimationOptions options = default)
         {
-            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_DropMarkers, "Calling DropAsync");
-            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_DropMarkers, "Points", points);
-            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_DropMarkers, "Source", source);
-            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_DropMarkers, "Height", height);
-            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_DropMarkers, "Options", options);
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_Drop, "Calling DropAsync");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Drop, "Points", points);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Drop, "Source", source);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Drop, "Height", height);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Drop, "Options", options);
 
             var animation = new DropAnimation(Guid.NewGuid().ToString(), _jsRuntime);
             await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Drop.ToAnimationNamespace(), animation.Id, points, source.Id, height, options);
@@ -153,5 +153,32 @@
 
         public async Task<IDropAnimation> DropAsync(Point point, DataSource source, decimal? height = null, DropAnimationOptions options = default)
             => await DropAsync(new[] { point }, source, height, options);
+
+        public async Task<ISetCoordinatesAnimation> SetCoordinatesAsync<TPosition>(Geometry<TPosition> geometry, DataSource source, TPosition newCoordinates, SetCoordinatesAnimationOptions options = default)
+        {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_SetCoordinates, "Calling SetCoordinatesAsync");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_SetCoordinates, "Geometry", geometry);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_SetCoordinates, "Source", source);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_SetCoordinates, "New Coordinates", newCoordinates);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_SetCoordinates, "Options", options);
+
+            var animation = new SetCoordinatesAnimation(Guid.NewGuid().ToString(), _jsRuntime);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetCoordinates.ToAnimationNamespace(), animation.Id, geometry.Id, source.Id, newCoordinates, options);
+            animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
+            return animation;
+        }
+
+        public async Task<ISetCoordinatesAnimation> SetCoordinatesAsync(HtmlMarker marker, Position newCoordinates, SetCoordinatesAnimationOptions options = default)
+        {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_SetCoordinates, "Calling SetCoordinatesAsync");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_SetCoordinates, "Marker", marker);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_SetCoordinates, "New Coordinates", newCoordinates);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_SetCoordinates, "Options", options);
+
+            var animation = new SetCoordinatesAnimation(Guid.NewGuid().ToString(), _jsRuntime);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetCoordinates.ToAnimationNamespace(), animation.Id, marker.Id, null, newCoordinates, options);
+            animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
+            return animation;
+        }
     }
 }
