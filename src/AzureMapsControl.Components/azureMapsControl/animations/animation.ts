@@ -2,7 +2,7 @@ import * as azmaps from 'azure-maps-control';
 import * as azanimations from 'azure-maps-control-animations';
 import { Core } from '../core';
 import { EventHelper } from '../events';
-import { Geometry } from '../geometries';
+import { Geometry, GeometryBuilder } from '../geometries';
 import { HtmlMarkerEventArgs, HtmlMarkerOptions } from '../html-markers';
 
 export class Animation {
@@ -123,7 +123,7 @@ export class Animation {
         shapeId: string,
         datasourceId: string,
         newCoordinates: azmaps.data.Position | azmaps.data.Position[] | azmaps.data.Position[][] | azmaps.data.Position[][][],
-        options?: azanimations.PathAnimationOptions | azanimations.MapPathAnimationOptions): void {
+        options: azanimations.PathAnimationOptions | azanimations.MapPathAnimationOptions): void {
 
         const map = Core.getMap();
 
@@ -135,6 +135,27 @@ export class Animation {
         if (!options.disposeOnComplete) {
             this._animations.set(animationId, animation);
         }
+    }
+
+    public static morph(animationId: string,
+        shapeId: string,
+        datasourceId: string,
+        newGeometry: Geometry,
+        options: azanimations.PlayableAnimationOptions): void {
+
+        const map = Core.getMap();
+        const shape = (map.sources.getById(datasourceId) as azmaps.source.DataSource).getShapeById(shapeId);
+
+        const animation = azanimations.animations.morph(
+            shape,
+            GeometryBuilder.buildGeometry(newGeometry),
+            options
+        );
+
+        if (!options.disposeOnComplete) {
+            this, this._animations.set(animationId, animation);
+        }
+
     }
 
     public static dispose(animationId: string): void {

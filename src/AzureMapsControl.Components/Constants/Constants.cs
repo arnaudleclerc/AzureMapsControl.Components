@@ -33,6 +33,7 @@
                 internal const string GroupAnimations = "groupAnimations";
                 internal const string Drop = "drop";
                 internal const string SetCoordinates = "setCoordinates";
+                internal const string Morph = "morph";
             }
 
             internal static class Core

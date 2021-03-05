@@ -324,5 +324,27 @@
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetCoordinates.ToAnimationNamespace(), result.Id, marker.Id, null, newCoordinates, options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async void Should_Morph_Async(bool disposeOnComplete)
+        {
+            var geometry = new Point();
+            var dataSource = new DataSource();
+            var newGeometry = new Polygon();
+            var options = new MorphAnimationOptions {
+                DisposeOnComplete = disposeOnComplete
+            };
+
+
+            var result = await _animationService.MorphAsync(geometry, dataSource, newGeometry, options);
+            Assert.IsType<MorphAnimation>(result);
+            Assert.NotNull(result.Id);
+            Assert.Equal(disposeOnComplete, result.Disposed);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Morph.ToAnimationNamespace(), result.Id, geometry.Id, dataSource.Id, newGeometry, options), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
     }
 }

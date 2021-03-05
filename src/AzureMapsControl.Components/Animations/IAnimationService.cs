@@ -133,5 +133,16 @@
         /// <param name="options">Options for the animation.</param>
         /// <returns>Animation</returns>
         Task<ISetCoordinatesAnimation> SetCoordinatesAsync(HtmlMarker marker, Position newCoordinates, SetCoordinatesAnimationOptions options = default);
+
+        /// <summary>
+        /// Animates the morphing of a shape from one geometry type or set of coordinates to another.
+        /// </summary>
+        /// <typeparam name="T">Type of geometry the shape will be turned into</typeparam>
+        /// <param name="geometry">The shape to animate.</param>
+        /// <param name="source">Datasource the shape is attached to</param>
+        /// <param name="newGeometry">The new geometry to turn the shape into.</param>
+        /// <param name="options">Options for the animation</param>
+        /// <returns>Animation</returns>
+        Task<IMorphAnimation> MorphAsync<T>(Geometry geometry, DataSource source, T newGeometry, MorphAnimationOptions options = default) where T : Geometry;
     }
 }

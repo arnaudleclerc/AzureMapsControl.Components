@@ -180,5 +180,20 @@
             animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
+
+        public async Task<IMorphAnimation> MorphAsync<T>(Geometry geometry, DataSource source, T newGeometry, MorphAnimationOptions options = default)
+            where T : Geometry
+        {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_Morph, "Calling MorphAsync");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Morph, "Geometry", geometry);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Morph, "Source", source);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Morph, "New Geometry", newGeometry);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_SetCoordinates, "Options", options);
+
+            var animation = new MorphAnimation(Guid.NewGuid().ToString(), _jsRuntime);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Morph.ToAnimationNamespace(), animation.Id, geometry.Id, source.Id, newGeometry, options);
+            animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
+            return animation;
+        }
     }
 }
