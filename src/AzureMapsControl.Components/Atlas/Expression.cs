@@ -11,11 +11,29 @@
     [ExcludeFromCodeCoverage]
     public class Expression
     {
-        public IEnumerable<Expression> Expressions { get; set; }
+        /// <summary>
+        /// Json Document which will be used as the expression
+        /// </summary>
+        internal JsonDocument Json { get; }
+
+        /// <summary>
+        /// Expressions attached to this expression
+        /// </summary>
+        internal IEnumerable<Expression> Expressions { get; }
 
         internal Expression() { }
 
+        /// <summary>
+        /// Creates an expression
+        /// </summary>
+        /// <param name="expressions">Expressions to include in this expression</param>
         public Expression(IEnumerable<Expression> expressions) => Expressions = expressions;
+
+        /// <summary>
+        /// Creates an expression
+        /// </summary>
+        /// <param name="json">Json representation of the expression</param>
+        public Expression(JsonDocument json) => Json = json;
     }
 
     /// <summary>
@@ -27,7 +45,17 @@
     {
         internal double? Value { get; }
 
-        public ExpressionOrNumber(IEnumerable<Expression> expressions) => Expressions = expressions;
+        /// <summary>
+        /// Creates an expression
+        /// </summary>
+        /// <param name="expressions">Expressions to include in this expression</param>
+        public ExpressionOrNumber(IEnumerable<Expression> expressions) : base(expressions) { }
+
+        /// <summary>
+        /// Creates an expression
+        /// </summary>
+        /// <param name="json">Json representation of the expression</param>
+        public ExpressionOrNumber(JsonDocument json) : base(json) { }
 
         /// <summary>
         /// Creates an expression
@@ -45,7 +73,17 @@
     {
         internal string Value { get; }
 
-        public ExpressionOrString(IEnumerable<Expression> expressions) => Expressions = expressions;
+        /// <summary>
+        /// Creates an expression
+        /// </summary>
+        /// <param name="expressions">Expressions to include in this expression</param>
+        public ExpressionOrString(IEnumerable<Expression> expressions) : base(expressions) { }
+
+        /// <summary>
+        /// Creates an expression
+        /// </summary>
+        /// <param name="json">Json representation of the expression</param>
+        public ExpressionOrString(JsonDocument json) : base(json) { }
 
         /// <summary>
         /// Creates an expression with the JSON Array to use
@@ -61,8 +99,24 @@
     [ExcludeFromCodeCoverage]
     public sealed class ExpressionOrStringArray : Expression
     {
-        internal IEnumerable<string> Values { get; set; }
+        internal IEnumerable<string> Values { get; }
+
+        /// <summary>
+        /// Creates an expression
+        /// </summary>
+        /// <param name="expressions">Expressions to include in this expression</param>
         public ExpressionOrStringArray(IEnumerable<Expression> expressions) : base(expressions) { }
+
+        /// <summary>
+        /// Creates an expression
+        /// </summary>
+        /// <param name="json">Json representation of the expression</param>
+        public ExpressionOrStringArray(JsonDocument json): base(json) { }
+
+        /// <summary>
+        /// Creates an expression
+        /// </summary>
+        /// <param name="values">Values of the expression</param>
         public ExpressionOrStringArray(IEnumerable<string> values) => Values = values;
     }
 
@@ -74,7 +128,11 @@
 
         private void WriteExpression(Utf8JsonWriter writer, Expression value, JsonSerializerOptions options)
         {
-            if (value.Expressions != null)
+            if(value.Json != null)
+            {
+                value.Json.WriteTo(writer);
+            }
+            else if (value.Expressions != null)
             {
                 writer.WriteStartArray();
                 foreach (var expression in value.Expressions)
