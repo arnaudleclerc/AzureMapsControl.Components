@@ -98,30 +98,3 @@ Layers can be removed by calling the `RemoveLayersAsync` method on the map and p
 ```
 
 A `ClearLayersAsync` method on the Map allows you to remove all the user added layers.
-
-## Expressions
-
-Some options of the layer allow you to give either values or `Data driven Expressions`. The following example will get the `Confirmed` property of the data source and bind it to the weight of the heatmap layer.
-
-```
-var layer = new AzureMapsControl.Components.Layers.HeatmapLayer
-        {
-            Options = new Components.Layers.HeatmapLayerOptions
-            {
-                //This will get converted to ['get', 'Confirmed']
-                Weight = new Components.Atlas.ExpressionOrNumber(
-                    new AzureMapsControl.Components.Atlas.Expression[]
-                    {
-                        new AzureMapsControl.Components.Atlas.ExpressionOrString("get"),
-                        new AzureMapsControl.Components.Atlas.ExpressionOrString("Confirmed"),
-                    }
-                ),
-                Radius = new Components.Atlas.ExpressionOrNumber(20),
-                Source = dataSourceId
-            }
-        };
-```
-
-The first `ExpressionOrNumber` takes an array of `Expression` which will represent the JSON Array. The two `ExpressionOrString` on the Array will populate it, giving a result of `['get', 'Confirmed']`. 
-
-For more information on the `Expressions`, take a look at the [Web SDK Documentation](https://docs.microsoft.com/en-us/azure/azure-maps/data-driven-style-expressions-web-sdk).
