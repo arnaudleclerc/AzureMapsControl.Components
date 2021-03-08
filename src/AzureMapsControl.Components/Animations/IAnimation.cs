@@ -1,7 +1,5 @@
 ﻿namespace AzureMapsControl.Components.Animations
 {
-    using System.Threading.Tasks;
-
     public interface IAnimation
     {
         /// <summary>
