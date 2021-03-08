@@ -2,12 +2,12 @@
 {
     using System.Threading.Tasks;
 
-    public interface IPausableAnimation
+    public interface IMoveAlongRouteAnimation : IAnimation
     {
         /// <summary>
-        /// Pauses the animation.
+        /// Disposes the animation
         /// </summary>
         /// <returns></returns>
-        Task PauseAsync();
+        Task DisposeAsync();
     }
 }

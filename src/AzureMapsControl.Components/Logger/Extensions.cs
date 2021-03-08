@@ -22,6 +22,7 @@
         AnimationService_Drop = 3005,
         AnimationService_SetCoordinates = 3006,
         AnimationService_Morph = 3007,
+        AnimationService_MoveAlongRoute = 3008,
         Map_AddControlsAsync = 4000,
         Map_AddSourceAsync = 4001,
         Map_RemoveSourceAsync = 4002,

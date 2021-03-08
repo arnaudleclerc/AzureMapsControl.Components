@@ -144,5 +144,24 @@
         /// <param name="options">Options for the animation</param>
         /// <returns>Animation</returns>
         Task<IMorphAnimation> MorphAsync<T>(Geometry geometry, DataSource source, T newGeometry, MorphAnimationOptions options = default) where T : Geometry;
+
+        /// <summary>
+        /// Animates a Point shape along a route path. The movement will vary based on timestamps within the point feature properties. All points must have a `timestamp` property.
+        /// </summary>
+        /// <param name="points">The route path to animate the point along.</param>
+        /// <param name="pin">A Point shape to animate</param>
+        /// <param name="pinSource">The datasource where the pin can be found</param>
+        /// <param name="options">Options for the animation.</param>
+        /// <returns></returns>
+        Task<IMoveAlongRouteAnimation> MoveAlongRouteAsync(IEnumerable<RoutePoint> points, Point pin, DataSource pinSource, RoutePathAnimationOptions options = default);
+
+        /// <summary>
+        /// Animates an HTML Marker along a route path. The movement will vary based on timestamps within the point feature properties. All points must have a `timestamp` property.
+        /// </summary>
+        /// <param name="points">The route path to animate the point along</param>
+        /// <param name="pin">An HTML Marker to animate</param>
+        /// <param name="options">Options for the animation.</param>
+        /// <returns></returns>
+        Task<IMoveAlongRouteAnimation> MoveAlongRouteAsync(IEnumerable<RoutePoint> points, HtmlMarker pin, RoutePathAnimationOptions options = default);
     }
 }

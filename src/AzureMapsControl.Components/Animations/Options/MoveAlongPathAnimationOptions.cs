@@ -1,6 +1,6 @@
 ﻿namespace AzureMapsControl.Components.Animations.Options
 {
-    public struct MoveAlongPathAnimationOptions : IPathAnimationOptions, IMapPathAnimationOptions, IPlayableAnimationOptions, IDisposableAnimationOptions, IDurationAnimationOptions, IAnimationOptions
+    public struct MoveAlongPathAnimationOptions : IAnimationOptions
     {
         public bool? CaptureMetadata { get; set; }
         public bool? Geodesic { get; set; }

@@ -1,6 +1,37 @@
 ﻿namespace AzureMapsControl.Components.Animations
 {
-    public interface IFlowingDashedLineAnimation : IPausableAnimation, IAnimation
+    using System.Threading.Tasks;
+
+    public interface IFlowingDashedLineAnimation : IAnimation
     {
+        /// <summary>
+        /// Disposes the animation
+        /// </summary>
+        /// <returns></returns>
+        Task DisposeAsync();
+
+        /// <summary>
+        /// Plays the animation.
+        /// </summary>
+        /// <returns></returns>
+        Task PlayAsync();
+
+        /// <summary>
+        /// Stops the animation and jumps back to the beginning of the animation. 
+        /// </summary>
+        /// <returns></returns>
+        Task ResetAsync();
+
+        /// <summary>
+        /// Stops the animation and jumps back to the end of the animation. 
+        /// </summary>
+        /// <returns></returns>
+        Task StopAsync();
+
+        /// <summary>
+        /// Pauses the animation.
+        /// </summary>
+        /// <returns></returns>
+        Task PauseAsync();
     }
 }

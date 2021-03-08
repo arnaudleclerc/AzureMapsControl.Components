@@ -346,5 +346,36 @@
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Morph.ToAnimationNamespace(), result.Id, geometry.Id, dataSource.Id, newGeometry, options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async void Should_MoveAlongRoute_Async()
+        {
+            var routePoints = new List<RoutePoint>();
+            var dataSource = new DataSource();
+            var pin = new Point();
+            var options = new RoutePathAnimationOptions();
+
+            var result = await _animationService.MoveAlongRouteAsync(routePoints, pin, dataSource, options);
+            Assert.IsType<MoveAlongRouteAnimation>(result);
+            Assert.NotNull(result.Id);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongRoute.ToAnimationNamespace(), result.Id, routePoints, dataSource.Id, pin.Id, options), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_MoveAlongRoute_HtmlMarker_Async()
+        {
+            var routePoints = new List<RoutePoint>();
+            var pin = new HtmlMarker(new HtmlMarkerOptions());
+            var options = new RoutePathAnimationOptions();
+
+            var result = await _animationService.MoveAlongRouteAsync(routePoints, pin, options);
+            Assert.IsType<MoveAlongRouteAnimation>(result);
+            Assert.NotNull(result.Id);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongRoute.ToAnimationNamespace(), result.Id, routePoints, null, pin.Id, options), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
     }
 }

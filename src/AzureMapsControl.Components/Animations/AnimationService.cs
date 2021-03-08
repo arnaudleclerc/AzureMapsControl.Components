@@ -195,5 +195,30 @@
             animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
+
+        public async Task<IMoveAlongRouteAnimation> MoveAlongRouteAsync(IEnumerable<RoutePoint> points, Point pin, DataSource pinSource, RoutePathAnimationOptions options = default)
+        {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_Morph, "Calling MoveAlongRoute");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Morph, "Points", points);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Morph, "Pin", pin);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Morph, "Source", pinSource);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_SetCoordinates, "Options", options);
+
+            var animation = new MoveAlongRouteAnimation(Guid.NewGuid().ToString(), _jsRuntime);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongRoute.ToAnimationNamespace(), animation.Id, points, pinSource.Id, pin.Id, options);
+            return animation;
+        }
+
+        public async Task<IMoveAlongRouteAnimation> MoveAlongRouteAsync(IEnumerable<RoutePoint> points, HtmlMarker pin, RoutePathAnimationOptions options = default)
+        {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_Morph, "Calling MoveAlongRoute");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Morph, "Points", points);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Morph, "Pin", pin);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_SetCoordinates, "Options", options);
+
+            var animation = new MoveAlongRouteAnimation(Guid.NewGuid().ToString(), _jsRuntime);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongRoute.ToAnimationNamespace(), animation.Id, points, null, pin.Id, options);
+            return animation;
+        }
     }
 }

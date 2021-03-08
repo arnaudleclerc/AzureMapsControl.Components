@@ -2,67 +2,27 @@ import * as azmaps from 'azure-maps-control';
 import * as azanimations from 'azure-maps-control-animations';
 import { Core } from '../core';
 import { EventHelper } from '../events';
-import { Geometry, GeometryBuilder } from '../geometries';
+import { Geometry, GeometryBuilder, RoutePoint } from '../geometries';
 import { HtmlMarkerEventArgs, HtmlMarkerOptions } from '../html-markers';
 
 export class Animation {
 
-    private static readonly _animations = new Map<string, azanimations.IPlayableAnimation | azanimations.animations.GroupAnimation>();
+    private static readonly _animations = new Map<string, azanimations.IPlayableAnimation | azanimations.animations.GroupAnimation | azanimations.RoutePathAnimation>();
 
-    public static snakeline(animationId: string,
-        lineId: string,
-        dataSourceId: string,
-        options: azanimations.PathAnimationOptions | azanimations.MapPathAnimationOptions): void {
-        const source = Core.getMap().sources.getById(dataSourceId) as azmaps.source.DataSource;
-        const shape = source.getShapeById(lineId);
-        const animation = azanimations.animations.snakeline(shape, options);
+    public static drop(animationId: string,
+        shapes: Geometry[],
+        datasourceId: string,
+        height: number,
+        options: azanimations.PlayableAnimationOptions): void {
 
-        if (!options.disposeOnComplete) {
-            this._animations.set(animationId, animation);
-        }
-    }
-
-    public static moveAlongPath(animationId: string,
-        line: string | azmaps.data.Position[],
-        lineSourceId: string,
-        pin: string,
-        pinSourceId: string,
-        options: azanimations.PathAnimationOptions | azanimations.MapPathAnimationOptions): void {
         const map = Core.getMap();
+        const source = map.sources.getById(datasourceId) as azmaps.source.DataSource;
 
-        let path: azmaps.data.Position[] | azmaps.data.LineString | azmaps.Shape = null;
-        if (typeof line === 'string') {
-            const lineSource = map.sources.getById(lineSourceId) as azmaps.source.DataSource;
-            path = lineSource.getShapeById(line);
-        } else {
-            path = line;
-        }
-
-        let shape: azmaps.Shape | azmaps.HtmlMarker = null;
-        if (pinSourceId) {
-            const pinSource = map.sources.getById(pinSourceId) as azmaps.source.DataSource;
-            shape = pinSource.getShapeById(pin);
-        } else {
-            shape = map.markers.getMarkers().find(marker => (marker as any).amc.id === pin);
-        }
-
-        const animation = azanimations.animations.moveAlongPath(path, shape, options);
+        const animation = azanimations.animations.drop(shapes, source, height, options);
 
         if (!options.disposeOnComplete) {
             this._animations.set(animationId, animation);
         }
-    }
-
-    public static flowingDashedLine(animationId: string,
-        lineLayerId: string,
-        options: azanimations.MovingDashLineOptions): void {
-
-        const layer = Core.getMap().layers.getLayerById(lineLayerId) as azmaps.layer.LineLayer;
-
-        this._animations.set(
-            animationId,
-            azanimations.animations.flowingDashedLine(layer, options)
-        );
     }
 
     public static dropMarkers(animationId: string,
@@ -87,38 +47,6 @@ export class Animation {
         }
     }
 
-    public static groupAnimations(groupAnimationId: string,
-        animationsIds: string[],
-        options: azanimations.GroupAnimationOptions): void {
-
-        const animations: (azanimations.IPlayableAnimation | azanimations.animations.GroupAnimation)[] = [];
-        animationsIds.forEach(animationId => {
-            if (this._animations.has(animationId)) {
-                animations.push(this._animations.get(animationId));
-            }
-        });
-        this._animations.set(
-            groupAnimationId,
-            new azanimations.animations.GroupAnimation(animations, options)
-        );
-    }
-
-    public static drop(animationId: string,
-        shapes: Geometry[],
-        datasourceId: string,
-        height: number,
-        options: azanimations.PlayableAnimationOptions): void {
-
-        const map = Core.getMap();
-        const source = map.sources.getById(datasourceId) as azmaps.source.DataSource;
-
-        const animation = azanimations.animations.drop(shapes, source, height, options);
-
-        if (!options.disposeOnComplete) {
-            this._animations.set(animationId, animation);
-        }
-    }
-
     public static setCoordinates(animationId: string,
         shapeId: string,
         datasourceId: string,
@@ -135,6 +63,85 @@ export class Animation {
         if (!options.disposeOnComplete) {
             this._animations.set(animationId, animation);
         }
+    }
+
+    public static snakeline(animationId: string,
+        lineId: string,
+        dataSourceId: string,
+        options: azanimations.PathAnimationOptions | azanimations.MapPathAnimationOptions): void {
+        const source = Core.getMap().sources.getById(dataSourceId) as azmaps.source.DataSource;
+        const shape = source.getShapeById(lineId);
+        const animation = azanimations.animations.snakeline(shape, options);
+
+        if (!options.disposeOnComplete) {
+            this._animations.set(animationId, animation);
+        }
+    }
+
+    public static moveAlongPath(animationId: string,
+        line: string | azmaps.data.Position[],
+        lineSourceId: string,
+        pinId: string,
+        pinSourceId: string,
+        options: azanimations.PathAnimationOptions | azanimations.MapPathAnimationOptions): void {
+        const map = Core.getMap();
+
+        let path: azmaps.data.Position[] | azmaps.data.LineString | azmaps.Shape = null;
+        if (typeof line === 'string') {
+            const lineSource = map.sources.getById(lineSourceId) as azmaps.source.DataSource;
+            path = lineSource.getShapeById(line);
+        } else {
+            path = line;
+        }
+
+        let shape: azmaps.Shape | azmaps.HtmlMarker = null;
+        if (pinSourceId) {
+            const pinSource = map.sources.getById(pinSourceId) as azmaps.source.DataSource;
+            shape = pinSource.getShapeById(pinId);
+        } else {
+            shape = map.markers.getMarkers().find(marker => (marker as any).amc.id === pinId);
+        }
+
+        const animation = azanimations.animations.moveAlongPath(path, shape, options);
+
+        if (!options.disposeOnComplete) {
+            this._animations.set(animationId, animation);
+        }
+    }
+
+    public static moveAlongRoute(animationId: string,
+        routePoints: RoutePoint[],
+        pinSourceId: string,
+        pinId: string,
+        options: azanimations.RoutePathAnimationOptions): void {
+        const map = Core.getMap();
+
+        let shape: azmaps.Shape | azmaps.HtmlMarker = null;
+        if (pinSourceId) {
+            const pinSource = map.sources.getById(pinSourceId) as azmaps.source.DataSource;
+            shape = pinSource.getShapeById(pinId);
+        } else {
+            shape = map.markers.getMarkers().find(marker => (marker as any).amc.id === pinId);
+        }
+
+        const route = routePoints.map(routePoint => {
+            const point = GeometryBuilder.buildPoint(routePoint);
+            return new azmaps.data.Feature(point, { _timestamp: new Date(routePoint.timestamp).getTime() });
+        });
+
+        this._animations.set(animationId, azanimations.animations.moveAlongRoute(route, shape, options));
+    }
+
+    public static flowingDashedLine(animationId: string,
+        lineLayerId: string,
+        options: azanimations.MovingDashLineOptions): void {
+
+        const layer = Core.getMap().layers.getLayerById(lineLayerId) as azmaps.layer.LineLayer;
+
+        this._animations.set(
+            animationId,
+            azanimations.animations.flowingDashedLine(layer, options)
+        );
     }
 
     public static morph(animationId: string,
@@ -155,7 +162,25 @@ export class Animation {
         if (!options.disposeOnComplete) {
             this, this._animations.set(animationId, animation);
         }
+    }
 
+    public static groupAnimations(groupAnimationId: string,
+        animationsIds: string[],
+        options: azanimations.GroupAnimationOptions): void {
+
+        const animations: (azanimations.IPlayableAnimation | azanimations.animations.GroupAnimation)[] = [];
+        animationsIds.forEach(animationId => {
+            if (this._animations.has(animationId)) {
+                const animation = this._animations.get(animationId);
+                if (animation as (azanimations.IPlayableAnimation | azanimations.animations.GroupAnimation) !== null) {
+                    animations.push(animation as (azanimations.IPlayableAnimation | azanimations.animations.GroupAnimation));
+                }
+            }
+        });
+        this._animations.set(
+            groupAnimationId,
+            new azanimations.animations.GroupAnimation(animations, options)
+        );
     }
 
     public static dispose(animationId: string): void {
@@ -178,14 +203,18 @@ export class Animation {
     public static play(animationId: string): void {
         if (this._animations.has(animationId)) {
             const animation = this._animations.get(animationId);
-            animation.play();
+            if (animation as (azanimations.IPlayableAnimation | azanimations.animations.GroupAnimation) !== null) {
+                (animation as (azanimations.IPlayableAnimation | azanimations.animations.GroupAnimation)).play();
+            }
         }
     }
 
     public static reset(animationId: string): void {
         if (this._animations.has(animationId)) {
             const animation = this._animations.get(animationId);
-            animation.reset();
+            if (animation as (azanimations.IPlayableAnimation | azanimations.animations.GroupAnimation) !== null) {
+                (animation as (azanimations.IPlayableAnimation | azanimations.animations.GroupAnimation)).reset();
+            }
         }
     }
 
@@ -201,7 +230,9 @@ export class Animation {
     public static stop(animationId: string): void {
         if (this._animations.has(animationId)) {
             const animation = this._animations.get(animationId);
-            animation.stop();
+            if (animation as (azanimations.IPlayableAnimation | azanimations.animations.GroupAnimation) !== null) {
+                (animation as (azanimations.IPlayableAnimation | azanimations.animations.GroupAnimation)).stop();
+            }
         }
     }
 

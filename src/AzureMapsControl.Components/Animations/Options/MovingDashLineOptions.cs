@@ -1,6 +1,6 @@
 ﻿namespace AzureMapsControl.Components.Animations.Options
 {
-    public struct MovingDashLineOptions : IPlayableAnimationOptions, IAnimationOptions
+    public struct MovingDashLineOptions : IAnimationOptions
     {
         /// <summary>
         /// The length of the dashed part of the line.

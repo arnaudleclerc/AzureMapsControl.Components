@@ -1,0 +1,84 @@
+﻿@page "/Animations/MoveAlongRoute"
+@inject Components.Animations.IAnimationService AnimationService
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          CameraOptions="new CameraOptions { Center = new Components.Atlas.Position(-122.345, 47.615), Zoom = 14 }"
+          StyleOptions="StyleOptions"
+          EventActivationFlags="MapEventActivationFlags
+                                .None()
+                                .Enable(MapEventType.Ready)"
+          OnReady="OnMapReady" />
+
+@code  {
+    public StyleOptions StyleOptions = new StyleOptions
+    {
+        Style = MapStyle.GrayscaleDark
+    };
+
+    public async Task OnMapReady(MapEventArgs eventArgs)
+    {
+        await eventArgs.Map.CreateImageFromTemplateAsync("arrow-icon", "marker-arrow", "teal", "#fff");
+        var lineSource = new AzureMapsControl.Components.Data.DataSource();
+        var pinSource = new AzureMapsControl.Components.Data.DataSource();
+
+        await eventArgs.Map.AddSourceAsync(lineSource);
+        await eventArgs.Map.AddSourceAsync(pinSource);
+
+        await eventArgs.Map.AddLayerAsync(
+            new AzureMapsControl.Components.Layers.LineLayer
+            {
+                Options = new Components.Layers.LineLayerOptions
+                {
+                    Source = lineSource.Id,
+                    StrokeColor = new Components.Atlas.ExpressionOrString("DodgerBlue"),
+                    StrokeWidth = new Components.Atlas.ExpressionOrNumber(3)
+                }
+            });
+
+        var routePoints = new List<AzureMapsControl.Components.Atlas.RoutePoint>
+        {
+            new Components.Atlas.RoutePoint(new Components.Atlas.Position(-122.34758, 47.62155), DateTime.Parse("Tue, 18 Aug 2020 00:53:53 GMT")),
+            new Components.Atlas.RoutePoint(new Components.Atlas.Position(-122.34764, 47.61859), DateTime.Parse("Tue, 18 Aug 2020 00:54:53 GMT")),
+            new Components.Atlas.RoutePoint(new Components.Atlas.Position(-122.33787, 47.61295), DateTime.Parse("Tue, 18 Aug 2020 00:56:53 GMT")),
+            new Components.Atlas.RoutePoint(new Components.Atlas.Position(-122.34217, 47.60964), DateTime.Parse("Tue, 18 Aug 2020 00:59:53 GMT")),
+        };
+
+        await lineSource.AddAsync(new AzureMapsControl.Components.Atlas.LineString(routePoints.Select(routePoint => routePoint.Coordinates)));
+
+        await eventArgs.Map.AddLayerAsync(new AzureMapsControl.Components.Layers.SymbolLayer
+        {
+            Options = new Components.Layers.SymbolLayerOptions
+            {
+                Source = pinSource.Id,
+                IconOptions = new Components.Layers.IconOptions
+                {
+                    Image = new Components.Atlas.ExpressionOrString("arrow-icon"),
+                    Anchor = new Components.Atlas.ExpressionOrString("center"),
+                    Rotation = new Components.Atlas.ExpressionOrNumber(System.Text.Json.JsonDocument.Parse("[\"+\", 180, [\"get\", \"heading\"]]")),
+                    RotationAlignment = AzureMapsControl.Components.Atlas.PitchAlignment.Map,
+                    IgnorePlacement = true,
+                    AllowOverlap = true
+                },
+                TextOptions = new Components.Layers.TextOptions
+                {
+                    IgnorePlacement = true,
+                    AllowOverlap = true
+                }
+            }
+        });
+
+        var pin = routePoints[0];
+        await pinSource.AddAsync(pin);
+
+        await AnimationService.MoveAlongRouteAsync(routePoints, pin, pinSource, new Components.Animations.Options.RoutePathAnimationOptions
+        {
+            CaptureMetadata = true,
+            SpeedMultiplier = 60,
+            Zoom = 15,
+            Pitch = 45,
+            Rotate = true,
+            AutoPlay = true
+        });
+    }
+}

@@ -3,7 +3,7 @@
     using System.Diagnostics.CodeAnalysis;
 
     [ExcludeFromCodeCoverage]
-    public sealed class Point : Geometry<Position>
+    public class Point : Geometry<Position>
     {
         public Point() : base() { }
 

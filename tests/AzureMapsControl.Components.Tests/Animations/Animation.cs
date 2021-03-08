@@ -27,6 +27,7 @@
                     "drop" => new DropAnimation(id, runtime),
                     "setcoordinates" => new SetCoordinatesAnimation(id, runtime),
                     "morph" => new MorphAnimation(id, runtime),
+                    "movealongroute" => new MoveAlongRouteAnimation(id, runtime),
                     _ => throw new NotSupportedException(type),
                 };
             }
@@ -42,6 +43,7 @@
                 new object[] { "drop" },
                 new object[] { "setcoordinates" },
                 new object[] { "morph" },
+                new object[] { "movealongroute" }
             };
 
         public static IEnumerable<object[]> AllSeekAnimationsTypes =>
@@ -64,6 +66,42 @@
                 new object[] { "setcoordinates" },
                 new object[] { "morph" },
         };
+
+        public static IEnumerable<object[]> AllPlayAnimationsTypes =>
+            new List<object[]> {
+                new object[] { "dropmarkers" },
+                new object[] { "flowingdashed" },
+                new object[] { "movealongpath" },
+                new object[] { "snakeline" },
+                new object[] { "group" },
+                new object[] { "drop" },
+                new object[] { "setcoordinates" },
+                new object[] { "morph" }
+            };
+
+        public static IEnumerable<object[]> AllResetAnimationsTypes =>
+            new List<object[]> {
+                new object[] { "dropmarkers" },
+                new object[] { "flowingdashed" },
+                new object[] { "movealongpath" },
+                new object[] { "snakeline" },
+                new object[] { "group" },
+                new object[] { "drop" },
+                new object[] { "setcoordinates" },
+                new object[] { "morph" }
+            };
+
+        public static IEnumerable<object[]> AllStopAnimationsTypes =>
+            new List<object[]> {
+                new object[] { "dropmarkers" },
+                new object[] { "flowingdashed" },
+                new object[] { "movealongpath" },
+                new object[] { "snakeline" },
+                new object[] { "group" },
+                new object[] { "drop" },
+                new object[] { "setcoordinates" },
+                new object[] { "morph" }
+            };
 
         [Theory]
         [MemberData(nameof(AllAnimationsTypes))]
@@ -120,14 +158,14 @@
             var id = "id";
             var animation = AnimationFactory.GetAnimation(animationType, id, _jsRuntime.Object);
             animation.Disposed = true;
-            await Assert.ThrowsAsync<AnimationDisposedException>(async() => await animation.PauseAsync());
+            await Assert.ThrowsAsync<AnimationDisposedException>(async () => await animation.PauseAsync());
 
             _jsRuntime.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Pause.ToAnimationNamespace(), id), Times.Never);
             _jsRuntime.VerifyNoOtherCalls();
         }
 
         [Theory]
-        [MemberData(nameof(AllAnimationsTypes))]
+        [MemberData(nameof(AllPlayAnimationsTypes))]
         public async void Should_PlayAsync(string animationType)
         {
             var id = "id";
@@ -139,7 +177,7 @@
         }
 
         [Theory]
-        [MemberData(nameof(AllAnimationsTypes))]
+        [MemberData(nameof(AllPlayAnimationsTypes))]
         public async void Should_ThrowAnimationDisposedException_PlayAsync(string animationType)
         {
             var id = "id";
@@ -152,7 +190,7 @@
         }
 
         [Theory]
-        [MemberData(nameof(AllAnimationsTypes))]
+        [MemberData(nameof(AllResetAnimationsTypes))]
         public async void Should_ResetAsync(string animationType)
         {
             var id = "id";
@@ -164,7 +202,7 @@
         }
 
         [Theory]
-        [MemberData(nameof(AllAnimationsTypes))]
+        [MemberData(nameof(AllResetAnimationsTypes))]
         public async void Should_ThrowAnimationDisposedException_ResetAsync(string animationType)
         {
             var id = "id";
@@ -204,7 +242,7 @@
         }
 
         [Theory]
-        [MemberData(nameof(AllAnimationsTypes))]
+        [MemberData(nameof(AllStopAnimationsTypes))]
         public async void Should_StopAsync(string animationType)
         {
             var id = "id";
@@ -216,7 +254,7 @@
         }
 
         [Theory]
-        [MemberData(nameof(AllAnimationsTypes))]
+        [MemberData(nameof(AllStopAnimationsTypes))]
         public async void Should_ThrowAnimationDisposedException_StopAsync(string animationType)
         {
             var id = "id";

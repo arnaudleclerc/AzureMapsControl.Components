@@ -34,6 +34,7 @@
                 internal const string Drop = "drop";
                 internal const string SetCoordinates = "setCoordinates";
                 internal const string Morph = "morph";
+                internal const string MoveAlongRoute = "moveAlongRoute";
             }
 
             internal static class Core
