@@ -149,3 +149,4 @@ It also needs to fetch the token to send to the requests of the atlas library. F
 - [Popups](docs/popups)
 - [Traffic](docs/traffic)
 - [Expressions](docs/expressions)
+- [Animations](docs/animations)

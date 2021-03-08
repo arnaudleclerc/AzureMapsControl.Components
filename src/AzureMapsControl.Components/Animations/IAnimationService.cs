@@ -21,7 +21,7 @@
         Task<ISnakeLineAnimation> SnakelineAsync(LineString line, DataSource source, SnakeLineAnimationOptions options = default);
 
         /// <summary>
-        /// Animates a map and/or a Point shape, or marker along a path.
+        /// Animates a Point shape along a path.
         /// </summary>
         /// <param name="path">The path to animate the point along.</param>
         /// <param name="pathSource">The data source the given line is attached to</param>
@@ -32,7 +32,7 @@
         Task<IMoveAlongPathAnimation> MoveAlongPathAsync(LineString path, DataSource pathSource, Point pin, DataSource pinSource, MoveAlongPathAnimationOptions options = default);
 
         /// <summary>
-        /// Animates a map and/or a Point shape, or marker along a path.
+        /// Animates a marker along a path.
         /// </summary>
         /// <param name="path">The path to animate the point along.</param>
         /// <param name="lineSource">The data source the given line is attached to</param>
@@ -42,7 +42,7 @@
         Task<IMoveAlongPathAnimation> MoveAlongPathAsync(LineString path, DataSource pathSource, HtmlMarker pin, MoveAlongPathAnimationOptions options = default);
 
         /// <summary>
-        /// Animates a map and/or a Point shape, or marker along a path.
+        /// Animates a Point shape along a path.
         /// </summary>
         /// <param name="path">The path to animate the point along.</param>
         /// <param name="pin">A point to animate along the path</param>
@@ -52,7 +52,7 @@
         Task<IMoveAlongPathAnimation> MoveAlongPathAsync(IEnumerable<Position> path, Point pin, DataSource pinSource, MoveAlongPathAnimationOptions options = default);
 
         /// <summary>
-        /// Animates a map and/or a Point shape, or marker along a path.
+        /// Animates a marker along a path.
         /// </summary>
         /// <param name="path">The path to animate the point along.</param>
         /// <param name="pin">A point to animate along the path</param>
@@ -69,7 +69,7 @@
         Task<IFlowingDashedLineAnimation> FlowingDashedLineAsync(LineLayer layer, MovingDashLineOptions options = default);
 
         /// <summary>
-        /// Adds an offset to HtmlMarkers to animate its y value to simulate dropping. Animation modifies `pixelOffset` value of HtmlMarkers.
+        /// Adds an offset to HtmlMarkers to animate its y value to simulate dropping.
         /// </summary>
         /// <param name="markers">HtmlMarkers to drop in.</param>
         /// <param name="height">The height at which to drop the shape from.</param>
@@ -78,7 +78,7 @@
         Task<IDropMarkersAnimation> DropMarkersAsync(IEnumerable<HtmlMarker> markers, decimal? height = null, DropMarkersAnimationOptions options = default);
 
         /// <summary>
-        /// Adds an offset to an HtmlMarker to animate its y value to simulate dropping. Animation modifies `pixelOffset` value of HtmlMarker.
+        /// Adds an offset to an HtmlMarker to animate its y value to simulate dropping.
         /// </summary>
         /// <param name="markers">HtmlMarkers to drop in.</param>
         /// <param name="height">The height at which to drop the shape from.</param>
