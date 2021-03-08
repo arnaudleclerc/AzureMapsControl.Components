@@ -80,7 +80,7 @@ var layer = new AzureMapsControl.Components.Layers.PolygonExtrusionLayer
 {
     Options = new Components.Layers.PolygonExtrusionLayerOptions
     {
-        FillColor = new Components.Atlas.ExpressionOrString("red")
+        FillColor = new Components.Atlas.ExpressionOrString(System.Text.Json.JsonDocument.Parse(fillColorExpressionJsonString))
     }
 };
 ```
