@@ -1,15 +1,6 @@
 ﻿@page "/Animations/MoveAlongPath"
 @inject Components.Animations.IAnimationService AnimationService
 
-<style>
-    .animations-btns {
-        position: absolute;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-    }
-</style>
-
 @using AzureMapsControl.Components.Map
 @using AzureMapsControl.Sample.Animations
 <AnimationBar OnDispose="DisposeAsync"
