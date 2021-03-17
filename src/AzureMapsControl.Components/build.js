@@ -38,7 +38,7 @@ let rollupError = false;
     const outFilePath = `${distDirPath}/azure-maps-control.js`;
     const outMinFilePath = `${distDirPath}/azure-maps-control.min.js`;
 
-    const inputPath = "./js/index.js";
+    const inputPath = "./dist/index.js";
 
     // Ensure that all necessary output folders are created.
     await fs.ensureDir(path.dirname(outFilePath));
@@ -124,7 +124,7 @@ let rollupError = false;
     await bundle(rollupInputOps, rollupOutputOps, minifiedLicense);
 
     //Remove js folder.
-    await fs.remove("./js");
+    await fs.remove("./dist");
 
     // Build is done!
     console.log(rollupError ? "Build failed" : "Build completed successfully!");

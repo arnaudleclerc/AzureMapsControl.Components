@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "js",
+    "outDir": "dist",
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
@@ -16,7 +16,7 @@
       "es2017.object"
     ],
     "declaration": true,
-    "declarationDir": "./js/typings",
+    "declarationDir": "./dist/typings",
     "typeRoots": [
       "./types",
       "./node_modules/@types"
@@ -34,7 +34,7 @@
     }
   },
   "include": [
-    "azureMapsControl/**/*"
+    "typescript/**/*"
   ],
   "exclude": [
     "node_modules",
