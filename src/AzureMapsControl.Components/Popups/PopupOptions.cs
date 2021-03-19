@@ -1,10 +1,13 @@
 ﻿namespace AzureMapsControl.Components.Popups
 {
+    using System.Diagnostics.CodeAnalysis;
+
     using AzureMapsControl.Components.Atlas;
 
     /// <summary>
     /// The options for a popup.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public sealed class PopupOptions
     {
         /// <summary>

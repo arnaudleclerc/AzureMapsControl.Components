@@ -1,5 +1,8 @@
 ﻿namespace AzureMapsControl.Components.Controls
 {
+    using System.Diagnostics.CodeAnalysis;
+
+    [ExcludeFromCodeCoverage]
     public sealed class OverviewMapControlOverlay
     {
         private readonly string _overlay;

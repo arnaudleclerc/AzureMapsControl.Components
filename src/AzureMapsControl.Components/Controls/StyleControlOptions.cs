@@ -1,13 +1,15 @@
 ﻿namespace AzureMapsControl.Components.Controls
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     using AzureMapsControl.Components.Map;
 
     /// <summary>
     /// The options for a StyleControl object.
     /// </summary>
-    public sealed class StyleControlOptions : ControlOptions
+    [ExcludeFromCodeCoverage]
+    public sealed class StyleControlOptions : IControlOptions
     {
         /// <summary>
         /// The layout to display the styles in.

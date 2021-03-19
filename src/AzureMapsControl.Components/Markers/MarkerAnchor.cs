@@ -1,14 +1,12 @@
 ﻿namespace AzureMapsControl.Components.Markers
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
     /// <summary>
     /// Indicates the marker's location relative to its position on the map.
     /// </summary>
-    [ExcludeFromCodeCoverage]
     [JsonConverter(typeof(MarkerAnchorJsonConverter))]
     public sealed class MarkerAnchor
     {

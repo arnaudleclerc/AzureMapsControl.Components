@@ -1,13 +1,11 @@
 ﻿namespace AzureMapsControl.Components.Map
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
-    [ExcludeFromCodeCoverage]
     [JsonConverter(typeof(CameraTypeJsonConverter))]
-    public sealed class CameraType
+    public struct CameraType
     {
         private readonly string _type;
 
@@ -27,8 +25,10 @@
                     return Ease;
                 case "fly":
                     return Fly;
-                default:
+                case "jump":
                     return Jump;
+                default:
+                    return default;
             }
         }
     }

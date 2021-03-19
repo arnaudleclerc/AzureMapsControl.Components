@@ -1,8 +1,11 @@
 ﻿namespace AzureMapsControl.Components.Controls
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// The layout to display the styles in.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public sealed class StyleControlLayout
     {
         private readonly string _layout;

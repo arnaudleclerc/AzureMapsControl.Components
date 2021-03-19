@@ -1,6 +1,9 @@
 ﻿namespace AzureMapsControl.Components.Controls
 {
-    public sealed class ScaleBarControlOptions : ControlOptions
+    using System.Diagnostics.CodeAnalysis;
+
+    [ExcludeFromCodeCoverage]
+    public sealed class ScaleBarControlOptions : IControlOptions
     {
         /// <summary>
         /// The maximum length of the scale bar in pixels

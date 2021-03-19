@@ -3,7 +3,7 @@
     using System.Diagnostics.CodeAnalysis;
 
     [ExcludeFromCodeCoverage]
-    public sealed class BoundingBox
+    public struct BoundingBox
     {
         /// <summary>
         /// The east edge of the bounding box.

@@ -1,6 +1,7 @@
 ﻿namespace AzureMapsControl.Components.Controls
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
@@ -8,6 +9,7 @@
     /// A control for changing the rotation of the map.
     /// </summary>
     [JsonConverter(typeof(CompassControlJsonConverter))]
+    [ExcludeFromCodeCoverage]
     public sealed class CompassControl : Control<CompassControlOptions>
     {
         internal override string Type => "compass";

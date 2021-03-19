@@ -25,6 +25,16 @@
         }
 
         [Fact]
+        public async void Should_ThrowException_PauseAsync()
+        {
+            var id = "id";
+            var animation = new GroupAnimation(id, _jsRuntime.Object);
+            await Assert.ThrowsAnyAsync<NotSupportedException>(async () => await animation.PauseAsync());
+
+            _jsRuntime.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async void Should_SetOptionsAsync()
         {
             var id = "id";

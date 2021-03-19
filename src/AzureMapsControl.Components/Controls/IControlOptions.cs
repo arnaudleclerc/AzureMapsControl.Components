@@ -1,6 +1,6 @@
 ﻿namespace AzureMapsControl.Components.Controls
 {
-    public abstract class ControlOptions
+    public interface IControlOptions
     {
 
     }

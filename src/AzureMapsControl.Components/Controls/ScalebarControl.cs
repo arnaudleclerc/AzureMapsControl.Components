@@ -1,10 +1,12 @@
 ﻿namespace AzureMapsControl.Components.Controls
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
     [JsonConverter(typeof(ScaleBarControlJsonConverter))]
+    [ExcludeFromCodeCoverage]
     public sealed class ScaleBarControl : Control<ScaleBarControlOptions>
     {
         internal override string Type => "scalebar";

@@ -1,10 +1,12 @@
 ﻿namespace AzureMapsControl.Components.Controls
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
     [JsonConverter(typeof(ControlJsonConverter))]
+    [ExcludeFromCodeCoverage]
     public abstract class Control
     {
         internal abstract string Type { get; }
@@ -21,8 +23,9 @@
         internal Control(ControlPosition position) : this() => Position = position;
     }
 
+    [ExcludeFromCodeCoverage]
     public abstract class Control<T> : Control
-        where T : ControlOptions
+        where T : IControlOptions
     {
         /// <summary>
         /// Options of the control

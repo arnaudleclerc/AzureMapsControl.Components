@@ -1,6 +1,5 @@
 ﻿namespace AzureMapsControl.Components.Map
 {
-    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
 
     using AzureMapsControl.Components.Atlas;

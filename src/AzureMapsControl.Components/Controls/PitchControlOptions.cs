@@ -1,9 +1,12 @@
 ﻿namespace AzureMapsControl.Components.Controls
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// The options for a PitchControl object.
     /// </summary>
-    public sealed class PitchControlOptions : ControlOptions
+    [ExcludeFromCodeCoverage]
+    public sealed class PitchControlOptions : IControlOptions
     {
         /// <summary>
         /// The angle that the map will tilt with each click of the control.

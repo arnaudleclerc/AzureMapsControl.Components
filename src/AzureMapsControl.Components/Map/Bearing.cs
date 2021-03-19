@@ -8,7 +8,7 @@
     /// Bearing of the map (rotation)
     /// </summary>
     [JsonConverter(typeof(BearingJsonConverter))]
-    public sealed class Bearing
+    public struct Bearing
     {
         internal int Degrees { get; }
 
@@ -37,7 +37,7 @@
                     return West;
 
                 default:
-                    return null;
+                    return default;
             }
         }
     }

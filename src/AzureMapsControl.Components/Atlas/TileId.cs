@@ -3,7 +3,7 @@
     using System.Diagnostics.CodeAnalysis;
 
     [ExcludeFromCodeCoverage]
-    public sealed class TileId
+    public struct TileId
     {
         /// <summary>
         /// The x coordinate of the tile.

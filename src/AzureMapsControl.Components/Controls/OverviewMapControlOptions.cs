@@ -1,10 +1,13 @@
 ﻿namespace AzureMapsControl.Components.Controls
 {
+    using System.Diagnostics.CodeAnalysis;
+
     using AzureMapsControl.Components.Atlas;
     using AzureMapsControl.Components.Map;
     using AzureMapsControl.Components.Markers;
 
-    public sealed class OverviewMapControlOptions : ControlOptions
+    [ExcludeFromCodeCoverage]
+    public sealed class OverviewMapControlOptions : IControlOptions
     {
         /// <summary>
         /// The height of the overview map in pixels.

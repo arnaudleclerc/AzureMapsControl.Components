@@ -33,7 +33,8 @@
                 "absolute" => Absolute,
                 "relative" => Relative,
                 "relative-delay" => RelativeDelay,
-                _ => None,
+                "none" => None,
+                _ => default
             };
         }
 

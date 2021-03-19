@@ -39,7 +39,7 @@
     /// Specifies the label placement relative to its geometry.
     /// </summary>
     [JsonConverter(typeof(SymbolLayerPlacementJsonConverter))]
-    public sealed class SymbolLayerPlacement
+    public struct SymbolLayerPlacement
     {
         private readonly string _type;
 
@@ -78,7 +78,7 @@
                     return Point;
 
                 default:
-                    return null;
+                    return default;
             }
         }
     }

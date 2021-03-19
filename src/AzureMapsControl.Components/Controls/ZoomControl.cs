@@ -1,6 +1,7 @@
 ﻿namespace AzureMapsControl.Components.Controls
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
@@ -8,6 +9,7 @@
     /// A control for changing the zoom of the map.
     /// </summary>
     [JsonConverter(typeof(ZoomControlJsonConverter))]
+    [ExcludeFromCodeCoverage]
     public sealed class ZoomControl : Control<ZoomControlOptions>
     {
         internal override string Type => "zoom";

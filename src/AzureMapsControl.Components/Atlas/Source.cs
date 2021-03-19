@@ -3,7 +3,7 @@
     using System.Diagnostics.CodeAnalysis;
 
     [ExcludeFromCodeCoverage]
-    public sealed class Source
+    public struct Source
     {
         /// <summary>
         /// Id of the data source

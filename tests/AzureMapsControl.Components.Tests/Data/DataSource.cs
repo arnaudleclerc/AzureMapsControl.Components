@@ -44,13 +44,61 @@
         }
 
         [Fact]
-        public async void Should_AddGeometries_Async()
+        public async void Should_AddPoints_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
 
             var geometries = new List<Geometry> {
-                new Point(new Position(0, 0)),
-                new Point(new Position(1, 1))
+                new Point(),
+                new LineString(),
+                new MultiLineString(),
+                new MultiPoint(),
+                new MultiPolygon(),
+                new Polygon()
+            };
+
+            await dataSource.AddAsync(geometries);
+
+            Assert.Contains(geometries[0], dataSource.Geometries);
+            Assert.Contains(geometries[1], dataSource.Geometries);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Add.ToSourceNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == dataSource.Id
+                && parameters[1] is IEnumerable<Point>
+            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Add.ToSourceNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == dataSource.Id
+                && parameters[1] is IEnumerable<LineString>
+            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Add.ToSourceNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == dataSource.Id
+                && parameters[1] is IEnumerable<MultiLineString>
+            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Add.ToSourceNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == dataSource.Id
+                && parameters[1] is IEnumerable<MultiPoint>
+            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Add.ToSourceNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == dataSource.Id
+                && parameters[1] is IEnumerable<MultiPolygon>
+            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Add.ToSourceNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == dataSource.Id
+                && parameters[1] is IEnumerable<Polygon>
+            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Add.ToSourceNamespace(), It.IsAny<object[]>()), Times.Exactly(6));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_AddLineStrings_Async()
+        {
+            var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
+
+            var geometries = new List<Geometry> {
+                new LineString(),
+                new LineString()
             };
 
             await dataSource.AddAsync(geometries);
@@ -150,7 +198,7 @@
             var geometries = new List<Geometry> { point1, point2 };
 
             await dataSource.AddAsync(geometries);
-            await dataSource.RemoveAsync(new[] { point1 });
+            await dataSource.RemoveAsync(new List<Point> { point1 });
 
             Assert.DoesNotContain(point1, dataSource.Geometries);
             Assert.Contains(point2, dataSource.Geometries);

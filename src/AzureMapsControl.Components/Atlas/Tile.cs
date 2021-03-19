@@ -6,7 +6,7 @@
     /// Tile object returned by the map when a source data event occurs.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public sealed class Tile
+    public struct Tile
     {
         /// <summary>
         /// The ID of the tile.

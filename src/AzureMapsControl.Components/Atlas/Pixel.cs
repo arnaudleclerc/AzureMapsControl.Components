@@ -42,11 +42,8 @@
             var pixel = new Pixel();
             if (reader.TokenType == JsonTokenType.StartArray)
             {
-                reader.Read();
                 pixel.X = reader.GetDouble();
-                reader.Read();
                 pixel.Y = reader.GetDouble();
-                reader.Read();
             }
 
             return pixel;

@@ -968,6 +968,17 @@
         }
 
         [Fact]
+        public void Should_DispatchDblClickEvent()
+        {
+            var assertEvent = false;
+            var map = new Map("id");
+            var jsEventArgs = new MapJsEventArgs { Type = "dblclick" };
+            map.OnDblClick += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == jsEventArgs.Type;
+            map.DispatchEvent(jsEventArgs);
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
         public void Should_DispatchDragEvent()
         {
             var assertEvent = false;

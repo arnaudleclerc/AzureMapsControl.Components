@@ -22,7 +22,6 @@
                 Color = "#bbbbbb"
             };
 
-            var map = new Components.Map.Map("id");
             marker.DispatchEvent(new Components.Map.Map("id"), new HtmlMarkerJsEventArgs { Options = options });
             Assert.Equal(options, marker.Options);
         }
@@ -31,11 +30,6 @@
         public void Should_NotUpdateOptionsWithEvent()
         {
             var marker = new HtmlMarker(new HtmlMarkerOptions());
-            var options = new HtmlMarkerOptions {
-                Color = "#bbbbbb"
-            };
-
-            var map = new Components.Map.Map("id");
             marker.DispatchEvent(new Components.Map.Map("id"), new HtmlMarkerJsEventArgs());
             Assert.NotNull(marker.Options);
         }
@@ -54,6 +48,18 @@
 
         [Fact]
         public void Should_DispatchContextMenuEvent()
+        {
+            var assertEvent = false;
+            var marker = new HtmlMarker(new HtmlMarkerOptions());
+            var map = new Components.Map.Map("id");
+            var type = "contextmenu";
+            marker.OnContextMenu += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == type && eventArgs.HtmlMarker == marker;
+            marker.DispatchEvent(map, new HtmlMarkerJsEventArgs { Type = type });
+            Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public void Should_DispatchDblClickEvent()
         {
             var assertEvent = false;
             var marker = new HtmlMarker(new HtmlMarkerOptions());

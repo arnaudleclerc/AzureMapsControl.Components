@@ -1,6 +1,9 @@
 ﻿namespace AzureMapsControl.Components.Controls
 {
-    public sealed class ZoomControlOptions : ControlOptions
+    using System.Diagnostics.CodeAnalysis;
+
+    [ExcludeFromCodeCoverage]
+    public sealed class ZoomControlOptions : IControlOptions
     {
         /// <summary>
         /// The extent to which the map will zoom with each click of the control.

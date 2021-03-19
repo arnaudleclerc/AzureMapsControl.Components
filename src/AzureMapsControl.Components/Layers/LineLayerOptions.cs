@@ -60,7 +60,7 @@
     }
 
     [JsonConverter(typeof(LineJoinJsonConverter))]
-    public sealed class LineJoin
+    public struct LineJoin
     {
         private readonly string _type;
 
@@ -97,7 +97,7 @@
                     return Round;
 
                 default:
-                    return null;
+                    return default;
             }
         }
     }
@@ -112,6 +112,7 @@
     /// <summary>
     /// Options used when rendering SimpleLine, SimplePolygon, CirclePolygon, LineString, MultiLineString, Polygon, and MultiPolygon objects in a line layer.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public sealed class LineLayerOptions : SourceLayerOptions
     {
         /// <summary>

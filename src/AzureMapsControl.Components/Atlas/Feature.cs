@@ -6,7 +6,7 @@
     using System.Text.Json.Serialization;
 
     [ExcludeFromCodeCoverage]
-    public sealed class Feature
+    public struct Feature
     {
         [JsonConverter(typeof(StringConverter))]
         public string Id { get; set; }
