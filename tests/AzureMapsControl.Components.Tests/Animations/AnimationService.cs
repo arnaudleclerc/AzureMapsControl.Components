@@ -50,6 +50,29 @@
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public async void Should_ThrowArgumentNullException_Snakeline_LineCaseAsync()
+        {
+            var source = new DataSource();
+            var options = new SnakeLineAnimationOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.SnakelineAsync(null, source, options));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_ThrowArgumentNullException_Snakeline_SourceCaseAsync()
+        {
+            var line = new LineString();
+            var source = new DataSource();
+            var options = new SnakeLineAnimationOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.SnakelineAsync(line, null, options));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
@@ -69,6 +92,58 @@
             Assert.Equal(disposeOnComplete, result.Disposed);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), result.Id, line.Id, lineSource.Id, pin.Id, pinSource.Id, options), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_ThrowArgumentNullException_MoveAlongPath_PathCaseAsync()
+        {
+            var lineSource = new DataSource();
+            var pin = new Point();
+            var pinSource = new DataSource();
+            var options = new MoveAlongPathAnimationOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.MoveAlongPathAsync(null, lineSource, pin, pinSource, options));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_ThrowArgumentNullException_MoveAlongPath_PathSourceCaseAsync()
+        {
+            var line = new LineString();
+            var pin = new Point();
+            var pinSource = new DataSource();
+            var options = new MoveAlongPathAnimationOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.MoveAlongPathAsync(line, null, pin, pinSource, options));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_ThrowArgumentNullException_MoveAlongPath_PinCaseAsync()
+        {
+            var line = new LineString();
+            var lineSource = new DataSource();
+            var pinSource = new DataSource();
+            var options = new MoveAlongPathAnimationOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.MoveAlongPathAsync(line, lineSource, null, pinSource, options));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_ThrowArgumentNullException_MoveAlongPath_PinSourceCaseAsync()
+        {
+            var line = new LineString();
+            var lineSource = new DataSource();
+            var pin = new Point();
+            var options = new MoveAlongPathAnimationOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.MoveAlongPathAsync(line, lineSource, pin, null, options));
+
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -93,12 +168,48 @@
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public async void Should_ThrowArgumentNullException_MoveAlongPath_LineStringAndHtmlMarker_PathCaseAsync()
+        {
+            var lineSource = new DataSource();
+            var pin = new HtmlMarker(new HtmlMarkerOptions());
+            var options = new MoveAlongPathAnimationOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.MoveAlongPathAsync(null, lineSource, pin, options));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_ThrowArgumentNullException_MoveAlongPath_LineStringAndHtmlMarker_PathSourceCaseAsync()
+        {
+            var line = new LineString();
+            var pin = new HtmlMarker(new HtmlMarkerOptions());
+            var options = new MoveAlongPathAnimationOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.MoveAlongPathAsync(line, null, pin, options));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_ThrowArgumentNullException_MoveAlongPath_LineStringAndHtmlMarker_PinCaseAsync()
+        {
+            var line = new LineString();
+            var lineSource = new DataSource();
+            var options = new MoveAlongPathAnimationOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.MoveAlongPathAsync(line, lineSource, null, options));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
         public async void Should_MoveAlongPath_PositionsAndPoint_Async(bool disposeOnComplete)
         {
-            var line = Array.Empty<Position>();
+            var line = new Position[] { new Position() };
             var pin = new Point();
             var pinSource = new DataSource();
             var options = new MoveAlongPathAnimationOptions {
@@ -114,12 +225,48 @@
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public async void Should_ThrowArgumentNullException_MoveAlongPath_PositionsAndPoint_NullLineCaseAsync()
+        {
+            var pin = new Point();
+            var pinSource = new DataSource();
+            var options = new MoveAlongPathAnimationOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.MoveAlongPathAsync(null, pin, pinSource, options));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_ThrowArgumentNullException_MoveAlongPath_PositionsAndPoint_PinCaseAsync()
+        {
+            var line = new Position[] { new Position() };
+            var pinSource = new DataSource();
+            var options = new MoveAlongPathAnimationOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.MoveAlongPathAsync(line, null, pinSource, options));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_ThrowArgumentNullException_MoveAlongPath_PositionsAndPoint_PinSourceAsync()
+        {
+            var line = new Position[] { new Position() };
+            var pin = new Point();
+            var options = new MoveAlongPathAnimationOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.MoveAlongPathAsync(line, pin, null, options));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
         public async void Should_MoveAlongPath_PositionsAndHtmlMarkers_Async(bool disposeOnComplete)
         {
-            var line = Array.Empty<Position>();
+            var line = new Position[] { new Position() };
             var pin = new HtmlMarker(new HtmlMarkerOptions());
             var options = new MoveAlongPathAnimationOptions {
                 DisposeOnComplete = disposeOnComplete
@@ -135,6 +282,28 @@
         }
 
         [Fact]
+        public async void Should_ThrowArgumentNullException_MoveAlongPath_PositionsAndHtmlMarkers_NullLineCaseAsync()
+        {
+            var pin = new HtmlMarker(new HtmlMarkerOptions());
+            var options = new MoveAlongPathAnimationOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.MoveAlongPathAsync(null, pin, options));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_ThrowArgumentNullException_MoveAlongPath_PositionsAndHtmlMarkers_PinCaseAsync()
+        {
+            var line = new Position[] { new Position() };
+            var options = new MoveAlongPathAnimationOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.MoveAlongPathAsync(line, null, options));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async void Should_FlowingDashedLine_Async()
         {
             var layer = new LineLayer();
@@ -145,6 +314,16 @@
             Assert.NotNull(result.Id);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.FlowingDashedLine.ToAnimationNamespace(), result.Id, layer.Id, options), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_FlowingDashedLine_ThrowArgumentNullExceptionAsync()
+        {
+            var options = new MovingDashLineOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.FlowingDashedLineAsync(null, options));
+
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -181,6 +360,16 @@
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public async void Should_DropMarkers_ThrowArgumentNullExceptionAsync()
+        {
+            var height = 1m;
+            var options = new DropMarkersAnimationOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.DropMarkersAsync(null, height, options));
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
@@ -213,6 +402,16 @@
         }
 
         [Fact]
+        public async void Should_DropMarker_ThrowArgumentNullExceptionAsync()
+        {
+            var height = 1m;
+            var options = new DropMarkersAnimationOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.DropMarkerAsync(null, height, options));
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async void Should_GroupAnimations_Async()
         {
             var animation1 = new SnakeLineAnimation("id", _jsRuntimeMock.Object);
@@ -230,6 +429,16 @@
                 && (parameters[1] as IEnumerable<string>).Contains(animation2.Id)
                 && parameters[2] is GroupAnimationOptions
             )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_GroupAnimations_ThrowArgumentNullExceptionAsync()
+        {
+            var options = new GroupAnimationOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.GroupAnimationAsync(null, options));
+
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -253,6 +462,33 @@
             Assert.Equal(disposeOnComplete, result.Disposed);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Drop.ToAnimationNamespace(), result.Id, points, datasource.Id, height, options), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_DropMultiple_ThrowArgumentNullException_PointsCaseAsync()
+        {
+            IEnumerable<Point> points = null;
+            var datasource = new DataSource();
+            var options = new DropAnimationOptions();
+            var height = 1m;
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.DropAsync(points, datasource, height, options));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_DropMultiple_ThrowArgumentNullException_SourceCaseAsync()
+        {
+            var point = new Point();
+            var point2 = new Point();
+            var points = new[] { point, point2 };
+            var options = new DropAnimationOptions();
+            var height = 1m;
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.DropAsync(points, null, height, options));
+
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -284,6 +520,31 @@
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public async void Should_Drop_ThrowArgumentNullException_PointsCaseAsync()
+        {
+            Point points = null;
+            var datasource = new DataSource();
+            var options = new DropAnimationOptions();
+            var height = 1m;
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.DropAsync(points, datasource, height, options));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_Drop_ThrowArgumentNullException_SourceCaseAsync()
+        {
+            var point = new Point();
+            var options = new DropAnimationOptions();
+            var height = 1m;
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.DropAsync(point, null, height, options));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
@@ -305,6 +566,42 @@
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
+        [Fact]
+        public async void Should_SetCoordinates_ThrowArgumentNullException_PointCaseAsync()
+        {
+            var datasource = new DataSource();
+            var options = new SetCoordinatesAnimationOptions();
+            var newCoordinates = new Position();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async() => await _animationService.SetCoordinatesAsync(null, datasource, newCoordinates, options));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_SetCoordinates_ThrowArgumentNullException_SourceCaseAsync()
+        {
+            var point = new Point();
+            var options = new SetCoordinatesAnimationOptions();
+            var newCoordinates = new Position();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.SetCoordinatesAsync(point, null, newCoordinates, options));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_SetCoordinates_ThrowArgumentNullException_NewCoordinatesCaseAsync()
+        {
+            var point = new Point();
+            var datasource = new DataSource();
+            var options = new SetCoordinatesAnimationOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.SetCoordinatesAsync(point, datasource, null, options));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
@@ -322,6 +619,28 @@
             Assert.Equal(disposeOnComplete, result.Disposed);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetCoordinates.ToAnimationNamespace(), result.Id, marker.Id, null, newCoordinates, options), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_SetCoordinates_HtmlMarker_ThrowArgumentNullException_PointCaseAsync()
+        {
+            var options = new SetCoordinatesAnimationOptions();
+            var newCoordinates = new Position();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.SetCoordinatesAsync(null, newCoordinates, options));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_SetCoordinates_HtmlMarker_ThrowArgumentNullException_NewCoordinatesCaseAsync()
+        {
+            var marker = new HtmlMarker(new HtmlMarkerOptions());
+            var options = new SetCoordinatesAnimationOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.SetCoordinatesAsync(marker, null, options));
+
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -348,6 +667,43 @@
         }
 
         [Fact]
+        public async void Should_Morph_ThrowArgumentNullException_GeometryCaseAsync()
+        {
+            var dataSource = new DataSource();
+            var newGeometry = new Polygon();
+            var options = new MorphAnimationOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async() => await _animationService.MorphAsync(null, dataSource, newGeometry, options));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_Morph_ThrowArgumentNullException_SourceCaseAsync()
+        {
+            var geometry = new Point();
+            var newGeometry = new Polygon();
+            var options = new MorphAnimationOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.MorphAsync(geometry, null, newGeometry, options));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_Morph_ThrowArgumentNullException_NewGeometryCaseAsync()
+        {
+            var geometry = new Point();
+            var dataSource = new DataSource();
+            Polygon newGeometry = null;
+            var options = new MorphAnimationOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.MorphAsync(geometry, dataSource, newGeometry, options));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async void Should_MoveAlongRoute_Async()
         {
             var routePoints = new List<RoutePoint>();
@@ -364,6 +720,42 @@
         }
 
         [Fact]
+        public async void Should_MoveAlongRoute_ThrowArgumentNullException_RoutePointsCaseAsync()
+        {
+            var dataSource = new DataSource();
+            var pin = new Point();
+            var options = new RoutePathAnimationOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async() => await _animationService.MoveAlongRouteAsync(null, pin, dataSource, options));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_MoveAlongRoute_ThrowArgumentNullException_PinCaseAsync()
+        {
+            var routePoints = new List<RoutePoint>();
+            var dataSource = new DataSource();
+            var options = new RoutePathAnimationOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.MoveAlongRouteAsync(routePoints, null, dataSource, options));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_MoveAlongRoute_ThrowArgumentNullException_SourceCaseAsync()
+        {
+            var routePoints = new List<RoutePoint>();
+            var pin = new Point();
+            var options = new RoutePathAnimationOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.MoveAlongRouteAsync(routePoints, pin, null, options));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async void Should_MoveAlongRoute_HtmlMarker_Async()
         {
             var routePoints = new List<RoutePoint>();
@@ -375,6 +767,29 @@
             Assert.NotNull(result.Id);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongRoute.ToAnimationNamespace(), result.Id, routePoints, null, pin.Id, options), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_MoveAlongRoute_HtmlMarker_ThrowArgumentNullException_RoutePointsCaseAsync()
+        {
+            var pin = new HtmlMarker(new HtmlMarkerOptions());
+            var options = new RoutePathAnimationOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async() => await _animationService.MoveAlongRouteAsync(null, pin, options));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_MoveAlongRoute_HtmlMarker_ThrowArgumentNullException_PinCaseAsync()
+        {
+            var routePoints = new List<RoutePoint>();
+            var pin = new HtmlMarker(new HtmlMarkerOptions());
+            var options = new RoutePathAnimationOptions();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.MoveAlongRouteAsync(routePoints, null, options));
+
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
     }

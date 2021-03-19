@@ -8,6 +8,7 @@
     using AzureMapsControl.Components.Animations.Options;
     using AzureMapsControl.Components.Atlas;
     using AzureMapsControl.Components.Data;
+    using AzureMapsControl.Components.Guards;
     using AzureMapsControl.Components.Layers;
     using AzureMapsControl.Components.Logger;
     using AzureMapsControl.Components.Map;
@@ -32,6 +33,12 @@
         public async Task<IMoveAlongPathAnimation> MoveAlongPathAsync(LineString path, DataSource pathSource, Point pin, DataSource pinSource, MoveAlongPathAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_MoveAlongPath, "Calling MoveAlongPath");
+
+            Require.NotNull(path, nameof(path));
+            Require.NotNull(pathSource, nameof(pathSource));
+            Require.NotNull(pin, nameof(pin));
+            Require.NotNull(pinSource, nameof(pinSource));
+
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "PathId", path.Id);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "pathSource", pathSource.Id);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "PinId", pin.Id);
@@ -47,6 +54,11 @@
         public async Task<IMoveAlongPathAnimation> MoveAlongPathAsync(LineString path, DataSource pathSource, HtmlMarker pin, MoveAlongPathAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_MoveAlongPath, "Calling MoveAlongPath");
+
+            Require.NotNull(path, nameof(path));
+            Require.NotNull(pathSource, nameof(pathSource));
+            Require.NotNull(pin, nameof(pin));
+
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "PathId", path.Id);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "PathSource", pathSource.Id);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "PinId", pin.Id);
@@ -61,6 +73,11 @@
         public async Task<IMoveAlongPathAnimation> MoveAlongPathAsync(IEnumerable<Position> path, Point pin, DataSource pinSource, MoveAlongPathAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_MoveAlongPath, "Calling MoveAlongPath");
+
+            Require.NotNull(path, nameof(path));
+            Require.NotNull(pin, nameof(pin));
+            Require.NotNull(pinSource, nameof(pinSource));
+
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "Path", path);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "PinId", pin.Id);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "PinSourceId", pinSource.Id);
@@ -75,6 +92,10 @@
         public async Task<IMoveAlongPathAnimation> MoveAlongPathAsync(IEnumerable<Position> path, HtmlMarker pin, MoveAlongPathAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_MoveAlongPath, "Calling MoveAlongPath");
+
+            Require.NotNull(path, nameof(path));
+            Require.NotNull(pin, nameof(pin));
+
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "Path", path);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "PinId", pin.Id);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "Options", options);
@@ -88,6 +109,10 @@
         public async Task<ISnakeLineAnimation> SnakelineAsync(LineString line, DataSource source, SnakeLineAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_Snakeline, "Calling Snakeline");
+
+            Require.NotNull(line, nameof(line));
+            Require.NotNull(source, nameof(source));
+
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Snakeline, "LineId", line.Id);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Snakeline, "SourceId", source.Id);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Snakeline, "Options", options);
@@ -101,6 +126,9 @@
         public async Task<IFlowingDashedLineAnimation> FlowingDashedLineAsync(LineLayer layer, MovingDashLineOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_FlowingDashedLine, "Calling Snakeline");
+
+            Require.NotNull(layer, nameof(layer));
+
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_FlowingDashedLine, "LayerId", layer.Id);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_FlowingDashedLine, "Options", options);
 
@@ -112,6 +140,9 @@
         public async Task<IDropMarkersAnimation> DropMarkersAsync(IEnumerable<HtmlMarker> markers, decimal? height = null, DropMarkersAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_DropMarkers, "Calling DropMarkersAsync");
+
+            Require.NotNull(markers, nameof(markers));
+
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_DropMarkers, "Markers", markers);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_DropMarkers, "Height", height);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_DropMarkers, "Options", options);
@@ -124,11 +155,20 @@
             return animation;
         }
 
-        public async Task<IDropMarkersAnimation> DropMarkerAsync(HtmlMarker marker, decimal? height = null, DropMarkersAnimationOptions options = default) => await DropMarkersAsync(new[] { marker }, height, options);
+        public async Task<IDropMarkersAnimation> DropMarkerAsync(HtmlMarker marker, decimal? height = null, DropMarkersAnimationOptions options = default)
+        {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_DropMarkers, "Calling DropMarkersAsync");
+
+            Require.NotNull(marker, nameof(marker));
+            return await DropMarkersAsync(new[] { marker }, height, options);
+        }
 
         public async Task<IGroupAnimation> GroupAnimationAsync(IEnumerable<IAnimation> animations, GroupAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_GroupAnimations, "Calling GroupAnimationAsync");
+
+            Require.NotNull(animations, nameof(animations));
+
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_GroupAnimations, "Animations", animations);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_GroupAnimations, "Options", options);
 
@@ -140,6 +180,10 @@
         public async Task<IDropAnimation> DropAsync(IEnumerable<Point> points, DataSource source, decimal? height = null, DropAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_Drop, "Calling DropAsync");
+
+            Require.NotNull(points, nameof(points));
+            Require.NotNull(source, nameof(source));
+
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Drop, "Points", points);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Drop, "Source", source);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Drop, "Height", height);
@@ -152,11 +196,21 @@
         }
 
         public async Task<IDropAnimation> DropAsync(Point point, DataSource source, decimal? height = null, DropAnimationOptions options = default)
-            => await DropAsync(new[] { point }, source, height, options);
+        {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_Drop, "Calling DropAsync");
+
+            Require.NotNull(point, nameof(point));
+            return await DropAsync(new[] { point }, source, height, options);
+        }
 
         public async Task<ISetCoordinatesAnimation> SetCoordinatesAsync<TPosition>(Geometry<TPosition> geometry, DataSource source, TPosition newCoordinates, SetCoordinatesAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_SetCoordinates, "Calling SetCoordinatesAsync");
+
+            Require.NotNull(geometry, nameof(geometry));
+            Require.NotNull(source, nameof(source));
+            Require.NotNull(newCoordinates, nameof(newCoordinates));
+
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_SetCoordinates, "Geometry", geometry);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_SetCoordinates, "Source", source);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_SetCoordinates, "New Coordinates", newCoordinates);
@@ -171,6 +225,10 @@
         public async Task<ISetCoordinatesAnimation> SetCoordinatesAsync(HtmlMarker marker, Position newCoordinates, SetCoordinatesAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_SetCoordinates, "Calling SetCoordinatesAsync");
+
+            Require.NotNull(marker, nameof(marker));
+            Require.NotNull(newCoordinates, nameof(newCoordinates));
+
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_SetCoordinates, "Marker", marker);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_SetCoordinates, "New Coordinates", newCoordinates);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_SetCoordinates, "Options", options);
@@ -185,6 +243,11 @@
             where T : Geometry
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_Morph, "Calling MorphAsync");
+
+            Require.NotNull(geometry, nameof(geometry));
+            Require.NotNull(source, nameof(source));
+            Require.NotNull(newGeometry, nameof(newGeometry));
+
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Morph, "Geometry", geometry);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Morph, "Source", source);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Morph, "New Geometry", newGeometry);
@@ -199,6 +262,11 @@
         public async Task<IMoveAlongRouteAnimation> MoveAlongRouteAsync(IEnumerable<RoutePoint> points, Point pin, DataSource pinSource, RoutePathAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_Morph, "Calling MoveAlongRoute");
+
+            Require.NotNull(points, nameof(points));
+            Require.NotNull(pin, nameof(pin));
+            Require.NotNull(pinSource, nameof(pinSource));
+
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Morph, "Points", points);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Morph, "Pin", pin);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Morph, "Source", pinSource);
@@ -212,6 +280,10 @@
         public async Task<IMoveAlongRouteAnimation> MoveAlongRouteAsync(IEnumerable<RoutePoint> points, HtmlMarker pin, RoutePathAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_Morph, "Calling MoveAlongRoute");
+
+            Require.NotNull(points, nameof(points));
+            Require.NotNull(pin, nameof(pin));
+
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Morph, "Points", points);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Morph, "Pin", pin);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_SetCoordinates, "Options", options);
