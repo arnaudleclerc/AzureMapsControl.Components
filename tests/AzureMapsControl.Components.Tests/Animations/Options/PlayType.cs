@@ -1,4 +1,4 @@
-﻿namespace AzureMapsControl.Components.Tests.Animations
+﻿namespace AzureMapsControl.Components.Tests.Animations.Options
 {
     using AzureMapsControl.Components.Animations.Options;
 

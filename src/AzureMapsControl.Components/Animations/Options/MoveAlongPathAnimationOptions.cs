@@ -1,5 +1,8 @@
 ﻿namespace AzureMapsControl.Components.Animations.Options
 {
+    using System.Diagnostics.CodeAnalysis;
+
+    [ExcludeFromCodeCoverage]
     public struct MoveAlongPathAnimationOptions : IAnimationOptions
     {
         /// <summary>

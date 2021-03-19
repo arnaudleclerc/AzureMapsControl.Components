@@ -1,10 +1,12 @@
 ﻿namespace AzureMapsControl.Components.Animations.Options
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// Options for animating the map along a path.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public struct RoutePathAnimationOptions : IAnimationOptions
     {
         /// <summary>

@@ -1,8 +1,11 @@
 ﻿namespace AzureMapsControl.Components.Animations.Options
 {
+    using System.Diagnostics.CodeAnalysis;
+
     /// <summary>
     /// Defines how the value of property in two points is extrapolated.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public struct PointPairValueInterpolation
     {
         /// <summary>
