@@ -1,5 +1,6 @@
 ﻿namespace AzureMapsControl.Components.Tests.Map
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -80,6 +81,31 @@
         }
 
         [Fact]
+        public async void Should_NotAddControls_NullCaseAsync()
+        {
+            const string id = "id";
+            var map = new Map(id, _jsRuntimeMock.Object, _loggerMock.Object);
+
+            await map.AddControlsAsync(null);
+            Assert.Null(map.Controls);
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotAddControls_EmptyCaseAsync()
+        {
+            var controls = Array.Empty<Control>();
+            const string id = "id";
+            var map = new Map(id, _jsRuntimeMock.Object, _loggerMock.Object);
+
+            await map.AddControlsAsync(controls);
+            Assert.Null(map.Controls);
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async void Should_AddControls_ParamsVersion_Async()
         {
             var control = new CompassControl(position: ControlPosition.BottomLeft);
@@ -139,6 +165,15 @@
                 parameters.Single() is IEnumerable<HtmlMarkerCreationOptions>
                 && (parameters.Single() as IEnumerable<HtmlMarkerCreationOptions>).Count() == updates.Count)
             ), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotUpdateHtmlMarkers_NullCaseAsync()
+        {
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
+
+            await map.UpdateHtmlMarkersAsync(null);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -278,6 +313,21 @@
         }
 
         [Fact]
+        public async void Should_NotUpdateDrawingToolbar_NullCaseAsync()
+        {
+            var drawingToolbarOptions = new DrawingToolbarOptions();
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, new DrawingToolbarEventInvokeHelper(eventArgs => Task.CompletedTask));
+            await map.AddDrawingToolbarAsync(drawingToolbarOptions);
+            await map.UpdateDrawingToolbarAsync(null);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.AddDrawingToolbar.ToDrawingNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] is DrawingToolbarCreationOptions
+                && parameters[1] is DotNetObjectReference<DrawingToolbarEventInvokeHelper>
+             )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async void Should_RemoveDrawingToolbar_Async()
         {
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, new DrawingToolbarEventInvokeHelper(eventArgs => Task.CompletedTask));
@@ -322,6 +372,18 @@
                 && parameters[4] is IEnumerable<string> && (parameters[4] as IEnumerable<string>).Count() == 0
                 && parameters[5] is DotNetObjectReference<LayerEventInvokeHelper>
             )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotAddALayer_NullCaseAsync()
+        {
+            BubbleLayer layer = null;
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => Task.CompletedTask));
+
+            await map.AddLayerAsync(layer);
+            Assert.Null(map.Layers);
+
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -526,6 +588,15 @@
         }
 
         [Fact]
+        public async void Should_NotAddDataSource_NullCaseAsync()
+        {
+            DataSource dataSource = null;
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
+            await map.AddSourceAsync(dataSource);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async void Should_RemoveDataSource_Async()
         {
             var dataSource = new DataSource();
@@ -710,6 +781,15 @@
                 && parameters[2] is IEnumerable<string>
                 && parameters[3] is DotNetObjectReference<PopupInvokeHelper>
             )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotAddPopup_NullCaseAsync()
+        {
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => Task.CompletedTask));
+            await map.AddPopupAsync(null);
+            Assert.Null(map.Popups);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 

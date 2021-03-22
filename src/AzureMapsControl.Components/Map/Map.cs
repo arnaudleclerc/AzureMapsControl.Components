@@ -164,22 +164,25 @@
         /// <param name="controls">Controls to add to the map</param>
         public async Task AddControlsAsync(IEnumerable<Control> controls)
         {
-            if (controls != null && controls.Any())
+            if (controls == null || !controls.Any())
             {
-                _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddControlsAsync, "Map - AddControlsAsync");
-                Controls = controls;
-                var overviewMapControl = controls.OfType<OverviewMapControl>().FirstOrDefault();
-                if (overviewMapControl is not null)
-                {
-                    overviewMapControl.Logger = _logger;
-                    overviewMapControl.JsRuntime = _jsRuntime;
-                }
-                _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddControlsAsync, $"Adding controls", Controls);
-                _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_AddControlsAsync, $"{Controls.Count()} controls will be added: {string.Join('|', Controls.Select(co => co.Type))}");
-                //Ordering the controls is necessary if the controls contain an OverviewMapControl. This one needs to be added last, otherwise the controls added after it will be added to the overlay.
-                //Following : https://github.com/Azure-Samples/azure-maps-overview-map/issues/1
-                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddControls.ToCoreNamespace(), Controls?.OrderBy(control => control.Order));
+                return;
             }
+
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddControlsAsync, "Map - AddControlsAsync");
+            Controls = controls;
+            var overviewMapControl = controls.OfType<OverviewMapControl>().FirstOrDefault();
+            if (overviewMapControl is not null)
+            {
+                overviewMapControl.Logger = _logger;
+                overviewMapControl.JsRuntime = _jsRuntime;
+            }
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddControlsAsync, $"Adding controls", Controls);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_AddControlsAsync, $"{Controls.Count()} controls will be added: {string.Join('|', Controls.Select(co => co.Type))}");
+            //Ordering the controls is necessary if the controls contain an OverviewMapControl. This one needs to be added last, otherwise the controls added after it will be added to the overlay.
+            //Following : https://github.com/Azure-Samples/azure-maps-overview-map/issues/1
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddControls.ToCoreNamespace(), Controls?.OrderBy(control => control.Order));
+
         }
 
         #endregion
@@ -193,8 +196,13 @@
         /// <returns></returns>
         public async Task AddSourceAsync<TSource>(TSource source) where TSource : Source
         {
+            if (source == null)
+            {
+                return;
+            }
+
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddSourceAsync, "Adding source");
-            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_AddSourceAsync, $"Id: {source.Id} | Type: {source.SourceType.ToString()}");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_AddSourceAsync, $"Id: {source.Id} | Type: {source.SourceType}");
 
             if (_sources == null)
             {
@@ -222,7 +230,7 @@
         /// </summary>
         /// <param name="dataSource">Data source to remove</param>
         /// <returns></returns>
-        public async Task RemoveDataSourceAsync(DataSource dataSource) => await RemoveDataSourceAsync(dataSource.Id);
+        public async Task RemoveDataSourceAsync(DataSource dataSource) => await RemoveDataSourceAsync(dataSource?.Id);
 
         /// <summary>
         /// Removes a data source from the map
@@ -294,22 +302,25 @@
         /// <returns></returns>
         public async Task UpdateDrawingToolbarAsync(DrawingToolbarUpdateOptions drawingToolbarUpdateOptions)
         {
-            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_UpdateDrawingToolbarAsync, "Updating drawing toolbar");
-            DrawingToolbarOptions.Buttons = drawingToolbarUpdateOptions.Buttons;
-            DrawingToolbarOptions.ContainerId = drawingToolbarUpdateOptions.ContainerId;
-            DrawingToolbarOptions.NumColumns = drawingToolbarUpdateOptions.NumColumns;
-            DrawingToolbarOptions.Position = drawingToolbarUpdateOptions.Position;
-            DrawingToolbarOptions.Style = drawingToolbarUpdateOptions.Style;
-            DrawingToolbarOptions.Visible = drawingToolbarUpdateOptions.Visible;
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.UpdateDrawingToolbar.ToDrawingNamespace(),
-                new DrawingToolbarCreationOptions {
-                    Buttons = DrawingToolbarOptions.Buttons?.Select(button => button.ToString()).ToArray(),
-                    ContainerId = DrawingToolbarOptions.ContainerId,
-                    NumColumns = DrawingToolbarOptions.NumColumns,
-                    Position = DrawingToolbarOptions.Position.ToString(),
-                    Style = DrawingToolbarOptions.Style.ToString(),
-                    Visible = DrawingToolbarOptions.Visible
-                });
+            if (drawingToolbarUpdateOptions != null)
+            {
+                _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_UpdateDrawingToolbarAsync, "Updating drawing toolbar");
+                DrawingToolbarOptions.Buttons = drawingToolbarUpdateOptions.Buttons;
+                DrawingToolbarOptions.ContainerId = drawingToolbarUpdateOptions.ContainerId;
+                DrawingToolbarOptions.NumColumns = drawingToolbarUpdateOptions.NumColumns;
+                DrawingToolbarOptions.Position = drawingToolbarUpdateOptions.Position;
+                DrawingToolbarOptions.Style = drawingToolbarUpdateOptions.Style;
+                DrawingToolbarOptions.Visible = drawingToolbarUpdateOptions.Visible;
+                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.UpdateDrawingToolbar.ToDrawingNamespace(),
+                    new DrawingToolbarCreationOptions {
+                        Buttons = DrawingToolbarOptions.Buttons?.Select(button => button.ToString()).ToArray(),
+                        ContainerId = DrawingToolbarOptions.ContainerId,
+                        NumColumns = DrawingToolbarOptions.NumColumns,
+                        Position = DrawingToolbarOptions.Position.ToString(),
+                        Style = DrawingToolbarOptions.Style.ToString(),
+                        Visible = DrawingToolbarOptions.Visible
+                    });
+            }
         }
 
         /// <summary>
@@ -405,14 +416,18 @@
         /// <returns></returns>
         public async Task UpdateHtmlMarkersAsync(IEnumerable<HtmlMarkerUpdate> updates)
         {
-            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_UpdateHtmlMarkersAsync, "Updating html markers");
-            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_UpdateHtmlMarkersAsync, $"{updates.Count()} html markers will be updated");
-            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_UpdateHtmlMarkersAsync, $"Ids: {string.Join('|', updates.Select(h => h.Marker.Id))}");
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.UpdateHtmlMarkers.ToCoreNamespace(),
-            updates.Select(update => new HtmlMarkerCreationOptions {
-                Id = update.Marker.Id,
-                Options = update.Options
-            }));
+            if (updates != null)
+            {
+                _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_UpdateHtmlMarkersAsync, "Updating html markers");
+                _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_UpdateHtmlMarkersAsync, $"{updates.Count()} html markers will be updated");
+                _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_UpdateHtmlMarkersAsync, $"Ids: {string.Join('|', updates.Select(h => h.Marker.Id))}");
+                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.UpdateHtmlMarkers.ToCoreNamespace(),
+                    updates.Select(update => new HtmlMarkerCreationOptions {
+                        Id = update.Marker.Id,
+                        Options = update.Options
+                    })
+                );
+            }
         }
 
         /// <summary>
@@ -472,6 +487,11 @@
         /// <returns></returns>
         public async Task AddLayerAsync<T>(T layer, string before) where T : Layer
         {
+            if (layer == null)
+            {
+                return;
+            }
+
             if (_layers == null)
             {
                 _layers = new List<Layer>();
@@ -780,6 +800,11 @@
         /// <returns></returns>
         public async Task AddPopupAsync(Popup popup)
         {
+            if (popup == null)
+            {
+                return;
+            }
+
             if (_popups == null)
             {
                 _popups = new List<Popup>();
