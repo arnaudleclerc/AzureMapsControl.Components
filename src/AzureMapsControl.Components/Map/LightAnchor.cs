@@ -3,7 +3,7 @@
     using System.Diagnostics.CodeAnalysis;
 
     [ExcludeFromCodeCoverage]
-    public struct LightAnchor
+    public sealed class LightAnchor
     {
         private readonly string _anchor;
 

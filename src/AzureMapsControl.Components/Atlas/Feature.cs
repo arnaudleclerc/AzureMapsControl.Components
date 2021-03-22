@@ -6,7 +6,7 @@
     using System.Text.Json.Serialization;
 
     [ExcludeFromCodeCoverage]
-    public struct Feature
+    public sealed class Feature
     {
         [JsonConverter(typeof(StringConverter))]
         public string Id { get; set; }
@@ -18,8 +18,7 @@
     {
         public override string Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            return reader.TokenType switch
-            {
+            return reader.TokenType switch {
                 JsonTokenType.Number => reader.TryGetUInt64(out var value) ? value.ToString() : throw new JsonException($"Invalid number."),
                 JsonTokenType.String => reader.GetString(),
                 JsonTokenType.None => null,

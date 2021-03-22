@@ -3,7 +3,7 @@
     using System.Diagnostics.CodeAnalysis;
 
     [ExcludeFromCodeCoverage]
-    public struct LightOptionsPosition
+    public sealed class LightOptionsPosition
     {
         public double A { get; set; }
         public double P { get; set; }

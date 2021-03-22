@@ -3,7 +3,7 @@
     using System.Diagnostics.CodeAnalysis;
 
     [ExcludeFromCodeCoverage]
-    public struct Padding
+    public sealed class Padding
     {
         public int Bottom { get; set; }
         public int Left { get; set; }
