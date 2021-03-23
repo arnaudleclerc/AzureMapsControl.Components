@@ -6,7 +6,7 @@
 
     public sealed class PopupEventActivationFlags : EventActivationFlags<PopupEventType, PopupEventActivationFlags>
     {
-        private PopupEventActivationFlags(bool defaultFlag): base(new Dictionary<PopupEventType, bool> {
+        private PopupEventActivationFlags(bool defaultFlag) : base(new Dictionary<PopupEventType, bool> {
             { PopupEventType.Close, defaultFlag },
             { PopupEventType.Drag, defaultFlag },
             { PopupEventType.DragEnd, defaultFlag },
