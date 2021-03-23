@@ -7,5 +7,6 @@
     {
         public string Id { get; set; }
         public HtmlMarkerOptions Options { get; set; }
+        public HtmlMarkerPopupCreationOptions PopupOptions { get; set; }
     }
 }

@@ -15,7 +15,7 @@
     /// <summary>
     /// An information window anchored at a specified position on a map.
     /// </summary>
-    public sealed class Popup
+    public class Popup
     {
         private bool _isRemoved = false;
 
@@ -56,7 +56,7 @@
         /// Open the popup
         /// </summary>
         /// <returns></returns>
-        public async Task OpenAsync()
+        public virtual async Task OpenAsync()
         {
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Popup_OpenAsync, "Opening popup");
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Popup_OpenAsync, $"Id: {Id}");
@@ -67,7 +67,7 @@
         /// Close the popup
         /// </summary>
         /// <returns></returns>
-        public async Task CloseAsync()
+        public virtual async Task CloseAsync()
         {
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Popup_CloseAsync, "Closing popup");
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Popup_CloseAsync, $"Id: {Id}");
@@ -78,7 +78,7 @@
         /// Remove the popup from the map
         /// </summary>
         /// <returns></returns>
-        public async Task RemoveAsync()
+        public virtual async Task RemoveAsync()
         {
             if (_isRemoved)
             {
@@ -98,7 +98,7 @@
         /// </summary>
         /// <param name="update">Update to provide on the options</param>
         /// <returns></returns>
-        public async Task UpdateAsync(Action<PopupOptions> update)
+        public virtual async Task UpdateAsync(Action<PopupOptions> update)
         {
             update.Invoke(Options);
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Popup_UpdateAsync, "Removing popup");

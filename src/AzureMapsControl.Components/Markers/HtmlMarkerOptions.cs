@@ -1,8 +1,10 @@
 ﻿namespace AzureMapsControl.Components.Markers
 {
     using System.Diagnostics.CodeAnalysis;
+    using System.Text.Json.Serialization;
 
     using AzureMapsControl.Components.Atlas;
+    using AzureMapsControl.Components.Popups;
 
     [ExcludeFromCodeCoverage]
     public sealed class HtmlMarkerOptions
@@ -52,5 +54,11 @@
         /// Specifies if the marker is visible or not.
         /// </summary>
         public bool? Visible { get; set; }
+
+        /// <summary>
+        /// A popup that is attached to the marker
+        /// </summary>
+        [JsonIgnore]
+        public HtmlMarkerPopup Popup { get; set; }
     }
 }

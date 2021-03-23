@@ -1,4 +1,4 @@
-import { EventArgs } from '../events';
+import { EventArgs } from '../events/event';
 import * as azmaps from 'azure-maps-control';
 
 export interface MapEventArgs extends EventArgs {

@@ -379,6 +379,13 @@
                 await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(),
                 parameters.MarkerOptions,
                 parameters.InvokeHelper);
+
+                foreach (var marker in markers)
+                {
+                    marker.JSRuntime = _jsRuntime;
+                    marker.PopupInvokeHelper = _popupInvokeHelper;
+                    marker.Logger = _logger;
+                }
             }
         }
 
@@ -387,8 +394,14 @@
             return (markers.Select(marker => new HtmlMarkerCreationOptions {
                 Id = marker.Id,
                 Events = marker.EventActivationFlags?.EnabledEvents,
-                Options = marker.Options
-            }), DotNetObjectReference.Create(_htmlMarkerInvokeHelper));
+                Options = marker.Options,
+                PopupOptions = marker.Options?.Popup != null ? new HtmlMarkerPopupCreationOptions {
+                    Events = marker.Options.Popup.EventActivationFlags.EnabledEvents,
+                    Id = marker.Options.Popup.Id,
+                    Options = marker.Options.Popup.Options
+                } : null
+            }),
+            DotNetObjectReference.Create(_htmlMarkerInvokeHelper));
         }
 
         /// <summary>

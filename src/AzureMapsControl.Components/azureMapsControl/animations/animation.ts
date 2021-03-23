@@ -1,9 +1,12 @@
 import * as azmaps from 'azure-maps-control';
 import * as azanimations from 'azure-maps-control-animations';
-import { Core } from '../core';
-import { EventHelper } from '../events';
-import { Geometry, GeometryBuilder, RoutePoint } from '../geometries';
-import { HtmlMarkerEventArgs, HtmlMarkerOptions } from '../html-markers';
+import { Core } from '../core/core';
+import { EventHelper } from '../events/event-helper';
+import { Geometry } from '../geometries/geometry';
+import { GeometryBuilder } from '../geometries/geometry-builder';
+import { RoutePoint } from '../geometries/route-point';
+import { HtmlMarkerEventArgs } from '../html-markers/html-marker-event-args';
+import { HtmlMarkerDefinition } from '../html-markers/html-marker-options';
 
 export class Animation {
 
@@ -26,14 +29,14 @@ export class Animation {
     }
 
     public static dropMarkers(animationId: string,
-        markerOptions: HtmlMarkerOptions[],
+        markerOptions: HtmlMarkerDefinition[],
         height: number,
         options: azanimations.PlayableAnimationOptions,
         eventInvokeHelper: EventHelper<HtmlMarkerEventArgs>): void {
         const map = Core.getMap();
         const markers: azmaps.HtmlMarker[] = [];
         markerOptions.forEach(markerOption => {
-            const marker = Core.getHtmlMarkerFromOptions(markerOption);
+            const marker = Core.getHtmlMarkerFromDefinition(markerOption);
             markers.push(marker);
             if (markerOption.events) {
                 Core.attachEventsToHtmlMarker(marker, markerOption.events, eventInvokeHelper);

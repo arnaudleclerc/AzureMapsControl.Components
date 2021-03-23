@@ -1,11 +1,21 @@
 ﻿namespace AzureMapsControl.Components.Tests.Markers
 {
+    using System.Collections.Generic;
+
     using AzureMapsControl.Components.Markers;
+    using AzureMapsControl.Components.Popups;
+    using AzureMapsControl.Components.Runtime;
+
+    using Microsoft.JSInterop;
+
+    using Moq;
 
     using Xunit;
 
     public class HtmlMarkerTests
     {
+        private readonly Mock<IMapJsRuntime> _jsRuntime = new Mock<IMapJsRuntime>();
+
         [Fact]
         public void Should_HaveDefaultIdAndDeactivatedEvents()
         {
@@ -215,6 +225,49 @@
             marker.OnMouseUp += eventArgs => assertEvent = eventArgs.Map == map && eventArgs.Type == type && eventArgs.HtmlMarker == marker;
             marker.DispatchEvent(map, new HtmlMarkerJsEventArgs { Type = type });
             Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public async void Should_TogglePopupAsync()
+        {
+            var assertEvent = false;
+            var popupInvokeHelper = new PopupInvokeHelper(null);
+            var marker = new HtmlMarker(new HtmlMarkerOptions {
+                Popup = new HtmlMarkerPopup(new PopupOptions())
+            }) {
+                JSRuntime = _jsRuntime.Object,
+                PopupInvokeHelper = popupInvokeHelper
+            };
+
+            marker.OnPopupToggled += () => assertEvent = true;
+            await marker.TogglePopupAsync();
+            Assert.True(assertEvent);
+            Assert.True(marker.Options.Popup.HasBeenToggled);
+
+            _jsRuntime.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.HtmlMarker.TogglePopup.ToHtmlMarkerNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == marker.Id
+                && parameters[1] as string == marker.Options.Popup.Id
+                && parameters[2] is IEnumerable<string>
+                && parameters[2] is DotNetObjectReference<PopupInvokeHelper>
+            )));
+            _jsRuntime.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_Not_TogglePopupAsync()
+        {
+            var assertEvent = false;
+            var popupInvokeHelper = new PopupInvokeHelper(null);
+            var marker = new HtmlMarker(new HtmlMarkerOptions()) {
+                JSRuntime = _jsRuntime.Object,
+                PopupInvokeHelper = popupInvokeHelper
+            };
+
+            marker.OnPopupToggled += () => assertEvent = true;
+            await marker.TogglePopupAsync();
+            Assert.False(assertEvent);
+
+            _jsRuntime.VerifyNoOtherCalls();
         }
     }
 }

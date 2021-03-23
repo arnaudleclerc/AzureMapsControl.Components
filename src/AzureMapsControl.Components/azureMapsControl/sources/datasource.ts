@@ -1,6 +1,7 @@
 import * as azmaps from 'azure-maps-control';
-import { Core } from '../core';
-import { Geometry, GeometryBuilder } from '../geometries';
+import { Core } from '../core/core';
+import { Geometry } from '../geometries/geometry';
+import { GeometryBuilder } from '../geometries/geometry-builder';
 
 export class Datasource {
 

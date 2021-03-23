@@ -1,15 +1,17 @@
 import * as azmaps from 'azure-maps-control';
-import { Configuration } from '../configuration';
-import { Extensions } from '../extensions';
-import { mapDataEvents, mapEvents, mapLayerEvents, mapMouseEvents, mapStringEvents, mapTouchEvents, MapEventArgs } from '../map';
-import { EventHelper } from '../events';
-import { LayerType } from '../layers';
-import { SourceType } from '../sources';
-import { Control } from '../controls';
+import { Configuration } from '../configuration/configuration';
+import { Extensions } from '../extensions/extensions';
+import { EventHelper } from '../events/event-helper';
+import { LayerType } from '../layers/layer-type';
+import { SourceType } from '../sources/source-type';
+import { Control } from '../controls/control';
 import * as scalebar from 'azure-maps-control-scalebar';
 import * as overviewmap from 'azure-maps-control-overviewmap';
-import { HtmlMarkerEventArgs, HtmlMarkerOptions, toMarkerEvent } from '../html-markers';
 import { MapImageTemplate } from './map-image-template';
+import { HtmlMarkerEventArgs, toMarkerEvent } from '../html-markers/html-marker-event-args';
+import { HtmlMarkerDefinition } from '../html-markers/html-marker-options';
+import { MapEventArgs } from '../map/map-event-args';
+import { mapDataEvents, mapEvents, mapLayerEvents, mapMouseEvents, mapStringEvents, mapTouchEvents } from '../map/map-events';
 
 export class Core {
     private static readonly _popups: Map<string, azmaps.Popup> = new Map<string, azmaps.Popup>();
@@ -49,11 +51,12 @@ export class Core {
         });
     }
 
-    public static addHtmlMarkers(htmlMarkerOptions: HtmlMarkerOptions[], eventHelper: EventHelper<HtmlMarkerEventArgs>): void {
-        htmlMarkerOptions.forEach(htmlMarkerOption => {
-            const marker = this.getHtmlMarkerFromOptions(htmlMarkerOption);
-            if (htmlMarkerOption.events) {
-                htmlMarkerOption.events.forEach(htmlMarkerEvent => {
+    public static addHtmlMarkers(htmlMarkerDefinitions: HtmlMarkerDefinition[],
+        eventHelper: EventHelper<HtmlMarkerEventArgs>): void {
+        htmlMarkerDefinitions.forEach(htmlMarkerDefinition => {
+            const marker = this.getHtmlMarkerFromDefinition(htmlMarkerDefinition);
+            if (htmlMarkerDefinition.events) {
+                htmlMarkerDefinition.events.forEach(htmlMarkerEvent => {
                     this._map.events.add(htmlMarkerEvent as any, marker, event => {
                         eventHelper.invokeMethodAsync('NotifyEventAsync', toMarkerEvent(event, (marker as any).amc.id));
                     });
@@ -63,8 +66,8 @@ export class Core {
         });
     }
 
-    public static getHtmlMarkerFromOptions(htmlMarkerOptions: HtmlMarkerOptions): azmaps.HtmlMarker {
-        const marker = new azmaps.HtmlMarker({
+    public static getHtmlMarkerFromDefinition(htmlMarkerOptions: HtmlMarkerDefinition): azmaps.HtmlMarker {
+        const options: azmaps.HtmlMarkerOptions = {
             anchor: htmlMarkerOptions.options.anchor,
             color: htmlMarkerOptions.options.color,
             draggable: htmlMarkerOptions.options.draggable,
@@ -74,7 +77,14 @@ export class Core {
             secondaryColor: htmlMarkerOptions.options.secondaryColor,
             text: htmlMarkerOptions.options.text,
             visible: htmlMarkerOptions.options.visible
-        });
+        };
+
+        if (htmlMarkerOptions.popupOptions) {
+            options.popup = new azmaps.Popup(htmlMarkerOptions.popupOptions.options);
+        }
+
+        const marker = new azmaps.HtmlMarker(options);
+
         (marker as any).amc = {
             id: htmlMarkerOptions.id
         };
@@ -257,16 +267,7 @@ export class Core {
     }
 
     public static addPopup(id: string, options: azmaps.PopupOptions, events: string[], eventHelper: EventHelper<MapEventArgs>): void {
-        const popupOptions = {
-            draggable: options.draggable,
-            closeButton: options.closeButton,
-            content: options.content,
-            fillColor: options.fillColor,
-            pixelOffset: options.pixelOffset,
-            position: options.position,
-            showPointer: options.showPointer
-        };
-        const popup = new azmaps.Popup(popupOptions);
+        const popup = new azmaps.Popup(options);
         this._popups.set(id, popup);
         this._map.popups.add(popup);
 
@@ -320,6 +321,10 @@ export class Core {
 
     public static getPopup(id: string): azmaps.Popup {
         return this._popups.has(id) ? this._popups.get(id) : null;
+    }
+
+    public static getPopups(): Map<string, azmaps.Popup> {
+        return this._popups;
     }
 
     public static removeHtmlMarkers(markerIds: string[]): void {
@@ -393,7 +398,7 @@ export class Core {
         (mapControl as overviewmap.control.OverviewMap).setOptions(control.options);
     }
 
-    public static updateHtmlMarkers(htmlMarkerOptions: HtmlMarkerOptions[]): void {
+    public static updateHtmlMarkers(htmlMarkerOptions: HtmlMarkerDefinition[]): void {
         htmlMarkerOptions.forEach(htmlMarkerOption => {
             const options: azmaps.HtmlMarkerOptions = {};
             if (htmlMarkerOption.options.anchor) {
@@ -411,6 +416,9 @@ export class Core {
             if (htmlMarkerOption.options.position) {
                 options.position = htmlMarkerOption.options.position;
             }
+            if (htmlMarkerOption.options.pixelOffset) {
+                options.pixelOffset = htmlMarkerOption.options.pixelOffset;
+            }
             if (htmlMarkerOption.options.secondaryColor) {
                 options.secondaryColor = htmlMarkerOption.options.secondaryColor;
             }
@@ -419,6 +427,9 @@ export class Core {
             }
             if (htmlMarkerOption.options.visible) {
                 options.visible = htmlMarkerOption.options.visible;
+            }
+            if (htmlMarkerOption.popupOptions) {
+                options.popup = new azmaps.Popup(htmlMarkerOption.popupOptions.options);
             }
 
             this._map.markers.getMarkers().find(marker => (marker as any).amc.id === htmlMarkerOption.id).setOptions(options);
