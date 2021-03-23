@@ -32,7 +32,6 @@
                 Color = "#bbbbbb"
             };
 
-            var map = new Components.Map.Map("id");
             marker.DispatchEvent(new Components.Map.Map("id"), new HtmlMarkerJsEventArgs { Options = options });
             Assert.Equal(options, marker.Options);
         }
@@ -41,11 +40,6 @@
         public void Should_NotUpdateOptionsWithEvent()
         {
             var marker = new HtmlMarker(new HtmlMarkerOptions());
-            var options = new HtmlMarkerOptions {
-                Color = "#bbbbbb"
-            };
-
-            var map = new Components.Map.Map("id");
             marker.DispatchEvent(new Components.Map.Map("id"), new HtmlMarkerJsEventArgs());
             Assert.NotNull(marker.Options);
         }
@@ -233,7 +227,9 @@
             var assertEvent = false;
             var popupInvokeHelper = new PopupInvokeHelper(null);
             var marker = new HtmlMarker(new HtmlMarkerOptions {
-                Popup = new HtmlMarkerPopup(new PopupOptions())
+                Popup = new HtmlMarkerPopup(new PopupOptions()) {
+                    IsRemoved = true
+                }
             }) {
                 JSRuntime = _jsRuntime.Object,
                 PopupInvokeHelper = popupInvokeHelper
@@ -243,6 +239,7 @@
             await marker.TogglePopupAsync();
             Assert.True(assertEvent);
             Assert.True(marker.Options.Popup.HasBeenToggled);
+            Assert.False(marker.Options.Popup.IsRemoved);
 
             _jsRuntime.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.HtmlMarker.TogglePopup.ToHtmlMarkerNamespace(), It.Is<object[]>(parameters =>
                 parameters[0] as string == marker.Id

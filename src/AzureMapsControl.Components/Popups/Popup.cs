@@ -17,7 +17,7 @@
     /// </summary>
     public class Popup
     {
-        private bool _isRemoved = false;
+        internal bool IsRemoved { get; set; }
 
         internal IMapJsRuntime JSRuntime { get; set; }
         internal ILogger Logger { get; set; }
@@ -80,7 +80,7 @@
         /// <returns></returns>
         public virtual async Task RemoveAsync()
         {
-            if (_isRemoved)
+            if (IsRemoved)
             {
                 throw new PopupAlreadyRemovedException();
             }
@@ -90,7 +90,7 @@
             await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Remove.ToPopupNamespace(), Id);
 
             OnRemoved?.Invoke();
-            _isRemoved = true;
+            IsRemoved = true;
         }
 
         /// <summary>

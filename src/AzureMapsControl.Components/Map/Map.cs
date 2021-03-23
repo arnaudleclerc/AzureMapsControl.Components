@@ -385,6 +385,12 @@
                     marker.JSRuntime = _jsRuntime;
                     marker.PopupInvokeHelper = _popupInvokeHelper;
                     marker.Logger = _logger;
+
+                    if (marker.Options?.Popup != null)
+                    {
+                        marker.Options.Popup.JSRuntime = _jsRuntime;
+                        marker.Options.Popup.Logger = _logger;
+                    }
                 }
             }
         }
@@ -421,10 +427,31 @@
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_UpdateHtmlMarkersAsync, "Updating html markers");
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_UpdateHtmlMarkersAsync, $"{updates.Count()} html markers will be updated");
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_UpdateHtmlMarkersAsync, $"Ids: {string.Join('|', updates.Select(h => h.Marker.Id))}");
+
+            foreach (var updateWithPopup in updates.Where(update => update.Options?.Popup != null))
+            {
+                var marker = HtmlMarkers.First(marker => marker.Id == updateWithPopup.Marker.Id);
+                marker.Options.Popup = updateWithPopup.Options.Popup;
+
+                if (marker.Options.Popup.JSRuntime == null)
+                {
+                    marker.Options.Popup.JSRuntime = _jsRuntime;
+                }
+                if (marker.Options.Popup.Logger == null)
+                {
+                    marker.Options.Popup.Logger = _logger;
+                }
+            }
+
             await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.UpdateHtmlMarkers.ToCoreNamespace(),
             updates.Select(update => new HtmlMarkerCreationOptions {
                 Id = update.Marker.Id,
-                Options = update.Options
+                Options = update.Options,
+                PopupOptions = update.Options?.Popup != null ? new HtmlMarkerPopupCreationOptions {
+                    Events = update.Options.Popup.EventActivationFlags.EnabledEvents,
+                    Id = update.Options.Popup.Id,
+                    Options = update.Options.Popup.Options
+                } : null
             }));
         }
 

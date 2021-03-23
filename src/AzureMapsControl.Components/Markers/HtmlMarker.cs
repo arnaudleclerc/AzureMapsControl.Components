@@ -146,6 +146,7 @@
                 Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.HtmlMarker_TogglePopupAsync, "Calling TogglePopupAsync");
                 await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.HtmlMarker.TogglePopup.ToHtmlMarkerNamespace(), Id, Options.Popup.Id, Options.Popup.EventActivationFlags.EnabledEvents, DotNetObjectReference.Create(PopupInvokeHelper));
                 Options.Popup.HasBeenToggled = true;
+                Options.Popup.IsRemoved = false;
                 OnPopupToggled?.Invoke();
             }
         }

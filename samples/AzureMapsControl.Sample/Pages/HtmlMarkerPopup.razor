@@ -30,6 +30,18 @@
         marker.OnClick += async (eventArgs) =>
         {
             await marker.TogglePopupAsync();
+
+            System.Threading.Thread.Sleep(2000);
+
+            await marker.Options.Popup.CloseAsync();
+
+            System.Threading.Thread.Sleep(2000);
+
+            await marker.Options.Popup.OpenAsync();
+
+            System.Threading.Thread.Sleep(2000);
+
+            await marker.Options.Popup.RemoveAsync();
         };
     }
 }
