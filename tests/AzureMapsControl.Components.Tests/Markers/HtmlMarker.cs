@@ -248,7 +248,7 @@
                 parameters[0] as string == marker.Id
                 && parameters[1] as string == marker.Options.Popup.Id
                 && parameters[2] is IEnumerable<string>
-                && parameters[2] is DotNetObjectReference<PopupInvokeHelper>
+                && parameters[3] is DotNetObjectReference<PopupInvokeHelper>
             )));
             _jsRuntime.VerifyNoOtherCalls();
         }
