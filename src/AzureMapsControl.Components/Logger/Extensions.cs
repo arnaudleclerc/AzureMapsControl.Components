@@ -53,6 +53,7 @@
         DataSource_RemoveAsync = 7001,
         DataSource_ImportDataFromUrlAsync = 7002,
         DataSource_ClearAsync = 7003,
+        HtmlMarker_TogglePopupAsync = 8000
     }
 
     internal static class Extensions

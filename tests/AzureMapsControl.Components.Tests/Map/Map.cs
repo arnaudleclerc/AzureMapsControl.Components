@@ -124,11 +124,16 @@
         public async void Should_AddHtmlMarkers_Async()
         {
             var markers = new List<HtmlMarker> { new HtmlMarker(null), new HtmlMarker(null) };
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => Task.CompletedTask));
+            var popupInvokeHelper = new PopupInvokeHelper(null);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => Task.CompletedTask), popupInvokeHelper: popupInvokeHelper);
 
             await map.AddHtmlMarkersAsync(markers);
             Assert.Contains(markers[0], map.HtmlMarkers);
             Assert.Contains(markers[1], map.HtmlMarkers);
+            Assert.Equal(markers[0].JSRuntime, _jsRuntimeMock.Object);
+            Assert.Equal(markers[1].JSRuntime, _jsRuntimeMock.Object);
+            Assert.Equal(markers[0].PopupInvokeHelper, popupInvokeHelper);
+            Assert.Equal(markers[1].PopupInvokeHelper, popupInvokeHelper);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(), It.Is<object[]>(parameters =>
                 parameters[0] is IEnumerable<HtmlMarkerCreationOptions> && (parameters[0] as IEnumerable<HtmlMarkerCreationOptions>).Count() == 2
@@ -138,15 +143,54 @@
         }
 
         [Fact]
+        public async void Should_AddHtmlMarkers_WithPopup_WithAutoOpenAsync()
+        {
+            var assertEvent = false;
+            var popup = new HtmlMarkerPopup(new PopupOptions {
+                OpenOnAdd = true
+            });
+            var marker = new HtmlMarker(new HtmlMarkerOptions {
+                Popup = popup
+            });
+
+            marker.OnPopupToggled += () => assertEvent = true;
+
+            var popupInvokeHelper = new PopupInvokeHelper(null);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => Task.CompletedTask), popupInvokeHelper: popupInvokeHelper);
+
+            await map.AddHtmlMarkersAsync(marker);
+            Assert.True(assertEvent);
+            Assert.Contains(marker, map.HtmlMarkers);
+            Assert.Equal(marker.JSRuntime, _jsRuntimeMock.Object);
+            Assert.Equal(marker.PopupInvokeHelper, popupInvokeHelper);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] is IEnumerable<HtmlMarkerCreationOptions> && (parameters[0] as IEnumerable<HtmlMarkerCreationOptions>).Count() == 1
+                && parameters[1] is DotNetObjectReference<HtmlMarkerInvokeHelper>
+            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.HtmlMarker.TogglePopup.ToHtmlMarkerNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == marker.Id
+                && parameters[1] as string == marker.Options.Popup.Id
+                && parameters[2] is IEnumerable<string>
+                && parameters[3] is DotNetObjectReference<PopupInvokeHelper>
+            )));
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async void Should_AddHtmlMarkers_ParamsVersion_Async()
         {
             var marker1 = new HtmlMarker(null);
             var marker2 = new HtmlMarker(null);
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => Task.CompletedTask));
+            var popupInvokeHelper = new PopupInvokeHelper(null);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => Task.CompletedTask), popupInvokeHelper: popupInvokeHelper);
 
             await map.AddHtmlMarkersAsync(marker1, marker2);
             Assert.Contains(marker1, map.HtmlMarkers);
             Assert.Contains(marker2, map.HtmlMarkers);
+            Assert.Equal(marker1.JSRuntime, _jsRuntimeMock.Object);
+            Assert.Equal(marker2.JSRuntime, _jsRuntimeMock.Object);
+            Assert.Equal(marker1.PopupInvokeHelper, popupInvokeHelper);
+            Assert.Equal(marker2.PopupInvokeHelper, popupInvokeHelper);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(), It.Is<object[]>(parameters =>
                 parameters[0] is IEnumerable<HtmlMarkerCreationOptions> && (parameters[0] as IEnumerable<HtmlMarkerCreationOptions>).Count() == 2
                 && parameters[1] is DotNetObjectReference<HtmlMarkerInvokeHelper>
@@ -1547,7 +1591,7 @@
             var map = new Map("id", _jsRuntimeMock.Object);
             await map.CreateImageFromTemplateAsync("imageId", "templateName", "color", "secondaryColor", 1m);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.CreateImageFromTemplate.ToCoreNamespace(), It.Is<object[]>(parameters => 
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.CreateImageFromTemplate.ToCoreNamespace(), It.Is<object[]>(parameters =>
                 parameters[0] is MapImageTemplate
                 && ((MapImageTemplate)parameters[0]).Id == "imageId"
                 && ((MapImageTemplate)parameters[0]).TemplateName == "templateName"
