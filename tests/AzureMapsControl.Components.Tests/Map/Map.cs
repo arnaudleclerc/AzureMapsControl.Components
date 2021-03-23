@@ -117,6 +117,40 @@
         }
 
         [Fact]
+        public async void Should_AddHtmlMarkers_WithPopup_WithAutoOpenAsync()
+        {
+            var assertEvent = false;
+            var popup = new HtmlMarkerPopup(new PopupOptions {
+                OpenOnAdd = true
+            });
+            var marker = new HtmlMarker(new HtmlMarkerOptions {
+                Popup = popup
+            });
+
+            marker.OnPopupToggled += () => assertEvent = true;
+
+            var popupInvokeHelper = new PopupInvokeHelper(null);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => Task.CompletedTask), popupInvokeHelper: popupInvokeHelper);
+
+            await map.AddHtmlMarkersAsync(marker);
+            Assert.True(assertEvent);
+            Assert.Contains(marker, map.HtmlMarkers);
+            Assert.Equal(marker.JSRuntime, _jsRuntimeMock.Object);
+            Assert.Equal(marker.PopupInvokeHelper, popupInvokeHelper);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] is IEnumerable<HtmlMarkerCreationOptions> && (parameters[0] as IEnumerable<HtmlMarkerCreationOptions>).Count() == 1
+                && parameters[1] is DotNetObjectReference<HtmlMarkerInvokeHelper>
+            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.HtmlMarker.TogglePopup.ToHtmlMarkerNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == marker.Id
+                && parameters[1] as string == marker.Options.Popup.Id
+                && parameters[2] is IEnumerable<string>
+                && parameters[3] is DotNetObjectReference<PopupInvokeHelper>
+            )));
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async void Should_AddHtmlMarkers_ParamsVersion_Async()
         {
             var marker1 = new HtmlMarker(null);

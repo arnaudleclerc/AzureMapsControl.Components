@@ -18,7 +18,8 @@
                 Popup = new Components.Popups.HtmlMarkerPopup(new Components.Popups.PopupOptions
                 {
                     Content = "<div style='padding:10px'v>Hello World</div>",
-                    PixelOffset = new Components.Atlas.Pixel(0, -30)
+                    PixelOffset = new Components.Atlas.Pixel(0, -30),
+                    OpenOnAdd = true
                 })
             })
         {
@@ -30,18 +31,6 @@
         marker.OnClick += async (eventArgs) =>
         {
             await marker.TogglePopupAsync();
-
-            System.Threading.Thread.Sleep(2000);
-
-            await marker.Options.Popup.CloseAsync();
-
-            System.Threading.Thread.Sleep(2000);
-
-            await marker.Options.Popup.OpenAsync();
-
-            System.Threading.Thread.Sleep(2000);
-
-            await marker.Options.Popup.RemoveAsync();
         };
     }
 }
