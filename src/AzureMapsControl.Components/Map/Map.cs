@@ -386,10 +386,23 @@
                     marker.PopupInvokeHelper = _popupInvokeHelper;
                     marker.Logger = _logger;
 
+                    marker.OnPopupToggled += () => {
+                        if (_popups == null)
+                        {
+                            _popups = new List<Popup>();
+                        }
+
+                        if (!_popups.Contains(marker.Options.Popup))
+                        {
+                            _popups.Add(marker.Options.Popup);
+                        }
+                    };
+
                     if (marker.Options?.Popup != null)
                     {
                         marker.Options.Popup.JSRuntime = _jsRuntime;
                         marker.Options.Popup.Logger = _logger;
+                        marker.Options.Popup.OnRemoved += () => RemovePopup(marker.Options.Popup.Id);
 
                         if (marker.Options.Popup.Options.OpenOnAdd.GetValueOrDefault())
                         {
@@ -452,6 +465,7 @@
                 if (marker.Options.Popup.JSRuntime == null)
                 {
                     marker.Options.Popup.JSRuntime = _jsRuntime;
+                    marker.Options.Popup.OnRemoved += () => RemovePopup(marker.Options.Popup.Id);
                 }
                 if (marker.Options.Popup.Logger == null)
                 {
@@ -840,6 +854,8 @@
             await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddPopup.ToCoreNamespace(), popup.Id, popup.Options, popup.EventActivationFlags.EnabledEvents, DotNetObjectReference.Create(_popupInvokeHelper));
 
             popup.JSRuntime = _jsRuntime;
+            popup.Logger = _logger;
+
             popup.OnRemoved += () => RemovePopup(popup.Id);
 
             _popups.Add(popup);
