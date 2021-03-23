@@ -1,9 +1,17 @@
 ﻿namespace AzureMapsControl.Components.Markers
 {
     using System;
+    using System.Threading.Tasks;
 
+    using AzureMapsControl.Components.Logger;
     using AzureMapsControl.Components.Map;
+    using AzureMapsControl.Components.Popups;
+    using AzureMapsControl.Components.Runtime;
 
+    using Microsoft.Extensions.Logging;
+    using Microsoft.JSInterop;
+
+    internal delegate void HtmlMarkerPopupToggledEvent();
     public delegate void HtmlMarkerEvent(HtmlMarkerEventArgs eventArgs);
 
     /// <summary>
@@ -12,6 +20,10 @@
     public sealed class HtmlMarker
     {
         internal string Id { get; }
+
+        internal IMapJsRuntime JSRuntime { get; set; }
+        internal PopupInvokeHelper PopupInvokeHelper { get; set; }
+        internal ILogger Logger { get; set; }
 
         /// <summary>
         /// Options of the marker
@@ -103,6 +115,8 @@
         /// </summary>
         public event HtmlMarkerEvent OnMouseUp;
 
+        internal event HtmlMarkerPopupToggledEvent OnPopupToggled;
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -121,11 +135,29 @@
             EventActivationFlags = eventActivationFlags;
         }
 
+        /// <summary>
+        /// Toggles the popup attached to the marker.
+        /// </summary>
+        /// <returns></returns>
+        public async Task TogglePopupAsync()
+        {
+            if (Options?.Popup != null)
+            {
+                Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.HtmlMarker_TogglePopupAsync, "Calling TogglePopupAsync");
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.HtmlMarker.TogglePopup.ToHtmlMarkerNamespace(), Id, Options.Popup.Id, Options.Popup.EventActivationFlags.EnabledEvents, DotNetObjectReference.Create(PopupInvokeHelper));
+                Options.Popup.HasBeenToggled = true;
+                Options.Popup.IsRemoved = false;
+                OnPopupToggled?.Invoke();
+            }
+        }
+
         internal void DispatchEvent(Map map, HtmlMarkerJsEventArgs eventArgs)
         {
-            if(eventArgs.Options != null)
+            if (eventArgs.Options != null)
             {
+                var popupOptions = Options.Popup;
                 Options = eventArgs.Options;
+                Options.Popup = popupOptions;
             }
 
             switch (eventArgs.Type)

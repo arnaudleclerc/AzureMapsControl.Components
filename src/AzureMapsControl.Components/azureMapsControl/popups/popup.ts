@@ -1,5 +1,5 @@
 import * as azmaps from 'azure-maps-control';
-import { Core } from '../core';
+import { Core } from '../core/core';
 
 export class Popup {
 

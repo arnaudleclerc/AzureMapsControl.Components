@@ -1,7 +1,7 @@
 import * as azdrawings from 'azure-maps-drawing-tools';
 import * as azmaps from 'azure-maps-control';
-import { EventHelper } from '../events';
-import { Core } from '../core';
+import { EventHelper } from '../events/event-helper';
+import { Core } from '../core/core';
 import { DrawingEventArgs } from './drawing-event-args';
 
 export class Drawing {

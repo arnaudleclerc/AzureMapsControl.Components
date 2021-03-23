@@ -13,6 +13,7 @@
             internal const string Drawing = "Drawing";
             internal const string Popup = "Popup";
             internal const string Source = "Datasource";
+            internal const string HtmlMarker = "HtmlMarker";
         }
 
         internal static class Methods
@@ -84,6 +85,11 @@
                 internal const string Clear = "clear";
                 internal const string ImportDataFromUrl = "importDataFromUrl";
                 internal const string Remove = "remove";
+            }
+
+            internal static class HtmlMarker
+            {
+                internal const string TogglePopup = "togglePopup";
             }
         }
     }
