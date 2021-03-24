@@ -1,7 +1,18 @@
 import * as azmaps from 'azure-maps-control';
-import { Geometry } from './geometry';
+import { Feature, Geometry } from './geometry';
 
 export class GeometryBuilder {
+
+    public static buildFeature(feature: Feature): azmaps.data.Feature<azmaps.data.Geometry, any> {
+        const geometry = this.buildGeometry(feature.geometry);
+        return new azmaps.data.Feature(geometry, feature.properties, feature.id,
+            feature.bbox ?
+                new azmaps.data.BoundingBox(
+                    new azmaps.data.Position(feature.bbox.south, feature.bbox.west)
+                    , new azmaps.data.Position(feature.bbox.north, feature.bbox.east)
+                ) : null
+        );
+    }
 
     public static buildShape(geometry: Geometry): azmaps.Shape {
         return new azmaps.Shape(

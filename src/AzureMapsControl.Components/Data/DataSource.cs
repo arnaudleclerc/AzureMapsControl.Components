@@ -14,11 +14,14 @@
     public sealed class DataSource : Source<DataSourceOptions>
     {
         private List<Geometry> _geometries;
+        private List<Feature> _features;
 
         internal ILogger Logger { get; set; }
         internal IMapJsRuntime JSRuntime { get; set; }
 
         public IEnumerable<Geometry> Geometries => _geometries;
+
+        public IEnumerable<Feature> Features => _features;
 
         public DataSource() : this(Guid.NewGuid().ToString()) { }
 
@@ -95,6 +98,78 @@
         /// <param name="geometries">Geometries to add</param>
         /// <returns></returns>
         public async Task AddAsync(params Geometry[] geometries) => await AddAsync(geometries as IEnumerable<Geometry>);
+
+        /// <summary>
+        /// Add features to the data source
+        /// </summary>
+        /// <param name="features">Features to add</param>
+        /// <returns></returns>
+        public async Task AddAsync(IEnumerable<Feature> features)
+        {
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.DataSource_AddAsync, "Adding features to data source");
+
+            if (features == null || !features.Any())
+            {
+                return;
+            }
+
+            if (_features == null)
+            {
+                _features = new List<Feature>();
+            }
+
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_AddAsync, $"Id: {Id}");
+            var lineStrings = features.OfType<Feature<LineString>>();
+            if (lineStrings.Any())
+            {
+                Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_AddAsync, $"{lineStrings.Count()} linestrings will be added");
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, lineStrings);
+            }
+
+            var multiLineStrings = features.OfType<Feature<MultiLineString>>();
+            if (multiLineStrings.Any())
+            {
+                Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_AddAsync, $"{multiLineStrings.Count()} multilinestrings will be added");
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, multiLineStrings);
+            }
+
+            var multiPoints = features.OfType<Feature<MultiPoint>>();
+            if (multiPoints.Any())
+            {
+                Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_AddAsync, $"{multiPoints.Count()} multipoints will be added");
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, multiPoints);
+            }
+
+            var multiPolygons = features.OfType<Feature<MultiPolygon>>();
+            if (multiPolygons.Any())
+            {
+                Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_AddAsync, $"{multiPolygons.Count()} multipolygons will be added");
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, multiPolygons);
+            }
+
+            var points = features.OfType<Feature<Point>>();
+            if (points.Any())
+            {
+                Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_AddAsync, $"{points.Count()} points will be added");
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, points);
+            }
+
+            var polygons = features.OfType<Feature<Polygon>>();
+            if (polygons.Any())
+            {
+                Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_AddAsync, $"{polygons.Count()} polygons will be added");
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, polygons);
+            }
+
+            _features.AddRange(features);
+        }
+
+        /// <summary>
+        /// Add features to the data source
+        /// </summary>
+        /// <param name="features">Features to add</param>
+        /// <returns></returns>
+        public async Task AddAsync(params Feature[] features) => await AddAsync(features as IEnumerable<Feature>);
 
         /// <summary>
         /// Remove geometries from the data source
