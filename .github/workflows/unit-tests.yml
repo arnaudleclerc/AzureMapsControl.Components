@@ -5,6 +5,7 @@ on:
     branches: 
       - features/**
       - hotfix/**
+      - releases/**
     paths:
       - src/**
       - tests/**
@@ -15,6 +16,7 @@ on:
     paths:
       - src/**
       - tests/**
+      - .github/**
 
 jobs:
   build:
