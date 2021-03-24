@@ -18,18 +18,21 @@ i
         var feature = new AzureMapsControl.Components.Atlas.Feature<AzureMapsControl.Components.Atlas.Point>(new AzureMapsControl.Components.Atlas.Point(
                     new AzureMapsControl.Components.Atlas.Position(-122.13284, 47.63699)
                 ), new Dictionary<string, object> {
-                    { "title", "Cafeteria" },
-                    { "subtitle", "Building 40"}
+                { "title", "Cafeteria" },
+                { "subtitle", "Building 40"}
                 });
 
         await datasource.AddAsync(feature);
 
         var textFieldExpressionJsonString = "[\"format\", [\"get\", \"title\"], {\"text-font\": [\"literal\", [\"StandardFont-Bold\"]], \"font-scale\": 1.25}, \"\\n\", {}, [\"get\", \"subtitle\"], {\"font-scale\": 0.75}]";
 
-        var layer = new AzureMapsControl.Components.Layers.SymbolLayer {
-            Options = new Components.Layers.SymbolLayerOptions {
+        var layer = new AzureMapsControl.Components.Layers.SymbolLayer
+        {
+            Options = new Components.Layers.SymbolLayerOptions
+            {
                 Source = datasourceId,
-                TextOptions = new Components.Layers.TextOptions {
+                TextOptions = new Components.Layers.TextOptions
+                {
                     TextField = new Components.Atlas.ExpressionOrString(
                         System.Text.Json.JsonDocument.Parse(textFieldExpressionJsonString)
                     )
@@ -38,5 +41,9 @@ i
         };
 
         await eventArgs.Map.AddLayerAsync(layer);
+
+        System.Threading.Thread.Sleep(5000);
+
+        await datasource.RemoveAsync(feature);
     }
 }

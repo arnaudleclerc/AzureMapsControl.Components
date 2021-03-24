@@ -7,6 +7,8 @@
     using AzureMapsControl.Components.Data;
     using AzureMapsControl.Components.Runtime;
 
+    using Microsoft.CodeAnalysis.CSharp.Syntax;
+
     using Moq;
 
     using Xunit;
@@ -245,6 +247,28 @@
         }
 
         [Fact]
+        public async void Should_RemoveFeatures_Async()
+        {
+            var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var point1 = new Feature<Point>(new Point("point1"));
+            var point2 = new Feature<Point>(new Point("point2"));
+            var features = new List<Feature> { point1, point2 };
+
+            await dataSource.AddAsync(features);
+            await dataSource.RemoveAsync(point1);
+
+            Assert.DoesNotContain(point1, dataSource.Features);
+            Assert.Contains(point2, dataSource.Features);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(
+                parameters => parameters[0] as string == dataSource.Id
+                && (parameters[1] as IEnumerable<string>).Single() == point1.Id
+                )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async void Should_RemoveGeometries_EnumerableVersion_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
@@ -253,12 +277,34 @@
             var geometries = new List<Geometry> { point1, point2 };
 
             await dataSource.AddAsync(geometries);
-            await dataSource.RemoveAsync(new[] { point1 });
+            await dataSource.RemoveAsync(point1);
 
             Assert.DoesNotContain(point1, dataSource.Geometries);
             Assert.Contains(point2, dataSource.Geometries);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Add.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(
+                parameters => parameters[0] as string == dataSource.Id
+                && (parameters[1] as IEnumerable<string>).Single() == point1.Id
+                )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_RemoveFeatures_EnumerableVersion_Async()
+        {
+            var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var point1 = new Feature<Point>(new Point("point1"));
+            var point2 = new Feature<Point>(new Point("point2"));
+            var features = new List<Feature> { point1, point2 };
+
+            await dataSource.AddAsync(features);
+            await dataSource.RemoveAsync(point1);
+
+            Assert.DoesNotContain(point1, dataSource.Features);
+            Assert.Contains(point2, dataSource.Features);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(
                 parameters => parameters[0] as string == dataSource.Id
                 && (parameters[1] as IEnumerable<string>).Single() == point1.Id
@@ -289,6 +335,59 @@
         }
 
         [Fact]
+        public async void Should_RemoveFeatures_IdsVersion_Async()
+        {
+            var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var point1 = new Feature<Point>(new Point("point1"));
+            var point2 = new Feature<Point>(new Point("point2"));
+            var features = new List<Feature> { point1, point2 };
+
+            await dataSource.AddAsync(features);
+            await dataSource.RemoveAsync(point1.Id);
+
+            Assert.DoesNotContain(point1, dataSource.Features);
+            Assert.Contains(point2, dataSource.Features);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(
+                parameters => parameters[0] as string == dataSource.Id
+                && (parameters[1] as IEnumerable<string>).Single() == point1.Id
+                )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_RemoveGeometriesAndFeatures_IdsVersion_Async()
+        {
+            var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var point1 = new Feature<Point>(new Point("point1"));
+            var point2 = new Feature<Point>(new Point("point2"));
+            var point3 = new Point("point3");
+            var point4 = new Point("point4");
+            var features = new List<Feature> { point1, point2 };
+            var geometries = new List<Geometry> { point3, point4 };
+
+            await dataSource.AddAsync(features);
+            await dataSource.AddAsync(geometries);
+
+            await dataSource.RemoveAsync(point1.Id, point3.Id);
+
+            Assert.DoesNotContain(point1, dataSource.Features);
+            Assert.Contains(point2, dataSource.Features);
+            Assert.DoesNotContain(point3, dataSource.Geometries);
+            Assert.Contains(point4, dataSource.Geometries);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Add.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(
+                parameters => parameters[0] as string == dataSource.Id
+                && (parameters[1] as IEnumerable<string>).Contains(point1.Id)
+                && (parameters[1] as IEnumerable<string>).Contains(point3.Id)
+                )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async void Should_RemoveGeometries_IdsEnumerableVersion_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
@@ -311,6 +410,28 @@
         }
 
         [Fact]
+        public async void Should_RemoveFeatures_IdsEnumerableVersion_Async()
+        {
+            var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var point1 = new Feature<Point>(new Point("point1"));
+            var point2 = new Feature<Point>(new Point("point2"));
+            var features = new List<Feature> { point1, point2 };
+
+            await dataSource.AddAsync(features);
+            await dataSource.RemoveAsync(new List<string> { point1.Id });
+
+            Assert.DoesNotContain(point1, dataSource.Features);
+            Assert.Contains(point2, dataSource.Features);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(
+                parameters => parameters[0] as string == dataSource.Id
+                && (parameters[1] as IEnumerable<string>).Single() == point1.Id
+                )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async void Should_NotRemoveGeometries_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
@@ -325,7 +446,21 @@
         }
 
         [Fact]
-        public async void Should_NotRemoveGeometries_NullCheck_Async()
+        public async void Should_NotRemoveFeatures_Async()
+        {
+            var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var point1 = new Feature<Point>(new Point("point1"));
+            var point2 = new Feature<Point>(new Point("point2"));
+
+            await dataSource.AddAsync(point2);
+            await dataSource.RemoveAsync(point1);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotRemove_NullCheck_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point1 = new Point("point1");
@@ -336,17 +471,110 @@
         }
 
         [Fact]
+        public async void Should_NotRemoveGeometriesNorFeatures_NullCheck_Async()
+        {
+            var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var geometry = new Point("point1");
+            var feature = new Feature<Point>(new Point("point2"));
+
+            IEnumerable<Geometry> geometries = null;
+            IEnumerable<Feature> features = null;
+
+            await dataSource.AddAsync(geometry);
+            await dataSource.AddAsync(feature);
+            await dataSource.RemoveAsync(geometries, features);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Add.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotRemoveGeometriesButOnlyFeatures_Async()
+        {
+            var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var geometry = new Point("point1");
+            var feature = new Feature<Point>(new Point("point2"));
+
+            IEnumerable<Geometry> geometries = null;
+            Feature[] features = new[] { feature };
+
+            await dataSource.AddAsync(geometry);
+            await dataSource.AddAsync(feature);
+            await dataSource.RemoveAsync(geometries, features);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Add.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(
+                parameters => parameters[0] as string == dataSource.Id
+                && (parameters[1] as IEnumerable<string>).Single() == feature.Id
+                )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotRemoveFeaturesButOnlyGeometries_Async()
+        {
+            var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var geometry = new Point("point1");
+            var feature = new Feature<Point>(new Point("point2"));
+
+            Geometry[] geometries = new[] { geometry };
+            Feature[] features = null;
+
+            await dataSource.AddAsync(geometry);
+            await dataSource.AddAsync(feature);
+            await dataSource.RemoveAsync(geometries, features);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Add.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(
+                parameters => parameters[0] as string == dataSource.Id
+                && (parameters[1] as IEnumerable<string>).Single() == geometry.Id
+                )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_RemoveGeometriesAndFeatures_Async()
+        {
+            var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var geometry = new Point("point1");
+            var feature = new Feature<Point>(new Point("point2"));
+
+            Geometry[] geometries = new[] { geometry };
+            Feature[] features = new[] { feature };
+
+            await dataSource.AddAsync(geometry);
+            await dataSource.AddAsync(feature);
+            await dataSource.RemoveAsync(geometries, features);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Add.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(
+                parameters => parameters[0] as string == dataSource.Id
+                && (parameters[1] as IEnumerable<string>).Contains(geometry.Id)
+                && (parameters[1] as IEnumerable<string>).Contains(feature.Id)
+                )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async void Should_ClearDataSource_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point2 = new Point("point2");
+            var feature = new Feature<Point>(new Point("point1"));
 
             await dataSource.AddAsync(point2);
+            await dataSource.AddAsync(feature);
             await dataSource.ClearAsync();
 
             Assert.Null(dataSource.Geometries);
+            Assert.Null(dataSource.Features);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Add.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Clear.ToSourceNamespace(), dataSource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
