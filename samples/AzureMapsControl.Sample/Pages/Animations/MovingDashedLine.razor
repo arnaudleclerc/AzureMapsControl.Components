@@ -68,13 +68,17 @@
     {
         var dataSource = new AzureMapsControl.Components.Data.DataSource();
         await eventArgs.Map.AddSourceAsync(dataSource);
-        await dataSource.AddAsync(new AzureMapsControl.Components.Atlas.LineString(new[]
-        {
-            new AzureMapsControl.Components.Atlas.Position(-122.34758, 47.62155),
-            new Components.Atlas.Position(-122.34764, 47.61859),
-            new Components.Atlas.Position(-122.33787, 47.61295),
-            new Components.Atlas.Position(-122.34217, 47.60964)
-        }));
+        await dataSource.AddAsync(new AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.LineString>
+        (
+            new AzureMapsControl.Components.Atlas.LineString(
+            new[]
+            {
+                new AzureMapsControl.Components.Atlas.Position(-122.34758, 47.62155),
+                new Components.Atlas.Position(-122.34764, 47.61859),
+                new Components.Atlas.Position(-122.33787, 47.61295),
+                new Components.Atlas.Position(-122.34217, 47.60964)
+            })
+        ));
         var layer = new AzureMapsControl.Components.Layers.LineLayer
         {
             Options = new Components.Layers.LineLayerOptions

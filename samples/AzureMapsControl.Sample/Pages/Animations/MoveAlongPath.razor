@@ -100,7 +100,7 @@
             new AzureMapsControl.Components.Atlas.Position(-122.33787, 47.61295),
             new AzureMapsControl.Components.Atlas.Position(-122.34217, 47.60964)
         });
-        await lineSource.AddAsync(line);
+        await lineSource.AddAsync(new AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.LineString>(line));
 
         var symbolLayer = new AzureMapsControl.Components.Layers.SymbolLayer
         {
@@ -135,7 +135,7 @@
         await eventArgs.Map.AddLayerAsync(symbolLayer);
 
         var pin = new AzureMapsControl.Components.Atlas.Point(new Components.Atlas.Position(-122.34758, 47.62155));
-        await pinSource.AddAsync(pin);
+        await pinSource.AddAsync(new AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.Point>(pin));
 
         _animation = await AnimationService.MoveAlongPathAsync(line, lineSource, pin, pinSource, new Components.Animations.Options.MoveAlongPathAnimationOptions
         {

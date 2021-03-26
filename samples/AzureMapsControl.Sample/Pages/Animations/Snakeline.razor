@@ -109,7 +109,7 @@
         new AzureMapsControl.Components.Atlas.Position(11.592281, 48.152074)
     });
 
-        await dataSource.AddAsync(line);
+        await dataSource.AddAsync(new AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.LineString>(line));
 
         var layer = new AzureMapsControl.Components.Layers.LineLayer
         {

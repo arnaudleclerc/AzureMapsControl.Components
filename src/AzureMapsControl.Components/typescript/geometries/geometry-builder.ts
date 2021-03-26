@@ -1,5 +1,5 @@
 import * as azmaps from 'azure-maps-control';
-import { Feature, Geometry } from './geometry';
+import { Feature, Geometry, Shape } from './geometry';
 
 export class GeometryBuilder {
 
@@ -14,10 +14,10 @@ export class GeometryBuilder {
         );
     }
 
-    public static buildShape(geometry: Geometry): azmaps.Shape {
+    public static buildShape(shape: Shape): azmaps.Shape {
         return new azmaps.Shape(
-            this.buildGeometry(geometry),
-            geometry.id
+            this.buildGeometry(shape.geometry),
+            shape.id
         );
     }
 

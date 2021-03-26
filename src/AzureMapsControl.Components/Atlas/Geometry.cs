@@ -1,6 +1,5 @@
 ﻿namespace AzureMapsControl.Components.Atlas
 {
-    using System;
     using System.Diagnostics.CodeAnalysis;
 
     [ExcludeFromCodeCoverage]
@@ -8,7 +7,7 @@
     {
         private string _type;
 
-        public string Id { get; set; }
+        internal string Id { get; set; }
 
         public string Type
         {
@@ -17,7 +16,6 @@
         }
 
         public Geometry() { }
-        public Geometry(string id) => Id = id;
 
         internal abstract string GetGeometryType();
     }
@@ -28,8 +26,7 @@
         public TPosition Coordinates { get; set; }
 
         public Geometry() { }
-        public Geometry(string id) : base(id) { }
 
-        public Geometry(TPosition coordinates): base(Guid.NewGuid().ToString()) => Coordinates = coordinates;
+        public Geometry(TPosition coordinates) : base() => Coordinates = coordinates;
     }
 }

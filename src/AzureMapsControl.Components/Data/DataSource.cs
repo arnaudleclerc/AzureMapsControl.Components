@@ -13,13 +13,13 @@
 
     public sealed class DataSource : Source<DataSourceOptions>
     {
-        private List<Geometry> _geometries;
+        private List<Shape> _shapes;
         private List<Feature> _features;
 
         internal ILogger Logger { get; set; }
         internal IMapJsRuntime JSRuntime { get; set; }
 
-        public IEnumerable<Geometry> Geometries => _geometries;
+        public IEnumerable<Shape> Shapes => _shapes;
 
         public IEnumerable<Feature> Features => _features;
 
@@ -28,76 +28,76 @@
         public DataSource(string id) : base(id, SourceType.DataSource) { }
 
         /// <summary>
-        /// Add geometries to the data source
+        /// Add shapes to the data source
         /// </summary>
-        /// <param name="geometries">Geometries to add</param>
+        /// <param name="shapes">Shapes to add</param>
         /// <returns></returns>
-        public async Task AddAsync(IEnumerable<Geometry> geometries)
+        public async Task AddAsync(IEnumerable<Shape> shapes)
         {
-            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.DataSource_AddAsync, "Adding geometries to data source");
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.DataSource_AddAsync, "Adding shapes to data source");
 
-            if (geometries == null || !geometries.Any())
+            if (shapes == null || !shapes.Any())
             {
                 return;
             }
 
-            if (_geometries == null)
+            if (_shapes == null)
             {
-                _geometries = new List<Geometry>();
+                _shapes = new List<Shape>();
             }
 
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_AddAsync, $"Id: {Id}");
-            var lineStrings = geometries.OfType<LineString>();
+            var lineStrings = shapes.OfType<Shape<LineString>>();
             if (lineStrings.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_AddAsync, $"{lineStrings.Count()} linestrings will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Add.ToSourceNamespace(), Id, lineStrings);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, lineStrings);
             }
 
-            var multiLineStrings = geometries.OfType<MultiLineString>();
+            var multiLineStrings = shapes.OfType<Shape<MultiLineString>>();
             if (multiLineStrings.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_AddAsync, $"{multiLineStrings.Count()} multilinestrings will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Add.ToSourceNamespace(), Id, multiLineStrings);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, multiLineStrings);
             }
 
-            var multiPoints = geometries.OfType<MultiPoint>();
+            var multiPoints = shapes.OfType<Shape<MultiPoint>>();
             if (multiPoints.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_AddAsync, $"{multiPoints.Count()} multipoints will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Add.ToSourceNamespace(), Id, multiPoints);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, multiPoints);
             }
 
-            var multiPolygons = geometries.OfType<MultiPolygon>();
+            var multiPolygons = shapes.OfType<Shape<MultiPolygon>>();
             if (multiPolygons.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_AddAsync, $"{multiPolygons.Count()} multipolygons will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Add.ToSourceNamespace(), Id, multiPolygons);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, multiPolygons);
             }
 
-            var points = geometries.OfType<Point>();
+            var points = shapes.OfType<Shape<Point>>();
             if (points.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_AddAsync, $"{points.Count()} points will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Add.ToSourceNamespace(), Id, points);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, points);
             }
 
-            var polygons = geometries.OfType<Polygon>();
+            var polygons = shapes.OfType<Shape<Polygon>>();
             if (polygons.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_AddAsync, $"{polygons.Count()} polygons will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Add.ToSourceNamespace(), Id, polygons);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, polygons);
             }
 
-            _geometries.AddRange(geometries);
+            _shapes.AddRange(shapes);
         }
 
         /// <summary>
-        /// Add geometries to the data source
+        /// Add shapes to the data source
         /// </summary>
-        /// <param name="geometries">Geometries to add</param>
+        /// <param name="shapes">Shapes to add</param>
         /// <returns></returns>
-        public async Task AddAsync(params Geometry[] geometries) => await AddAsync(geometries as IEnumerable<Geometry>);
+        public async Task AddAsync(params Shape[] shapes) => await AddAsync(shapes as IEnumerable<Shape>);
 
         /// <summary>
         /// Add features to the data source
@@ -172,19 +172,19 @@
         public async Task AddAsync(params Feature[] features) => await AddAsync(features as IEnumerable<Feature>);
 
         /// <summary>
-        /// Remove geometriesand features from the data source
+        /// Remove shapes and features from the data source
         /// </summary>
-        /// <param name="ids">IDs of the geometries and features to remove</param>
+        /// <param name="ids">IDs of the shapes and features to remove</param>
         /// <returns></returns>
         public async Task RemoveAsync(IEnumerable<string> ids)
         {
-            var geometryIdsToRemove = _geometries?.Where(geometry => ids.Contains(geometry.Id)).Select(geometry => geometry.Id);
+            var shapeIdsToRemove = _shapes?.Where(shape => ids.Contains(shape.Id)).Select(shape => shape.Id);
             var featureIdsToRemove = _features?.Where(feature => ids.Contains(feature.Id)).Select(feature => feature.Id);
             var idsToRemove = new List<string>();
-            if (geometryIdsToRemove != null)
+            if (shapeIdsToRemove != null)
             {
-                idsToRemove.AddRange(geometryIdsToRemove);
-                _geometries.RemoveAll(geometry => geometryIdsToRemove.Contains(geometry.Id));
+                idsToRemove.AddRange(shapeIdsToRemove);
+                _shapes.RemoveAll(geometry => shapeIdsToRemove.Contains(geometry.Id));
             }
 
             if (featureIdsToRemove != null)
@@ -202,24 +202,24 @@
         }
 
         /// <summary>
-        /// Remove geometries and features from the data source
+        /// Remove shapes and features from the data source
         /// </summary>
-        /// <param name="ids">IDs of the geometries and features to remove</param>
+        /// <param name="ids">IDs of the shapes and features to remove</param>
         /// <returns></returns>
         public async Task RemoveAsync(params string[] ids) => await RemoveAsync(ids as IEnumerable<string>);
 
         /// <summary>
-        /// Remove geometries and features from the datasource
+        /// Remove shapes and features from the datasource
         /// </summary>
-        /// <param name="geometries">Geometries to remove</param>
+        /// <param name="shapes">Shapes to remove</param>
         /// <param name="features">Features to remove</param>
         /// <returns></returns>
-        public async Task RemoveAsync(IEnumerable<Geometry> geometries, IEnumerable<Feature> features)
+        public async Task RemoveAsync(IEnumerable<Shape> shapes, IEnumerable<Feature> features)
         {
             var ids = new List<string>();
-            if (geometries != null)
+            if (shapes != null)
             {
-                ids.AddRange(geometries.Select(geometry => geometry.Id));
+                ids.AddRange(shapes.Select(shape => shape.Id));
             }
 
             if (features != null)
@@ -231,18 +231,18 @@
         }
 
         /// <summary>
-        /// Remove geometries from the datasource
+        /// Remove shapes from the datasource
         /// </summary>
-        /// <param name="geometries">Geometries to remove</param>
+        /// <param name="shapes">Shapes to remove</param>
         /// <returns></returns>
-        public async Task RemoveAsync(IEnumerable<Geometry> geometries) => await RemoveAsync(geometries, null);
+        public async Task RemoveAsync(IEnumerable<Shape> shapes) => await RemoveAsync(shapes, null);
 
         /// <summary>
-        /// Remove geometries from the data source
+        /// Remove shapes from the data source
         /// </summary>
-        /// <param name="geometries">Geometries to remove</param>
+        /// <param name="shapes">Shapes to remove</param>
         /// <returns></returns>
-        public async Task RemoveAsync(params Geometry[] geometries) => await RemoveAsync(geometries, null);
+        public async Task RemoveAsync(params Shape[] shapes) => await RemoveAsync(shapes, null);
 
         /// <summary>
         /// Remove features from the datasource
@@ -280,7 +280,7 @@
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.DataSource_ClearAsync, "Clearing data source");
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_ClearAsync, $"Id: {Id}");
 
-            _geometries = null;
+            _shapes = null;
             _features = null;
             await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Clear.ToSourceNamespace(), Id);
         }

@@ -26,7 +26,7 @@
             }
         });
 
-        await dataSource.AddAsync(polygon);
+        await dataSource.AddAsync(new AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.Polygon>(polygon));
 
         var layer = new AzureMapsControl.Components.Layers.PolygonLayer
         {

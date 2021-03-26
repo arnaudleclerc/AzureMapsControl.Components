@@ -26,7 +26,23 @@
     public sealed class Feature<TGeometry> : Feature
         where TGeometry : Geometry
     {
-        public TGeometry Geometry { get; set; }
+        private TGeometry _geometry;
+
+        public TGeometry Geometry
+        {
+            get 
+            {
+                if (_geometry != null && _geometry.Id != Id)
+                {
+                    _geometry.Id = Id;
+                }
+                return _geometry;
+            }
+            set {
+                _geometry = value;
+                _geometry.Id = Id;
+            }
+        }
 
         public Feature() : base() { }
 

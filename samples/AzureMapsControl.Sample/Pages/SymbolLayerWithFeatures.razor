@@ -5,8 +5,9 @@
           CameraOptions="new CameraOptions { Zoom = 16, Center = new Components.Atlas.Position(-122.13284, 47.63699) }"
           EventActivationFlags="MapEventActivationFlags
                                 .None()
-                                .Enable(MapEventType.Ready)"
-          OnReady="OnMapReady" />
+                                .Enable(MapEventType.Ready, MapEventType.Click)"
+          OnReady="OnMapReady"
+          OnClick="OnMapClick"/>
 i
 @code  {
     public async Task OnMapReady(MapEventArgs eventArgs)
@@ -37,9 +38,19 @@ i
                         System.Text.Json.JsonDocument.Parse(textFieldExpressionJsonString)
                     )
                 }
-            }
+            },
+            EventActivationFlags = Components.Layers.LayerEventActivationFlags.None().Enable(Components.Layers.LayerEventType.Click)
+        };
+
+        layer.OnClick += eventArgs => {
+            Console.WriteLine(eventArgs.Shapes);
         };
 
         await eventArgs.Map.AddLayerAsync(layer);
+    }
+
+    public async Task OnMapClick(MapMouseEventArgs eventArgs)
+    {
+        Console.WriteLine(eventArgs.Shapes);
     }
 }

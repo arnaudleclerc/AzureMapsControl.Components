@@ -148,7 +148,8 @@ export class Core {
                         pixel: e.pixel,
                         pixels: e.pixels,
                         position: e.position,
-                        positions: e.positions
+                        positions: e.positions,
+                        shapes: e.shapes
                     });
                 });
             });
@@ -209,7 +210,8 @@ export class Core {
                         type: value,
                         layerId: mouseEvent.layerId,
                         pixel: mouseEvent.pixel,
-                        position: mouseEvent.position
+                        position: mouseEvent.position,
+                        shapes: mouseEvent.shapes
                     });
                 });
             });
@@ -259,7 +261,8 @@ export class Core {
                         pixel: touchEvent.pixel,
                         pixels: touchEvent.pixels,
                         position: touchEvent.position,
-                        positions: touchEvent.positions
+                        positions: touchEvent.positions,
+                        shapes: touchEvent.shapes ?? null
                     });
                 });
             });

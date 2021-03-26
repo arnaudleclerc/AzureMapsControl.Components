@@ -81,7 +81,7 @@
 
             internal static class Source
             {
-                internal const string Add = "add";
+                internal const string AddShapes = "addShapes";
                 internal const string AddFeatures = "addFeatures";
                 internal const string Clear = "clear";
                 internal const string ImportDataFromUrl = "importDataFromUrl";

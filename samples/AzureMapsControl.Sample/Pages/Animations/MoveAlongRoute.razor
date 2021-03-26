@@ -44,7 +44,7 @@
             new Components.Atlas.RoutePoint(new Components.Atlas.Position(-122.34217, 47.60964), DateTime.Parse("Tue, 18 Aug 2020 00:59:53 GMT")),
         };
 
-        await lineSource.AddAsync(new AzureMapsControl.Components.Atlas.LineString(routePoints.Select(routePoint => routePoint.Coordinates)));
+        await lineSource.AddAsync(new AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.LineString>(new AzureMapsControl.Components.Atlas.LineString(routePoints.Select(routePoint => routePoint.Coordinates))));
 
         await eventArgs.Map.AddLayerAsync(new AzureMapsControl.Components.Layers.SymbolLayer
         {
@@ -69,7 +69,7 @@
         });
 
         var pin = routePoints[0];
-        await pinSource.AddAsync(pin);
+        await pinSource.AddAsync(new Components.Atlas.Shape<Components.Atlas.RoutePoint>(pin));
 
         await AnimationService.MoveAlongRouteAsync(routePoints, pin, pinSource, new Components.Animations.Options.RoutePathAnimationOptions
         {

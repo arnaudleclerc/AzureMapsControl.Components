@@ -1,13 +1,13 @@
 import * as azmaps from 'azure-maps-control';
 import { Core } from '../core/core';
-import { Feature, Geometry } from '../geometries/geometry';
+import { Feature, Shape } from '../geometries/geometry';
 import { GeometryBuilder } from '../geometries/geometry-builder';
 
 export class Datasource {
 
-    public static add(id: string, geometries: Geometry[]): void {
-        const shapes = geometries.map(geometry => GeometryBuilder.buildShape(geometry));
-        (Core.getMap().sources.getById(id) as azmaps.source.DataSource).add(shapes);
+    public static addShapes(id: string, shapes: Shape[]): void {
+        const mapsShapes = shapes.map(shape => GeometryBuilder.buildShape(shape));
+        (Core.getMap().sources.getById(id) as azmaps.source.DataSource).add(mapsShapes);
     }
 
     public static addFeatures(id: string, features: Feature[]): void {

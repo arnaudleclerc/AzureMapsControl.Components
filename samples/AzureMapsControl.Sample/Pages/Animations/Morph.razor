@@ -27,19 +27,24 @@
 
     private AzureMapsControl.Components.Data.DataSource _datasource;
 
-    private readonly AzureMapsControl.Components.Atlas.Polygon _geometry1 = new AzureMapsControl.Components.Atlas.Polygon(
-            new[]
-            {
-                new []
-{
-                    new AzureMapsControl.Components.Atlas.Position(-114.96093,44.08758),
-                    new AzureMapsControl.Components.Atlas.Position(-101.07421,38.95940),
-                    new AzureMapsControl.Components.Atlas.Position(-97.91015,52.37559),
-                    new AzureMapsControl.Components.Atlas.Position(-114.96093,44.08758),
-            }
-                                                                                                                });
+    private readonly AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.Polygon> _geometry1 
+        = new AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.Polygon>
+            (
+            new AzureMapsControl.Components.Atlas.Polygon(
+                new[]
+                {
+                    new []
+                    {
+                        new AzureMapsControl.Components.Atlas.Position(-114.96093,44.08758),
+                        new AzureMapsControl.Components.Atlas.Position(-101.07421,38.95940),
+                        new AzureMapsControl.Components.Atlas.Position(-97.91015,52.37559),
+                        new AzureMapsControl.Components.Atlas.Position(-114.96093,44.08758),
+                    }
+                })
+             );
 
-    private readonly AzureMapsControl.Components.Atlas.LineString _geometry2 = new Components.Atlas.LineString(
+    private readonly AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.LineString> _geometry2 = new Components.Atlas.Shape<Components.Atlas.LineString>(
+        new AzureMapsControl.Components.Atlas.LineString(
         new[]
         {
             new AzureMapsControl.Components.Atlas.Position(-83.32031,44.08758),
@@ -49,12 +54,16 @@
             new AzureMapsControl.Components.Atlas.Position(-37.61718,51.83577),
             new AzureMapsControl.Components.Atlas.Position(-45.35156,45.33670),
             new AzureMapsControl.Components.Atlas.Position(-51.67968,44.08758),
-                                                                                        }
-    );
+         }
+    ));
 
-    private readonly AzureMapsControl.Components.Atlas.Point _geometry3 = new Components.Atlas.Point(new Components.Atlas.Position(-99.14062, 23.56398));
+    private readonly AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.Point> _geometry3 
+        = new AzureMapsControl.Components.Atlas.Shape<Components.Atlas.Point>(
+                new Components.Atlas.Point(new Components.Atlas.Position(-99.14062, 23.56398))
+            );
 
-    private readonly AzureMapsControl.Components.Atlas.MultiPoint _geometry4 = new Components.Atlas.MultiPoint(
+    private readonly AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.MultiPoint> _geometry4 = new AzureMapsControl.Components.Atlas.Shape<Components.Atlas.MultiPoint>(
+        new Components.Atlas.MultiPoint(
         new[]
         {
             new AzureMapsControl.Components.Atlas.Position(-68.55468, 8.75479),
@@ -62,54 +71,58 @@
             new AzureMapsControl.Components.Atlas.Position(-20.39062, 23.56398),
             new AzureMapsControl.Components.Atlas.Position(-41.48437, 8.40716),
             new AzureMapsControl.Components.Atlas.Position(-49.57031, 15.96132)
-                                            });
+        }));
 
-    private readonly AzureMapsControl.Components.Atlas.MultiLineString _geometry5 = new AzureMapsControl.Components.Atlas.MultiLineString(
+    private readonly AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.MultiLineString> _geometry5 = new AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.MultiLineString>
+    (
+        new AzureMapsControl.Components.Atlas.MultiLineString(
         new[] {
-            new [] {
-                new AzureMapsControl.Components.Atlas.Position(-80.85937, -53.95608),
-                new AzureMapsControl.Components.Atlas.Position(-15.11718, -53.95608),
-                new AzureMapsControl.Components.Atlas.Position(-15.11718, -22.59372),
-                new AzureMapsControl.Components.Atlas.Position(-80.85937, -22.59372),
-                new AzureMapsControl.Components.Atlas.Position(-80.85937, -53.95608),
-            },
-            new []
-{
-                new AzureMapsControl.Components.Atlas.Position(-63.28125, -47.75409),
-                new AzureMapsControl.Components.Atlas.Position(-28.47656, -47.75409),
-                new AzureMapsControl.Components.Atlas.Position(-28.47656, -31.95216),
-                new AzureMapsControl.Components.Atlas.Position(-63.28125, -31.95216),
-                new AzureMapsControl.Components.Atlas.Position(-63.28125, -47.75409),
-            }
-                                            }
-    );
+                new [] 
+                {
+                    new AzureMapsControl.Components.Atlas.Position(-80.85937, -53.95608),
+                    new AzureMapsControl.Components.Atlas.Position(-15.11718, -53.95608),
+                    new AzureMapsControl.Components.Atlas.Position(-15.11718, -22.59372),
+                    new AzureMapsControl.Components.Atlas.Position(-80.85937, -22.59372),
+                    new AzureMapsControl.Components.Atlas.Position(-80.85937, -53.95608),
+                },
+                new []
+                {
+                    new AzureMapsControl.Components.Atlas.Position(-63.28125, -47.75409),
+                    new AzureMapsControl.Components.Atlas.Position(-28.47656, -47.75409),
+                    new AzureMapsControl.Components.Atlas.Position(-28.47656, -31.95216),
+                    new AzureMapsControl.Components.Atlas.Position(-63.28125, -31.95216),
+                    new AzureMapsControl.Components.Atlas.Position(-63.28125, -47.75409),
+                }
+              }
+    ));
 
-    private readonly AzureMapsControl.Components.Atlas.MultiPolygon _geometry6 = new Components.Atlas.MultiPolygon(
-        new[]
-        {
-            new []
-{
-                new []
-{
-                    new AzureMapsControl.Components.Atlas.Position(22.14843, -42.03297),
-                    new AzureMapsControl.Components.Atlas.Position(12.65625, -54.97761),
-                    new AzureMapsControl.Components.Atlas.Position(52.03125, -55.17886),
-                    new AzureMapsControl.Components.Atlas.Position(47.46093, -41.77131),
-                    new AzureMapsControl.Components.Atlas.Position(22.14843, -42.03297),
-                }
-            },
-            new []
-        {
-                new []
+    private readonly AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.MultiPolygon> _geometry6 = new AzureMapsControl.Components.Atlas.Shape<Components.Atlas.MultiPolygon>(
+        new Components.Atlas.MultiPolygon(
+            new[]
             {
-                    new AzureMapsControl.Components.Atlas.Position(52.73437, -41.24477),
-                    new AzureMapsControl.Components.Atlas.Position(60.46875, -54.16243),
-                    new AzureMapsControl.Components.Atlas.Position(88.94531, -39.36827),
-                    new AzureMapsControl.Components.Atlas.Position(78.75, -32.84267),
-                    new AzureMapsControl.Components.Atlas.Position(52.73437, -41.24477),
+                new []
+                {
+                    new []
+                    {
+                        new AzureMapsControl.Components.Atlas.Position(22.14843, -42.03297),
+                        new AzureMapsControl.Components.Atlas.Position(12.65625, -54.97761),
+                        new AzureMapsControl.Components.Atlas.Position(52.03125, -55.17886),
+                        new AzureMapsControl.Components.Atlas.Position(47.46093, -41.77131),
+                        new AzureMapsControl.Components.Atlas.Position(22.14843, -42.03297),
+                    }
+                },
+                new []
+                    {
+                    new []
+                    {
+                        new AzureMapsControl.Components.Atlas.Position(52.73437, -41.24477),
+                        new AzureMapsControl.Components.Atlas.Position(60.46875, -54.16243),
+                        new AzureMapsControl.Components.Atlas.Position(88.94531, -39.36827),
+                        new AzureMapsControl.Components.Atlas.Position(78.75, -32.84267),
+                        new AzureMapsControl.Components.Atlas.Position(52.73437, -41.24477),
+                    }
                 }
-            }
-                            });
+            }));
 
     public StyleOptions StyleOptions = new StyleOptions
     {
@@ -259,23 +272,23 @@
         switch (random)
         {
             case 0:
-                _animation = await AnimationService.MorphAsync(_geometry1, _datasource, _geometry1, options);
+                _animation = await AnimationService.MorphAsync(_geometry1.Geometry, _datasource, _geometry1.Geometry, options);
                 break;
 
             case 1:
-                _animation = await AnimationService.MorphAsync(_geometry1, _datasource, _geometry2, options);
+                _animation = await AnimationService.MorphAsync(_geometry1.Geometry, _datasource, _geometry2.Geometry, options);
                 break;
 
             case 2:
-                _animation = await AnimationService.MorphAsync(_geometry1, _datasource, _geometry3, options);
+                _animation = await AnimationService.MorphAsync(_geometry1.Geometry, _datasource, _geometry3.Geometry, options);
                 break;
 
             case 3:
-                _animation = await AnimationService.MorphAsync(_geometry1, _datasource, _geometry4, options);
+                _animation = await AnimationService.MorphAsync(_geometry1.Geometry, _datasource, _geometry4.Geometry, options);
                 break;
 
             case 4:
-                _animation = await AnimationService.MorphAsync(_geometry1, _datasource, _geometry5, options);
+                _animation = await AnimationService.MorphAsync(_geometry1.Geometry, _datasource, _geometry5.Geometry, options);
                 break;
         }
     }

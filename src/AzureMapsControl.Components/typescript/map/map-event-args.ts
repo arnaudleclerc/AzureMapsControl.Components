@@ -16,4 +16,5 @@ export interface MapEventArgs extends EventArgs {
     sourceDataType?: string;
     style?: string;
     tile?: azmaps.Tile;
+    shapes?: (azmaps.data.Feature<azmaps.data.Geometry, any> | azmaps.Shape)[];
 }

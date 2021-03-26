@@ -6,7 +6,6 @@ export interface Geometry {
         south: number;
         west: number;
     },
-    id: string;
     type: 'LineString' | 'MultiLineString' | 'MultiPoint' | 'MultiPolygon' | 'Point' | 'Polygon';
 }
 
@@ -19,5 +18,11 @@ export interface Feature {
         west: number;
     },
     geometry: Geometry,
+    properties: { [key: string]: any }
+}
+
+export interface Shape {
+    id: string;
+    geometry: Geometry;
     properties: { [key: string]: any }
 }

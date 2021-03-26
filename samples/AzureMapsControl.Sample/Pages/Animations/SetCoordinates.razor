@@ -81,7 +81,7 @@
         _point = new AzureMapsControl.Components.Atlas.Point(new Components.Atlas.Position(-122.33825, 47.53945));
         _dataSource = new AzureMapsControl.Components.Data.DataSource();
         await eventArgs.Map.AddSourceAsync(_dataSource);
-        await _dataSource.AddAsync(_point);
+        await _dataSource.AddAsync(new AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.Point>(_point));
 
         await eventArgs.Map.AddLayerAsync(new AzureMapsControl.Components.Layers.SymbolLayer
         {
