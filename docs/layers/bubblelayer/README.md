@@ -25,10 +25,10 @@ The `Bubble Layer` requires a data source. The ID of the datasource to bind to t
         await events.Map.AddSourceAsync(dataSource);
 
 
-        var geometries = new List<AzureMapsControl.Components.Atlas.Geometry>();
+        var geometries = new List<AzureMapsControl.Components.Atlas.Shape>();
         for (var i = 0; i < 10; i++)
         {
-            geometries.Add(new AzureMapsControl.Components.Atlas.Point(new Components.Atlas.Position(i * 5, i * 5)));
+            geometries.Add(new AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.Point>(new AzureMapsControl.Components.Atlas.Point(new Components.Atlas.Position(i * 5, i * 5))));
         }
 
         await dataSource.AddAsync(geometries);

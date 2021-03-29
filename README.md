@@ -146,6 +146,7 @@ It also needs to fetch the token to send to the requests of the atlas library. F
 - [Drawing Toolbar](docs/drawingtoolbar)
 - [Html Markers](docs/htmlmarkers)
 - [Layers](docs/layers)
+- [Sources](docs/sources)
 - [Popups](docs/popups)
 - [Traffic](docs/traffic)
 - [Expressions](docs/expressions)

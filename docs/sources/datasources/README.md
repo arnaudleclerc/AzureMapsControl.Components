@@ -11,7 +11,7 @@ Multiple types of `Geometries` can be added to a data source :
 - Point
 - Polygon
 
-You can add geometry on a data source using the `AddAsync` method.
+You can add geometry wrapped into `Shapes` or `Features` on a data source using the `AddAsync` method.
 
 ```
 @page "/BubbleLayerOnReady"
@@ -32,10 +32,10 @@ You can add geometry on a data source using the `AddAsync` method.
         await events.Map.AddSourceAsync(dataSource);
 
 
-        var geometries = new List<AzureMapsControl.Components.Atlas.Geometry>();
+        var geometries = new List<AzureMapsControl.Components.Atlas.Shape>();
         for (var i = 0; i < 10; i++)
         {
-            geometries.Add(new AzureMapsControl.Components.Atlas.Point(new Components.Atlas.Position(i * 5, i * 5)));
+            geometries.Add(new AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.Point>(new AzureMapsControl.Components.Atlas.Point(new Components.Atlas.Position(i * 5, i * 5))));
         }
 
         await dataSource.AddAsync(geometries);

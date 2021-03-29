@@ -24,7 +24,7 @@
         {
             Options = new Components.Layers.PolygonExtrusionLayerOptions
             {
-                Source = "dataSource",
+                Source = dataSourceId,
                 Base = new Components.Atlas.ExpressionOrNumber(100),
                 FillColor = new Components.Atlas.ExpressionOrString(System.Text.Json.JsonDocument.Parse(fillColorExpressionJsonString)),
                 FillOpacity = 0.7,
