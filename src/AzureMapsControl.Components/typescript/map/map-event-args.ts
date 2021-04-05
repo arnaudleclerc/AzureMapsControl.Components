@@ -1,5 +1,6 @@
 import { EventArgs } from '../events/event';
 import * as azmaps from 'azure-maps-control';
+import { Feature, Shape } from '../geometries/geometry';
 
 export interface MapEventArgs extends EventArgs {
     dataType?: string;
@@ -16,5 +17,6 @@ export interface MapEventArgs extends EventArgs {
     sourceDataType?: string;
     style?: string;
     tile?: azmaps.Tile;
-    shapes?: (azmaps.data.Feature<azmaps.data.Geometry, any> | azmaps.Shape)[];
+    shapes?: Shape[];
+    features?: Feature[];
 }

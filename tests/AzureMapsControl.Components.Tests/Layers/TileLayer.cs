@@ -41,7 +41,7 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    
+
                     && args.Type == eventArgs.Type;
             };
             layer.DispatchEvent(map, eventArgs);
@@ -60,7 +60,7 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    
+
                     && args.Type == eventArgs.Type;
             };
             layer.DispatchEvent(map, eventArgs);
@@ -79,7 +79,7 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    
+
                     && args.Type == eventArgs.Type;
             };
             layer.DispatchEvent(map, eventArgs);
@@ -126,7 +126,7 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    
+
                     && args.Type == eventArgs.Type;
             };
             layer.DispatchEvent(map, eventArgs);
@@ -145,7 +145,7 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    
+
                     && args.Type == eventArgs.Type;
             };
             layer.DispatchEvent(map, eventArgs);
@@ -164,7 +164,7 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    
+
                     && args.Type == eventArgs.Type;
             };
             layer.DispatchEvent(map, eventArgs);
@@ -183,7 +183,7 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    
+
                     && args.Type == eventArgs.Type;
             };
             layer.DispatchEvent(map, eventArgs);
@@ -202,7 +202,7 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    
+
                     && args.Type == eventArgs.Type;
             };
             layer.DispatchEvent(map, eventArgs);
@@ -221,7 +221,7 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    
+
                     && args.Type == eventArgs.Type;
             };
             layer.DispatchEvent(map, eventArgs);
@@ -240,7 +240,7 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    
+
                     && args.Type == eventArgs.Type;
             };
             layer.DispatchEvent(map, eventArgs);
@@ -259,7 +259,7 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    
+
                     && args.Pixels == eventArgs.Pixels
                     && args.Positions == eventArgs.Positions
                     && args.Type == eventArgs.Type;
@@ -280,7 +280,7 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    
+
                     && args.Pixels == eventArgs.Pixels
                     && args.Positions == eventArgs.Positions
                     && args.Type == eventArgs.Type;
@@ -301,7 +301,7 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    
+
                     && args.Pixels == eventArgs.Pixels
                     && args.Positions == eventArgs.Positions
                     && args.Type == eventArgs.Type;
@@ -322,7 +322,7 @@
                     && args.LayerId == eventArgs.LayerId
                     && args.Pixel == eventArgs.Pixel
                     && args.Position == eventArgs.Position
-                    
+
                     && args.Pixels == eventArgs.Pixels
                     && args.Positions == eventArgs.Positions
                     && args.Type == eventArgs.Type;
@@ -349,7 +349,7 @@
             LayerId = "layerId",
             Pixel = new Pixel(),
             Position = new Position(),
-            Shapes = new List<Feature>(),
+            Shapes = new List<Shape>(),
             Type = type
         };
 
@@ -359,7 +359,7 @@
             Pixels = new List<Pixel>(),
             Position = new Position(),
             Positions = new List<Position>(),
-            Shapes = new List<Feature>(),
+            Shapes = new List<Shape>(),
             Type = type
         };
     }

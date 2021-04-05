@@ -13,7 +13,8 @@
         public string Type { get; set; }
 
         public string LayerId { get; set; }
-        public IEnumerable<Feature> Shapes { get; set; }
+        public IEnumerable<Feature> Features { get; set; }
+        public IEnumerable<Shape> Shapes { get; set; }
         public Pixel Pixel { get; set; }
         public Position Position { get; set; }
 

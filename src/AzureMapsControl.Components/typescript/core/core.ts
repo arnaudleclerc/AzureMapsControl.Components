@@ -12,6 +12,7 @@ import { HtmlMarkerEventArgs, toMarkerEvent } from '../html-markers/html-marker-
 import { HtmlMarkerDefinition } from '../html-markers/html-marker-options';
 import { MapEventArgs } from '../map/map-event-args';
 import { mapDataEvents, mapEvents, mapLayerEvents, mapMouseEvents, mapStringEvents, mapTouchEvents } from '../map/map-events';
+import { Feature, Shape } from '../geometries/geometry';
 
 export class Core {
     private static readonly _popups: Map<string, azmaps.Popup> = new Map<string, azmaps.Popup>();
@@ -149,7 +150,7 @@ export class Core {
                         pixels: e.pixels,
                         position: e.position,
                         positions: e.positions,
-                        shapes: e.shapes
+                        shapes: e.shapes?.filter(shape => shape instanceof azmaps.Shape).map(shape => this._getSerializableShape(shape as azmaps.Shape))
                     });
                 });
             });
@@ -211,7 +212,7 @@ export class Core {
                         layerId: mouseEvent.layerId,
                         pixel: mouseEvent.pixel,
                         position: mouseEvent.position,
-                        shapes: mouseEvent.shapes
+                        shapes: mouseEvent.shapes?.filter(shape => shape instanceof azmaps.Shape).map(shape => this._getSerializableShape(shape as azmaps.Shape))
                     });
                 });
             });
@@ -262,7 +263,7 @@ export class Core {
                         pixels: touchEvent.pixels,
                         position: touchEvent.position,
                         positions: touchEvent.positions,
-                        shapes: touchEvent.shapes ?? null
+                        shapes: touchEvent.shapes?.filter(shape => shape instanceof azmaps.Shape).map(shape => this._getSerializableShape(shape as azmaps.Shape))
                     });
                 });
             });
@@ -447,5 +448,27 @@ export class Core {
             imageTemplate.secondaryColor,
             imageTemplate.scale
         );
+    }
+
+    private static _getSerializableShape(shape: azmaps.Shape): Shape {
+        return {
+            geometry: shape.toJson().geometry,
+            id: shape.getId(),
+            properties: shape.getProperties()
+        } as Shape;
+    }
+
+    private static _getSerializableFeature(feature: azmaps.data.Feature<azmaps.data.Geometry, any>): Feature {
+        return {
+            bbox: {
+                west: feature.bbox[0],
+                south: feature.bbox[1],
+                east: feature.bbox[2],
+                north: feature.bbox[3]
+            },
+            geometry: feature.geometry,
+            id: feature.id,
+            properties: feature.properties
+        } as Feature;
     }
 }
