@@ -173,12 +173,14 @@ export class Core {
         } else if (configuration.authType === 'subscriptionKey') {
             azmaps.setAuthenticationOptions({
                 authType: configuration.authType,
-                subscriptionKey: configuration.subscriptionKey
+                subscriptionKey: configuration.subscriptionKey,
+                clientId: configuration.clientId
             });
         } else {
             azmaps.setAuthenticationOptions({
                 authType: configuration.authType,
-                getToken: Extensions.getTokenCallback
+                getToken: Extensions.getTokenCallback,
+                clientId: configuration.clientId
             })
         }
 
