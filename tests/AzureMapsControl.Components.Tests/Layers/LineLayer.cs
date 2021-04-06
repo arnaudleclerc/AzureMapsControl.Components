@@ -349,7 +349,7 @@
             LayerId = "layerId",
             Pixel = new Pixel(),
             Position = new Position(),
-            Shapes = new List<Shape>(),
+            Shapes = new List<Shape<Geometry>>(),
             Type = type
         };
 
@@ -359,7 +359,7 @@
             Pixels = new List<Pixel>(),
             Position = new Position(),
             Positions = new List<Position>(),
-            Shapes = new List<Shape>(),
+            Shapes = new List<Shape<Geometry>>(),
             Type = type
         };
     }
