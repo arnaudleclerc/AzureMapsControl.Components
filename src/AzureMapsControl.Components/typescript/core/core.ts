@@ -150,7 +150,8 @@ export class Core {
                         pixels: e.pixels,
                         position: e.position,
                         positions: e.positions,
-                        shapes: e.shapes?.filter(shape => shape instanceof azmaps.Shape).map(shape => this._getSerializableShape(shape as azmaps.Shape))
+                        shapes: e.shapes?.filter(shape => shape instanceof azmaps.Shape).map(shape => this._getSerializableShape(shape as azmaps.Shape)),
+                        features: e.shapes?.filter(shape => shape instanceof azmaps.data.Feature).map(feature => this._getSerializableFeature(feature as azmaps.data.Feature<azmaps.data.Geometry, unknown>))
                     });
                 });
             });
@@ -214,7 +215,8 @@ export class Core {
                         layerId: mouseEvent.layerId,
                         pixel: mouseEvent.pixel,
                         position: mouseEvent.position,
-                        shapes: mouseEvent.shapes?.filter(shape => shape instanceof azmaps.Shape).map(shape => this._getSerializableShape(shape as azmaps.Shape))
+                        shapes: mouseEvent.shapes?.filter(shape => shape instanceof azmaps.Shape).map(shape => this._getSerializableShape(shape as azmaps.Shape)),
+                        features: mouseEvent.shapes?.filter(shape => shape instanceof azmaps.data.Feature).map(feature => this._getSerializableFeature(feature as azmaps.data.Feature<azmaps.data.Geometry, unknown>))
                     });
                 });
             });

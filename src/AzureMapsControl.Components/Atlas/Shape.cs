@@ -40,20 +40,11 @@
             }
         }
 
+        public Shape() : base() { }
+
         public Shape(string id, TGeometry geometry) : base(id) => Geometry = geometry;
         public Shape(TGeometry geometry) : this(Guid.NewGuid().ToString(), geometry) { }
         public Shape(TGeometry geometry, IDictionary<string, object> properties) : this(Guid.NewGuid().ToString(), geometry, properties) { }
         public Shape(string id, TGeometry geometry, IDictionary<string, object> properties) : base(id, properties) => Geometry = geometry;
-    }
-
-    internal class ShapeJsonConverter : JsonConverter<Shape>
-    {
-        public override Shape Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            //TODO : Implement deserialization of shapes here
-            throw new NotImplementedException();
-        }
-
-        public override void Write(Utf8JsonWriter writer, Shape value, JsonSerializerOptions options) => JsonSerializer.Serialize(writer, value, value.GetType());
     }
 }

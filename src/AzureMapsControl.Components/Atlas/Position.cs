@@ -50,22 +50,23 @@
     {
         public override Position Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            var position = new Position();
             if (reader.TokenType == JsonTokenType.StartArray)
             {
+                var position = new Position();
                 reader.Read();
                 position.Longitude = reader.GetDouble();
                 reader.Read();
                 position.Latitude = reader.GetDouble();
                 reader.Read();
-                if(reader.TokenType == JsonTokenType.Number)
+                if (reader.TokenType == JsonTokenType.Number)
                 {
                     position.Elevation = reader.GetInt32();
                     reader.Read();
                 }
+                return position;
             }
 
-            return position;
+            return null;
         }
 
         public override void Write(Utf8JsonWriter writer, Position value, JsonSerializerOptions options)
