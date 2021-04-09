@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using System.Text;
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
@@ -49,7 +48,6 @@
                 {
                     reader.Read();
                     type = reader.GetString();
-                    Console.WriteLine(type);
                 }
 
                 if (reader.TokenType == JsonTokenType.PropertyName && reader.GetString() == "coordinates")
@@ -72,78 +70,98 @@
 
         public override void Write(Utf8JsonWriter writer, Geometry value, JsonSerializerOptions options) => throw new NotImplementedException();
 
-        internal dynamic ReadCoordinates(ref Utf8JsonReader reader)
+        internal static dynamic ReadCoordinates(ref Utf8JsonReader reader)
         {
             var startDepth = reader.CurrentDepth;
-            Console.WriteLine($"1 - Reading coordinates at depth {startDepth}");
             dynamic result = null;
-            do
+            dynamic coordinates = null;
+            dynamic positions = null;
+
+            while (reader.TokenType != JsonTokenType.EndArray || startDepth != reader.CurrentDepth)
             {
-                Console.WriteLine($"2 - Reading depth {reader.CurrentDepth}");
                 reader.Read();
-                Console.WriteLine(reader.TokenType);
-                Console.WriteLine(reader.CurrentDepth);
 
-                if (reader.TokenType == JsonTokenType.StartArray)
+                if (reader.TokenType == JsonTokenType.Number)
                 {
-                    result = ReadCoordinatesArray(ref reader, startDepth);
-                }
-            }
-            while (reader.TokenType != JsonTokenType.EndArray && startDepth != reader.CurrentDepth);
-            return result;
-        }
+                    // The depth tells us which kind of object we are dealing with
+                    // startDepth => Point
+                    // startDepth + 1 => LineString / MultiPoint
+                    // startDepth + 2 => MultiLineString / Polygon
+                    // startDepth + 3 => Polygon
 
-        private dynamic ReadCoordinatesArray(ref Utf8JsonReader reader, int startDepth)
-        {
-            dynamic result = null;
-            Console.WriteLine($"3 - Found array at depth {reader.CurrentDepth}");
-            reader.Read();
-            Console.WriteLine(reader.TokenType);
-            Console.WriteLine(reader.CurrentDepth);
-
-            if (reader.TokenType == JsonTokenType.StartArray)
-            {
-                result = ReadCoordinatesArray(ref reader, startDepth);
-            }
-            else if (reader.TokenType == JsonTokenType.Number)
-            {
-                Console.WriteLine($"4 - Found number at depth {reader.CurrentDepth}");
-                if (reader.CurrentDepth == startDepth + 1)
-                {
-                    Console.WriteLine("Point case");
-                    result = ReadPosition(ref reader);
-                }
-                else if (reader.CurrentDepth == startDepth + 2)
-                {
-                    Console.WriteLine("LineString and multipoint case");
-                    result = new List<Position>();
-
-                    do
+                    if (reader.CurrentDepth == startDepth + 1)
                     {
-                        Console.WriteLine("Adding position to line string or multi point");
-
-                        if (reader.TokenType == JsonTokenType.StartArray)
+                        result = ReadPosition(ref reader);
+                    }
+                    else if (reader.CurrentDepth == startDepth + 2)
+                    {
+                        if (result == null)
                         {
-                            Console.WriteLine("5");
-                            reader.Read();
-                            Console.WriteLine(reader.TokenType);
-                            Console.WriteLine(reader.CurrentDepth);
+                            result = new List<Position>();
                         }
 
                         result.Add(ReadPosition(ref reader));
+                    }
+                    else if (reader.CurrentDepth == startDepth + 3)
+                    {
+                        if (result == null)
+                        {
+                            result = new List<IEnumerable<Position>>();
+                        }
 
-                        Console.WriteLine("6");
-                        reader.Read();
-                        Console.WriteLine(reader.TokenType);
-                        Console.WriteLine(reader.CurrentDepth);
-                    } while (reader.TokenType == JsonTokenType.StartArray && reader.CurrentDepth == startDepth + 1);
+                        if (coordinates == null)
+                        {
+                            coordinates = new List<Position>();
+                        }
+
+                        coordinates.Add(ReadPosition(ref reader));
+                    }
+                    else if (reader.CurrentDepth == startDepth + 4)
+                    {
+                        if (result == null)
+                        {
+                            result = new List<IEnumerable<IEnumerable<Position>>>();
+                        }
+
+                        if (coordinates == null)
+                        {
+                            coordinates = new List<IEnumerable<Position>>();
+                        }
+
+                        if (positions == null)
+                        {
+                            positions = new List<Position>();
+                        }
+
+                        positions.Add(ReadPosition(ref reader));
+                    }
+                }
+
+                if (reader.TokenType == JsonTokenType.EndArray)
+                {
+                    if (reader.CurrentDepth == startDepth + 2)
+                    {
+                        if (positions != null)
+                        {
+                            coordinates.Add(positions);
+                            positions = null;
+                        }
+                    }
+                    else if (reader.CurrentDepth == startDepth + 1)
+                    {
+                        if (coordinates != null)
+                        {
+                            result.Add(coordinates);
+                            coordinates = null;
+                        }
+                    }
                 }
             }
 
             return result;
         }
 
-        private Position ReadPosition(ref Utf8JsonReader reader)
+        internal static Position ReadPosition(ref Utf8JsonReader reader)
         {
             var result = new Position();
             result.Longitude = reader.GetDouble();
@@ -159,7 +177,7 @@
         }
     }
 
-    internal class GeometryJsonConverter<TGeometry> : JsonConverter<TGeometry> where TGeometry : Geometry, new()
+    internal class GeometryJsonConverter<TGeometry> : JsonConverter<TGeometry> where TGeometry : Geometry
     {
         public GeometryJsonConverter() { }
 
@@ -168,22 +186,34 @@
             var originalDepth = reader.CurrentDepth;
 
             string type = null;
+            dynamic coordinates = null;
 
             while (reader.TokenType != JsonTokenType.EndObject || originalDepth != reader.CurrentDepth)
             {
                 reader.Read();
+
                 if (reader.TokenType == JsonTokenType.PropertyName && reader.GetString() == "type")
                 {
                     reader.Read();
                     type = reader.GetString();
-                    Console.WriteLine(type);
                 }
+
+                if (reader.TokenType == JsonTokenType.PropertyName && reader.GetString() == "coordinates")
+                {
+                    coordinates = GeometryJsonConverter.ReadCoordinates(ref reader);
+                }
+
             }
 
-            var geometry = new TGeometry {
-                GeometryType = type
+            return type switch {
+                Point.InnerGeometryType => new Point(coordinates) as TGeometry,
+                LineString.InnerGeometryType => new LineString(coordinates) as TGeometry,
+                MultiLineString.InnerGeometryType => new MultiLineString(coordinates) as TGeometry,
+                MultiPoint.InnerGeometryType => new MultiPoint(coordinates) as TGeometry,
+                MultiPolygon.InnerGeometryType => new MultiPolygon(coordinates) as TGeometry,
+                Polygon.InnerGeometryType => new Polygon(coordinates) as TGeometry,
+                _ => default
             };
-            return geometry;
         }
 
         public override void Write(Utf8JsonWriter writer, TGeometry value, JsonSerializerOptions options)
