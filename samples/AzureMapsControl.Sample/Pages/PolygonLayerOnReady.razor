@@ -17,24 +17,60 @@
 
         var polygon = new AzureMapsControl.Components.Atlas.Polygon(new[]
         {
-            new []
+        new []
 {
-                new AzureMapsControl.Components.Atlas.Position(-50, -20),
-                new AzureMapsControl.Components.Atlas.Position(0, 40),
-                new AzureMapsControl.Components.Atlas.Position(50, -20),
-                new AzureMapsControl.Components.Atlas.Position(-50, -20),
-            }
-        });
+            new AzureMapsControl.Components.Atlas.Position(-50, -20),
+            new AzureMapsControl.Components.Atlas.Position(0, 40),
+            new AzureMapsControl.Components.Atlas.Position(50, -20),
+            new AzureMapsControl.Components.Atlas.Position(-50, -20),
+        }
+    });
 
         await dataSource.AddAsync(new AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.Polygon>(polygon));
 
         var layer = new AzureMapsControl.Components.Layers.PolygonLayer
         {
+            EventActivationFlags = Components.Layers.LayerEventActivationFlags.None().Enable(Components.Layers.LayerEventType.Click),
             Options = new Components.Layers.PolygonLayerOptions
             {
                 Source = dataSourceId,
                 FillOpacity = new Components.Atlas.ExpressionOrNumber(0.5),
                 FillColor = new Components.Atlas.ExpressionOrString("#1a73aa")
+            }
+        };
+
+        layer.OnClick += eventArgs =>
+        {
+            var firstShape = eventArgs.Shapes?.FirstOrDefault();
+            if (firstShape != null)
+            {
+                if (firstShape.Geometry is AzureMapsControl.Components.Atlas.Polygon polygon)
+                {
+                    foreach (var positions in polygon.Coordinates)
+                    {
+                        foreach (var position in positions)
+                        {
+                            Console.WriteLine(position.Longitude);
+                            Console.WriteLine(position.Latitude);
+                        }
+                    }
+                }
+            }
+
+            var firstFeature = eventArgs.Features?.FirstOrDefault();
+            if (firstFeature != null)
+            {
+                if (firstFeature.Geometry is AzureMapsControl.Components.Atlas.Polygon polygon)
+                {
+                    foreach (var positions in polygon.Coordinates)
+                    {
+                        foreach (var position in positions)
+                        {
+                            Console.WriteLine(position.Longitude);
+                            Console.WriteLine(position.Latitude);
+                        }
+                    }
+                }
             }
         };
 

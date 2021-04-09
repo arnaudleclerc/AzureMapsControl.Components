@@ -113,6 +113,7 @@
 
         var layer = new AzureMapsControl.Components.Layers.LineLayer
         {
+            EventActivationFlags = Components.Layers.LayerEventActivationFlags.None().Enable(Components.Layers.LayerEventType.Click),
             Options = new Components.Layers.LineLayerOptions
             {
                 Source = dataSourceId,
@@ -144,6 +145,34 @@
                     new AzureMapsControl.Components.Atlas.ExpressionOrNumber(1),
                     new AzureMapsControl.Components.Atlas.ExpressionOrString("red"),
                     })
+            }
+        };
+
+        layer.OnClick += eventArgs => {
+            var firstShape = eventArgs.Shapes?.FirstOrDefault();
+            if (firstShape != null)
+            {
+                if(firstShape.Geometry is AzureMapsControl.Components.Atlas.LineString lineString)
+                {
+                    foreach(var position in lineString.Coordinates)
+                    {
+                        Console.WriteLine(position.Longitude);
+                        Console.WriteLine(position.Latitude);   
+                    }
+                }
+            }
+
+            var firstFeature = eventArgs.Features?.FirstOrDefault();
+            if (firstFeature != null)
+            {
+                if(firstFeature.Geometry is AzureMapsControl.Components.Atlas.LineString lineString)
+                {
+                    foreach(var position in lineString.Coordinates)
+                    {
+                        Console.WriteLine(position.Longitude);
+                        Console.WriteLine(position.Latitude);   
+                    }
+                }
             }
         };
 

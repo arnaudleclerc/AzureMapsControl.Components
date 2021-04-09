@@ -6,8 +6,7 @@
           EventActivationFlags="MapEventActivationFlags
                                 .None()
                                 .Enable(MapEventType.Ready, MapEventType.Click)"
-          OnReady="OnMapReady"
-          OnClick="OnMapClick"/>
+          OnReady="OnMapReady" />
 i
 @code  {
     public async Task OnMapReady(MapEventArgs eventArgs)
@@ -42,15 +41,29 @@ i
             EventActivationFlags = Components.Layers.LayerEventActivationFlags.None().Enable(Components.Layers.LayerEventType.Click)
         };
 
-        layer.OnClick += eventArgs => {
-            Console.WriteLine(eventArgs.Shapes);
+        layer.OnClick += eventArgs =>
+        {
+            var firstShape = eventArgs.Shapes?.FirstOrDefault();
+            if (firstShape != null)
+            {
+                if(firstShape.Geometry is AzureMapsControl.Components.Atlas.Point point)
+                {
+                    Console.WriteLine(point.Coordinates.Longitude);
+                    Console.WriteLine(point.Coordinates.Latitude);
+                }
+            }
+
+            var firstFeature = eventArgs.Features?.FirstOrDefault();
+            if (firstFeature != null)
+            {
+                if(firstFeature.Geometry is AzureMapsControl.Components.Atlas.Point point)
+                {
+                    Console.WriteLine(point.Coordinates.Longitude);
+                    Console.WriteLine(point.Coordinates.Latitude);
+                }
+            }
         };
 
         await eventArgs.Map.AddLayerAsync(layer);
-    }
-
-    public async Task OnMapClick(MapMouseEventArgs eventArgs)
-    {
-        Console.WriteLine(eventArgs.Shapes);
     }
 }
