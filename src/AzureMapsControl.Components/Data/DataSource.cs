@@ -89,6 +89,13 @@
                 await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, polygons);
             }
 
+            var routePoints = shapes.OfType<Shape<RoutePoint>>();
+            if (routePoints.Any())
+            {
+                Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_AddAsync, $"{routePoints.Count()} route points will be added");
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, routePoints);
+            }
+
             _shapes.AddRange(shapes);
         }
 
@@ -159,6 +166,13 @@
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_AddAsync, $"{polygons.Count()} polygons will be added");
                 await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, polygons);
+            }
+
+            var routePoints = features.OfType<Feature<RoutePoint>>();
+            if (routePoints.Any())
+            {
+                Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_AddAsync, $"{routePoints.Count()} route points will be added");
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, routePoints);
             }
 
             _features.AddRange(features);

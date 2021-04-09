@@ -2,8 +2,10 @@
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Text.Json.Serialization;
 
     [ExcludeFromCodeCoverage]
+    [JsonConverter(typeof(GeometryJsonConverter<RoutePoint>))]
     public sealed class RoutePoint : Point
     {
         public DateTime Timestamp { get; set; }

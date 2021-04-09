@@ -1,14 +1,15 @@
 ﻿namespace AzureMapsControl.Components.Atlas
 {
     using System.Diagnostics.CodeAnalysis;
+    using System.Text.Json.Serialization;
 
     [ExcludeFromCodeCoverage]
+    [JsonConverter(typeof(GeometryJsonConverter<Point>))]
     public class Point : Geometry<Position>
     {
-        public Point() : base() { }
+        internal const string GeometryType = "Point";
+        public Point() : base(GeometryType) { }
 
-        public Point(Position coordinates) : base(coordinates) { }
-
-        internal override string GetGeometryType() => "Point";
+        public Point(Position coordinates) : base(coordinates, GeometryType) { }
     }
 }

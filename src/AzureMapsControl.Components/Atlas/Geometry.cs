@@ -6,22 +6,13 @@
     using System.Text.Json.Serialization;
 
     [ExcludeFromCodeCoverage]
-    [JsonConverter(typeof(GeometryJsonConverter))]
     public abstract class Geometry
     {
-        private string _type;
-
         internal string Id { get; set; }
 
-        public string Type
-        {
-            get => string.IsNullOrEmpty(_type) ? GetGeometryType() : _type;
-            set => _type = value;
-        }
+        internal string Type { get; set; }
 
         public Geometry() { }
-
-        internal abstract string GetGeometryType();
     }
 
     [ExcludeFromCodeCoverage]
@@ -29,14 +20,18 @@
     {
         public TPosition Coordinates { get; set; }
 
-        public Geometry() { }
+        public Geometry() : base() { }
 
-        public Geometry(TPosition coordinates) : base() => Coordinates = coordinates;
+        internal Geometry(string type) : this() => Type = type;
+
+        internal Geometry(TPosition coordinates, string type) : this(type) => Coordinates = coordinates;
     }
 
-    internal class GeometryJsonConverter : JsonConverter<Geometry>
+    internal class GeometryJsonConverter<TGeometry> : JsonConverter<TGeometry> where TGeometry : Geometry, new()
     {
-        public override Geometry Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public GeometryJsonConverter() { }
+
+        public override TGeometry Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             var originalDepth = reader.CurrentDepth;
 
@@ -51,24 +46,90 @@
                 }
             }
 
-            switch (type)
+            var geometry = new TGeometry {
+                Type = type
+            };
+            return geometry;
+        }
+
+        public override void Write(Utf8JsonWriter writer, TGeometry value, JsonSerializerOptions options)
+        {
+            writer.WriteStartObject();
+            writer.WriteString("type", value.Type);
+            switch (value.Type)
             {
-                case "Point":
-                    return new Point();
-                case "LineString":
-                    return new LineString();
-                case "MultiLineString":
-                    return new MultiLineString();
-                case "MultiPoint":
-                    return new MultiPoint();
-                case "MultiPolygon":
-                    return new MultiPolygon();
-                case "Polygon":
-                    return new Polygon();
-                default:
-                    return null;
+                case Point.GeometryType:
+                    WritePoint(writer, value as Point);
+                    break;
+                case LineString.GeometryType:
+                    WriteLineString(writer, value as LineString);
+                    break;
+                case MultiLineString.GeometryType:
+                    WriteMultiLineString(writer, value as MultiLineString);
+                    break;
+                case MultiPoint.GeometryType:
+                    WriteMultiPoint(writer, value as MultiPoint);
+                    break;
+                case MultiPolygon.GeometryType:
+                    WriteMultiPolygon(writer, value as MultiPolygon);
+                    break;
+                case Polygon.GeometryType:
+                    WritePolygon(writer, value as Polygon);
+                    break;
+            }
+            writer.WriteEndObject();
+        }
+
+        private void WritePoint(Utf8JsonWriter writer, Point value)
+        {
+            writer.WritePropertyName("coordinates");
+            JsonSerializer.Serialize(writer, value.Coordinates);
+            if (value is RoutePoint routePoint)
+            {
+                writer.WritePropertyName("timestamp");
+                JsonSerializer.Serialize(writer, routePoint.Timestamp);
             }
         }
-        public override void Write(Utf8JsonWriter writer, Geometry value, JsonSerializerOptions options) => throw new NotImplementedException();
+
+        private void WriteLineString(Utf8JsonWriter writer, LineString value)
+        {
+            writer.WritePropertyName("coordinates");
+            JsonSerializer.Serialize(writer, value.Coordinates);
+            WriteBoundingBox(writer, value.BBox);
+        }
+
+        private void WriteMultiLineString(Utf8JsonWriter writer, MultiLineString value)
+        {
+            writer.WritePropertyName("coordinates");
+            JsonSerializer.Serialize(writer, value.Coordinates);
+            WriteBoundingBox(writer, value.BBox);
+        }
+
+        private void WriteMultiPoint(Utf8JsonWriter writer, MultiPoint value)
+        {
+            writer.WritePropertyName("coordinates");
+            JsonSerializer.Serialize(writer, value.Coordinates);
+            WriteBoundingBox(writer, value.BBox);
+        }
+
+        private void WriteMultiPolygon(Utf8JsonWriter writer, MultiPolygon value)
+        {
+            writer.WritePropertyName("coordinates");
+            JsonSerializer.Serialize(writer, value.Coordinates);
+            WriteBoundingBox(writer, value.BBox);
+        }
+
+        private void WritePolygon(Utf8JsonWriter writer, Polygon value)
+        {
+            writer.WritePropertyName("coordinates");
+            JsonSerializer.Serialize(writer, value.Coordinates);
+            WriteBoundingBox(writer, value.BBox);
+        }
+
+        private void WriteBoundingBox(Utf8JsonWriter writer, BoundingBox bbox)
+        {
+            writer.WritePropertyName("bbox");
+            JsonSerializer.Serialize(writer, bbox);
+        }
     }
 }

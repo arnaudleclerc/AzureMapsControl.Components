@@ -55,7 +55,8 @@
                 new Shape<MultiLineString>(new MultiLineString()),
                 new Shape<MultiPoint>(new MultiPoint()),
                 new Shape<MultiPolygon>(new MultiPolygon()),
-                new Shape<Polygon>(new Polygon())
+                new Shape<Polygon>(new Polygon()),
+                new Shape<RoutePoint>(new RoutePoint()),
             };
 
             await dataSource.AddAsync(shapes);
@@ -66,6 +67,7 @@
             Assert.Contains(shapes[3], dataSource.Shapes);
             Assert.Contains(shapes[4], dataSource.Shapes);
             Assert.Contains(shapes[5], dataSource.Shapes);
+            Assert.Contains(shapes[6], dataSource.Shapes);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), It.Is<object[]>(parameters =>
                 parameters[0] as string == dataSource.Id
@@ -91,7 +93,11 @@
                 parameters[0] as string == dataSource.Id
                 && parameters[1] is IEnumerable<Shape<Polygon>>
             )), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), It.IsAny<object[]>()), Times.Exactly(6));
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == dataSource.Id
+                && parameters[1] is IEnumerable<Shape<RoutePoint>>
+            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), It.IsAny<object[]>()), Times.Exactly(7));
 
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -129,7 +135,8 @@
                 new Feature<MultiLineString>(),
                 new Feature<MultiPoint>(),
                 new Feature<MultiPolygon>(),
-                new Feature<Polygon>()
+                new Feature<Polygon>(),
+                new Feature<RoutePoint>()
             };
 
             await dataSource.AddAsync(features);
@@ -140,6 +147,7 @@
             Assert.Contains(features[3], dataSource.Features);
             Assert.Contains(features[4], dataSource.Features);
             Assert.Contains(features[5], dataSource.Features);
+            Assert.Contains(features[6], dataSource.Features);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.Is<object[]>(parameters =>
                 parameters[0] as string == dataSource.Id
@@ -165,7 +173,11 @@
                 parameters[0] as string == dataSource.Id
                 && parameters[1] is IEnumerable<Feature<Polygon>>
             )), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.IsAny<object[]>()), Times.Exactly(6));
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == dataSource.Id
+                && parameters[1] is IEnumerable<Feature<RoutePoint>>
+            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.IsAny<object[]>()), Times.Exactly(7));
 
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -181,8 +193,9 @@
             var multiPoint = new Feature<MultiPoint>();
             var multiPolygon = new Feature<MultiPolygon>();
             var polygon = new Feature<Polygon>();
+            var routePoint = new Feature<RoutePoint>();
 
-            await dataSource.AddAsync(point, lineString, multiLineString, multiPoint, multiPolygon, polygon);
+            await dataSource.AddAsync(point, lineString, multiLineString, multiPoint, multiPolygon, polygon, routePoint);
 
             Assert.Contains(point, dataSource.Features);
             Assert.Contains(lineString, dataSource.Features);
@@ -190,6 +203,7 @@
             Assert.Contains(multiPoint, dataSource.Features);
             Assert.Contains(multiPolygon, dataSource.Features);
             Assert.Contains(polygon, dataSource.Features);
+            Assert.Contains(routePoint, dataSource.Features);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.Is<object[]>(parameters =>
                 parameters[0] as string == dataSource.Id
@@ -215,7 +229,11 @@
                 parameters[0] as string == dataSource.Id
                 && parameters[1] is IEnumerable<Feature<Polygon>>
             )), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.IsAny<object[]>()), Times.Exactly(6));
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == dataSource.Id
+                && parameters[1] is IEnumerable<Feature<RoutePoint>>
+            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.IsAny<object[]>()), Times.Exactly(7));
 
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
