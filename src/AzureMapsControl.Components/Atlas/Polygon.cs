@@ -8,12 +8,12 @@
     [JsonConverter(typeof(GeometryJsonConverter<Polygon>))]
     public sealed class Polygon : Geometry<IEnumerable<IEnumerable<Position>>>
     {
-        internal const string GeometryType = "Polygon";
+        internal const string InnerGeometryType = "Polygon";
         public BoundingBox BBox { get; set; }
 
-        public Polygon() : base(GeometryType) { }
+        public Polygon() : base(InnerGeometryType) { }
 
-        public Polygon(IEnumerable<IEnumerable<Position>> coordinates) : base(coordinates, GeometryType) { }
+        public Polygon(IEnumerable<IEnumerable<Position>> coordinates) : base(coordinates, InnerGeometryType) { }
 
         public Polygon(IEnumerable<IEnumerable<Position>> coordinates, BoundingBox bbox) : this(coordinates) => BBox = bbox;
     }

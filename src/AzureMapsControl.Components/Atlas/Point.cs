@@ -7,9 +7,9 @@
     [JsonConverter(typeof(GeometryJsonConverter<Point>))]
     public class Point : Geometry<Position>
     {
-        internal const string GeometryType = "Point";
-        public Point() : base(GeometryType) { }
+        internal const string InnerGeometryType = "Point";
+        public Point() : base(InnerGeometryType) { }
 
-        public Point(Position coordinates) : base(coordinates, GeometryType) { }
+        public Point(Position coordinates) : base(coordinates, InnerGeometryType) { }
     }
 }

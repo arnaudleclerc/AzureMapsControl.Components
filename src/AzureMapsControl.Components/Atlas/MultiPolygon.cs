@@ -8,10 +8,10 @@
     [JsonConverter(typeof(GeometryJsonConverter<MultiPolygon>))]
     public sealed class MultiPolygon : Geometry<IEnumerable<IEnumerable<IEnumerable<Position>>>>
     {
-        internal const string GeometryType = "MultiPolygon";
+        internal const string InnerGeometryType = "MultiPolygon";
         public BoundingBox BBox { get; set; }
-        public MultiPolygon() : base(GeometryType) { }
-        public MultiPolygon(IEnumerable<IEnumerable<IEnumerable<Position>>> coordinates) : base(coordinates, GeometryType) { }
+        public MultiPolygon() : base(InnerGeometryType) { }
+        public MultiPolygon(IEnumerable<IEnumerable<IEnumerable<Position>>> coordinates) : base(coordinates, InnerGeometryType) { }
         public MultiPolygon(IEnumerable<IEnumerable<IEnumerable<Position>>> coordinates, BoundingBox bbox) : this(coordinates) => BBox = bbox;
     }
 }
