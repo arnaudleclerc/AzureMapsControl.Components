@@ -7,6 +7,7 @@ import { SourceType } from '../sources/source-type';
 import { Control } from '../controls/control';
 import * as scalebar from 'azure-maps-control-scalebar';
 import * as overviewmap from 'azure-maps-control-overviewmap';
+import * as geolocationcontrol from 'azure-maps-control-geolocation';
 import { MapImageTemplate } from './map-image-template';
 import { HtmlMarkerEventArgs, toMarkerEvent } from '../html-markers/html-marker-event-args';
 import { HtmlMarkerDefinition } from '../html-markers/html-marker-options';
@@ -40,6 +41,9 @@ export class Core {
                     break;
                 case 'overviewmap':
                     mapControl = new overviewmap.control.OverviewMap(control.options);
+                    break;
+                case 'geolocation':
+                    mapControl = new geolocationcontrol.control.GeolocationControl(control.options);
                     break;
             }
 

@@ -1,0 +1,12 @@
+﻿@page "/GeolocationControl"
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          Controls="new Components.Controls.Control[]
+          {
+              new AzureMapsControl.Components.Controls.GeolocationControl(new Components.Controls.GeolocationControlOptions
+              {
+                  Style = Components.Controls.ControlStyle.Auto
+              },
+              AzureMapsControl.Components.Controls.ControlPosition.TopRight),
+          }" />

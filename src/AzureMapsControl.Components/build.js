@@ -80,7 +80,14 @@ let rollupError = false;
     let rollupInputOps, rollupOutputOps;
     // Set rollup options for browser builds.
     rollupInputOps = {
-        external: ["azure-maps-control", "azure-maps-drawing-tools", "azure-maps-control-scalebar", "azure-maps-control-overviewmap", "azure-maps-control-animations"],
+        external: [
+            "azure-maps-control",
+            "azure-maps-drawing-tools",
+            "azure-maps-control-scalebar",
+            "azure-maps-control-overviewmap",
+            "azure-maps-control-animations",
+            "azure-maps-control-geolocation"
+        ],
         onwarn: rollupWarn,
         input: inputPath,
         plugins: [
@@ -103,7 +110,8 @@ let rollupError = false;
             "azure-maps-drawing-tools": "atlas",
             "azure-maps-control-scalebar": "atlas",
             "azure-maps-control-overviewmap": "atlas",
-            "azure-maps-control-animations": "atlas"
+            "azure-maps-control-animations": "atlas",
+            "azure-maps-control-geolocation": "atlas"
         }
     };
 

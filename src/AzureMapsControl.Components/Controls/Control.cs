@@ -60,6 +60,9 @@
                 case "overviewmap":
                     OverviewMapControlJsonConverter.Write(writer, value as OverviewMapControl);
                     break;
+                case "geolocation":
+                    GeolocationControlJsonConverter.Write(writer, value as GeolocationControl);
+                    break;
             }
         }
     }

@@ -30,6 +30,9 @@
       ],
       "azure-maps-control-animations": [
         "typings/Animations"
+      ],
+      "azure-maps-control-geolocation": [
+        "typings/GeolocationControl"
       ]
     }
   },
