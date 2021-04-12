@@ -18,18 +18,18 @@
     "declaration": true,
     "declarationDir": "./dist/typings",
     "typeRoots": [
-      "./types",
+      "./typings",
       "./node_modules/@types"
     ],
     "paths": {
       "azure-maps-control-scalebar": [
-        "types/ScalebarControl"
+        "typings/ScalebarControl"
       ],
       "azure-maps-control-overviewmap": [
-        "types/OverviewMap"
+        "typings/OverviewMap"
       ],
       "azure-maps-control-animations": [
-        "types/Animations"
+        "typings/Animations"
       ]
     }
   },
