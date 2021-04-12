@@ -14,6 +14,7 @@
             internal const string Popup = "Popup";
             internal const string Source = "Datasource";
             internal const string HtmlMarker = "HtmlMarker";
+            internal const string GeolocationControl = "GeolocationControl";
         }
 
         internal static class Methods
@@ -91,6 +92,11 @@
             internal static class HtmlMarker
             {
                 internal const string TogglePopup = "togglePopup";
+            }
+
+            internal static class GeolocationControl
+            {
+                internal const string GetLastKnownPosition = "getLastKnownPosition";
             }
         }
     }

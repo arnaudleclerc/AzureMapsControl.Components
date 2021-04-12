@@ -1,18 +1,38 @@
 ﻿namespace AzureMapsControl.Components.Controls
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using System.Text.Json;
     using System.Text.Json.Serialization;
+    using System.Threading.Tasks;
 
-    [ExcludeFromCodeCoverage]
+    using AzureMapsControl.Components.Atlas;
+    using AzureMapsControl.Components.Logger;
+    using AzureMapsControl.Components.Runtime;
+
+    using Microsoft.Extensions.Logging;
+
     public sealed class GeolocationControl : Control<GeolocationControlOptions>
     {
         internal override string Type => "geolocation";
 
         internal override int Order => 0;
 
+        internal IMapJsRuntime JsRuntime { get; set; }
+        internal ILogger Logger { get; set; }
+
         public GeolocationControl(GeolocationControlOptions options = null, ControlPosition position = default) : base(options, position) { }
+
+        /// <summary>
+        /// Get the last known position from the geolocation control.
+        /// </summary>
+        /// <returns>Feature containing the last known position</returns>
+        public async Task<Feature<Point>> GetLastKnownPositionAsync()
+        {
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.GeolocationControl_GetLastKnownPosition, "GeolocationControl - GetLastKnownPositionAsync");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.GeolocationControl_GetLastKnownPosition, $"Id: {Id}");
+
+            return await JsRuntime.InvokeAsync<Feature<Point>>(Constants.JsConstants.Methods.GeolocationControl.GetLastKnownPosition.ToGeolocationControlNamespace(), Id);
+        }
     }
 
     internal class GeolocationControlJsonConverter : JsonConverter<GeolocationControl>

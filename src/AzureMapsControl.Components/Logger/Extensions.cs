@@ -53,7 +53,8 @@
         DataSource_RemoveAsync = 7001,
         DataSource_ImportDataFromUrlAsync = 7002,
         DataSource_ClearAsync = 7003,
-        HtmlMarker_TogglePopupAsync = 8000
+        HtmlMarker_TogglePopupAsync = 8000,
+        GeolocationControl_GetLastKnownPosition = 9000
     }
 
     internal static class Extensions

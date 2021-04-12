@@ -39,5 +39,6 @@
         internal static string ToPopupNamespace(this string method) => $"{JsConstants.Namespaces.AzureMapsControl}.{JsConstants.Namespaces.Popup}.{method}";
         internal static string ToSourceNamespace(this string method) => $"{JsConstants.Namespaces.AzureMapsControl}.{JsConstants.Namespaces.Source}.{method}";
         internal static string ToHtmlMarkerNamespace(this string method) => $"{JsConstants.Namespaces.AzureMapsControl}.{JsConstants.Namespaces.HtmlMarker}.{method}";
+        internal static string ToGeolocationControlNamespace(this string method) => $"{JsConstants.Namespaces.AzureMapsControl}.{JsConstants.Namespaces.GeolocationControl}.{method}";
     }
 }

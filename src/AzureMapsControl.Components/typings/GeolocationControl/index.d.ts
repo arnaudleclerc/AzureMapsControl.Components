@@ -28,8 +28,8 @@ declare namespace atlas {
             /** Disposes the control. */
             public dispose(): void;
 
-            /** Get sthe last known position from the geolocation control. */
-            public getLastKnownPosition(): GeolocationPosition;
+            /** Get the last known position from the geolocation control. */
+            public getLastKnownPosition(): azmaps.data.Feature<azmaps.data.Geometry, any>;
 
             /** Gets the options of the geolocation control. */
             public getOptions(): GeolocationControlOptions;

@@ -177,6 +177,14 @@
                 overviewMapControl.Logger = _logger;
                 overviewMapControl.JsRuntime = _jsRuntime;
             }
+
+            var geolocationControl = controls.OfType<GeolocationControl>().FirstOrDefault();
+            if (geolocationControl is not null)
+            {
+                geolocationControl.Logger = _logger;
+                geolocationControl.JsRuntime = _jsRuntime;
+            }
+
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddControlsAsync, $"Adding controls", Controls);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_AddControlsAsync, $"{Controls.Count()} controls will be added: {string.Join('|', Controls.Select(co => co.Type))}");
             //Ordering the controls is necessary if the controls contain an OverviewMapControl. This one needs to be added last, otherwise the controls added after it will be added to the overlay.
