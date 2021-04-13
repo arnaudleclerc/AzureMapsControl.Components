@@ -28,5 +28,50 @@
             _mapJsRuntimeMock.Verify(runtime => runtime.InvokeAsync<Feature<Point>>(Constants.JsConstants.Methods.GeolocationControl.GetLastKnownPosition.ToGeolocationControlNamespace(), control.Id), Times.Once);
             _mapJsRuntimeMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async void Should_NotGetLastKnowPosition_IfAlreadyDisposed_Async()
+        {
+            var control = new GeolocationControl() {
+                JsRuntime = _mapJsRuntimeMock.Object
+            };
+
+            await control.DisposeAsync();
+            await Assert.ThrowsAnyAsync<ControlDisposedException>(async () => await control.GetLastKnownPositionAsync());
+
+            _mapJsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.GeolocationControl.Dispose.ToGeolocationControlNamespace(), control.Id), Times.Once);
+            _mapJsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_DisposeAsync()
+        {
+            var control = new GeolocationControl() {
+                JsRuntime = _mapJsRuntimeMock.Object
+            };
+
+            var disposedCalled = false;
+            control.OnDisposed += () => disposedCalled = true;
+
+            await control.DisposeAsync();
+
+            Assert.True(control.Disposed);
+            Assert.True(disposedCalled);
+            _mapJsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.GeolocationControl.Dispose.ToGeolocationControlNamespace(), control.Id), Times.Once);
+            _mapJsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotDispose_IfAlreadyDisposed_Async()
+        {
+            var control = new GeolocationControl() {
+                JsRuntime = _mapJsRuntimeMock.Object
+            };
+            await control.DisposeAsync();
+            await Assert.ThrowsAnyAsync<ControlDisposedException>(async () => await control.DisposeAsync());
+
+            _mapJsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.GeolocationControl.Dispose.ToGeolocationControlNamespace(), control.Id), Times.Once);
+            _mapJsRuntimeMock.VerifyNoOtherCalls();
+        }
     }
 }

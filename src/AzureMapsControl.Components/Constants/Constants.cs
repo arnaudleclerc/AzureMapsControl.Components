@@ -1,5 +1,6 @@
 ﻿namespace AzureMapsControl.Components.Constants
 {
+    using System.Data;
     using System.Diagnostics.CodeAnalysis;
 
     [ExcludeFromCodeCoverage]
@@ -98,6 +99,7 @@
             {
                 internal const string GetLastKnownPosition = "getLastKnownPosition";
                 internal const string IsGeolocationSupported = "isGeolocationSupported";
+                internal const string Dispose = "dispose";
             }
         }
     }

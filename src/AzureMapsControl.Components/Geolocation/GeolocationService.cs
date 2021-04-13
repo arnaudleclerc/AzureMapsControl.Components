@@ -22,9 +22,9 @@
         /// Checks to see if the geolocation API is supported in the browser.
         /// </summary>
         /// <returns>True if the geolocation API is supported in the browser, otherwise false</returns>
-        public async Task<bool> IsGeolocationSupportedAsync()
+        public async ValueTask<bool> IsGeolocationSupportedAsync()
         {
-            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.GeolocationService_IsGeolocationSupportedAsync, "Calling IsGeolocationSupportedAsync");
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.GeolocationService_IsGeolocationSupportedAsync, "GeolocationService - IsGeolocationSupportedAsync");
             return await _mapJsRuntime.InvokeAsync<bool>(Constants.JsConstants.Methods.GeolocationControl.IsGeolocationSupported.ToGeolocationControlNamespace());
         }
     }

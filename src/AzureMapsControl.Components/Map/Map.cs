@@ -48,6 +48,7 @@
         private List<Layer> _layers;
         private List<Source> _sources;
         private List<Popup> _popups;
+        private List<Control> _controls;
 
         #endregion
 
@@ -58,11 +59,11 @@
         /// </summary>
         public string Id { get; }
 
-        public IEnumerable<Control> Controls { get; internal set; }
-
         public IEnumerable<HtmlMarker> HtmlMarkers { get; internal set; }
 
         public DrawingToolbarOptions DrawingToolbarOptions { get; internal set; }
+
+        public IEnumerable<Control> Controls => _controls;
 
         public IEnumerable<Layer> Layers => _layers;
 
@@ -170,7 +171,14 @@
             }
 
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddControlsAsync, "Map - AddControlsAsync");
-            Controls = controls;
+            
+            if(_controls is null)
+            {
+                _controls = new List<Control>();
+            }
+
+            _controls.AddRange(controls);
+
             var overviewMapControl = controls.OfType<OverviewMapControl>().FirstOrDefault();
             if (overviewMapControl is not null)
             {
@@ -183,6 +191,8 @@
             {
                 geolocationControl.Logger = _logger;
                 geolocationControl.JsRuntime = _jsRuntime;
+
+                geolocationControl.OnDisposed += () => _controls.Remove(geolocationControl);
             }
 
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddControlsAsync, $"Adding controls", Controls);

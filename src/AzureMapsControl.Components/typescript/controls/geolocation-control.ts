@@ -18,4 +18,10 @@ export class GeolocationControl {
         return await geolocationcontrol.control.GeolocationControl.isSupported();
     }
 
+    public static dispose(controlId: string): void {
+        const map = Core.getMap();
+        const control = map.controls.getControls().find(ctrl => (ctrl as any).amc && (ctrl as any).amc.id === controlId) as geolocationcontrol.control.GeolocationControl;
+        control.dispose();
+    }
+
 }
