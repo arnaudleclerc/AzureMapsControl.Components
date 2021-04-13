@@ -21,7 +21,7 @@
         var overviewControl = eventArgs.Map.Controls?.OfType<AzureMapsControl.Components.Controls.OverviewMapControl>()?.FirstOrDefault();
         if(overviewControl is not null)
         {
-            await overviewControl.UpdateAsync(options => options.MapStyle = eventArgs.Style);
+            await overviewControl.SetOptionsAsync(options => options.MapStyle = eventArgs.Style);
         }
     }
 } 
