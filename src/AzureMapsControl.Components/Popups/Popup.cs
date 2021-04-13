@@ -56,10 +56,14 @@
         /// Open the popup
         /// </summary>
         /// <returns></returns>
-        public virtual async Task OpenAsync()
+        /// <exception cref="ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        public virtual async ValueTask OpenAsync()
         {
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Popup_OpenAsync, "Opening popup");
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Popup_OpenAsync, $"Id: {Id}");
+
+            EnsureJsRuntimeExists();
+
             await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Open.ToPopupNamespace(), Id);
         }
 
@@ -67,10 +71,14 @@
         /// Close the popup
         /// </summary>
         /// <returns></returns>
-        public virtual async Task CloseAsync()
+        /// <exception cref="ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        public virtual async ValueTask CloseAsync()
         {
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Popup_CloseAsync, "Closing popup");
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Popup_CloseAsync, $"Id: {Id}");
+
+            EnsureJsRuntimeExists();
+
             await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Close.ToPopupNamespace(), Id);
         }
 
@@ -78,7 +86,8 @@
         /// Remove the popup from the map
         /// </summary>
         /// <returns></returns>
-        public virtual async Task RemoveAsync()
+        /// <exception cref="ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        public virtual async ValueTask RemoveAsync()
         {
             if (IsRemoved)
             {
@@ -87,6 +96,9 @@
 
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Popup_RemoveAsync, "Removing popup");
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Popup_RemoveAsync, $"Id: {Id}");
+
+            EnsureJsRuntimeExists();
+
             await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Remove.ToPopupNamespace(), Id);
 
             OnRemoved?.Invoke();
@@ -98,8 +110,11 @@
         /// </summary>
         /// <param name="update">Update to provide on the options</param>
         /// <returns></returns>
-        public virtual async Task UpdateAsync(Action<PopupOptions> update)
+        /// <exception cref="ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        public virtual async ValueTask UpdateAsync(Action<PopupOptions> update)
         {
+            EnsureJsRuntimeExists();
+
             update.Invoke(Options);
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Popup_UpdateAsync, "Removing popup");
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Popup_UpdateAsync, $"Id: {Id}");
@@ -129,6 +144,14 @@
                 case "open":
                     OnOpen?.Invoke(eventArgs);
                     break;
+            }
+        }
+
+        private void EnsureJsRuntimeExists()
+        {
+            if (JSRuntime is null)
+            {
+                throw new ComponentNotAddedToMapException();
             }
         }
     }

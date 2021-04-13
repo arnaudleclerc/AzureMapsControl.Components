@@ -33,7 +33,7 @@
         /// </summary>
         /// <returns>Feature containing the last known position</returns>
         /// <exception cref="ControlDisposedException">The control has already been disposed</exception>
-        /// <exception cref="ControlNotAddedToMapException">The control has not been added to the map</exception>
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
         public async ValueTask<Feature<Point>> GetLastKnownPositionAsync()
         {
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.GeolocationControl_GetLastKnownPositionAsync, "GeolocationControl - GetLastKnownPositionAsync");
@@ -50,7 +50,7 @@
         /// </summary>
         /// <returns></returns>
         /// <exception cref="ControlDisposedException">The control has already been disposed</exception>
-        /// <exception cref="ControlNotAddedToMapException">The control has not been added to the map</exception>
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
         public async ValueTask DisposeAsync()
         {
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.GeolocationControl_DisposeAsync, "GeolocationControl - DisposeAsync");
@@ -70,19 +70,19 @@
         /// <param name="update">Update to apply on the options</param>
         /// <returns></returns>
         /// <exception cref="ControlDisposedException">The control has already been disposed</exception>
-        /// <exception cref="ControlNotAddedToMapException">The control has not been added to the map</exception>
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
         public async ValueTask SetOptionsAsync(Action<GeolocationControlOptions> update)
         {
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.GeolocationControl_SetOptionsAsync, "GeolocationControl - SetOptionsAsync");
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.GeolocationControl_SetOptionsAsync, $"Id: {Id}");
 
+            EnsureJsRuntimeExists();
+            EnsureNotDisposed();
+
             if (Options is null)
             {
                 Options = new GeolocationControlOptions();
             }
-
-            EnsureJsRuntimeExists();
-            EnsureNotDisposed();
 
             update(Options);
 
@@ -101,7 +101,7 @@
         {
             if (JsRuntime is null)
             {
-                throw new ControlNotAddedToMapException();
+                throw new Exceptions.ComponentNotAddedToMapException();
             }
         }
     }

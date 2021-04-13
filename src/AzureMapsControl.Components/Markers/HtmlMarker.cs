@@ -139,11 +139,18 @@
         /// Toggles the popup attached to the marker.
         /// </summary>
         /// <returns></returns>
-        public async Task TogglePopupAsync()
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        public async ValueTask TogglePopupAsync()
         {
             if (Options?.Popup != null)
             {
                 Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.HtmlMarker_TogglePopupAsync, "Calling TogglePopupAsync");
+
+                if (JSRuntime is null)
+                {
+                    throw new Exceptions.ComponentNotAddedToMapException();
+                }
+
                 await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.HtmlMarker.TogglePopup.ToHtmlMarkerNamespace(), Id, Options.Popup.Id, Options.Popup.EventActivationFlags.EnabledEvents, DotNetObjectReference.Create(PopupInvokeHelper));
                 Options.Popup.HasBeenToggled = true;
                 Options.Popup.IsRemoved = false;

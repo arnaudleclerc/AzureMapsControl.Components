@@ -55,6 +55,16 @@
         }
 
         [Fact]
+        public async void Should_NotOpen_NotAddedToMapCase_Async()
+        {
+            var popup = new Popup(new PopupOptions());
+
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await popup.OpenAsync());
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async void Should_CloseAsync()
         {
             var popup = new Popup(new PopupOptions()) {
@@ -62,6 +72,14 @@
             };
             await popup.CloseAsync();
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Close.ToPopupNamespace(), popup.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotClose_NotAddedToMapCase_Async()
+        {
+            var popup = new Popup(new PopupOptions());
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async() => await popup.CloseAsync());
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -78,6 +96,14 @@
             Assert.True(assertRemoveEvent);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Remove.ToPopupNamespace(), popup.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotRemove_NotAddedToMapCase_Async()
+        {
+            var popup = new Popup(new PopupOptions());
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async() => await popup.RemoveAsync());
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -111,6 +137,16 @@
                 parameters[0] as string == popup.Id
                 && (parameters[1] as PopupOptions).Content == "updatedContent"
             )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotUpdate_NotAddedToMapCase_Async()
+        {
+            var popup = new Popup(new PopupOptions());
+            var updatedContent = "updatedContent";
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async() => await popup.UpdateAsync(options => options.Content = updatedContent));
+
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 

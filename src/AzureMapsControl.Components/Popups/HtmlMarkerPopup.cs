@@ -23,7 +23,7 @@
         {
         }
 
-        public override async Task CloseAsync()
+        public override async ValueTask CloseAsync()
         {
             if (HasBeenToggled)
             {
@@ -31,7 +31,7 @@
             }
         }
 
-        public override async Task OpenAsync()
+        public override async ValueTask OpenAsync()
         {
             if (HasBeenToggled)
             {
@@ -39,7 +39,7 @@
             }
         }
 
-        public override async Task RemoveAsync()
+        public override async ValueTask RemoveAsync()
         {
             if (HasBeenToggled)
             {
@@ -47,7 +47,7 @@
             }
         }
 
-        public override async Task UpdateAsync(Action<PopupOptions> update)
+        public override async ValueTask UpdateAsync(Action<PopupOptions> update)
         {
             if (HasBeenToggled)
             {

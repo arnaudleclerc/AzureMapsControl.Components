@@ -5,6 +5,7 @@
 
     using AzureMapsControl.Components.Atlas;
     using AzureMapsControl.Components.Data;
+    using AzureMapsControl.Components.Exceptions;
     using AzureMapsControl.Components.Runtime;
 
     using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -102,6 +103,22 @@
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
+
+        [Fact]
+        public async void Should_NotAddShapes_NotAddedToMapCae_Async()
+        {
+            var dataSource = new DataSource();
+
+            var shapes = new List<Shape> {
+                new Shape<Point>(new Point())
+            };
+
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await dataSource.AddAsync(shapes));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+
         [Fact]
         public async void Should_AddLineStringsShapes_Async()
         {
@@ -178,6 +195,20 @@
                 && parameters[1] is IEnumerable<Feature<RoutePoint>>
             )), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.IsAny<object[]>()), Times.Exactly(7));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotAddFeatures_NotAddedToMapCase_Async()
+        {
+            var dataSource = new DataSource();
+
+            var features = new List<Feature> {
+                new Feature<Point>(),
+            };
+
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await dataSource.AddAsync(features));
 
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -290,6 +321,18 @@
                 parameters[0] as string == dataSource.Id
                 && parameters[1] as string == url
             )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotImportDataFromUrl_NotAddedToMapCase_Async()
+        {
+            var dataSource = new DataSource();
+
+            const string url = "someurl";
+
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await dataSource.ImportDataFromUrlAsync(url));
+
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -645,6 +688,16 @@
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Clear.ToSourceNamespace(), dataSource.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_ClearDataSource_NotAddedToMapCase_Async()
+        {
+            var dataSource = new DataSource();
+
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await dataSource.ClearAsync());
+
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
     }

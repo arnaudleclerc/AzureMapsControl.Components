@@ -2,6 +2,7 @@
 {
     using AzureMapsControl.Components.Atlas;
     using AzureMapsControl.Components.Controls;
+    using AzureMapsControl.Components.Exceptions;
     using AzureMapsControl.Components.Runtime;
 
     using Moq;
@@ -48,7 +49,7 @@
         {
             var control = new GeolocationControl();
 
-            await Assert.ThrowsAnyAsync<ControlNotAddedToMapException>(async () => await control.GetLastKnownPositionAsync());
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await control.GetLastKnownPositionAsync());
 
             _mapJsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -88,7 +89,7 @@
         public async void Should_NotDispose_NotAddedToMapCase_Async()
         {
             var control = new GeolocationControl();
-            await Assert.ThrowsAnyAsync<ControlNotAddedToMapException>(async () => await control.DisposeAsync());
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await control.DisposeAsync());
 
             _mapJsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -127,7 +128,7 @@
         {
             var control = new GeolocationControl();
 
-            await Assert.ThrowsAnyAsync<ControlNotAddedToMapException>(async () => await control.SetOptionsAsync(options => options.CalculateMissingValues = true));
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await control.SetOptionsAsync(options => options.CalculateMissingValues = true));
 
             _mapJsRuntimeMock.VerifyNoOtherCalls();
         }

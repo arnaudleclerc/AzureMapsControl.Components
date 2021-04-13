@@ -32,7 +32,8 @@
         /// </summary>
         /// <param name="shapes">Shapes to add</param>
         /// <returns></returns>
-        public async Task AddAsync(IEnumerable<Shape> shapes)
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        public async ValueTask AddAsync(IEnumerable<Shape> shapes)
         {
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.DataSource_AddAsync, "Adding shapes to data source");
 
@@ -40,6 +41,8 @@
             {
                 return;
             }
+
+            EnsureJsRuntimeExists();
 
             if (_shapes == null)
             {
@@ -104,14 +107,16 @@
         /// </summary>
         /// <param name="shapes">Shapes to add</param>
         /// <returns></returns>
-        public async Task AddAsync(params Shape[] shapes) => await AddAsync(shapes as IEnumerable<Shape>);
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        public async ValueTask AddAsync(params Shape[] shapes) => await AddAsync(shapes as IEnumerable<Shape>);
 
         /// <summary>
         /// Add features to the data source
         /// </summary>
         /// <param name="features">Features to add</param>
         /// <returns></returns>
-        public async Task AddAsync(IEnumerable<Feature> features)
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        public async ValueTask AddAsync(IEnumerable<Feature> features)
         {
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.DataSource_AddAsync, "Adding features to data source");
 
@@ -119,6 +124,8 @@
             {
                 return;
             }
+
+            EnsureJsRuntimeExists();
 
             if (_features == null)
             {
@@ -183,14 +190,16 @@
         /// </summary>
         /// <param name="features">Features to add</param>
         /// <returns></returns>
-        public async Task AddAsync(params Feature[] features) => await AddAsync(features as IEnumerable<Feature>);
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        public async ValueTask AddAsync(params Feature[] features) => await AddAsync(features as IEnumerable<Feature>);
 
         /// <summary>
         /// Remove shapes and features from the data source
         /// </summary>
         /// <param name="ids">IDs of the shapes and features to remove</param>
         /// <returns></returns>
-        public async Task RemoveAsync(IEnumerable<string> ids)
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        public async ValueTask RemoveAsync(IEnumerable<string> ids)
         {
             var shapeIdsToRemove = _shapes?.Where(shape => ids.Contains(shape.Id)).Select(shape => shape.Id);
             var featureIdsToRemove = _features?.Where(feature => ids.Contains(feature.Id)).Select(feature => feature.Id);
@@ -209,6 +218,8 @@
 
             if (idsToRemove.Any())
             {
+                EnsureJsRuntimeExists();
+
                 Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.DataSource_RemoveAsync, "Removing geometries from data source");
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_RemoveAsync, $"Id: {Id} | Ids: {string.Join('|', ids)}");
                 await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), Id, ids);
@@ -220,7 +231,8 @@
         /// </summary>
         /// <param name="ids">IDs of the shapes and features to remove</param>
         /// <returns></returns>
-        public async Task RemoveAsync(params string[] ids) => await RemoveAsync(ids as IEnumerable<string>);
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        public async ValueTask RemoveAsync(params string[] ids) => await RemoveAsync(ids as IEnumerable<string>);
 
         /// <summary>
         /// Remove shapes and features from the datasource
@@ -228,7 +240,8 @@
         /// <param name="shapes">Shapes to remove</param>
         /// <param name="features">Features to remove</param>
         /// <returns></returns>
-        public async Task RemoveAsync(IEnumerable<Shape> shapes, IEnumerable<Feature> features)
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        public async ValueTask RemoveAsync(IEnumerable<Shape> shapes, IEnumerable<Feature> features)
         {
             var ids = new List<string>();
             if (shapes != null)
@@ -249,28 +262,32 @@
         /// </summary>
         /// <param name="shapes">Shapes to remove</param>
         /// <returns></returns>
-        public async Task RemoveAsync(IEnumerable<Shape> shapes) => await RemoveAsync(shapes, null);
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        public async ValueTask RemoveAsync(IEnumerable<Shape> shapes) => await RemoveAsync(shapes, null);
 
         /// <summary>
         /// Remove shapes from the data source
         /// </summary>
         /// <param name="shapes">Shapes to remove</param>
         /// <returns></returns>
-        public async Task RemoveAsync(params Shape[] shapes) => await RemoveAsync(shapes, null);
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        public async ValueTask RemoveAsync(params Shape[] shapes) => await RemoveAsync(shapes, null);
 
         /// <summary>
         /// Remove features from the datasource
         /// </summary>
         /// <param name="features">Features to remove</param>
         /// <returns></returns>
-        public async Task RemoveAsync(IEnumerable<Feature> features) => await RemoveAsync(null, features);
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        public async ValueTask RemoveAsync(IEnumerable<Feature> features) => await RemoveAsync(null, features);
 
         /// <summary>
         /// Remove features from the data source
         /// </summary>
         /// <param name="features">Features to remove</param>
         /// <returns></returns>
-        public async Task RemoveAsync(params Feature[] features) => await RemoveAsync(null, features);
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        public async ValueTask RemoveAsync(params Feature[] features) => await RemoveAsync(null, features);
 
         /// <summary>
         /// Imports data from an URL into a data source
@@ -278,10 +295,14 @@
         /// <param name="dataSourceId">ID of the data source on which the data will be imported</param>
         /// <param name="url">Url to import the data from</param>
         /// <returns></returns>
-        public async Task ImportDataFromUrlAsync(string url)
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        public async ValueTask ImportDataFromUrlAsync(string url)
         {
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.DataSource_ImportDataFromUrlAsync, "Importing data from url into data source");
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_ImportDataFromUrlAsync, $"Id: {Id} | Url: {url}");
+
+            EnsureJsRuntimeExists();
+
             await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.ImportDataFromUrl.ToSourceNamespace(), Id, url);
         }
 
@@ -289,14 +310,25 @@
         /// Clear the datasource
         /// </summary>
         /// <returns></returns>
-        public async Task ClearAsync()
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        public async ValueTask ClearAsync()
         {
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.DataSource_ClearAsync, "Clearing data source");
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_ClearAsync, $"Id: {Id}");
 
+            EnsureJsRuntimeExists();
+
             _shapes = null;
             _features = null;
             await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Clear.ToSourceNamespace(), Id);
+        }
+
+        private void EnsureJsRuntimeExists()
+        {
+            if (JSRuntime is null)
+            {
+                throw new Exceptions.ComponentNotAddedToMapException();
+            }
         }
     }
 }

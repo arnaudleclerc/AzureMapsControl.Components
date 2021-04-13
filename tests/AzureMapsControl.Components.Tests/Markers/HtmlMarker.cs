@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
 
+    using AzureMapsControl.Components.Exceptions;
     using AzureMapsControl.Components.Markers;
     using AzureMapsControl.Components.Popups;
     using AzureMapsControl.Components.Runtime;
@@ -275,6 +276,23 @@
             marker.OnPopupToggled += () => assertEvent = true;
             await marker.TogglePopupAsync();
             Assert.False(assertEvent);
+
+            _jsRuntime.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_Not_TogglePopup_NotAddedToMapCase_Async()
+        {
+            var popupInvokeHelper = new PopupInvokeHelper(null);
+            var marker = new HtmlMarker(new HtmlMarkerOptions {
+                Popup = new HtmlMarkerPopup(new PopupOptions()) {
+                    IsRemoved = true
+                }
+            }) {
+                PopupInvokeHelper = popupInvokeHelper
+            };
+
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await marker.TogglePopupAsync());
 
             _jsRuntime.VerifyNoOtherCalls();
         }

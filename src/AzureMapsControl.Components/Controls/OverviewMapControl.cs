@@ -25,8 +25,16 @@
         /// </summary>
         /// <param name="update">Update to apply to the options</param>
         /// <returns></returns>
-        public async Task UpdateAsync(Action<OverviewMapControlOptions> update)
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        public async ValueTask UpdateAsync(Action<OverviewMapControlOptions> update)
         {
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.OverviewMapControl_UpdateAsync, "OverviewMapControl - UpdateAsync");
+
+            if (JsRuntime is null)
+            {
+                throw new Exceptions.ComponentNotAddedToMapException();
+            }
+
             if (Options is null)
             {
                 Options = new OverviewMapControlOptions();
@@ -34,7 +42,6 @@
 
             update(Options);
 
-            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.OverviewMapControl_UpdateAsync, "OverviewMapControl - UpdateAsync");
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.OverviewMapControl_UpdateAsync, $"Id: {Id}");
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.OverviewMapControl_UpdateAsync, $"Type: {Type}");
             await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.UpdateControl.ToCoreNamespace(), this);
