@@ -54,5 +54,14 @@
                 await base.UpdateAsync(update);
             }
         }
+
+        public override async ValueTask SetOptionsAsync(Action<PopupOptions> update)
+        {
+            if (HasBeenToggled)
+            {
+                await base.SetOptionsAsync(update);
+            }
+        }
+
     }
 }

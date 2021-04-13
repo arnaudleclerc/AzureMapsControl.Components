@@ -405,11 +405,6 @@ export class Core {
         this._map.setUserInteraction(userInteractionOptions);
     }
 
-    public static updateControl(control: Control): void {
-        const mapControl = this._map.controls.getControls().find(ctrl => (ctrl as any).amc && (ctrl as any).amc.id === control.id);
-        (mapControl as overviewmap.control.OverviewMap).setOptions(control.options);
-    }
-
     public static updateHtmlMarkers(htmlMarkerOptions: HtmlMarkerDefinition[]): void {
         htmlMarkerOptions.forEach(htmlMarkerOption => {
             const options: azmaps.HtmlMarkerOptions = {};

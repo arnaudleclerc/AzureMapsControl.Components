@@ -15,6 +15,7 @@
             internal const string Popup = "Popup";
             internal const string Source = "Datasource";
             internal const string HtmlMarker = "HtmlMarker";
+            internal const string OverviewMapControl = "OverviewMapControl";
             internal const string GeolocationControl = "GeolocationControl";
         }
 
@@ -61,7 +62,6 @@
                 internal const string SetStyleOptions = "setStyleOptions";
                 internal const string SetTraffic = "setTraffic";
                 internal const string SetUserInteraction = "setUserInteraction";
-                internal const string UpdateControl = "updateControl";
                 internal const string UpdateHtmlMarkers = "updateHtmlMarkers";
                 internal const string CreateImageFromTemplate = "createImageFromTemplate";
             }
@@ -78,7 +78,7 @@
                 internal const string Close = "close";
                 internal const string Open = "open";
                 internal const string Remove = "remove";
-                internal const string Update = "update";
+                internal const string SetOptions = "setOptions";
             }
 
             internal static class Source
@@ -93,6 +93,11 @@
             internal static class HtmlMarker
             {
                 internal const string TogglePopup = "togglePopup";
+            }
+
+            internal static class OverviewMapControl
+            {
+                internal const string SetOptions = "setOptions";
             }
 
             internal static class GeolocationControl

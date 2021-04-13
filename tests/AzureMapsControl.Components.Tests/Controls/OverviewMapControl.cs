@@ -37,7 +37,7 @@
 
             await control.UpdateAsync(options => options.Interactive = true);
             Assert.True(options.Interactive);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.UpdateControl.ToCoreNamespace(), control), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.OverviewMapControl.SetOptions.ToOverviewMapControlNamespace(), control), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -52,6 +52,31 @@
         }
 
         [Fact]
+        public async void Should_SetOptionsAsync()
+        {
+            var options = new OverviewMapControlOptions();
+            var position = ControlPosition.BottomLeft;
+            var control = new OverviewMapControl(options, position) {
+                JsRuntime = _jsRuntimeMock.Object
+            };
+
+            await control.SetOptionsAsync(options => options.Interactive = true);
+            Assert.True(options.Interactive);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.OverviewMapControl.SetOptions.ToOverviewMapControlNamespace(), control), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotSetOptions_NotAddtoMapCase_Async()
+        {
+            var control = new OverviewMapControl();
+
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await control.SetOptionsAsync(options => options.Interactive = true));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async void Should_UpdateAsyncWithDefaultOptionsAsync()
         {
             var control = new OverviewMapControl
@@ -61,7 +86,20 @@
 
             await control.UpdateAsync(options => options.Interactive = true);
             Assert.True(control.Options.Interactive);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.UpdateControl.ToCoreNamespace(), control), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.OverviewMapControl.SetOptions.ToOverviewMapControlNamespace(), control), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_SetOptionsAsyncWithDefaultOptionsAsync()
+        {
+            var control = new OverviewMapControl {
+                JsRuntime = _jsRuntimeMock.Object
+            };
+
+            await control.SetOptionsAsync(options => options.Interactive = true);
+            Assert.True(control.Options.Interactive);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.OverviewMapControl.SetOptions.ToOverviewMapControlNamespace(), control), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
     }

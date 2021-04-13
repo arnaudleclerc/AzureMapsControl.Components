@@ -25,7 +25,7 @@ export class Popup {
         }
     }
 
-    public static update(id: string, options: azmaps.PopupOptions): void {
+    public static setOptions(id: string, options: azmaps.PopupOptions): void {
         const popup = Core.getPopup(id);
         if (popup) {
             const popupOptions = {

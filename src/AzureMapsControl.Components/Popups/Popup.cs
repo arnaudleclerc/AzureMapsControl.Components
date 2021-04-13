@@ -29,7 +29,7 @@
         /// <summary>
         /// Options of the popup
         /// </summary>
-        internal PopupOptions Options { get; }
+        internal PopupOptions Options { get; private set; }
 
         public event PopupEvent OnClose;
         public event PopupEvent OnDrag;
@@ -111,14 +111,33 @@
         /// <param name="update">Update to provide on the options</param>
         /// <returns></returns>
         /// <exception cref="ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        [Obsolete("Will be removed in a future version. Use SetOptionsAsync instead.")]
         public virtual async ValueTask UpdateAsync(Action<PopupOptions> update)
+        {
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Popup_UpdateAsync, "Popup - UpdateAsync");
+
+            await SetOptionsAsync(update);
+        }
+
+        /// <summary>
+        /// Set the options on the popup
+        /// </summary>
+        /// <param name="update">Update to provide on the options</param>
+        /// <returns></returns>
+        /// <exception cref="ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        public virtual async ValueTask SetOptionsAsync(Action<PopupOptions> update)
         {
             EnsureJsRuntimeExists();
 
+            if (Options is null)
+            {
+                Options = new PopupOptions();
+            }
+
             update.Invoke(Options);
-            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Popup_UpdateAsync, "Removing popup");
-            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Popup_UpdateAsync, $"Id: {Id}");
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Update.ToPopupNamespace(), Id, Options);
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Popup_SetOptionsAsync, "Poup - SetOptionsAsync");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Popup_SetOptionsAsync, $"Id: {Id}");
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.SetOptions.ToPopupNamespace(), Id, Options);
         }
 
         internal void DispatchEvent(PopupEventArgs eventArgs)
