@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/member-ordering */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable quotes */
 /* eslint-disable @typescript-eslint/prefer-namespace-keyword */
