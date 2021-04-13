@@ -100,6 +100,7 @@
                 internal const string GetLastKnownPosition = "getLastKnownPosition";
                 internal const string IsGeolocationSupported = "isGeolocationSupported";
                 internal const string Dispose = "dispose";
+                internal const string SetOptions = "setOptions";
             }
         }
     }

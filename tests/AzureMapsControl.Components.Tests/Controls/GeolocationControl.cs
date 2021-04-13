@@ -44,6 +44,16 @@
         }
 
         [Fact]
+        public async void Should_NotGetLastKnowPosition_NotAddedToMapCase_Async()
+        {
+            var control = new GeolocationControl();
+
+            await Assert.ThrowsAnyAsync<ControlNotAddedToMapException>(async () => await control.GetLastKnownPositionAsync());
+
+            _mapJsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async void Should_DisposeAsync()
         {
             var control = new GeolocationControl() {
@@ -71,6 +81,54 @@
             await Assert.ThrowsAnyAsync<ControlDisposedException>(async () => await control.DisposeAsync());
 
             _mapJsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.GeolocationControl.Dispose.ToGeolocationControlNamespace(), control.Id), Times.Once);
+            _mapJsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotDispose_NotAddedToMapCase_Async()
+        {
+            var control = new GeolocationControl();
+            await Assert.ThrowsAnyAsync<ControlNotAddedToMapException>(async () => await control.DisposeAsync());
+
+            _mapJsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_SetOptions_Async()
+        {
+            var control = new GeolocationControl() {
+                JsRuntime = _mapJsRuntimeMock.Object
+            };
+
+            await control.SetOptionsAsync(options => options.CalculateMissingValues = true);
+
+            Assert.True(control.Options.CalculateMissingValues);
+
+            _mapJsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.GeolocationControl.SetOptions.ToGeolocationControlNamespace(), control.Id, control.Options), Times.Once);
+            _mapJsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotSetOptions_DisposedCase_Async()
+        {
+            var control = new GeolocationControl() {
+                JsRuntime = _mapJsRuntimeMock.Object
+            };
+
+            await control.DisposeAsync();
+            await Assert.ThrowsAnyAsync<ControlDisposedException>(async () => await control.SetOptionsAsync(options => options.CalculateMissingValues = true));
+
+            _mapJsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.GeolocationControl.Dispose.ToGeolocationControlNamespace(), control.Id), Times.Once);
+            _mapJsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotSetOptions_NotAddedToMapCase_Async()
+        {
+            var control = new GeolocationControl();
+
+            await Assert.ThrowsAnyAsync<ControlNotAddedToMapException>(async () => await control.SetOptionsAsync(options => options.CalculateMissingValues = true));
+
             _mapJsRuntimeMock.VerifyNoOtherCalls();
         }
     }

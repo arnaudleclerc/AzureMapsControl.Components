@@ -56,6 +56,7 @@
         HtmlMarker_TogglePopupAsync = 8000,
         GeolocationControl_GetLastKnownPositionAsync = 9000,
         GeolocationControl_DisposeAsync = 9001,
+        GeolocationControl_SetOptionsAsync = 9002,
         GeolocationService_IsGeolocationSupportedAsync = 9100,
     }
 

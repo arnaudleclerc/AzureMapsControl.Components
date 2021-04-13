@@ -33,11 +33,13 @@
         /// </summary>
         /// <returns>Feature containing the last known position</returns>
         /// <exception cref="ControlDisposedException">The control has already been disposed</exception>
+        /// <exception cref="ControlNotAddedToMapException">The control has not been added to the map</exception>
         public async ValueTask<Feature<Point>> GetLastKnownPositionAsync()
         {
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.GeolocationControl_GetLastKnownPositionAsync, "GeolocationControl - GetLastKnownPositionAsync");
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.GeolocationControl_GetLastKnownPositionAsync, $"Id: {Id}");
 
+            EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
             return await JsRuntime.InvokeAsync<Feature<Point>>(Constants.JsConstants.Methods.GeolocationControl.GetLastKnownPosition.ToGeolocationControlNamespace(), Id);
@@ -47,12 +49,14 @@
         /// Disposes the control.
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="ControlDiposedException">The control has already been disposed</exception>
+        /// <exception cref="ControlDisposedException">The control has already been disposed</exception>
+        /// <exception cref="ControlNotAddedToMapException">The control has not been added to the map</exception>
         public async ValueTask DisposeAsync()
         {
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.GeolocationControl_DisposeAsync, "GeolocationControl - DisposeAsync");
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.GeolocationControl_DisposeAsync, $"Id: {Id}");
-            
+
+            EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
             await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.GeolocationControl.Dispose.ToGeolocationControlNamespace(), Id);
@@ -60,11 +64,44 @@
             OnDisposed?.Invoke();
         }
 
+        /// <summary>
+        /// Sets the options of the geolocation control.
+        /// </summary>
+        /// <param name="update">Update to apply on the options</param>
+        /// <returns></returns>
+        /// <exception cref="ControlDisposedException">The control has already been disposed</exception>
+        /// <exception cref="ControlNotAddedToMapException">The control has not been added to the map</exception>
+        public async ValueTask SetOptionsAsync(Action<GeolocationControlOptions> update)
+        {
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.GeolocationControl_SetOptionsAsync, "GeolocationControl - SetOptionsAsync");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.GeolocationControl_SetOptionsAsync, $"Id: {Id}");
+
+            if (Options is null)
+            {
+                Options = new GeolocationControlOptions();
+            }
+
+            EnsureJsRuntimeExists();
+            EnsureNotDisposed();
+
+            update(Options);
+
+            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.GeolocationControl.SetOptions.ToGeolocationControlNamespace(), Id, Options);
+        }
+
         private void EnsureNotDisposed()
         {
             if (Disposed)
             {
                 throw new ControlDisposedException();
+            }
+        }
+
+        private void EnsureJsRuntimeExists()
+        {
+            if (JsRuntime is null)
+            {
+                throw new ControlNotAddedToMapException();
             }
         }
     }

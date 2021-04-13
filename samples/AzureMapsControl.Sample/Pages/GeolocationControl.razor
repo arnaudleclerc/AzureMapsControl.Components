@@ -15,11 +15,9 @@
     {
         if (await GeolocationService.IsGeolocationSupportedAsync())
         {
-            await eventArgs.Map.AddControlsAsync(new Components.Controls.GeolocationControl(
-                new Components.Controls.GeolocationControlOptions
-                {
-                    Style = Components.Controls.ControlStyle.Auto,
-                }, Components.Controls.ControlPosition.TopRight));
+            var control = new Components.Controls.GeolocationControl(position: Components.Controls.ControlPosition.TopRight);
+            await eventArgs.Map.AddControlsAsync(control);
+            await control.SetOptionsAsync(options => options.Style = Components.Controls.ControlStyle.Auto);
         }
     }
 
