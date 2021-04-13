@@ -14,4 +14,8 @@ export class GeolocationControl {
         } as Feature;
     }
 
+    public static async isGeolocationSupported(): Promise<boolean> {
+        return await geolocationcontrol.control.GeolocationControl.isSupported();
+    }
+
 }

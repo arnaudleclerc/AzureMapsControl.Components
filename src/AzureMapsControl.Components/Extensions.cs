@@ -5,6 +5,7 @@
     using AzureMapsControl.Components.Animations;
     using AzureMapsControl.Components.Configuration;
     using AzureMapsControl.Components.Constants;
+    using AzureMapsControl.Components.Geolocation;
     using AzureMapsControl.Components.Map;
     using AzureMapsControl.Components.Runtime;
 
@@ -26,6 +27,7 @@
                 .AddSingleton<IMapService>(sp => sp.GetRequiredService<MapService>())
                 .AddScoped<IAnimationService, AnimationService>()
                 .AddScoped<IMapJsRuntime, MapJsRuntime>()
+                .AddScoped<IGeolocationService, GeolocationService>()
                 .AddOptions<AzureMapsConfiguration>()
                 .Configure(configure)
                 .Validate(configuration => configuration.Validate(), "The given AzureMapsConfiguration is invalid");

@@ -1,4 +1,5 @@
 ﻿@page "/GeolocationControl"
+@inject AzureMapsControl.Components.Geolocation.IGeolocationService GeolocationService
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
@@ -6,24 +7,31 @@
                                 .None()
                                 .Enable(MapEventType.Ready, MapEventType.Click)"
           OnReady="OnMapReady"
-          OnClick="OnMapClick"/>
+          OnClick="OnMapClick" />
 
 @code  {
 
     public async Task OnMapReady(MapEventArgs eventArgs)
     {
-        await eventArgs.Map.AddControlsAsync(new Components.Controls.GeolocationControl(
-            new Components.Controls.GeolocationControlOptions {
-                Style = Components.Controls.ControlStyle.Auto,
-            }, Components.Controls.ControlPosition.TopRight));
+        if (await GeolocationService.IsGeolocationSupportedAsync())
+        {
+            await eventArgs.Map.AddControlsAsync(new Components.Controls.GeolocationControl(
+                new Components.Controls.GeolocationControlOptions
+                {
+                    Style = Components.Controls.ControlStyle.Auto,
+                }, Components.Controls.ControlPosition.TopRight));
+        }
     }
 
     public async Task OnMapClick(MapMouseEventArgs eventArgs)
     {
-        var control = eventArgs.Map.Controls.OfType<Components.Controls.GeolocationControl>().First();
-        var feature = await control.GetLastKnownPositionAsync();
-        Console.WriteLine(feature.Geometry.Coordinates.Longitude);
-        Console.WriteLine(feature.Geometry.Coordinates.Latitude);
+        var control = eventArgs.Map.Controls.OfType<Components.Controls.GeolocationControl>().FirstOrDefault();
+        if (control is not null)
+        {
+            var feature = await control.GetLastKnownPositionAsync();
+            Console.WriteLine(feature.Geometry.Coordinates.Longitude);
+            Console.WriteLine(feature.Geometry.Coordinates.Latitude);
+        }
     }
 
 }

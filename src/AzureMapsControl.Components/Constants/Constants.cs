@@ -97,6 +97,7 @@
             internal static class GeolocationControl
             {
                 internal const string GetLastKnownPosition = "getLastKnownPosition";
+                internal const string IsGeolocationSupported = "isGeolocationSupported";
             }
         }
     }

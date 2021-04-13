@@ -54,7 +54,8 @@
         DataSource_ImportDataFromUrlAsync = 7002,
         DataSource_ClearAsync = 7003,
         HtmlMarker_TogglePopupAsync = 8000,
-        GeolocationControl_GetLastKnownPosition = 9000
+        GeolocationControl_GetLastKnownPosition = 9000,
+        GeolocationService_IsGeolocationSupportedAsync = 9100,
     }
 
     internal static class Extensions
