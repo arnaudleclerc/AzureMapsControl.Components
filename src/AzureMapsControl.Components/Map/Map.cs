@@ -171,13 +171,19 @@
             }
 
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddControlsAsync, "Map - AddControlsAsync");
-            
-            if(_controls is null)
+
+            if (_controls is null)
             {
                 _controls = new List<Control>();
             }
 
             _controls.AddRange(controls);
+
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddControlsAsync, $"Adding controls", Controls);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_AddControlsAsync, $"{Controls.Count()} controls will be added: {string.Join('|', Controls.Select(co => co.Type))}");
+            //Ordering the controls is necessary if the controls contain an OverviewMapControl. This one needs to be added last, otherwise the controls added after it will be added to the overlay.
+            //Following : https://github.com/Azure-Samples/azure-maps-overview-map/issues/1
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddControls.ToCoreNamespace(), Controls?.OrderBy(control => control.Order));
 
             var overviewMapControl = controls.OfType<OverviewMapControl>().FirstOrDefault();
             if (overviewMapControl is not null)
@@ -193,14 +199,8 @@
                 geolocationControl.JsRuntime = _jsRuntime;
 
                 geolocationControl.OnDisposed += () => _controls.Remove(geolocationControl);
+                await geolocationControl.AddEventsAsync();
             }
-
-            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddControlsAsync, $"Adding controls", Controls);
-            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_AddControlsAsync, $"{Controls.Count()} controls will be added: {string.Join('|', Controls.Select(co => co.Type))}");
-            //Ordering the controls is necessary if the controls contain an OverviewMapControl. This one needs to be added last, otherwise the controls added after it will be added to the overlay.
-            //Following : https://github.com/Azure-Samples/azure-maps-overview-map/issues/1
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddControls.ToCoreNamespace(), Controls?.OrderBy(control => control.Order));
-
         }
 
         #endregion

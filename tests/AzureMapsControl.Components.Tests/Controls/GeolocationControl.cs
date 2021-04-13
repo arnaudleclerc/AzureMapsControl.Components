@@ -1,9 +1,16 @@
 ﻿namespace AzureMapsControl.Components.Tests.Controls
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     using AzureMapsControl.Components.Atlas;
     using AzureMapsControl.Components.Controls;
     using AzureMapsControl.Components.Exceptions;
+    using AzureMapsControl.Components.Geolocation;
     using AzureMapsControl.Components.Runtime;
+
+    using Microsoft.JSInterop;
 
     using Moq;
 
@@ -129,6 +136,48 @@
             var control = new GeolocationControl();
 
             await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await control.SetOptionsAsync(options => options.CalculateMissingValues = true));
+
+            _mapJsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_AddEvents_Async()
+        {
+            var control = new GeolocationControl(eventFlags: GeolocationEventActivationFlags.None().Enable(GeolocationEventType.GeolocationError)) {
+                JsRuntime = _mapJsRuntimeMock.Object
+            };
+
+            await control.AddEventsAsync();
+
+            _mapJsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.GeolocationControl.AddEvents.ToGeolocationControlNamespace(), It.Is<object[]>(parameters =>
+               (parameters[0] as Guid?).GetValueOrDefault() == control.Id
+               && parameters[1] is IEnumerable<string>
+               && (parameters[1] as IEnumerable<string>).Single() == GeolocationEventType.GeolocationError.ToString()
+               && parameters[2] is DotNetObjectReference<GeolocationEventInvokeHelper>
+            )), Times.Once);
+            _mapJsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotAddEvents_NoEvents_Async()
+        {
+            var control = new GeolocationControl(eventFlags: GeolocationEventActivationFlags.None()) {
+                JsRuntime = _mapJsRuntimeMock.Object
+            };
+
+            await control.AddEventsAsync();
+
+            _mapJsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotAddEvents_NullCase_Async()
+        {
+            var control = new GeolocationControl() {
+                JsRuntime = _mapJsRuntimeMock.Object
+            };
+
+            await control.AddEventsAsync();
 
             _mapJsRuntimeMock.VerifyNoOtherCalls();
         }

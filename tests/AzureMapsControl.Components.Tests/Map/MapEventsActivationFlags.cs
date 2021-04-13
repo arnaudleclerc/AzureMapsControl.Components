@@ -35,7 +35,7 @@
         {
             var mapEventActivationFlags = MapEventActivationFlags.All().Disable(MapEventType.Click);
             Assert.NotEmpty(mapEventActivationFlags.EnabledEvents);
-            Assert.DoesNotContain(mapEventActivationFlags.EnabledEvents.First(), MapEventType.Click.ToString());
+            Assert.DoesNotContain(MapEventType.Click.ToString(), mapEventActivationFlags.EnabledEvents);
         }
     }
 }

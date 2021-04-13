@@ -4,7 +4,6 @@
     using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Events;
-    using AzureMapsControl.Components.Markers;
 
     internal class HtmlMarkerInvokeHelper : EventInvokeHelper<HtmlMarkerJsEventArgs>
     {

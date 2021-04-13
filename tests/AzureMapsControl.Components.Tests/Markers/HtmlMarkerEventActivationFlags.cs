@@ -35,7 +35,7 @@
         {
             var htmlMarkerEventActivationFlags = HtmlMarkerEventActivationFlags.All().Disable(HtmlMarkerEventType.Click);
             Assert.NotEmpty(htmlMarkerEventActivationFlags.EnabledEvents);
-            Assert.DoesNotContain(htmlMarkerEventActivationFlags.EnabledEvents.First(), HtmlMarkerEventType.Click.ToString());
+            Assert.DoesNotContain(HtmlMarkerEventType.Click.ToString(), htmlMarkerEventActivationFlags.EnabledEvents);
         }
     }
 }

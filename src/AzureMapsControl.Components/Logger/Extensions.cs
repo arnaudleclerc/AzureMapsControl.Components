@@ -59,6 +59,7 @@
         GeolocationControl_GetLastKnownPositionAsync = 9000,
         GeolocationControl_DisposeAsync = 9001,
         GeolocationControl_SetOptionsAsync = 9002,
+        GeolocationControl_AddEventsAsync = 9003,
         GeolocationService_IsGeolocationSupportedAsync = 9100,
     }
 

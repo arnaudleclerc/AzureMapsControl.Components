@@ -3,7 +3,7 @@
     using System.Diagnostics.CodeAnalysis;
 
     [ExcludeFromCodeCoverage]
-    public sealed class HtmlMarkerJsEventArgs
+    internal class HtmlMarkerJsEventArgs
     {
         public string MarkerId { get; set; }
         public string Type { get; set; }

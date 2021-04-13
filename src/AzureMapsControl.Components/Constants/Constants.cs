@@ -106,6 +106,7 @@
                 internal const string IsGeolocationSupported = "isGeolocationSupported";
                 internal const string Dispose = "dispose";
                 internal const string SetOptions = "setOptions";
+                internal const string AddEvents = "addEvents";
             }
         }
     }

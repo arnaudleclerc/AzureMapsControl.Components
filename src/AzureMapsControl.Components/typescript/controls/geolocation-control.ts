@@ -1,6 +1,8 @@
 import { Core } from '../core/core';
 import * as geolocationcontrol from 'azure-maps-control-geolocation';
 import { Feature } from '../geometries/geometry';
+import { EventHelper } from '../events/event-helper';
+import { GeolocationEventArgs } from './geolocation-event-args';
 
 export class GeolocationControl {
 
@@ -22,6 +24,31 @@ export class GeolocationControl {
 
     public static setOptions(controlId: string, options: geolocationcontrol.GeolocationControlOptions): void {
         this._getGeolocationControl(controlId).setOptions(options);
+    }
+
+    public static addEvents(controlId: string, events: string[], eventHelper: EventHelper<GeolocationEventArgs>): void {
+        const control = this._getGeolocationControl(controlId);
+        const map = Core.getMap();
+
+        events.forEach(event => {
+            map.events.add(event as any, control, (args: any) => {
+                eventHelper.invokeMethodAsync('NotifyEventAsync', {
+                    code: args.code,
+                    message: args.message,
+                    feature: {
+                        bbox: args.bbox ? {
+                            west: args.bbox[0],
+                            south: args.bbox[1],
+                            east: args.bbox[2],
+                            north: args.bbox[3]
+                        } : null,
+                        geometry: args.geometry,
+                        properties: args.properties
+                    },
+                    type: event
+                });
+            });
+        })
     }
 
     private static _getGeolocationControl(controlId: string): geolocationcontrol.control.GeolocationControl {

@@ -10,7 +10,7 @@ export interface Geometry {
 }
 
 export interface Feature {
-    id: string;
+    id?: string;
     bbox: {
         east: number;
         north: number;

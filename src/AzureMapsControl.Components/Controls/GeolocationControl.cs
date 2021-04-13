@@ -1,20 +1,28 @@
 ﻿namespace AzureMapsControl.Components.Controls
 {
     using System;
+    using System.Linq;
     using System.Text.Json;
     using System.Text.Json.Serialization;
     using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Atlas;
+    using AzureMapsControl.Components.Geolocation;
     using AzureMapsControl.Components.Logger;
     using AzureMapsControl.Components.Runtime;
 
     using Microsoft.Extensions.Logging;
+    using Microsoft.JSInterop;
 
     internal delegate void GeolocationControlDisposed();
+    public delegate void GeolocationSuccess(GeolocationSuccessEventArgs eventArgs);
+    public delegate void GeolocationError(GeolocationErrorEventArgs eventArgs);
 
     public sealed class GeolocationControl : Control<GeolocationControlOptions>
     {
+        private readonly GeolocationEventInvokeHelper _eventInvokeHelper;
+        private readonly GeolocationEventActivationFlags _eventFlags;
+
         internal override string Type => "geolocation";
 
         internal override int Order => 0;
@@ -22,11 +30,17 @@
         internal IMapJsRuntime JsRuntime { get; set; }
         internal ILogger Logger { get; set; }
 
-        internal event GeolocationControlDisposed OnDisposed;
-
         public bool Disposed { get; private set; }
 
-        public GeolocationControl(GeolocationControlOptions options = null, ControlPosition position = default) : base(options, position) { }
+        internal event GeolocationControlDisposed OnDisposed;
+        public event GeolocationSuccess GeolocationSuccess;
+        public event GeolocationError GeolocationError;
+
+        public GeolocationControl(GeolocationControlOptions options = null, ControlPosition position = default, GeolocationEventActivationFlags eventFlags = null) : base(options, position)
+        {
+            _eventInvokeHelper = new GeolocationEventInvokeHelper(DispatchEventAsync);
+            _eventFlags = eventFlags;
+        }
 
         /// <summary>
         /// Get the last known position from the geolocation control.
@@ -87,6 +101,36 @@
             update(Options);
 
             await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.GeolocationControl.SetOptions.ToGeolocationControlNamespace(), Id, Options);
+        }
+
+        internal async ValueTask AddEventsAsync()
+        {
+            if (_eventFlags?.EnabledEvents is not null && _eventFlags.EnabledEvents.Any())
+            {
+                Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.GeolocationControl_AddEventsAsync, "GeolocationControl - AddEventsAsync");
+                Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.GeolocationControl_AddEventsAsync, $"Id: {Id}");
+                Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.GeolocationControl_AddEventsAsync, $"Events: {_eventFlags.EnabledEvents}");
+
+                await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.GeolocationControl.AddEvents.ToGeolocationControlNamespace(),
+                    Id,
+                    _eventFlags.EnabledEvents,
+                    DotNetObjectReference.Create(_eventInvokeHelper));
+            }
+        }
+
+        private async Task DispatchEventAsync(GeolocationJsEventArgs eventArgs)
+        {
+            await Task.Run(() => {
+                switch (eventArgs.Type)
+                {
+                    case "geolocationerror":
+                        GeolocationError?.Invoke(new GeolocationErrorEventArgs(eventArgs));
+                        break;
+                    case "geolocationsuccess":
+                        GeolocationSuccess?.Invoke(new GeolocationSuccessEventArgs(eventArgs));
+                        break;
+                }
+            });
         }
 
         private void EnsureNotDisposed()
