@@ -18,7 +18,7 @@
         /// <param name="source">DataSource the given line string is attached to</param>
         /// <param name="options">Options for the animation.</param>
         /// <returns>Animation</returns>
-        Task<ISnakeLineAnimation> SnakelineAsync(LineString line, DataSource source, SnakeLineAnimationOptions options = default);
+        ValueTask<ISnakeLineAnimation> SnakelineAsync(LineString line, DataSource source, SnakeLineAnimationOptions options = default);
 
         /// <summary>
         /// Animates a Point shape along a path.
@@ -29,7 +29,7 @@
         /// <param name="pinSource">The data source the given point is attached to</param>
         /// <param name="options">Options for the animation</param>
         /// <returns>Animation</returns>
-        Task<IMoveAlongPathAnimation> MoveAlongPathAsync(LineString path, DataSource pathSource, Point pin, DataSource pinSource, MoveAlongPathAnimationOptions options = default);
+        ValueTask<IMoveAlongPathAnimation> MoveAlongPathAsync(LineString path, DataSource pathSource, Point pin, DataSource pinSource, MoveAlongPathAnimationOptions options = default);
 
         /// <summary>
         /// Animates a marker along a path.
@@ -39,7 +39,7 @@
         /// <param name="pin">An HTML Marker to animate along the path</param>
         /// <param name="options">Options for the animation</param>
         /// <returns>Animation</returns>
-        Task<IMoveAlongPathAnimation> MoveAlongPathAsync(LineString path, DataSource pathSource, HtmlMarker pin, MoveAlongPathAnimationOptions options = default);
+        ValueTask<IMoveAlongPathAnimation> MoveAlongPathAsync(LineString path, DataSource pathSource, HtmlMarker pin, MoveAlongPathAnimationOptions options = default);
 
         /// <summary>
         /// Animates a Point shape along a path.
@@ -49,7 +49,7 @@
         /// <param name="pinSource">The data source the given point is attached to</param>
         /// <param name="options">Options for the animation</param>
         /// <returns>Animation</returns>
-        Task<IMoveAlongPathAnimation> MoveAlongPathAsync(IEnumerable<Position> path, Point pin, DataSource pinSource, MoveAlongPathAnimationOptions options = default);
+        ValueTask<IMoveAlongPathAnimation> MoveAlongPathAsync(IEnumerable<Position> path, Point pin, DataSource pinSource, MoveAlongPathAnimationOptions options = default);
 
         /// <summary>
         /// Animates a marker along a path.
@@ -58,7 +58,7 @@
         /// <param name="pin">A point to animate along the path</param>
         /// <param name="options">Options for the animation</param>
         /// <returns>Animation</returns>
-        Task<IMoveAlongPathAnimation> MoveAlongPathAsync(IEnumerable<Position> path, HtmlMarker pin, MoveAlongPathAnimationOptions options = default);
+        ValueTask<IMoveAlongPathAnimation> MoveAlongPathAsync(IEnumerable<Position> path, HtmlMarker pin, MoveAlongPathAnimationOptions options = default);
 
         /// <summary>
         /// Animates the dash-array of a line layer to make it appear to flow. 
@@ -66,7 +66,7 @@
         /// <param name="layer">LineLayer to animate</param>
         /// <param name="options">Options of the animations</param>
         /// <returns>Animation</returns>
-        Task<IFlowingDashedLineAnimation> FlowingDashedLineAsync(LineLayer layer, MovingDashLineOptions options = default);
+        ValueTask<IFlowingDashedLineAnimation> FlowingDashedLineAsync(LineLayer layer, MovingDashLineOptions options = default);
 
         /// <summary>
         /// Adds an offset to HtmlMarkers to animate its y value to simulate dropping.
@@ -75,7 +75,7 @@
         /// <param name="height">The height at which to drop the shape from.</param>
         /// <param name="options">Options for the animation.</param>
         /// <returns></returns>
-        Task<IDropMarkersAnimation> DropMarkersAsync(IEnumerable<HtmlMarker> markers, decimal? height = null, DropMarkersAnimationOptions options = default);
+        ValueTask<IDropMarkersAnimation> DropMarkersAsync(IEnumerable<HtmlMarker> markers, decimal? height = null, DropMarkersAnimationOptions options = default);
 
         /// <summary>
         /// Adds an offset to an HtmlMarker to animate its y value to simulate dropping.
@@ -84,7 +84,7 @@
         /// <param name="height">The height at which to drop the shape from.</param>
         /// <param name="options">Options for the animation.</param>
         /// <returns></returns>
-        Task<IDropMarkersAnimation> DropMarkerAsync(HtmlMarker marker, decimal? height = null, DropMarkersAnimationOptions options = default);
+        ValueTask<IDropMarkersAnimation> DropMarkerAsync(HtmlMarker marker, decimal? height = null, DropMarkersAnimationOptions options = default);
 
         /// <summary>
         /// Group animations
@@ -92,7 +92,7 @@
         /// <param name="animations">Animations to group</param>
         /// <param name="options">Options for the animation</param>
         /// <returns>Animation</returns>
-        Task<IGroupAnimation> GroupAnimationAsync(IEnumerable<IAnimation> animations, GroupAnimationOptions options = default);
+        ValueTask<IGroupAnimation> GroupAnimationAsync(IEnumerable<IAnimation> animations, GroupAnimationOptions options = default);
 
         /// <summary>
         /// Adds an offset array property to point shapes and animates its y value to simulate dropping.
@@ -102,7 +102,7 @@
         /// <param name="height">The height at which to drop the shape from</param>
         /// <param name="options">Options for the animation</param>
         /// <returns>Animation</returns>
-        Task<IDropAnimation> DropAsync(IEnumerable<Point> points, DataSource source, decimal? height = null, DropAnimationOptions options = default);
+        ValueTask<IDropAnimation> DropAsync(IEnumerable<Point> points, DataSource source, decimal? height = null, DropAnimationOptions options = default);
 
         /// <summary>
         /// Adds an offset array property to a point shape and animates its y value to simulate dropping.
@@ -112,7 +112,7 @@
         /// <param name="height">The height at which to drop the shape from</param>
         /// <param name="options">Options for the animation</param>
         /// <returns>Animation</returns>
-        Task<IDropAnimation> DropAsync(Point point, DataSource source, decimal? height = null, DropAnimationOptions options = default);
+        ValueTask<IDropAnimation> DropAsync(Point point, DataSource source, decimal? height = null, DropAnimationOptions options = default);
 
         /// <summary>
         /// Animates the update of coordinates on a shape. Shapes will stay the same type. Only base animation options supported for geometries other than Point. 
@@ -123,7 +123,7 @@
         /// <param name="newCoordinates">The new coordinates of the shape.</param>
         /// <param name="options">Options for the animation</param>
         /// <returns>Animation</returns>
-        Task<ISetCoordinatesAnimation> SetCoordinatesAsync<TPosition>(Geometry<TPosition> geometry, DataSource source, TPosition newCoordinates, SetCoordinatesAnimationOptions options = default);
+        ValueTask<ISetCoordinatesAnimation> SetCoordinatesAsync<TPosition>(Geometry<TPosition> geometry, DataSource source, TPosition newCoordinates, SetCoordinatesAnimationOptions options = default);
 
         /// <summary>
         /// Animates the update of coordinates on a HtmlMarker.
@@ -132,7 +132,7 @@
         /// <param name="newCoordinates">The new coordinates of the marker.</param>
         /// <param name="options">Options for the animation.</param>
         /// <returns>Animation</returns>
-        Task<ISetCoordinatesAnimation> SetCoordinatesAsync(HtmlMarker marker, Position newCoordinates, SetCoordinatesAnimationOptions options = default);
+        ValueTask<ISetCoordinatesAnimation> SetCoordinatesAsync(HtmlMarker marker, Position newCoordinates, SetCoordinatesAnimationOptions options = default);
 
         /// <summary>
         /// Animates the morphing of a shape from one geometry type or set of coordinates to another.
@@ -143,7 +143,7 @@
         /// <param name="newGeometry">The new geometry to turn the shape into.</param>
         /// <param name="options">Options for the animation</param>
         /// <returns>Animation</returns>
-        Task<IMorphAnimation> MorphAsync<T>(Geometry geometry, DataSource source, T newGeometry, MorphAnimationOptions options = default) where T : Geometry;
+        ValueTask<IMorphAnimation> MorphAsync<T>(Geometry geometry, DataSource source, T newGeometry, MorphAnimationOptions options = default) where T : Geometry;
 
         /// <summary>
         /// Animates a Point shape along a route path. The movement will vary based on timestamps within the point feature properties. All points must have a `timestamp` property.
@@ -153,7 +153,7 @@
         /// <param name="pinSource">The datasource where the pin can be found</param>
         /// <param name="options">Options for the animation.</param>
         /// <returns></returns>
-        Task<IMoveAlongRouteAnimation> MoveAlongRouteAsync(IEnumerable<RoutePoint> points, Point pin, DataSource pinSource, RoutePathAnimationOptions options = default);
+        ValueTask<IMoveAlongRouteAnimation> MoveAlongRouteAsync(IEnumerable<RoutePoint> points, Point pin, DataSource pinSource, RoutePathAnimationOptions options = default);
 
         /// <summary>
         /// Animates an HTML Marker along a route path. The movement will vary based on timestamps within the point feature properties. All points must have a `timestamp` property.
@@ -162,6 +162,6 @@
         /// <param name="pin">An HTML Marker to animate</param>
         /// <param name="options">Options for the animation.</param>
         /// <returns></returns>
-        Task<IMoveAlongRouteAnimation> MoveAlongRouteAsync(IEnumerable<RoutePoint> points, HtmlMarker pin, RoutePathAnimationOptions options = default);
+        ValueTask<IMoveAlongRouteAnimation> MoveAlongRouteAsync(IEnumerable<RoutePoint> points, HtmlMarker pin, RoutePathAnimationOptions options = default);
     }
 }

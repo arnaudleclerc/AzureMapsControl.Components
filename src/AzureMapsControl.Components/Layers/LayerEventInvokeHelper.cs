@@ -8,7 +8,7 @@
 
     internal sealed class LayerEventInvokeHelper : EventInvokeHelper<MapJsEventArgs>
     {
-        public LayerEventInvokeHelper(Func<MapJsEventArgs, Task> callback) : base(callback)
+        public LayerEventInvokeHelper(Func<MapJsEventArgs, ValueTask> callback) : base(callback)
         {
         }
     }

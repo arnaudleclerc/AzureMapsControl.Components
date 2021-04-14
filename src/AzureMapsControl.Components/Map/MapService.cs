@@ -5,7 +5,7 @@
     using AzureMapsControl.Components.Logger;
     using Microsoft.Extensions.Logging;
 
-    public delegate Task MapReadyEvent();
+    public delegate ValueTask MapReadyEvent();
 
     internal class MapService : IMapAdderService
     {
@@ -21,7 +21,7 @@
 
         public event MapReadyEvent OnMapReadyAsync;
 
-        public async Task AddMapAsync(Map map)
+        public async ValueTask AddMapAsync(Map map)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.MapService_AddMapAsync, "Adding instance of map");
             Map = map;

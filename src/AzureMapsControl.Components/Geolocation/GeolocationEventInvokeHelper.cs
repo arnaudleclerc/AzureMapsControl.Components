@@ -7,7 +7,7 @@
 
     internal class GeolocationEventInvokeHelper : EventInvokeHelper<GeolocationJsEventArgs>
     {
-        public GeolocationEventInvokeHelper(Func<GeolocationJsEventArgs, Task> callback) : base(callback)
+        public GeolocationEventInvokeHelper(Func<GeolocationJsEventArgs, ValueTask> callback) : base(callback)
         {
         }
     }

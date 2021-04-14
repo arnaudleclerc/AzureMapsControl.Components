@@ -9,6 +9,6 @@
     [ExcludeFromCodeCoverage]
     internal class DrawingToolbarEventInvokeHelper : EventInvokeHelper<DrawingToolbarJsEventArgs>
     {
-        public DrawingToolbarEventInvokeHelper(Func<DrawingToolbarJsEventArgs, Task> callback) : base(callback) { }
+        public DrawingToolbarEventInvokeHelper(Func<DrawingToolbarJsEventArgs, ValueTask> callback) : base(callback) { }
     }
 }

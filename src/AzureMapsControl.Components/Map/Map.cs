@@ -157,13 +157,13 @@
         /// Adds controls to the map
         /// </summary>
         /// <param name="controls">Controls to add to the map</param>
-        public async Task AddControlsAsync(params Control[] controls) => await AddControlsAsync(controls as IEnumerable<Control>);
+        public async ValueTask AddControlsAsync(params Control[] controls) => await AddControlsAsync(controls as IEnumerable<Control>);
 
         /// <summary>
         /// Adds controls to the map
         /// </summary>
         /// <param name="controls">Controls to add to the map</param>
-        public async Task AddControlsAsync(IEnumerable<Control> controls)
+        public async ValueTask AddControlsAsync(IEnumerable<Control> controls)
         {
             if (controls == null || !controls.Any())
             {
@@ -212,7 +212,7 @@
         /// </summary>
         /// <param name="dataSource">Data source to add</param>
         /// <returns></returns>
-        public async Task AddSourceAsync<TSource>(TSource source) where TSource : Source
+        public async ValueTask AddSourceAsync<TSource>(TSource source) where TSource : Source
         {
             if (source == null)
             {
@@ -248,14 +248,14 @@
         /// </summary>
         /// <param name="dataSource">Data source to remove</param>
         /// <returns></returns>
-        public async Task RemoveDataSourceAsync(DataSource dataSource) => await RemoveDataSourceAsync(dataSource?.Id);
+        public async ValueTask RemoveDataSourceAsync(DataSource dataSource) => await RemoveDataSourceAsync(dataSource?.Id);
 
         /// <summary>
         /// Removes a data source from the map
         /// </summary>
         /// <param name="id">ID of the data source to remove</param>
         /// <returns></returns>
-        public async Task RemoveDataSourceAsync(string id)
+        public async ValueTask RemoveDataSourceAsync(string id)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_RemoveSourceAsync, "Removing data source");
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_RemoveSourceAsync, $"Id: {id}");
@@ -271,7 +271,7 @@
         /// Removes all sources from the map.
         /// </summary>
         /// <returns></returns>
-        public async Task ClearDataSourcesAsync()
+        public async ValueTask ClearDataSourcesAsync()
         {
             _sources = null;
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_ClearSourcesAsync, $"Clearing sources");
@@ -287,7 +287,7 @@
         /// </summary>
         /// <param name="drawingToolbarOptions">Options of the toolbar to create</param>
         /// <returns></returns>
-        public async Task AddDrawingToolbarAsync(DrawingToolbarOptions drawingToolbarOptions)
+        public async ValueTask AddDrawingToolbarAsync(DrawingToolbarOptions drawingToolbarOptions)
         {
             if (drawingToolbarOptions != null)
             {
@@ -318,7 +318,7 @@
         /// </summary>
         /// <param name="drawingToolbarUpdateOptions">Options to update the drawing toolbar</param>
         /// <returns></returns>
-        public async Task UpdateDrawingToolbarAsync(DrawingToolbarUpdateOptions drawingToolbarUpdateOptions)
+        public async ValueTask UpdateDrawingToolbarAsync(DrawingToolbarUpdateOptions drawingToolbarUpdateOptions)
         {
             if (drawingToolbarUpdateOptions != null)
             {
@@ -345,7 +345,7 @@
         /// Removes the drawing toolbar from the map
         /// </summary>
         /// <returns></returns>
-        public async Task RemoveDrawingToolbarAsync()
+        public async ValueTask RemoveDrawingToolbarAsync()
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_RemoveDrawingToolbarAsync, "Removing drawing toolbar");
             if (DrawingToolbarOptions != null)
@@ -390,14 +390,14 @@
         /// </summary>
         /// <param name="markers">Html Marker to add to the map</param>
         /// <returns></returns>
-        public async Task AddHtmlMarkersAsync(params HtmlMarker[] markers) => await AddHtmlMarkersAsync(markers as IEnumerable<HtmlMarker>);
+        public async ValueTask AddHtmlMarkersAsync(params HtmlMarker[] markers) => await AddHtmlMarkersAsync(markers as IEnumerable<HtmlMarker>);
 
         /// <summary>
         /// Add HtmlMarkers to the map
         /// </summary>
         /// <param name="markers">Html Marker to add to the map</param>
         /// <returns></returns>
-        public async Task AddHtmlMarkersAsync(IEnumerable<HtmlMarker> markers)
+        public async ValueTask AddHtmlMarkersAsync(IEnumerable<HtmlMarker> markers)
         {
             if (markers != null)
             {
@@ -462,14 +462,14 @@
         /// </summary>
         /// <param name="updates">HtmlMarkers to update</param>
         /// <returns></returns>
-        public async Task UpdateHtmlMarkersAsync(params HtmlMarkerUpdate[] updates) => await UpdateHtmlMarkersAsync(updates as IEnumerable<HtmlMarkerUpdate>);
+        public async ValueTask UpdateHtmlMarkersAsync(params HtmlMarkerUpdate[] updates) => await UpdateHtmlMarkersAsync(updates as IEnumerable<HtmlMarkerUpdate>);
 
         /// <summary>
         /// Update HtmlMarkers on the map
         /// </summary>
         /// <param name="updates">HtmlMarkers to update</param>
         /// <returns></returns>
-        public async Task UpdateHtmlMarkersAsync(IEnumerable<HtmlMarkerUpdate> updates)
+        public async ValueTask UpdateHtmlMarkersAsync(IEnumerable<HtmlMarkerUpdate> updates)
         {
             if (updates != null)
             {
@@ -511,14 +511,14 @@
         /// </summary>
         /// <param name="markers">HtmlMarkers to remove</param>
         /// <returns></returns>
-        public async Task RemoveHtmlMarkersAsync(params HtmlMarker[] markers) => await RemoveHtmlMarkersAsync(markers as IEnumerable<HtmlMarker>);
+        public async ValueTask RemoveHtmlMarkersAsync(params HtmlMarker[] markers) => await RemoveHtmlMarkersAsync(markers as IEnumerable<HtmlMarker>);
 
         /// <summary>
         /// Remove HtmlMarkers from the map
         /// </summary>
         /// <param name="markers">HtmlMarkers to remove</param>
         /// <returns></returns>
-        public async Task RemoveHtmlMarkersAsync(IEnumerable<HtmlMarker> markers)
+        public async ValueTask RemoveHtmlMarkersAsync(IEnumerable<HtmlMarker> markers)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_RemoveHtmlMarkersAsync, "Removing html markers");
             if (HtmlMarkers != null && markers != null)
@@ -535,7 +535,7 @@
         /// Removes all markers
         /// </summary>
         /// <returns></returns>
-        public async Task ClearHtmlMarkersAsync()
+        public async ValueTask ClearHtmlMarkersAsync()
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_ClearHtmlMarkersAsync, "Clearing html markers");
             HtmlMarkers = null;
@@ -552,7 +552,7 @@
         /// <typeparam name="T">Type of layer to add</typeparam>
         /// <param name="layer">Layer to add to the map</param>
         /// <returns></returns>
-        public async Task AddLayerAsync<T>(T layer) where T : Layer => await AddLayerAsync(layer, null);
+        public async ValueTask AddLayerAsync<T>(T layer) where T : Layer => await AddLayerAsync(layer, null);
 
         /// <summary>
         /// Add a layer to the map
@@ -561,7 +561,7 @@
         /// <param name="layer">Layer to add</param>
         /// <param name="before">ID of the layer before which the new layer will be added</param>
         /// <returns></returns>
-        public async Task AddLayerAsync<T>(T layer, string before) where T : Layer
+        public async ValueTask AddLayerAsync<T>(T layer, string before) where T : Layer
         {
             if (layer == null)
             {
@@ -596,28 +596,28 @@
         /// </summary>
         /// <param name="layers">Layers to remove</param>
         /// <returns></returns>
-        public async Task RemoveLayersAsync(IEnumerable<Layer> layers) => await RemoveLayersAsync(layers?.Select(l => l.Id));
+        public async ValueTask RemoveLayersAsync(IEnumerable<Layer> layers) => await RemoveLayersAsync(layers?.Select(l => l.Id));
 
         /// <summary>
         /// Remove layers from the map
         /// </summary>
         /// <param name="layers">Layers to remove</param>
         /// <returns></returns>
-        public async Task RemoveLayersAsync(params Layer[] layers) => await RemoveLayersAsync(layers?.Select(l => l.Id));
+        public async ValueTask RemoveLayersAsync(params Layer[] layers) => await RemoveLayersAsync(layers?.Select(l => l.Id));
 
         /// <summary>
         /// Remove layers from the map
         /// </summary>
         /// <param name="layerIds">ID of the layers to remove</param>
         /// <returns></returns>
-        public async Task RemoveLayersAsync(params string[] layerIds) => await RemoveLayersAsync(layerIds as IEnumerable<string>);
+        public async ValueTask RemoveLayersAsync(params string[] layerIds) => await RemoveLayersAsync(layerIds as IEnumerable<string>);
 
         /// <summary>
         /// Remove layers from the map
         /// </summary>
         /// <param name="layerIds">ID of the layers to remove</param>
         /// <returns></returns>
-        public async Task RemoveLayersAsync(IEnumerable<string> layerIds)
+        public async ValueTask RemoveLayersAsync(IEnumerable<string> layerIds)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_RemoveLayersAsync, "Removing layers");
             var layers = _layers?.Where(l => layerIds.Contains(l.Id));
@@ -634,7 +634,7 @@
         /// Removes all user added layers from the map
         /// </summary>
         /// <returns></returns>
-        public async Task ClearLayersAsync()
+        public async ValueTask ClearLayersAsync()
         {
             _layers = null;
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_ClearLayersAsync, "Clearing layers");
@@ -649,7 +649,7 @@
         /// Removes all user added sources, layers, markers, and popups from the map. User added images are preserved.
         /// </summary>
         /// <returns></returns>
-        public async Task ClearMapAsync()
+        public async ValueTask ClearMapAsync()
         {
             _sources = null;
             _layers = null;
@@ -664,7 +664,7 @@
         /// </summary>
         /// <param name="configure">Action setting the camera options</param>
         /// <returns></returns>
-        public async Task SetCameraOptionsAsync(Action<CameraOptions> configure)
+        public async ValueTask SetCameraOptionsAsync(Action<CameraOptions> configure)
         {
             if (CameraOptions == null)
             {
@@ -680,7 +680,7 @@
         /// </summary>
         /// <param name="configure">Action setting the style options</param>
         /// <returns></returns>
-        public async Task SetStyleOptionsAsync(Action<StyleOptions> configure)
+        public async ValueTask SetStyleOptionsAsync(Action<StyleOptions> configure)
         {
             if (StyleOptions == null)
             {
@@ -696,7 +696,7 @@
         /// </summary>
         /// <param name="configure">Action setting the user interaction options</param>
         /// <returns></returns>
-        public async Task SetUserInteractionAsync(Action<UserInteractionOptions> configure)
+        public async ValueTask SetUserInteractionAsync(Action<UserInteractionOptions> configure)
         {
             if (UserInteractionOptions == null)
             {
@@ -712,7 +712,7 @@
         /// </summary>
         /// <param name="configure">Action setting the traffic options</param>
         /// <returns></returns>
-        public async Task SetTrafficOptionsAsync(Action<TrafficOptions> configure)
+        public async ValueTask SetTrafficOptionsAsync(Action<TrafficOptions> configure)
         {
             if (TrafficOptions == null)
             {
@@ -874,7 +874,7 @@
         /// </summary>
         /// <param name="poup">Popup to add to the map</param>
         /// <returns></returns>
-        public async Task AddPopupAsync(Popup popup)
+        public async ValueTask AddPopupAsync(Popup popup)
         {
             if (popup == null)
             {
@@ -908,7 +908,7 @@
         /// </summary>
         /// <param name="id">ID of the popup to remove</param>
         /// <returns></returns>
-        public async Task RemovePopupAsync(string id)
+        public async ValueTask RemovePopupAsync(string id)
         {
             var popup = _popups?.SingleOrDefault(p => p.Id == id);
             if (popup != null)
@@ -922,13 +922,13 @@
         /// </summary>
         /// <param name="popup">Popup to remove</param>
         /// <returns></returns>
-        public async Task RemovePopupAsync(Popup popup) => await RemovePopupAsync(popup.Id);
+        public async ValueTask RemovePopupAsync(Popup popup) => await RemovePopupAsync(popup.Id);
 
         /// <summary>
         /// Remove all the popups from the map
         /// </summary>
         /// <returns></returns>
-        public async Task ClearPopupsAsync()
+        public async ValueTask ClearPopupsAsync()
         {
             _popups = null;
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_ClearPopupsAsync, "Clearing popups");
@@ -957,7 +957,7 @@
         /// <param name="secondaryColor">A secondary color value</param>
         /// <param name="scale">Specifies how much to scale the template. For best results, scale the icon to the maximum size you want to display it on the map, then use the symbol layers icon size option to scale down if needed. This will reduce blurriness due to scaling.</param>
         /// <returns></returns>
-        public async Task CreateImageFromTemplateAsync(string id, string templateName, string color = null, string secondaryColor = null, decimal? scale = null)
+        public async ValueTask CreateImageFromTemplateAsync(string id, string templateName, string color = null, string secondaryColor = null, decimal? scale = null)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_CreateImageFromTemplate, "Creating image from template");
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_CreateImageFromTemplate, "Id", id);

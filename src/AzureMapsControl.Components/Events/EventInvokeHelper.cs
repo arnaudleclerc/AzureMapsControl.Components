@@ -9,10 +9,10 @@
     [ExcludeFromCodeCoverage]
     internal abstract class EventInvokeHelper<T> where T : new()
     {
-        private readonly Func<T, Task> _callback;
-        public EventInvokeHelper(Func<T, Task> callback) => _callback = callback;
+        private readonly Func<T, ValueTask> _callback;
+        public EventInvokeHelper(Func<T, ValueTask> callback) => _callback = callback;
 
         [JSInvokable]
-        public async Task NotifyEventAsync(T arg) => await _callback.Invoke(arg);
+        public async ValueTask NotifyEventAsync(T arg) => await _callback.Invoke(arg);
     }
 }

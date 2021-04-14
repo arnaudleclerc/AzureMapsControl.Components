@@ -4,6 +4,6 @@
 
     internal interface IMapAdderService : IMapService
     {
-        Task AddMapAsync(Map map);
+        ValueTask AddMapAsync(Map map);
     }
 }

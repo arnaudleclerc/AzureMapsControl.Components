@@ -8,30 +8,30 @@
         /// Disposes the animation
         /// </summary>
         /// <returns></returns>
-        Task DisposeAsync();
+        ValueTask DisposeAsync();
 
         /// <summary>
         /// Plays the animation.
         /// </summary>
         /// <returns></returns>
-        Task PlayAsync();
+        ValueTask PlayAsync();
 
         /// <summary>
         /// Stops the animation and jumps back to the beginning of the animation. 
         /// </summary>
         /// <returns></returns>
-        Task ResetAsync();
+        ValueTask ResetAsync();
 
         /// <summary>
         /// Stops the animation and jumps back to the end of the animation. 
         /// </summary>
         /// <returns></returns>
-        Task StopAsync();
+        ValueTask StopAsync();
 
         /// <summary>
         /// Pauses the animation.
         /// </summary>
         /// <returns></returns>
-        Task PauseAsync();
+        ValueTask PauseAsync();
     }
 }

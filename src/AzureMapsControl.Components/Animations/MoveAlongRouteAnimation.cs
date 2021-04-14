@@ -12,11 +12,11 @@
         {
         }
 
-        public override Task PauseAsync() => throw new NotSupportedException($"{nameof(PauseAsync)} is not supported by {nameof(MoveAlongRouteAnimation)}");
-        public override Task PlayAsync() => throw new NotSupportedException($"{nameof(PlayAsync)} is not supported by {nameof(MoveAlongRouteAnimation)}");
-        public override Task ResetAsync() => throw new NotSupportedException($"{nameof(ResetAsync)} is not supported by {nameof(MoveAlongRouteAnimation)}");
-        public override Task SeekAsync(decimal progress) => throw new NotSupportedException($"{nameof(SeekAsync)} is not supported by {nameof(MoveAlongRouteAnimation)}");
-        public override Task SetOptionsAsync(RoutePathAnimationOptions options) => throw new NotSupportedException($"{nameof(SetOptionsAsync)} is not supported by {nameof(MoveAlongRouteAnimation)}");
-        public override Task StopAsync() => throw new NotSupportedException($"{nameof(StopAsync)} is not supported by {nameof(MoveAlongRouteAnimation)}");
+        public override ValueTask PauseAsync() => throw new NotSupportedException($"{nameof(PauseAsync)} is not supported by {nameof(MoveAlongRouteAnimation)}");
+        public override ValueTask PlayAsync() => throw new NotSupportedException($"{nameof(PlayAsync)} is not supported by {nameof(MoveAlongRouteAnimation)}");
+        public override ValueTask ResetAsync() => throw new NotSupportedException($"{nameof(ResetAsync)} is not supported by {nameof(MoveAlongRouteAnimation)}");
+        public override ValueTask SeekAsync(decimal progress) => throw new NotSupportedException($"{nameof(SeekAsync)} is not supported by {nameof(MoveAlongRouteAnimation)}");
+        public override ValueTask SetOptionsAsync(RoutePathAnimationOptions options) => throw new NotSupportedException($"{nameof(SetOptionsAsync)} is not supported by {nameof(MoveAlongRouteAnimation)}");
+        public override ValueTask StopAsync() => throw new NotSupportedException($"{nameof(StopAsync)} is not supported by {nameof(MoveAlongRouteAnimation)}");
     }
 }

@@ -442,7 +442,7 @@
 
     #region Drawing Toolbar
 
-    private async Task DrawingToolbarEventReceivedAsync(AzureMapsControl.Components.Drawing.DrawingToolbarJsEventArgs drawingToolbarEvent)
+    private async ValueTask DrawingToolbarEventReceivedAsync(AzureMapsControl.Components.Drawing.DrawingToolbarJsEventArgs drawingToolbarEvent)
     {
         Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_DrawingToolbarEvent, "Received drawing toolbar event");
         Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_DrawingToolbarEvent, $"Type: {drawingToolbarEvent.Type}");
@@ -480,7 +480,7 @@
 
     #region HTML Markers
 
-    private async Task HtmlMarkerEventReceivedAsync(AzureMapsControl.Components.Markers.HtmlMarkerJsEventArgs htmlMarkerEvent)
+    private async ValueTask HtmlMarkerEventReceivedAsync(AzureMapsControl.Components.Markers.HtmlMarkerJsEventArgs htmlMarkerEvent)
     {
         Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_HtmlMarkerEventReceivedAsync, "Received html marker event");
         Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_HtmlMarkerEventReceivedAsync, $"Id: {htmlMarkerEvent.MarkerId} | Type: {htmlMarkerEvent.Type}");
@@ -503,7 +503,7 @@
 
     #region Layers
 
-    private async Task LayerEventReceivedAsync(MapJsEventArgs eventArgs)
+    private async ValueTask LayerEventReceivedAsync(MapJsEventArgs eventArgs)
     {
         Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_LayerEventReceivedAsync, "Layer event received");
         var layer = MapService.Map.Layers.FirstOrDefault(l => l.Id == eventArgs.LayerId);
@@ -522,7 +522,7 @@
 
     #region Map
 
-    private async Task MapEventReceivedAsync(MapJsEventArgs mapEvent)
+    private async ValueTask MapEventReceivedAsync(MapJsEventArgs mapEvent)
     {
         Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_MapEventReceivedAsync, "Received map event");
         Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_MapEventReceivedAsync, $"Type: {mapEvent.Type}");
@@ -552,7 +552,7 @@
         await DispatchMapEventAsync(mapEvent);
     }
 
-    private async Task DispatchMapEventAsync(MapJsEventArgs mapEvent)
+    private async ValueTask DispatchMapEventAsync(MapJsEventArgs mapEvent)
     {
         if (EventActivationFlags != null
         && EventActivationFlags.EnabledEvents != null
@@ -750,7 +750,7 @@
 
     #region Popups
 
-    private async Task PopupEventReceivedAsync(AzureMapsControl.Components.Popups.PopupEventArgs eventArgs)
+    private async ValueTask PopupEventReceivedAsync(AzureMapsControl.Components.Popups.PopupEventArgs eventArgs)
     {
         Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_PopupEventReceivedAsync, "Received popup event");
         Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_PopupEventReceivedAsync, $"Id: {eventArgs.Id} | Type: {eventArgs.Type}");

@@ -30,7 +30,7 @@
             _mapService = mapService;
         }
 
-        public async Task<IMoveAlongPathAnimation> MoveAlongPathAsync(LineString path, DataSource pathSource, Point pin, DataSource pinSource, MoveAlongPathAnimationOptions options = default)
+        public async ValueTask<IMoveAlongPathAnimation> MoveAlongPathAsync(LineString path, DataSource pathSource, Point pin, DataSource pinSource, MoveAlongPathAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_MoveAlongPath, "Calling MoveAlongPath");
 
@@ -51,7 +51,7 @@
             return animation;
         }
 
-        public async Task<IMoveAlongPathAnimation> MoveAlongPathAsync(LineString path, DataSource pathSource, HtmlMarker pin, MoveAlongPathAnimationOptions options = default)
+        public async ValueTask<IMoveAlongPathAnimation> MoveAlongPathAsync(LineString path, DataSource pathSource, HtmlMarker pin, MoveAlongPathAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_MoveAlongPath, "Calling MoveAlongPath");
 
@@ -70,7 +70,7 @@
             return animation;
         }
 
-        public async Task<IMoveAlongPathAnimation> MoveAlongPathAsync(IEnumerable<Position> path, Point pin, DataSource pinSource, MoveAlongPathAnimationOptions options = default)
+        public async ValueTask<IMoveAlongPathAnimation> MoveAlongPathAsync(IEnumerable<Position> path, Point pin, DataSource pinSource, MoveAlongPathAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_MoveAlongPath, "Calling MoveAlongPath");
 
@@ -89,7 +89,7 @@
             return animation;
         }
 
-        public async Task<IMoveAlongPathAnimation> MoveAlongPathAsync(IEnumerable<Position> path, HtmlMarker pin, MoveAlongPathAnimationOptions options = default)
+        public async ValueTask<IMoveAlongPathAnimation> MoveAlongPathAsync(IEnumerable<Position> path, HtmlMarker pin, MoveAlongPathAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_MoveAlongPath, "Calling MoveAlongPath");
 
@@ -106,7 +106,7 @@
             return animation;
         }
 
-        public async Task<ISnakeLineAnimation> SnakelineAsync(LineString line, DataSource source, SnakeLineAnimationOptions options = default)
+        public async ValueTask<ISnakeLineAnimation> SnakelineAsync(LineString line, DataSource source, SnakeLineAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_Snakeline, "Calling Snakeline");
 
@@ -123,7 +123,7 @@
             return animation;
         }
 
-        public async Task<IFlowingDashedLineAnimation> FlowingDashedLineAsync(LineLayer layer, MovingDashLineOptions options = default)
+        public async ValueTask<IFlowingDashedLineAnimation> FlowingDashedLineAsync(LineLayer layer, MovingDashLineOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_FlowingDashedLine, "Calling Snakeline");
 
@@ -137,7 +137,7 @@
             return animation;
         }
 
-        public async Task<IDropMarkersAnimation> DropMarkersAsync(IEnumerable<HtmlMarker> markers, decimal? height = null, DropMarkersAnimationOptions options = default)
+        public async ValueTask<IDropMarkersAnimation> DropMarkersAsync(IEnumerable<HtmlMarker> markers, decimal? height = null, DropMarkersAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_DropMarkers, "Calling DropMarkersAsync");
 
@@ -155,7 +155,7 @@
             return animation;
         }
 
-        public async Task<IDropMarkersAnimation> DropMarkerAsync(HtmlMarker marker, decimal? height = null, DropMarkersAnimationOptions options = default)
+        public async ValueTask<IDropMarkersAnimation> DropMarkerAsync(HtmlMarker marker, decimal? height = null, DropMarkersAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_DropMarkers, "Calling DropMarkersAsync");
 
@@ -163,7 +163,7 @@
             return await DropMarkersAsync(new[] { marker }, height, options);
         }
 
-        public async Task<IGroupAnimation> GroupAnimationAsync(IEnumerable<IAnimation> animations, GroupAnimationOptions options = default)
+        public async ValueTask<IGroupAnimation> GroupAnimationAsync(IEnumerable<IAnimation> animations, GroupAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_GroupAnimations, "Calling GroupAnimationAsync");
 
@@ -177,7 +177,7 @@
             return animation;
         }
 
-        public async Task<IDropAnimation> DropAsync(IEnumerable<Point> points, DataSource source, decimal? height = null, DropAnimationOptions options = default)
+        public async ValueTask<IDropAnimation> DropAsync(IEnumerable<Point> points, DataSource source, decimal? height = null, DropAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_Drop, "Calling DropAsync");
 
@@ -195,7 +195,7 @@
             return animation;
         }
 
-        public async Task<IDropAnimation> DropAsync(Point point, DataSource source, decimal? height = null, DropAnimationOptions options = default)
+        public async ValueTask<IDropAnimation> DropAsync(Point point, DataSource source, decimal? height = null, DropAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_Drop, "Calling DropAsync");
 
@@ -203,7 +203,7 @@
             return await DropAsync(new[] { point }, source, height, options);
         }
 
-        public async Task<ISetCoordinatesAnimation> SetCoordinatesAsync<TPosition>(Geometry<TPosition> geometry, DataSource source, TPosition newCoordinates, SetCoordinatesAnimationOptions options = default)
+        public async ValueTask<ISetCoordinatesAnimation> SetCoordinatesAsync<TPosition>(Geometry<TPosition> geometry, DataSource source, TPosition newCoordinates, SetCoordinatesAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_SetCoordinates, "Calling SetCoordinatesAsync");
 
@@ -222,7 +222,7 @@
             return animation;
         }
 
-        public async Task<ISetCoordinatesAnimation> SetCoordinatesAsync(HtmlMarker marker, Position newCoordinates, SetCoordinatesAnimationOptions options = default)
+        public async ValueTask<ISetCoordinatesAnimation> SetCoordinatesAsync(HtmlMarker marker, Position newCoordinates, SetCoordinatesAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_SetCoordinates, "Calling SetCoordinatesAsync");
 
@@ -239,7 +239,7 @@
             return animation;
         }
 
-        public async Task<IMorphAnimation> MorphAsync<T>(Geometry geometry, DataSource source, T newGeometry, MorphAnimationOptions options = default)
+        public async ValueTask<IMorphAnimation> MorphAsync<T>(Geometry geometry, DataSource source, T newGeometry, MorphAnimationOptions options = default)
             where T : Geometry
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_Morph, "Calling MorphAsync");
@@ -259,7 +259,7 @@
             return animation;
         }
 
-        public async Task<IMoveAlongRouteAnimation> MoveAlongRouteAsync(IEnumerable<RoutePoint> points, Point pin, DataSource pinSource, RoutePathAnimationOptions options = default)
+        public async ValueTask<IMoveAlongRouteAnimation> MoveAlongRouteAsync(IEnumerable<RoutePoint> points, Point pin, DataSource pinSource, RoutePathAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_Morph, "Calling MoveAlongRoute");
 
@@ -277,7 +277,7 @@
             return animation;
         }
 
-        public async Task<IMoveAlongRouteAnimation> MoveAlongRouteAsync(IEnumerable<RoutePoint> points, HtmlMarker pin, RoutePathAnimationOptions options = default)
+        public async ValueTask<IMoveAlongRouteAnimation> MoveAlongRouteAsync(IEnumerable<RoutePoint> points, HtmlMarker pin, RoutePathAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_Morph, "Calling MoveAlongRoute");
 

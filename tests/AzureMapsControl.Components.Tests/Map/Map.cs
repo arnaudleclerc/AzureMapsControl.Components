@@ -125,7 +125,7 @@
         {
             var markers = new List<HtmlMarker> { new HtmlMarker(null), new HtmlMarker(null) };
             var popupInvokeHelper = new PopupInvokeHelper(null);
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => Task.CompletedTask), popupInvokeHelper: popupInvokeHelper);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => ValueTask.CompletedTask), popupInvokeHelper: popupInvokeHelper);
 
             await map.AddHtmlMarkersAsync(markers);
             Assert.Contains(markers[0], map.HtmlMarkers);
@@ -156,7 +156,7 @@
             marker.OnPopupToggled += () => assertEvent = true;
 
             var popupInvokeHelper = new PopupInvokeHelper(null);
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => Task.CompletedTask), popupInvokeHelper: popupInvokeHelper);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => ValueTask.CompletedTask), popupInvokeHelper: popupInvokeHelper);
 
             await map.AddHtmlMarkersAsync(marker);
             Assert.True(assertEvent);
@@ -182,7 +182,7 @@
             var marker1 = new HtmlMarker(null);
             var marker2 = new HtmlMarker(null);
             var popupInvokeHelper = new PopupInvokeHelper(null);
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => Task.CompletedTask), popupInvokeHelper: popupInvokeHelper);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => ValueTask.CompletedTask), popupInvokeHelper: popupInvokeHelper);
 
             await map.AddHtmlMarkersAsync(marker1, marker2);
             Assert.Contains(marker1, map.HtmlMarkers);
@@ -248,7 +248,7 @@
         [Fact]
         public async void Shoud_NotRemoveAnyHtmlMarkers_Null_Async()
         {
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => Task.CompletedTask));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => ValueTask.CompletedTask));
             var htmlMarker = new HtmlMarker(null);
             await map.AddHtmlMarkersAsync(htmlMarker);
 
@@ -267,7 +267,7 @@
             var htmlMarker = new HtmlMarker(null);
             var htmlMarker2 = new HtmlMarker(null);
 
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => Task.CompletedTask));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => ValueTask.CompletedTask));
             await map.AddHtmlMarkersAsync(new List<HtmlMarker> { htmlMarker, htmlMarker2 });
 
             await map.RemoveHtmlMarkersAsync(htmlMarker);
@@ -290,7 +290,7 @@
             var htmlMarker = new HtmlMarker(null);
             var htmlMarker2 = new HtmlMarker(null);
 
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => Task.CompletedTask));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => ValueTask.CompletedTask));
             await map.AddHtmlMarkersAsync(htmlMarker, htmlMarker2);
 
             await map.RemoveHtmlMarkersAsync(htmlMarker);
@@ -311,7 +311,7 @@
         public async void Should_AddDrawingToolbar_Async()
         {
             var drawingToolbarOptions = new DrawingToolbarOptions();
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, new DrawingToolbarEventInvokeHelper(eventArgs => Task.CompletedTask));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, new DrawingToolbarEventInvokeHelper(eventArgs => ValueTask.CompletedTask));
             await map.AddDrawingToolbarAsync(drawingToolbarOptions);
 
             Assert.Equal(drawingToolbarOptions, map.DrawingToolbarOptions);
@@ -335,7 +335,7 @@
                 Style = DrawingToolbarStyle.Dark,
                 Visible = false
             };
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, new DrawingToolbarEventInvokeHelper(eventArgs => Task.CompletedTask));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, new DrawingToolbarEventInvokeHelper(eventArgs => ValueTask.CompletedTask));
             await map.AddDrawingToolbarAsync(drawingToolbarOptions);
             await map.UpdateDrawingToolbarAsync(updateDrawingToolbarOptions);
 
@@ -360,7 +360,7 @@
         public async void Should_NotUpdateDrawingToolbar_NullCaseAsync()
         {
             var drawingToolbarOptions = new DrawingToolbarOptions();
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, new DrawingToolbarEventInvokeHelper(eventArgs => Task.CompletedTask));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, new DrawingToolbarEventInvokeHelper(eventArgs => ValueTask.CompletedTask));
             await map.AddDrawingToolbarAsync(drawingToolbarOptions);
             await map.UpdateDrawingToolbarAsync(null);
 
@@ -374,7 +374,7 @@
         [Fact]
         public async void Should_RemoveDrawingToolbar_Async()
         {
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, new DrawingToolbarEventInvokeHelper(eventArgs => Task.CompletedTask));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, new DrawingToolbarEventInvokeHelper(eventArgs => ValueTask.CompletedTask));
 
             await map.AddDrawingToolbarAsync(new DrawingToolbarOptions());
             await map.RemoveDrawingToolbarAsync();
@@ -391,7 +391,7 @@
         [Fact]
         public async void Should_NotRemoveDrawingToolbar_Async()
         {
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, new DrawingToolbarEventInvokeHelper(eventArgs => Task.CompletedTask));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, new DrawingToolbarEventInvokeHelper(eventArgs => ValueTask.CompletedTask));
 
             await map.RemoveDrawingToolbarAsync();
 
@@ -403,7 +403,7 @@
         public async void Should_AddALayer_Async()
         {
             var layer = new BubbleLayer();
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => Task.CompletedTask));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => ValueTask.CompletedTask));
 
             await map.AddLayerAsync(layer);
             Assert.Contains(layer, map.Layers);
@@ -423,7 +423,7 @@
         public async void Should_NotAddALayer_NullCaseAsync()
         {
             BubbleLayer layer = null;
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => Task.CompletedTask));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => ValueTask.CompletedTask));
 
             await map.AddLayerAsync(layer);
             Assert.Null(map.Layers);
@@ -436,7 +436,7 @@
         {
             var layer = new BubbleLayer();
             const string before = "before";
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => Task.CompletedTask));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => ValueTask.CompletedTask));
 
             await map.AddLayerAsync(layer, before);
             Assert.Contains(layer, map.Layers);
@@ -456,7 +456,7 @@
         public async void Should_NotAddLayerWithSameId_Async()
         {
             var layer = new BubbleLayer();
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => Task.CompletedTask));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => ValueTask.CompletedTask));
 
             await map.AddLayerAsync(layer);
             await Assert.ThrowsAnyAsync<LayerAlreadyAddedException>(async () => await map.AddLayerAsync(layer));
@@ -478,7 +478,7 @@
             var layer1 = new BubbleLayer();
             var layer2 = new BubbleLayer();
 
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => Task.CompletedTask));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => ValueTask.CompletedTask));
             await map.AddLayerAsync(layer1);
             await map.AddLayerAsync(layer2);
             await map.RemoveLayersAsync(layer1);
@@ -499,7 +499,7 @@
             var layer1 = new BubbleLayer();
             var layer2 = new BubbleLayer();
 
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => Task.CompletedTask));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => ValueTask.CompletedTask));
             await map.AddLayerAsync(layer1);
             await map.AddLayerAsync(layer2);
             await map.RemoveLayersAsync(new List<Layer> { layer1, layer2 });
@@ -520,7 +520,7 @@
             var layer1 = new BubbleLayer();
             var layer2 = new BubbleLayer();
 
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => Task.CompletedTask));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => ValueTask.CompletedTask));
             await map.AddLayerAsync(layer1);
             await map.AddLayerAsync(layer2);
             await map.RemoveLayersAsync(layer1, layer2);
@@ -541,7 +541,7 @@
             var layer1 = new BubbleLayer();
             var layer2 = new BubbleLayer();
 
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => Task.CompletedTask));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => ValueTask.CompletedTask));
             await map.AddLayerAsync(layer1);
             await map.AddLayerAsync(layer2);
             await map.RemoveLayersAsync(new List<string> { layer1.Id, layer2.Id });
@@ -562,7 +562,7 @@
             var layer1 = new BubbleLayer();
             var layer2 = new BubbleLayer();
 
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => Task.CompletedTask));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => ValueTask.CompletedTask));
             await map.AddLayerAsync(layer1);
             await map.AddLayerAsync(layer2);
             await map.RemoveLayersAsync(layer1.Id, layer2.Id);
@@ -741,10 +741,10 @@
         [Fact]
         public async void Should_ClearMap_Async()
         {
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, new DrawingToolbarEventInvokeHelper(eventArgs => Task.CompletedTask),
-                new HtmlMarkerInvokeHelper(eventArgs => Task.CompletedTask),
-                new LayerEventInvokeHelper(eventArgs => Task.CompletedTask),
-                new PopupInvokeHelper(eventArgs => Task.CompletedTask));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, new DrawingToolbarEventInvokeHelper(eventArgs => ValueTask.CompletedTask),
+                new HtmlMarkerInvokeHelper(eventArgs => ValueTask.CompletedTask),
+                new LayerEventInvokeHelper(eventArgs => ValueTask.CompletedTask),
+                new PopupInvokeHelper(eventArgs => ValueTask.CompletedTask));
 
             await map.AddSourceAsync(new DataSource());
             await map.AddLayerAsync(new BubbleLayer());
@@ -768,7 +768,7 @@
         [Fact]
         public async void Should_ClearLayers_Async()
         {
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => Task.CompletedTask));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => ValueTask.CompletedTask));
             await map.AddLayerAsync(new BubbleLayer());
 
             await map.ClearLayersAsync();
@@ -795,7 +795,7 @@
         [Fact]
         public async void Should_ClearHtmlMarkers_Async()
         {
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => Task.CompletedTask));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => ValueTask.CompletedTask));
 
             await map.AddHtmlMarkersAsync(new HtmlMarker(null));
             await map.ClearHtmlMarkersAsync();
@@ -814,7 +814,7 @@
         public async void Should_AddPopup_Async()
         {
             var popup = new Popup(new PopupOptions());
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => Task.CompletedTask));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => ValueTask.CompletedTask));
             await map.AddPopupAsync(popup);
 
             Assert.Contains(popup, map.Popups);
@@ -831,7 +831,7 @@
         [Fact]
         public async void Should_NotAddPopup_NullCaseAsync()
         {
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => Task.CompletedTask));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => ValueTask.CompletedTask));
             await map.AddPopupAsync(null);
             Assert.Null(map.Popups);
             _jsRuntimeMock.VerifyNoOtherCalls();
@@ -841,7 +841,7 @@
         public async void Should_NotAddTwiceTheSamePopup_Async()
         {
             var popup = new Popup(new PopupOptions());
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => Task.CompletedTask));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => ValueTask.CompletedTask));
             await map.AddPopupAsync(popup);
             await Assert.ThrowsAnyAsync<PopupAlreadyExistingException>(async () => await map.AddPopupAsync(popup));
 
@@ -860,7 +860,7 @@
             var popup = new Popup(new PopupOptions()) {
                 JSRuntime = _jsRuntimeMock.Object
             };
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => Task.CompletedTask));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => ValueTask.CompletedTask));
             await map.AddPopupAsync(popup);
             await map.RemovePopupAsync(popup);
 
@@ -876,7 +876,7 @@
             var popup = new Popup(new PopupOptions()) {
                 JSRuntime = _jsRuntimeMock.Object
             };
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => Task.CompletedTask));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => ValueTask.CompletedTask));
             await map.AddPopupAsync(popup);
             await map.RemovePopupAsync(popup.Id);
 
@@ -890,7 +890,7 @@
         public async void Should_NotRemovePopup_Async()
         {
             var popup = new Popup(new PopupOptions());
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => Task.CompletedTask));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => ValueTask.CompletedTask));
             await map.AddPopupAsync(popup);
             await map.RemovePopupAsync(new Popup(new PopupOptions()));
 
@@ -902,7 +902,7 @@
         public async void Should_ClearPopups_Async()
         {
             var popup = new Popup(new PopupOptions());
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => Task.CompletedTask));
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => ValueTask.CompletedTask));
             await map.AddPopupAsync(popup);
             await map.ClearPopupsAsync();
 

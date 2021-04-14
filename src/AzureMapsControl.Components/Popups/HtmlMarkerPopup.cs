@@ -47,6 +47,7 @@
             }
         }
 
+        [Obsolete("Will be removed in a future versio. Use SetOptionsAsync instead")]
         public override async ValueTask UpdateAsync(Action<PopupOptions> update)
         {
             if (HasBeenToggled)

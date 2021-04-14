@@ -259,7 +259,6 @@ dotnet_naming_rule.events_must_start_with_on.severity = warning
 
 dotnet_naming_symbols.events_on_symbols.applicable_kinds = event
 
-dotnet_naming_style.events_on_style.required_prefix = On
 dotnet_naming_style.events_on_style.capitalization = pascal_case
 
 # Async methods end with Async

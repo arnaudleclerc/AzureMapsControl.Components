@@ -7,6 +7,6 @@
 
     internal sealed class PopupInvokeHelper : EventInvokeHelper<PopupEventArgs>
     {
-        public PopupInvokeHelper(Func<PopupEventArgs, Task> callback) : base(callback) { }
+        public PopupInvokeHelper(Func<PopupEventArgs, ValueTask> callback) : base(callback) { }
     }
 }

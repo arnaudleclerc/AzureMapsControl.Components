@@ -10,44 +10,44 @@
         /// Disposes the animation
         /// </summary>
         /// <returns></returns>
-        Task DisposeAsync();
+        ValueTask DisposeAsync();
 
         /// <summary>
         /// Plays the animation.
         /// </summary>
         /// <returns></returns>
-        Task PlayAsync();
+        ValueTask PlayAsync();
 
         /// <summary>
         /// Stops the animation and jumps back to the beginning of the animation. 
         /// </summary>
         /// <returns></returns>
-        Task ResetAsync();
+        ValueTask ResetAsync();
 
         /// <summary>
         /// Stops the animation and jumps back to the end of the animation. 
         /// </summary>
         /// <returns></returns>
-        Task StopAsync();
+        ValueTask StopAsync();
 
         /// <summary>
         /// Pauses the animation.
         /// </summary>
         /// <returns></returns>
-        Task PauseAsync();
+        ValueTask PauseAsync();
 
         /// <summary>
         /// Advances the animation to specific step. 
         /// </summary>
         /// <param name="progress">The progress of the animation to advance to. A value between 0 and 1.</param>
         /// <returns></returns>
-        Task SeekAsync(decimal progress);
+        ValueTask SeekAsync(decimal progress);
 
         /// <summary>
         /// Sets the options of the animation.
         /// </summary>
         /// <param name="options">Options to update the animation with</param>
         /// <returns></returns>
-        Task SetOptionsAsync(DropMarkersAnimationOptions options);
+        ValueTask SetOptionsAsync(DropMarkersAnimationOptions options);
     }
 }

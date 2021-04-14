@@ -7,7 +7,7 @@
 
     internal class HtmlMarkerInvokeHelper : EventInvokeHelper<HtmlMarkerJsEventArgs>
     {
-        public HtmlMarkerInvokeHelper(Func<HtmlMarkerJsEventArgs, Task> callback) : base(callback)
+        public HtmlMarkerInvokeHelper(Func<HtmlMarkerJsEventArgs, ValueTask> callback) : base(callback)
         {
         }
     }

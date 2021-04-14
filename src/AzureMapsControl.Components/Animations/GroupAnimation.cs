@@ -12,7 +12,7 @@
         {
         }
 
-        public override Task SeekAsync(decimal progress) => throw new NotSupportedException($"{nameof(SeekAsync)} is not supported by {nameof(GroupAnimation)}");
-        public override Task PauseAsync() => throw new NotSupportedException($"{nameof(PauseAsync)} is not supported by {nameof(GroupAnimation)}");
+        public override ValueTask SeekAsync(decimal progress) => throw new NotSupportedException($"{nameof(SeekAsync)} is not supported by {nameof(GroupAnimation)}");
+        public override ValueTask PauseAsync() => throw new NotSupportedException($"{nameof(PauseAsync)} is not supported by {nameof(GroupAnimation)}");
     }
 }

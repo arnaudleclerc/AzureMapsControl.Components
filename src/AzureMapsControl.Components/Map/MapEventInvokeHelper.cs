@@ -7,7 +7,7 @@
 
     internal sealed class MapEventInvokeHelper : EventInvokeHelper<MapJsEventArgs>
     {
-        public MapEventInvokeHelper(Func<MapJsEventArgs, Task> callback) : base(callback)
+        public MapEventInvokeHelper(Func<MapJsEventArgs, ValueTask> callback) : base(callback)
         {
         }
     }

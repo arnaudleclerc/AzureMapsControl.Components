@@ -12,8 +12,8 @@
         {
         }
 
-        public override Task SeekAsync(decimal progress) => throw new NotSupportedException($"{nameof(SeekAsync)} is not supported on {nameof(FlowingDashedLineAnimation)}");
+        public override ValueTask SeekAsync(decimal progress) => throw new NotSupportedException($"{nameof(SeekAsync)} is not supported on {nameof(FlowingDashedLineAnimation)}");
 
-        public override Task SetOptionsAsync(MovingDashLineOptions options) => throw new NotSupportedException($"{nameof(SetOptionsAsync)} is not supported on {nameof(FlowingDashedLineAnimation)}");
+        public override ValueTask SetOptionsAsync(MovingDashLineOptions options) => throw new NotSupportedException($"{nameof(SetOptionsAsync)} is not supported on {nameof(FlowingDashedLineAnimation)}");
     }
 }

@@ -8,6 +8,6 @@
         /// Disposes the animation
         /// </summary>
         /// <returns></returns>
-        Task DisposeAsync();
+        ValueTask DisposeAsync();
     }
 }

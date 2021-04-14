@@ -10,31 +10,31 @@
         /// Disposes the animation
         /// </summary>
         /// <returns></returns>
-        Task DisposeAsync();
+        ValueTask DisposeAsync();
 
         /// <summary>
         /// Plays the animation.
         /// </summary>
         /// <returns></returns>
-        Task PlayAsync();
+        ValueTask PlayAsync();
 
         /// <summary>
         /// Stops the animation and jumps back to the beginning of the animation. 
         /// </summary>
         /// <returns></returns>
-        Task ResetAsync();
+        ValueTask ResetAsync();
 
         /// <summary>
         /// Stops the animation and jumps back to the end of the animation. 
         /// </summary>
         /// <returns></returns>
-        Task StopAsync();
+        ValueTask StopAsync();
 
         /// <summary>
         /// Sets the options of the animation.
         /// </summary>
         /// <param name="options">Options to update the animation with</param>
         /// <returns></returns>
-        Task SetOptionsAsync(GroupAnimationOptions options);
+        ValueTask SetOptionsAsync(GroupAnimationOptions options);
     }
 }

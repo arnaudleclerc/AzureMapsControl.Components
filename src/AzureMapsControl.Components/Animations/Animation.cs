@@ -24,7 +24,7 @@
         /// Disposes the animation
         /// </summary>
         /// <returns></returns>
-        public virtual async Task DisposeAsync()
+        public virtual async ValueTask DisposeAsync()
         {
             EnsureNotDisposed();
             await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Dispose.ToAnimationNamespace(), Id);
@@ -35,7 +35,7 @@
         /// Pauses the animation.
         /// </summary>
         /// <returns></returns>
-        public virtual async Task PauseAsync()
+        public virtual async ValueTask PauseAsync()
         {
             EnsureNotDisposed();
             await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Pause.ToAnimationNamespace(), Id);
@@ -45,7 +45,7 @@
         /// Plays the animation.
         /// </summary>
         /// <returns></returns>
-        public virtual async Task PlayAsync()
+        public virtual async ValueTask PlayAsync()
         {
             EnsureNotDisposed();
             await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Play.ToAnimationNamespace(), Id);
@@ -55,7 +55,7 @@
         /// Stops the animation and jumps back to the beginning of the animation. 
         /// </summary>
         /// <returns></returns>
-        public virtual async Task ResetAsync()
+        public virtual async ValueTask ResetAsync()
         {
             EnsureNotDisposed();
             await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Reset.ToAnimationNamespace(), Id);
@@ -65,7 +65,7 @@
         /// Stops the animation and jumps back to the end of the animation. 
         /// </summary>
         /// <returns></returns>
-        public virtual async Task StopAsync()
+        public virtual async ValueTask StopAsync()
         {
             EnsureNotDisposed();
             await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Stop.ToAnimationNamespace(), Id);
@@ -76,7 +76,7 @@
         /// </summary>
         /// <param name="progress">The progress of the animation to advance to. A value between 0 and 1.</param>
         /// <returns></returns>
-        public virtual async Task SeekAsync(decimal progress)
+        public virtual async ValueTask SeekAsync(decimal progress)
         {
             EnsureNotDisposed();
             await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Seek.ToAnimationNamespace(), Id, progress);
@@ -103,7 +103,7 @@
         /// </summary>
         /// <param name="options">Options to update the animation with</param>
         /// <returns></returns>
-        public virtual async Task SetOptionsAsync(TOptions options)
+        public virtual async ValueTask SetOptionsAsync(TOptions options)
         {
             EnsureNotDisposed();
             await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetOptions.ToAnimationNamespace(), Id, options);

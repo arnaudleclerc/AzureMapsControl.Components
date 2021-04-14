@@ -118,7 +118,7 @@
             }
         }
 
-        private async Task DispatchEventAsync(GeolocationJsEventArgs eventArgs)
+        private async ValueTask DispatchEventAsync(GeolocationJsEventArgs eventArgs)
         {
             await Task.Run(() => {
                 switch (eventArgs.Type)
