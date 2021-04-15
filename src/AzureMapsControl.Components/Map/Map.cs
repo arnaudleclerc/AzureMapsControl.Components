@@ -1014,5 +1014,43 @@
             }
         }
 
+        /// <summary>
+        /// Set a property on the style of the map's canvas container
+        /// </summary>
+        /// <param name="property">Name of the property to set</param>
+        /// <param name="value">Value of the property</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException">The property parameter is null or made of whitespaces</exception>
+        public async ValueTask SetCanvasContainerStylePropertyAsync(string property, string value)
+        {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_SetCanvasContainerStylePropertyAsync, "Map - SetCanvasContainerStylePropertyAsync");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_SetCanvasContainerStylePropertyAsync, "Property", property);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_SetCanvasContainerStylePropertyAsync, "Value", value);
+
+            Require.NotNullOrWhiteSpace(property, nameof(property));
+
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasContainerStyleProperty.ToCoreNamespace(), property, value);
+        }
+
+        /// <summary>
+        /// Set properties on the style of the map's canvas container
+        /// </summary>
+        /// <param name="properties">Properties to set</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">The given dictionary is null</exception>
+        public async ValueTask SetCanvasContainerStylePropertiesAsync(IReadOnlyDictionary<string, string> properties)
+        {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_SetCanvasContainerStylePropertiesAsync, "Map - SetCanvasContainerStylePropertiesAsync");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_SetCanvasContainerStylePropertiesAsync, "Properties", properties);
+
+            Require.NotNull(properties, nameof(properties));
+
+            var definedProperties = properties.Where(property => !string.IsNullOrWhiteSpace(property.Key));
+            if (definedProperties.Any())
+            {
+                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasContainerStyleProperties.ToCoreNamespace(), definedProperties);
+            }
+        }
+
     }
 }

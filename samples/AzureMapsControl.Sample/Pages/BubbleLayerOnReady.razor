@@ -38,13 +38,13 @@
         };
 
         layer.OnMouseEnter += async _ => {
-            await eventArgs.Map.SetCanvasStylePropertiesAsync(new Dictionary<string, string> {
+            await eventArgs.Map.SetCanvasContainerStylePropertiesAsync(new Dictionary<string, string> {
                 { "cursor", "pointer" }
             });
         };
 
         layer.OnMouseLeave += async _ => {
-            await eventArgs.Map.SetCanvasStylePropertiesAsync(new Dictionary<string, string> {
+            await eventArgs.Map.SetCanvasContainerStylePropertiesAsync(new Dictionary<string, string> {
                 { "cursor", "grab" }
             });
         };

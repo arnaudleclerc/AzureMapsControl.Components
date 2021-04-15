@@ -1694,5 +1694,95 @@
             await map.SetCanvasStylePropertiesAsync(properties);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async void Should_SetCanvasContainerStylePropertyAsync()
+        {
+            var map = new Map("id", _jsRuntimeMock.Object);
+            await map.SetCanvasContainerStylePropertyAsync("property", "value");
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasContainerStyleProperty.ToCoreNamespace(), "property", "value"), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public async void Should_NotSetCanvasContainerStyleProperty_InvalidProperty_Async(string property)
+        {
+            var map = new Map("id", _jsRuntimeMock.Object);
+            await Assert.ThrowsAnyAsync<ArgumentException>(async () => await map.SetCanvasContainerStylePropertyAsync(property, "value"));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_SetCanvasContainerStylePropertiesAsync()
+        {
+            var map = new Map("id", _jsRuntimeMock.Object);
+            var properties = new Dictionary<string, string> {
+                { "cursor", "hand" }
+            };
+
+            await map.SetCanvasContainerStylePropertiesAsync(properties);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasContainerStyleProperties.ToCoreNamespace(), It.Is<IEnumerable<KeyValuePair<string, string>>>(dictionary =>
+                dictionary.Single().Key == "cursor" && dictionary.Single().Value == "hand"))
+            , Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotSetCanvasContainerStyleProperties_NullCase_Async()
+        {
+            var map = new Map("id", _jsRuntimeMock.Object);
+            
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await map.SetCanvasContainerStylePropertiesAsync(null));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_SetOnlyDefinedCanvasContainerProperties_Async()
+        {
+            var map = new Map("id", _jsRuntimeMock.Object);
+
+            var properties = new Dictionary<string, string> {
+                { "cursor", "hand" },
+                { "", "value" },
+                { " ", "value" },
+            };
+
+            await map.SetCanvasContainerStylePropertiesAsync(properties);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasContainerStyleProperties.ToCoreNamespace(), It.Is<IEnumerable<KeyValuePair<string, string>>>(dictionary =>
+                dictionary.Single().Key == "cursor" && dictionary.Single().Value == "hand"))
+            , Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotSetCanvasContainerProperties_EmptyCase_Async()
+        {
+            var map = new Map("id", _jsRuntimeMock.Object);
+
+            var properties = new Dictionary<string, string>();
+
+            await map.SetCanvasContainerStylePropertiesAsync(properties);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotSetCanvasContainerProperties_NoDefinedPropertiesCase_Async()
+        {
+            var map = new Map("id", _jsRuntimeMock.Object);
+
+            var properties = new Dictionary<string, string> {
+                { "", "value" },
+                { " ", "value" },
+            };
+            await map.SetCanvasContainerStylePropertiesAsync(properties);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
     }
 }

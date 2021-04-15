@@ -66,6 +66,8 @@
                 internal const string CreateImageFromTemplate = "createImageFromTemplate";
                 internal const string SetCanvasStyleProperty = "setCanvasStyleProperty";
                 internal const string SetCanvasStyleProperties = "setCanvasStyleProperties";
+                internal const string SetCanvasContainerStyleProperty = "setCanvasContainerStyleProperty";
+                internal const string SetCanvasContainerStyleProperties = "setCanvasContainerStyleProperties";
             }
 
             internal static class Drawing
