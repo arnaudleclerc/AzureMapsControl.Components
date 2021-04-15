@@ -64,6 +64,8 @@
                 internal const string SetUserInteraction = "setUserInteraction";
                 internal const string UpdateHtmlMarkers = "updateHtmlMarkers";
                 internal const string CreateImageFromTemplate = "createImageFromTemplate";
+                internal const string SetCanvasStyleProperty = "setCanvasStyleProperty";
+                internal const string SetCanvasStyleProperties = "setCanvasStyleProperties";
             }
 
             internal static class Drawing

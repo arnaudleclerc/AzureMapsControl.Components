@@ -11,5 +11,13 @@
                 throw new ArgumentNullException(name);
             }
         }
+
+        internal static void NotNullOrWhiteSpace(string element, string name)
+        {
+            if(string.IsNullOrWhiteSpace(element))
+            {
+                throw new ArgumentException(name);
+            }
+        }
     }
 }

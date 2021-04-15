@@ -9,6 +9,7 @@
     using AzureMapsControl.Components.Data;
     using AzureMapsControl.Components.Drawing;
     using AzureMapsControl.Components.Exceptions;
+    using AzureMapsControl.Components.Guards;
     using AzureMapsControl.Components.Layers;
     using AzureMapsControl.Components.Logger;
     using AzureMapsControl.Components.Markers;
@@ -974,5 +975,44 @@
                 Scale = scale
             });
         }
+
+        /// <summary>
+        /// Set a property on the style of the map's canvas
+        /// </summary>
+        /// <param name="property">Name of the property to set</param>
+        /// <param name="value">Value of the property</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException">The property parameter is null or made of whitespaces</exception>
+        public async ValueTask SetCanvasStylePropertyAsync(string property, string value)
+        {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_SetCanvasStylePropertyAsync, "Map - SetCanvasStylePropertyAsync");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_SetCanvasStylePropertyAsync, "Property", property);
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_SetCanvasStylePropertyAsync, "Value", value);
+
+            Require.NotNullOrWhiteSpace(property, nameof(property));
+
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasStyleProperty.ToCoreNamespace(), property, value);
+        }
+
+        /// <summary>
+        /// Set properties on the style of the map's canvas
+        /// </summary>
+        /// <param name="properties">Properties to set</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">The given dictionary is null</exception>
+        public async ValueTask SetCanvasStylePropertiesAsync(IReadOnlyDictionary<string, string> properties)
+        {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_SetCanvasStylePropertiesAsync, "Map - SetCanvasStylePropertiesAsync");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_SetCanvasStylePropertiesAsync, "Properties", properties);
+
+            Require.NotNull(properties, nameof(properties));
+
+            var definedProperties = properties.Where(property => !string.IsNullOrWhiteSpace(property.Key));
+            if (definedProperties.Any())
+            {
+                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasStyleProperties.ToCoreNamespace(), definedProperties);
+            }
+        }
+
     }
 }

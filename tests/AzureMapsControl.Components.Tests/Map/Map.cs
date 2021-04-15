@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Atlas;
@@ -21,6 +22,8 @@
     using Microsoft.JSInterop;
 
     using Moq;
+
+    using NuGet.Frameworks;
 
     using Xunit;
 
@@ -1599,6 +1602,96 @@
                 && ((MapImageTemplate)parameters[0]).SecondaryColor == "secondaryColor"
                 && ((MapImageTemplate)parameters[0]).Scale == 1m
             )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_SetCanvasStylePropertyAsync()
+        {
+            var map = new Map("id", _jsRuntimeMock.Object);
+            await map.SetCanvasStylePropertyAsync("property", "value");
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasStyleProperty.ToCoreNamespace(), "property", "value"), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public async void Should_NotSetCanvasStyleProperty_InvalidProperty_Async(string property)
+        {
+            var map = new Map("id", _jsRuntimeMock.Object);
+            await Assert.ThrowsAnyAsync<ArgumentException>(async () => await map.SetCanvasStylePropertyAsync(property, "value"));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_SetCanvasStylePropertiesAsync()
+        {
+            var map = new Map("id", _jsRuntimeMock.Object);
+            var properties = new Dictionary<string, string> {
+                { "cursor", "hand" }
+            };
+
+            await map.SetCanvasStylePropertiesAsync(properties);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasStyleProperties.ToCoreNamespace(), It.Is<IEnumerable<KeyValuePair<string, string>>>(dictionary => 
+                dictionary.Single().Key == "cursor" && dictionary.Single().Value == "hand"))
+            , Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotSetCanvasStyleProperties_NullCase_Async()
+        {
+            var map = new Map("id", _jsRuntimeMock.Object);
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async() => await map.SetCanvasStylePropertiesAsync(null));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_SetOnlyDefinedCanvasProperties_Async()
+        {
+            var map = new Map("id", _jsRuntimeMock.Object);
+
+            var properties = new Dictionary<string, string> {
+                { "cursor", "hand" },
+                { "", "value" },
+                { " ", "value" },
+            };
+
+            await map.SetCanvasStylePropertiesAsync(properties);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasStyleProperties.ToCoreNamespace(), It.Is<IEnumerable<KeyValuePair<string, string>>>(dictionary =>
+                dictionary.Single().Key == "cursor" && dictionary.Single().Value == "hand"))
+            , Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotSetCanvasProperties_EmptyCase_Async()
+        {
+            var map = new Map("id", _jsRuntimeMock.Object);
+
+            var properties = new Dictionary<string, string>();
+
+            await map.SetCanvasStylePropertiesAsync(properties);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotSetCanvasProperties_NoDefinedPropertiesCase_Async()
+        {
+            var map = new Map("id", _jsRuntimeMock.Object);
+
+            var properties = new Dictionary<string, string> {
+                { "", "value" },
+                { " ", "value" },
+            };
+            await map.SetCanvasStylePropertiesAsync(properties);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
     }

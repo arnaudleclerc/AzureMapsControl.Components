@@ -453,6 +453,17 @@ export class Core {
         );
     }
 
+    public static setCanvasStyleProperty(property: string, value: string): void {
+        this._map.getCanvas().style.setProperty(property, value);
+    }
+
+    public static setCanvasStyleProperties(properties: { key: string, value: string }[]): void {
+        const canvas = this._map.getCanvas();
+        properties.forEach(property => {
+            canvas.style.setProperty(property.key, property.value);
+        });
+    }
+
     private static _getSerializableShape(shape: azmaps.Shape): Shape {
         return {
             geometry: shape.toJson().geometry,

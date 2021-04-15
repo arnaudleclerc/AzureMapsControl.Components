@@ -9,11 +9,11 @@
           OnReady="OnMapReady" />
 
 @code  {
-    public async Task OnMapReady(MapEventArgs events)
+    public async Task OnMapReady(MapEventArgs eventArgs)
     {
         const string dataSourceId = "bubbleDataSource";
         var dataSource = new AzureMapsControl.Components.Data.DataSource(dataSourceId);
-        await events.Map.AddSourceAsync(dataSource);
+        await eventArgs.Map.AddSourceAsync(dataSource);
 
 
         var geometries = new List<AzureMapsControl.Components.Atlas.Shape>();
@@ -33,9 +33,22 @@
                 StrokeColor = new Components.Atlas.ExpressionOrString("#4288f7"),
                 StrokeWidth = new Components.Atlas.ExpressionOrNumber(6),
                 Source = dataSourceId
-            }
+            },
+            EventActivationFlags = Components.Layers.LayerEventActivationFlags.None().Enable(Components.Layers.LayerEventType.MouseEnter, Components.Layers.LayerEventType.MouseLeave)
         };
 
-        await events.Map.AddLayerAsync(layer);
+        layer.OnMouseEnter += async _ => {
+            await eventArgs.Map.SetCanvasStylePropertiesAsync(new Dictionary<string, string> {
+                { "cursor", "pointer" }
+            });
+        };
+
+        layer.OnMouseLeave += async _ => {
+            await eventArgs.Map.SetCanvasStylePropertiesAsync(new Dictionary<string, string> {
+                { "cursor", "grab" }
+            });
+        };
+
+        await eventArgs.Map.AddLayerAsync(layer);
     }
 }

@@ -44,6 +44,8 @@
         Map_AddPopupAsync = 4018,
         Map_ClearPopupsAsync = 4019,
         Map_CreateImageFromTemplate = 4020,
+        Map_SetCanvasStylePropertyAsync = 4021,
+        Map_SetCanvasStylePropertiesAsync = 4022,
         OverviewMapControl_UpdateAsync = 5000,
         OverviewMapControl_SetOptionsAsync = 5001,
         Popup_OpenAsync = 6000,
