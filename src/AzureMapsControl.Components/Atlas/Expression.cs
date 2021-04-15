@@ -167,7 +167,7 @@
 
         private void WriteExpressionOrStringArray(Utf8JsonWriter writer, ExpressionOrStringArray value)
         {
-            if (value.Values.Any())
+            if (value.Values is not null)
             {
                 writer.WriteStartArray();
                 foreach (var expression in value.Values)

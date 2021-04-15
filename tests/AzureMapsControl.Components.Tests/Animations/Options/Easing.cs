@@ -1,5 +1,6 @@
 ﻿namespace AzureMapsControl.Components.Tests.Animations.Options
 {
+
     using AzureMapsControl.Components.Animations.Options;
 
     using Xunit;
@@ -38,14 +39,14 @@
         [InlineData("easeInBounce")]
         [InlineData("easeOutBounce")]
         [InlineData("easeInOutBounce")]
-        public static void Should_ReturnEasingFromString(string easingType)
+        public void Should_ReturnEasingFromString(string easingType)
         {
             var easing = Easing.FromString(easingType);
             Assert.Equal(easingType, easing.ToString());
         }
 
         [Fact]
-        public static void Should_ReturnDefaultEasing_IfStringDoesNotMatch()
+        public void Should_ReturnDefaultEasing_IfStringDoesNotMatch()
         {
             var easingType = "obviouslyNotAValidOne";
             var easing = Easing.FromString(easingType);
