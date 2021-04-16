@@ -475,6 +475,60 @@ export class Core {
         });
     }
 
+    public static getCamera(): azmaps.CameraOptions {
+        const camera = this._map.getCamera();
+        return <azmaps.CameraOptions>{
+            bearing: camera.bearing,
+            center: camera.center,
+            centerOffset: camera.centerOffset,
+            maxBounds: camera.maxBounds,
+            maxZoom: camera.maxZoom,
+            minZoom: camera.minZoom,
+            pitch: camera.pitch,
+            zoom: camera.zoom
+        };
+    }
+
+    public static getStyle(): azmaps.StyleOptions {
+        const style = this._map.getStyle();
+        return <azmaps.StyleOptions>{
+            autoResize: style.autoResize,
+            language: style.language,
+            light: style.light,
+            preserveDrawingBuffer: style.preserveDrawingBuffer,
+            renderWorldCopies: style.renderWorldCopies,
+            showBuildingModels: style.showBuildingModels,
+            showFeedbackLink: style.showFeedbackLink,
+            showLogo: style.showLogo,
+            showTileBoundaries: style.showTileBoundaries,
+            style: style.style,
+            view: style.view
+        };
+    }
+
+    public static getTraffic(): azmaps.TrafficOptions {
+        const traffic = this._map.getTraffic();
+        return <azmaps.TrafficOptions>{
+            flow: traffic.flow,
+            incidents: traffic.incidents
+        };
+    }
+
+    public static getUserInteraction(): azmaps.UserInteractionOptions {
+        const userInteraction = this._map.getUserInteraction();
+        return <azmaps.UserInteractionOptions>{
+            boxZoomInteraction: userInteraction.boxZoomInteraction,
+            dblClickZoomInteraction: userInteraction.dblClickZoomInteraction,
+            dragPanInteraction: userInteraction.dragPanInteraction,
+            dragRotateInteraction: userInteraction.dragRotateInteraction,
+            interactive: userInteraction.interactive,
+            keyboardInteraction: userInteraction.keyboardInteraction,
+            scrollZoomInteraction: userInteraction.scrollZoomInteraction,
+            touchInteraction: userInteraction.touchInteraction,
+            wheelZoomRate: userInteraction.wheelZoomRate
+        };
+    }
+
     private static _getSerializableShape(shape: azmaps.Shape): Shape {
         return {
             geometry: shape.toJson().geometry,

@@ -68,6 +68,10 @@
                 internal const string SetCanvasStyleProperties = "setCanvasStyleProperties";
                 internal const string SetCanvasContainerStyleProperty = "setCanvasContainerStyleProperty";
                 internal const string SetCanvasContainerStyleProperties = "setCanvasContainerStyleProperties";
+                internal const string GetCamera = "getCamera";
+                internal const string GetStyle = "getStyle";
+                internal const string GetTraffic = "getTraffic";
+                internal const string GetUserInteraction = "getUserInteraction";
             }
 
             internal static class Drawing

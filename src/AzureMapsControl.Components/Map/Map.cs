@@ -677,6 +677,50 @@
         }
 
         /// <summary>
+        /// Get the camera options
+        /// </summary>
+        /// <returns>Current camera options</returns>
+        public async ValueTask<CameraOptions> GetCameraOptionsAsync()
+        {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_GetCameraOptionsAsync, "Map - GetCameraOptionsAsync");
+            CameraOptions = await _jsRuntime.InvokeAsync<CameraOptions>(Constants.JsConstants.Methods.Core.GetCamera.ToCoreNamespace());
+            return CameraOptions;
+        }
+
+        /// <summary>
+        /// Get the style options
+        /// </summary>
+        /// <returns>Current style options</returns>
+        public async ValueTask<StyleOptions> GetStyleOptionsAsync()
+        {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_GetStyleOptionsAsync, "Map - GetStyleOptionsAsync");
+            StyleOptions = await _jsRuntime.InvokeAsync<StyleOptions>(Constants.JsConstants.Methods.Core.GetStyle.ToCoreNamespace());
+            return StyleOptions;
+        }
+
+        /// <summary>
+        /// Get the traffic options
+        /// </summary>
+        /// <returns>Current traffic options</returns>
+        public async ValueTask<TrafficOptions> GetTrafficOptionsAsync()
+        {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_GetTrafficOptionsAsync, "Map - GetTrafficOptionsAsync");
+            TrafficOptions = await _jsRuntime.InvokeAsync<TrafficOptions>(Constants.JsConstants.Methods.Core.GetTraffic.ToCoreNamespace());
+            return TrafficOptions;
+        }
+
+        /// <summary>
+        /// Get the user interaction options
+        /// </summary>
+        /// <returns>Current user interactions</returns>
+        public async ValueTask<UserInteractionOptions> GetUserInteractionOptionsAsync()
+        {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_GetUserInteractionOptionsAsync, "Map - GetTrafficOptionsAsync");
+            UserInteractionOptions = await _jsRuntime.InvokeAsync<UserInteractionOptions>(Constants.JsConstants.Methods.Core.GetUserInteraction.ToCoreNamespace());
+            return UserInteractionOptions;
+        }
+
+        /// <summary>
         /// Update the style options of the map
         /// </summary>
         /// <param name="configure">Action setting the style options</param>

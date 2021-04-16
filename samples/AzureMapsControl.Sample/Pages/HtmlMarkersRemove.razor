@@ -13,7 +13,7 @@
 
     public async Task OnMapClick(MapMouseEventArgs args)
     {
-        if(_marker != null)
+        if (_marker != null)
         {
             await args.Map.RemoveHtmlMarkersAsync(_marker);
         }
@@ -28,6 +28,12 @@
             _marker
         );
 
-        await args.Map.SetCameraOptionsAsync(options => options.Center = args.Position);
+        var options = await args.Map.GetCameraOptionsAsync();
+
+        await args.Map.SetCameraOptionsAsync(options =>
+        {
+            options.Center = args.Position;
+            options.Zoom = ++options.Zoom;
+        });
     }
 }

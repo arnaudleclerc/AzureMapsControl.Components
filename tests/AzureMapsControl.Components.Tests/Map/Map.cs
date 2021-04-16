@@ -1784,5 +1784,65 @@
             await map.SetCanvasContainerStylePropertiesAsync(properties);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
+        
+        [Fact]
+        public async void Should_GetCameraOptionsAsync()
+        {
+            var options = new CameraOptions();
+            _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<CameraOptions>(It.IsAny<string>())).ReturnsAsync(options);
+
+            var map = new Map("id", _jsRuntimeMock.Object);
+            var result = await map.GetCameraOptionsAsync();
+            Assert.Equal(options, map.CameraOptions);
+            Assert.Equal(options, result);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<CameraOptions>(Constants.JsConstants.Methods.Core.GetCamera.ToCoreNamespace()), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_GetStyleOptionsAsync()
+        {
+            var options = new StyleOptions();
+            _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<StyleOptions>(It.IsAny<string>())).ReturnsAsync(options);
+
+            var map = new Map("id", _jsRuntimeMock.Object);
+            var result = await map.GetStyleOptionsAsync();
+            Assert.Equal(options, map.StyleOptions);
+            Assert.Equal(options, result);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<StyleOptions>(Constants.JsConstants.Methods.Core.GetStyle.ToCoreNamespace()), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_GetTrafficOptionsAsync()
+        {
+            var options = new TrafficOptions();
+            _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<TrafficOptions>(It.IsAny<string>())).ReturnsAsync(options);
+
+            var map = new Map("id", _jsRuntimeMock.Object);
+            var result = await map.GetTrafficOptionsAsync();
+            Assert.Equal(options, map.TrafficOptions);
+            Assert.Equal(options, result);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<TrafficOptions>(Constants.JsConstants.Methods.Core.GetTraffic.ToCoreNamespace()), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_GetUserInteractionOptionsAsync()
+        {
+            var options = new UserInteractionOptions();
+            _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<UserInteractionOptions>(It.IsAny<string>())).ReturnsAsync(options);
+
+            var map = new Map("id", _jsRuntimeMock.Object);
+            var result = await map.GetUserInteractionOptionsAsync();
+            Assert.Equal(options, map.UserInteractionOptions);
+            Assert.Equal(options, result);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<UserInteractionOptions>(Constants.JsConstants.Methods.Core.GetUserInteraction.ToCoreNamespace()), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
     }
 }
