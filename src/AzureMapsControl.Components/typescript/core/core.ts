@@ -357,15 +357,15 @@ export class Core {
         }
     }
 
-    public static setCameraOptions(cameraOptions: azmaps.CameraOptions & azmaps.CameraBoundsOptions): void {
-        const options: azmaps.CameraOptions & azmaps.CameraBoundsOptions = {
+    public static setCameraOptions(cameraOptions: (azmaps.CameraOptions | azmaps.CameraBoundsOptions) & azmaps.AnimationOptions): void {
+        const options: (azmaps.CameraOptions | azmaps.CameraBoundsOptions) & azmaps.AnimationOptions = {
             bearing: cameraOptions.bearing,
             centerOffset: cameraOptions.centerOffset,
             duration: cameraOptions.duration,
             maxZoom: cameraOptions.maxZoom,
             minZoom: cameraOptions.minZoom,
             pitch: cameraOptions.pitch,
-            type: cameraOptions.cameraType
+            type: cameraOptions.type
         };
 
         if (cameraOptions.bounds) {

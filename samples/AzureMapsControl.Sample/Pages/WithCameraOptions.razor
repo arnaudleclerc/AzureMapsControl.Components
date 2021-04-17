@@ -1,0 +1,29 @@
+﻿@page "/WithCameraOptions"
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          CameraOptions="new CameraOptions { Center= new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534), Zoom= 8.5, MinZoom = 3, MaxZoom = 12.5 }"
+          StyleOptions="StyleOptions"
+            EventActivationFlags="MapEventActivationFlags
+                                .None()
+                                .Enable(MapEventType.Click)"
+          OnClick="OnMapClick"          />
+
+@code {
+    public StyleOptions StyleOptions = new StyleOptions
+    {
+        Style = MapStyle.GrayscaleDark,
+        ShowLogo = false,
+        ShowFeedbackLink = false
+    };
+
+    public async Task OnMapClick(MapMouseEventArgs eventArgs)
+    {
+        var options = await eventArgs.Map.GetCameraOptionsAsync();
+        await eventArgs.Map.SetCameraOptionsAsync(cameraOptions => {
+            cameraOptions.Type = CameraType.Fly;
+            cameraOptions.Duration = 1000;
+            cameraOptions.Zoom = options.Zoom + 1;
+        });
+    }
+}
