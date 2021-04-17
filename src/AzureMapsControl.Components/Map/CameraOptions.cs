@@ -75,6 +75,6 @@
         /// <summary>
         /// The zoom level of the map view
         /// </summary>
-        public int? Zoom { get; set; }
+        public double? Zoom { get; set; }
     }
 }

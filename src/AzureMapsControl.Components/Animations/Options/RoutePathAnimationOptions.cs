@@ -22,7 +22,7 @@
         /// <summary>
         /// A fixed zoom level to snap the map to on each animation frame. By default the maps current zoom level is used.
         /// </summary>
-        public int? Zoom { get; set; }
+        public double? Zoom { get; set; }
 
         /// <summary>
         /// A pitch value to set on the map. By default this is not set.
