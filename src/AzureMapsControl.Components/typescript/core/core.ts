@@ -1,4 +1,5 @@
 import * as azmaps from 'azure-maps-control';
+import * as azmapshtmlmarkerlayer from 'azure-maps-html-marker-layer';
 import { Configuration } from '../configuration/configuration';
 import { Extensions } from '../extensions/extensions';
 import { EventHelper } from '../events/event-helper';
@@ -107,7 +108,7 @@ export class Core {
     public static addLayer(id: string,
         before: string,
         layerType: LayerType,
-        layerOptions: azmaps.LayerOptions,
+        layerOptions: azmaps.LayerOptions | azmaps.HtmlMarkerOptions,
         enabledEvents: string[],
         eventHelper: EventHelper<MapEventArgs>): void {
         let layer: azmaps.layer.Layer;
@@ -125,7 +126,7 @@ export class Core {
                 break;
 
             case 'heatmapLayer':
-                layer = new azmaps.layer.HeatMapLayer(this._map.sources.getById(layerOptions.source), id, layerOptions);
+                layer = new azmaps.layer.HeatMapLayer(this._map.sources.getById(layerOptions.source), id, layerOptions as azmaps.LayerOptions);
                 break;
 
             case 'lineLayer':
@@ -142,6 +143,10 @@ export class Core {
 
             case 'symbolLayer':
                 layer = new azmaps.layer.SymbolLayer(this._map.sources.getById(layerOptions.source), id, layerOptions);
+                break;
+
+            case 'htmlMarkerLayer':
+                layer = new azmapshtmlmarkerlayer.layer.HtmlMarkerLayer(this._map.sources.getById(layerOptions.source), id, layerOptions);
                 break;
         }
         if (layer) {

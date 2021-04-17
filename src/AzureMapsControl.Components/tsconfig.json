@@ -33,6 +33,9 @@
       ],
       "azure-maps-control-geolocation": [
         "typings/GeolocationControl"
+      ],
+      "azure-maps-html-marker-layer": [
+        "typings/HtmlMarkerLayer"
       ]
     }
   },

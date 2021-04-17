@@ -1,1 +1,1 @@
-export type LayerType = 'bubbleLayer' | 'heatmapLayer' | 'imageLayer' | 'lineLayer' | 'polygonExtrusionLayer' | 'polygonLayer' | 'symbolLayer' | 'tileLayer';
+export type LayerType = 'bubbleLayer' | 'heatmapLayer' | 'imageLayer' | 'lineLayer' | 'polygonExtrusionLayer' | 'polygonLayer' | 'symbolLayer' | 'tileLayer' | 'htmlMarkerLayer';
