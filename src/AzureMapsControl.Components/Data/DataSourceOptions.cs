@@ -37,7 +37,7 @@
         /// <summary>
         /// Maximum zoom level at which to create vector tiles (higher means greater detail at high zoom levels).
         /// </summary>
-        public int? MaxZoom { get; set; }
+        public double? MaxZoom { get; set; }
 
         /// <summary>
         /// The Douglas-Peucker simplification tolerance that is applied to the data when rendering (higher means simpler geometries and faster performance).
