@@ -15,6 +15,7 @@ import { HtmlMarkerDefinition } from '../html-markers/html-marker-options';
 import { MapEventArgs } from '../map/map-event-args';
 import { mapDataEvents, mapEvents, mapLayerEvents, mapMouseEvents, mapStringEvents, mapTouchEvents } from '../map/map-events';
 import { Feature, Shape } from '../geometries/geometry';
+import { HtmlMarkerLayerInvokeHelper } from '../layers/html-marker-layer-invoke-helper';
 
 export class Core {
     private static readonly _popups: Map<string, azmaps.Popup> = new Map<string, azmaps.Popup>();
@@ -108,9 +109,10 @@ export class Core {
     public static addLayer(id: string,
         before: string,
         layerType: LayerType,
-        layerOptions: azmaps.LayerOptions | azmaps.HtmlMarkerOptions,
+        layerOptions: azmaps.LayerOptions,
         enabledEvents: string[],
-        eventHelper: EventHelper<MapEventArgs>): void {
+        eventHelper: EventHelper<MapEventArgs>,
+        htmlMarkerLayerInvokeHelper: HtmlMarkerLayerInvokeHelper): void {
         let layer: azmaps.layer.Layer;
         switch (layerType) {
             case 'tileLayer':
@@ -146,7 +148,37 @@ export class Core {
                 break;
 
             case 'htmlMarkerLayer':
-                layer = new azmapshtmlmarkerlayer.layer.HtmlMarkerLayer(this._map.sources.getById(layerOptions.source), id, layerOptions);
+                layer = new azmapshtmlmarkerlayer.layer.HtmlMarkerLayer(this._map.sources.getById(layerOptions.source), id, {
+                    filter: layerOptions.filter,
+                    maxZoom: layerOptions.maxZoom,
+                    minZoom: layerOptions.minZoom,
+                    source: layerOptions.source,
+                    sourceLayer: layerOptions.sourceLayer,
+                    updateWhileMoving: layerOptions.updateWhileMoving,
+                    visible: layerOptions.visible === null || layerOptions.visible === undefined ? true : layerOptions.visible,
+                    markerCallback: (markerId, position, properties): azmaps.HtmlMarker => {
+                        let isResolved = false;
+                        let markerDefinition: HtmlMarkerDefinition = null;
+                        htmlMarkerLayerInvokeHelper.invokeMethodAsync('InvokeMarkerCallbackAsync', markerId, position, properties)
+                            .then(definition => {
+                                markerDefinition = definition;
+                                isResolved = true;
+                            }, () => {
+                                isResolved = true;
+                            });
+
+                        while (!isResolved) {
+                            // eslint-disable-next-line @typescript-eslint/no-empty-function
+                            const timeout = setTimeout(() => { }, 100);
+                            clearTimeout(timeout);
+                        }
+
+                        if (markerDefinition) {
+                            console.log(markerDefinition);
+                            return this.getHtmlMarkerFromDefinition(markerDefinition);
+                        }
+                    }
+                });
                 break;
         }
         if (layer) {

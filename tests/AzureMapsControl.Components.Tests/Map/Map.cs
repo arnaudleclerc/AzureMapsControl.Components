@@ -204,7 +204,7 @@
         [Fact]
         public async void Should_UpdateHtmlMarkers_Async()
         {
-            var updates = new List<HtmlMarkerUpdate> { new HtmlMarkerUpdate(new HtmlMarker(null, null), null), new HtmlMarkerUpdate(new HtmlMarker(null, null), null) };
+            var updates = new List<HtmlMarkerUpdate> { new HtmlMarkerUpdate(new HtmlMarker(options: null, null), null), new HtmlMarkerUpdate(new HtmlMarker(options: null, null), null) };
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
 
             await map.UpdateHtmlMarkersAsync(updates);
@@ -227,8 +227,8 @@
         [Fact]
         public async void Should_UpdateHtmlMarkers_ParamsVersion_Async()
         {
-            var update1 = new HtmlMarkerUpdate(new HtmlMarker(null, null), null);
-            var update2 = new HtmlMarkerUpdate(new HtmlMarker(null, null), null);
+            var update1 = new HtmlMarkerUpdate(new HtmlMarker(options: null, null), null);
+            var update2 = new HtmlMarkerUpdate(new HtmlMarker(options: null, null), null);
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
 
             await map.UpdateHtmlMarkersAsync(update1, update2);
@@ -418,6 +418,27 @@
                 && parameters[3] == null
                 && parameters[4] is IEnumerable<string> && (parameters[4] as IEnumerable<string>).Count() == 0
                 && parameters[5] is DotNetObjectReference<LayerEventInvokeHelper>
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_AddHtmlMarkerLayer_Async()
+        {
+            var layer = new HtmlMarkerLayer();
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => ValueTask.CompletedTask));
+
+            await map.AddLayerAsync(layer);
+            Assert.Contains(layer, map.Layers);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddLayer.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == layer.Id
+                && parameters[1] == null
+                && parameters[2] as string == layer.Type.ToString()
+                && parameters[3] == null
+                && parameters[4] is IEnumerable<string> && (parameters[4] as IEnumerable<string>).Count() == 0
+                && parameters[5] is DotNetObjectReference<LayerEventInvokeHelper>
+                && parameters[6] is DotNetObjectReference<HtmlMarkerLayerCallbackInvokeHelper>
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }

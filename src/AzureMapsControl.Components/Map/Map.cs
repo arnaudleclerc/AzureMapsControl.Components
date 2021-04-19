@@ -589,7 +589,8 @@
                 layer.Type.ToString(),
                 layer.GetLayerOptions(),
                 layer.EventActivationFlags.EnabledEvents,
-                DotNetObjectReference.Create(_layerEventInvokeHelper));
+                DotNetObjectReference.Create(_layerEventInvokeHelper),
+                layer is HtmlMarkerLayer htmlMarkerLayer ? DotNetObjectReference.Create(htmlMarkerLayer.MarkerCallbackInvokeHelper) : null);
         }
 
         /// <summary>

@@ -126,11 +126,26 @@
         /// <summary>
         /// Constructor
         /// </summary>
+        /// <param name="id">Id of the HTML Marker</param>
+        /// <param name="options">Options of the HTML Marker</param>
+        public HtmlMarker(string id, HtmlMarkerOptions options) : this(id, options, HtmlMarkerEventActivationFlags.None()) { }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
         /// <param name="options">Options of the HtmlMarker</param>
         /// <param name="eventActivationFlags">Events to activate on the marker</param>
-        public HtmlMarker(HtmlMarkerOptions options, HtmlMarkerEventActivationFlags eventActivationFlags)
+        public HtmlMarker(HtmlMarkerOptions options, HtmlMarkerEventActivationFlags eventActivationFlags) : this(Guid.NewGuid().ToString(), options, eventActivationFlags) { }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="id">Id of the HTML Marker</param>
+        /// <param name="options">Options of the HTML Marker</param>
+        /// <param name="eventActivationFlags">Events to activate on the marker</param>
+        public HtmlMarker(string id, HtmlMarkerOptions options, HtmlMarkerEventActivationFlags eventActivationFlags)
         {
-            Id = Guid.NewGuid().ToString();
+            Id = id;
             Options = options;
             EventActivationFlags = eventActivationFlags;
         }

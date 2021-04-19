@@ -1,0 +1,85 @@
+﻿@page "/HtmlMarkerLayer"
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          CameraOptions="new CameraOptions { Zoom = 3, Center = new Components.Atlas.Position(-97, 39) }"
+          StyleOptions="StyleOptions"
+          EventActivationFlags="MapEventActivationFlags
+                                .None()
+                                .Enable(MapEventType.Ready)"
+          OnReady="OnMapReady" />
+
+@code  {
+
+    public StyleOptions StyleOptions = new StyleOptions
+    {
+        Style = MapStyle.Night,
+        View = "auto"
+    };
+
+    public async Task OnMapReady(MapEventArgs eventArgs)
+    {
+        var datasource = new Components.Data.DataSource
+        {
+            Options = new Components.Data.DataSourceOptions
+            {
+                Cluster = true
+            }
+        };
+
+        await eventArgs.Map.AddSourceAsync(datasource);
+
+        Func<string, Components.Atlas.Position, IDictionary<string, object>, Components.Markers.HtmlMarker> markerCallback = (string id, Components.Atlas.Position position, IDictionary<string, object> properties) =>
+        {
+            if (properties.TryGetValue("cluster", out var cluster) && ((bool)cluster))
+            {
+                return new Components.Markers.HtmlMarker(id, new Components.Markers.HtmlMarkerOptions
+                {
+                    Position = position,
+                    Color = "DarkViolet",
+                    Text = properties.TryGetValue("point_count_abbreviated", out var text) ? (string)text : null
+                });
+            }
+
+            var color = "blue";
+
+            if (properties.TryGetValue("EntityType", out var entityType))
+            {
+                switch ((string)entityType)
+                {
+                    case "Gas Station":
+                        color = "#3366CC";
+                        break;
+                    case "Grocery Store":
+                        color = "#DC3912";
+                        break;
+                    case "Restaurant":
+                        color = "#FF9900";
+                        break;
+                    case "School":
+                        color = "#109618";
+                        break;
+                }
+            }
+
+            return new Components.Markers.HtmlMarker(id, new Components.Markers.HtmlMarkerOptions
+            {
+                Position = position,
+                Color = color
+            });
+        };
+
+        var markerLayer = new Components.Layers.HtmlMarkerLayer
+        {
+            Options = new Components.Layers.HtmlMarkerLayerOptions(markerCallback)
+            {
+                Source = datasource.Id
+            }
+        };
+
+        await eventArgs.Map.AddLayerAsync(markerLayer);
+        
+        var geojsonFeed = "https://azuremapscodesamples.azurewebsites.net/Common/data/geojson/SamplePoiDataSet.json";
+        await datasource.ImportDataFromUrlAsync(geojsonFeed);
+    }
+}

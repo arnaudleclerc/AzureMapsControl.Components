@@ -75,6 +75,10 @@
             {
                 JsonSerializer.Serialize(writer, tileLayerOptions, options);
             }
+            else if (value is HtmlMarkerLayerOptions htmlMarkerLayerOptions)
+            {
+                JsonSerializer.Serialize(writer, htmlMarkerLayerOptions, options);
+            }
         }
     }
 }

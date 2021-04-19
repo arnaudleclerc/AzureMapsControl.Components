@@ -231,5 +231,22 @@
             var expectedJson = JsonSerializer.Serialize(options, null);
             TestAndAssertWrite(options, expectedJson);
         }
+
+        [Fact]
+        public void Should_SerializeHtmlMarkerLayerOptions()
+        {
+            var options = new HtmlMarkerLayerOptions(null) {
+                Filter = new ExpressionOrNumber(1),
+                MaxZoom = 2,
+                MinZoom = 3,
+                Visible = true,
+                Source = "source",
+                SourceLayer = "sourceLayer",
+                UpdateWhileMoving = true
+            };
+
+            var expectedJson = JsonSerializer.Serialize(options, null);
+            TestAndAssertWrite(options, expectedJson);
+        }
     }
 }

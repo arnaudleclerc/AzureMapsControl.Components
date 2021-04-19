@@ -1,13 +1,12 @@
 ﻿namespace AzureMapsControl.Components.Layers
 {
-    using System.Diagnostics.CodeAnalysis;
-
     internal struct LayerType
     {
         private readonly string _type;
 
         internal static LayerType BubbleLayer = new LayerType("bubbleLayer");
         internal static LayerType HeatmapLayer = new LayerType("heatmapLayer");
+        internal static LayerType HtmlMarkerLayer = new LayerType("htmlMarkerLayer");
         internal static LayerType ImageLayer = new LayerType("imageLayer");
         internal static LayerType LineLayer = new LayerType("lineLayer");
         internal static LayerType PolygonExtrusionLayer = new LayerType("polygonExtrusionLayer");
