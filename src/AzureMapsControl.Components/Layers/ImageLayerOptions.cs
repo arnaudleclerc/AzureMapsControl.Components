@@ -2,20 +2,12 @@
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
 
     using AzureMapsControl.Components.Atlas;
 
     [ExcludeFromCodeCoverage]
     public sealed class ImageLayerOptions : MediaLayerOptions
     {
-
-        private class ImageLayerJsOptions
-        {
-            public string Url { get; set; }
-            public IEnumerable<IEnumerable<double>> Coordinates { get; set; }
-        }
-
         /// <summary>
         /// URL to an image to overlay. Images hosted on other domains must have CORs enabled.
         /// </summary>
@@ -31,14 +23,5 @@
             Url = url;
             Coordinates = coordinates;
         }
-
-        internal override object GenerateJsOptions()
-        {
-            return new ImageLayerJsOptions {
-                Url = Url,
-                Coordinates = Coordinates.Select(c => new double[] { c.Longitude, c.Latitude })
-            };
-        }
-
     }
 }

@@ -10,7 +10,7 @@
 
     [JsonConverter(typeof(LineCapJsonConverter))]
     [ExcludeFromCodeCoverage]
-    public sealed class LineCap
+    public struct LineCap
     {
         private readonly string _type;
 
@@ -47,7 +47,7 @@
                     return Square;
 
                 default:
-                    return null;
+                    return default;
             }
         }
     }
