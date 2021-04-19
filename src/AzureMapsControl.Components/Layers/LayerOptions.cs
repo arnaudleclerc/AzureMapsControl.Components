@@ -2,7 +2,6 @@
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
@@ -12,6 +11,7 @@
     /// A base class which all other layer options inherit from.
     /// </summary>
     [ExcludeFromCodeCoverage]
+    [JsonConverter(typeof(LayerOptionsJsonConverter))]
     public abstract class LayerOptions
     {
         /// <summary>
