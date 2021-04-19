@@ -156,27 +156,13 @@ export class Core {
                     sourceLayer: layerOptions.sourceLayer,
                     updateWhileMoving: layerOptions.updateWhileMoving,
                     visible: layerOptions.visible === null || layerOptions.visible === undefined ? true : layerOptions.visible,
-                    markerCallback: (markerId, position, properties): azmaps.HtmlMarker => {
-                        let isResolved = false;
-                        let markerDefinition: HtmlMarkerDefinition = null;
-                        htmlMarkerLayerInvokeHelper.invokeMethodAsync('InvokeMarkerCallbackAsync', markerId, position, properties)
-                            .then(definition => {
-                                markerDefinition = definition;
-                                isResolved = true;
-                            }, () => {
-                                isResolved = true;
-                            });
-
-                        while (!isResolved) {
-                            // eslint-disable-next-line @typescript-eslint/no-empty-function
-                            const timeout = setTimeout(() => { }, 100);
-                            clearTimeout(timeout);
-                        }
-
-                        if (markerDefinition) {
-                            console.log(markerDefinition);
-                            return this.getHtmlMarkerFromDefinition(markerDefinition);
-                        }
+                    markerCallback: (markerId, position, properties): azmaps.HtmlMarker | Promise<azmaps.HtmlMarker> => {
+                        return new Promise<azmaps.HtmlMarker>(resolve => {
+                            htmlMarkerLayerInvokeHelper.invokeMethodAsync('InvokeMarkerCallbackAsync', markerId, position, properties)
+                                .then(definition => {
+                                    resolve(this.getHtmlMarkerFromDefinition(definition));
+                                });
+                        });
                     }
                 });
                 break;
