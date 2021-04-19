@@ -42,12 +42,12 @@
         /// <summary>
         /// The maximum zoom level that the map can be zoomed into during the animation. Must be between 0 and 24, and greater than or equal to `minZoom`.
         /// </summary>
-        public int? MaxZoom { get; set; }
+        public double? MaxZoom { get; set; }
 
         /// <summary>
         /// The minimum zoom level that the map can be zoomed out to during the animation. Must be between 0 and 24, and less than or equal to `maxZoom`.
         /// </summary>
-        public int? MinZoom { get; set; }
+        public double? MinZoom { get; set; }
 
         /// <summary>
         /// An offset of the center of the given bounds relative to the map's center, measured in pixels
@@ -75,6 +75,6 @@
         /// <summary>
         /// The zoom level of the map view
         /// </summary>
-        public int? Zoom { get; set; }
+        public double? Zoom { get; set; }
     }
 }

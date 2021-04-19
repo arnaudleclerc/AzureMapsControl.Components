@@ -33,7 +33,7 @@
         /// <summary>
         /// A fixed zoom level to snap the map to on each animation frame.
         /// </summary>
-        public int? Zoom { get; set; }
+        public double? Zoom { get; set; }
 
         /// <summary>
         /// The easing of the animaiton

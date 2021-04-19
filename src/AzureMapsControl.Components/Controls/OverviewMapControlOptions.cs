@@ -76,7 +76,7 @@
         /// <summary>
         /// Zoom level to set on overview map when not synchronizing zoom level changes.
         /// </summary>
-        public int? Zoom { get; set; }
+        public double? Zoom { get; set; }
 
         /// <summary>
         /// The number of zoom levels to offset from the parent map zoom level when synchronizing zoom level changes.
