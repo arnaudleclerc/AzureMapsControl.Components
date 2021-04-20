@@ -1,36 +1,24 @@
 ﻿namespace AzureMapsControl.Components.Tests.Atlas
 {
     using System;
-    using System.Buffers;
-    using System.Text;
     using System.Text.Json;
 
     using AzureMapsControl.Components.Atlas;
+    using AzureMapsControl.Components.Tests.Json;
 
     using Xunit;
 
-    public class ExpressionJsonConverterTests
+    public class ExpressionJsonConverterTests : JsonConverterTests<Expression>
     {
+        public ExpressionJsonConverterTests() : base(new ExpressionJsonConverter()) { }
+
         [Fact]
         public void Should_WriteJson()
         {
-            var json = "[\"get\",\"Confirmed\"]";
-            var expression = new Expression(JsonDocument.Parse(json));
-            var buffer = new ArrayBufferWriter<byte>();
-            using var writer = new Utf8JsonWriter(buffer);
+            var expectedJson = "[\"get\",\"Confirmed\"]";
+            var expression = new Expression(JsonDocument.Parse(expectedJson));
 
-            var converter = new ExpressionJsonConverter();
-            converter.Write(writer, expression, null);
-
-            writer.Flush();
-
-            var expectedBytes = Encoding.UTF8.GetBytes(json);
-
-            var expectedBytesSet = new System.Collections.Generic.HashSet<byte>(expectedBytes);
-            var writterSet = new System.Collections.Generic.HashSet<byte>(buffer.WrittenSpan.ToArray());
-
-            Assert.Equal(expectedBytes.Length, buffer.WrittenCount);
-            Assert.Subset(expectedBytesSet, writterSet);
+            TestAndAssertWrite(expression, expectedJson);
         }
 
         [Fact]
@@ -39,47 +27,23 @@
             var json = "[\"get\",\"Confirmed\"]";
             var child = new Expression(JsonDocument.Parse(json));
             var expression = new Expression(new[] { child });
-            var buffer = new ArrayBufferWriter<byte>();
-            using var writer = new Utf8JsonWriter(buffer);
-
-            var converter = new ExpressionJsonConverter();
-            converter.Write(writer, expression, null);
-
-            writer.Flush();
 
             var expectedJson = "[[\"get\",\"Confirmed\"]]";
-            var expectedBytes = Encoding.UTF8.GetBytes(expectedJson);
-
-            var expectedBytesSet = new System.Collections.Generic.HashSet<byte>(expectedBytes);
-            var writterSet = new System.Collections.Generic.HashSet<byte>(buffer.WrittenSpan.ToArray());
-
-            Assert.Equal(expectedBytes.Length, buffer.WrittenCount);
-            Assert.Subset(expectedBytesSet, writterSet);
+            TestAndAssertWrite(expression, expectedJson);
         }
     }
 
-    public class ExpressionOrNumberJsonConverterTests
+    public class ExpressionOrNumberJsonConverterTests : JsonConverterTests<ExpressionOrNumber>
     {
+        public ExpressionOrNumberJsonConverterTests() : base(new ExpressionOrNumberJsonConverter()) { }
+
         [Fact]
         public void Should_WriteJson()
         {
-            var json = "[\"get\",\"Confirmed\"]";
-            var expression = new ExpressionOrNumber(JsonDocument.Parse(json));
-            var buffer = new ArrayBufferWriter<byte>();
-            using var writer = new Utf8JsonWriter(buffer);
+            var expectedJson = "[\"get\",\"Confirmed\"]";
+            var expression = new ExpressionOrNumber(JsonDocument.Parse(expectedJson));
 
-            var converter = new ExpressionOrNumberJsonConverter();
-            converter.Write(writer, expression, null);
-
-            writer.Flush();
-
-            var expectedBytes = Encoding.UTF8.GetBytes(json);
-
-            var expectedBytesSet = new System.Collections.Generic.HashSet<byte>(expectedBytes);
-            var writterSet = new System.Collections.Generic.HashSet<byte>(buffer.WrittenSpan.ToArray());
-
-            Assert.Equal(expectedBytes.Length, buffer.WrittenCount);
-            Assert.Subset(expectedBytesSet, writterSet);
+            TestAndAssertWrite(expression, expectedJson);
         }
 
         [Fact]
@@ -88,22 +52,9 @@
             var json = "[\"get\",\"Confirmed\"]";
             var child = new Expression(JsonDocument.Parse(json));
             var expression = new ExpressionOrNumber(new[] { child });
-            var buffer = new ArrayBufferWriter<byte>();
-            using var writer = new Utf8JsonWriter(buffer);
-
-            var converter = new ExpressionOrNumberJsonConverter();
-            converter.Write(writer, expression, null);
-
-            writer.Flush();
 
             var expectedJson = "[[\"get\",\"Confirmed\"]]";
-            var expectedBytes = Encoding.UTF8.GetBytes(expectedJson);
-
-            var expectedBytesSet = new System.Collections.Generic.HashSet<byte>(expectedBytes);
-            var writterSet = new System.Collections.Generic.HashSet<byte>(buffer.WrittenSpan.ToArray());
-
-            Assert.Equal(expectedBytes.Length, buffer.WrittenCount);
-            Assert.Subset(expectedBytesSet, writterSet);
+            TestAndAssertWrite(expression, expectedJson);
         }
 
         [Fact]
@@ -111,21 +62,8 @@
         {
             var value = 1;
             var expression = new ExpressionOrNumber(value);
-            var buffer = new ArrayBufferWriter<byte>();
-            using var writer = new Utf8JsonWriter(buffer);
 
-            var converter = new ExpressionOrNumberJsonConverter();
-            converter.Write(writer, expression, null);
-
-            writer.Flush();
-
-            var expectedBytes = Encoding.UTF8.GetBytes(value.ToString());
-
-            var expectedBytesSet = new System.Collections.Generic.HashSet<byte>(expectedBytes);
-            var writterSet = new System.Collections.Generic.HashSet<byte>(buffer.WrittenSpan.ToArray());
-
-            Assert.Equal(expectedBytes.Length, buffer.WrittenCount);
-            Assert.Subset(expectedBytesSet, writterSet);
+            TestAndAssertWrite(expression, value.ToString());
         }
 
         [Fact]
@@ -133,40 +71,23 @@
         {
             double? value = null;
             var expression = new ExpressionOrNumber(value);
-            var buffer = new ArrayBufferWriter<byte>();
-            using var writer = new Utf8JsonWriter(buffer);
 
-            var converter = new ExpressionOrNumberJsonConverter();
-            converter.Write(writer, expression, null);
-
-            writer.Flush();
-
-            Assert.Equal(0, buffer.WrittenCount);
+            TestAndAssertEmptytWrite(expression);
         }
     }
 
-    public class ExpressionOrStringJsonConverterTests
+    public class ExpressionOrStringJsonConverterTests : JsonConverterTests<ExpressionOrString>
     {
+        public ExpressionOrStringJsonConverterTests() : base(new ExpressionOrStringJsonConverter()) { }
+
+
         [Fact]
         public void Should_WriteJson()
         {
-            var json = "[\"get\",\"Confirmed\"]";
-            var expression = new ExpressionOrString(JsonDocument.Parse(json));
-            var buffer = new ArrayBufferWriter<byte>();
-            using var writer = new Utf8JsonWriter(buffer);
+            var expectedJson = "[\"get\",\"Confirmed\"]";
+            var expression = new ExpressionOrString(JsonDocument.Parse(expectedJson));
 
-            var converter = new ExpressionOrStringJsonConverter();
-            converter.Write(writer, expression, null);
-
-            writer.Flush();
-
-            var expectedBytes = Encoding.UTF8.GetBytes(json);
-
-            var expectedBytesSet = new System.Collections.Generic.HashSet<byte>(expectedBytes);
-            var writterSet = new System.Collections.Generic.HashSet<byte>(buffer.WrittenSpan.ToArray());
-
-            Assert.Equal(expectedBytes.Length, buffer.WrittenCount);
-            Assert.Subset(expectedBytesSet, writterSet);
+            TestAndAssertWrite(expression, expectedJson);
         }
 
         [Fact]
@@ -175,22 +96,9 @@
             var json = "[\"get\",\"Confirmed\"]";
             var child = new Expression(JsonDocument.Parse(json));
             var expression = new ExpressionOrString(new[] { child });
-            var buffer = new ArrayBufferWriter<byte>();
-            using var writer = new Utf8JsonWriter(buffer);
-
-            var converter = new ExpressionOrStringJsonConverter();
-            converter.Write(writer, expression, null);
-
-            writer.Flush();
 
             var expectedJson = "[[\"get\",\"Confirmed\"]]";
-            var expectedBytes = Encoding.UTF8.GetBytes(expectedJson);
-
-            var expectedBytesSet = new System.Collections.Generic.HashSet<byte>(expectedBytes);
-            var writterSet = new System.Collections.Generic.HashSet<byte>(buffer.WrittenSpan.ToArray());
-
-            Assert.Equal(expectedBytes.Length, buffer.WrittenCount);
-            Assert.Subset(expectedBytesSet, writterSet);
+            TestAndAssertWrite(expression, expectedJson);
         }
 
         [Fact]
@@ -198,46 +106,23 @@
         {
             var value = "value";
             var expression = new ExpressionOrString(value);
-            var buffer = new ArrayBufferWriter<byte>();
-            using var writer = new Utf8JsonWriter(buffer);
 
-            var converter = new ExpressionOrStringJsonConverter();
-            converter.Write(writer, expression, null);
-
-            writer.Flush();
-
-            var expectedBytes = Encoding.UTF8.GetBytes("\"" + value.ToString() + "\"");
-
-            var expectedBytesSet = new System.Collections.Generic.HashSet<byte>(expectedBytes);
-            var writterSet = new System.Collections.Generic.HashSet<byte>(buffer.WrittenSpan.ToArray());
-
-            Assert.Equal(expectedBytes.Length, buffer.WrittenCount);
-            Assert.Subset(expectedBytesSet, writterSet);
+            var expectedJson = "\"" + value.ToString() + "\"";
+            TestAndAssertWrite(expression, expectedJson);
         }
     }
 
-    public class ExpressionOrStringArrayConverterTests
+    public class ExpressionOrStringArrayConverterTests : JsonConverterTests<ExpressionOrStringArray>
     {
+        public ExpressionOrStringArrayConverterTests() : base(new ExpressionOrStringArrayJsonConverter()) { }
+
         [Fact]
         public void Should_WriteJson()
         {
-            var json = "[\"get\",\"Confirmed\"]";
-            var expression = new ExpressionOrStringArray(JsonDocument.Parse(json));
-            var buffer = new ArrayBufferWriter<byte>();
-            using var writer = new Utf8JsonWriter(buffer);
+            var expectedJson = "[\"get\",\"Confirmed\"]";
+            var expression = new ExpressionOrStringArray(JsonDocument.Parse(expectedJson));
 
-            var converter = new ExpressionOrStringArrayJsonConverter();
-            converter.Write(writer, expression, null);
-
-            writer.Flush();
-
-            var expectedBytes = Encoding.UTF8.GetBytes(json);
-
-            var expectedBytesSet = new System.Collections.Generic.HashSet<byte>(expectedBytes);
-            var writterSet = new System.Collections.Generic.HashSet<byte>(buffer.WrittenSpan.ToArray());
-
-            Assert.Equal(expectedBytes.Length, buffer.WrittenCount);
-            Assert.Subset(expectedBytesSet, writterSet);
+            TestAndAssertWrite(expression, expectedJson);
         }
 
         [Fact]
@@ -246,22 +131,9 @@
             var json = "[\"get\",\"Confirmed\"]";
             var child = new Expression(JsonDocument.Parse(json));
             var expression = new ExpressionOrStringArray(new[] { child });
-            var buffer = new ArrayBufferWriter<byte>();
-            using var writer = new Utf8JsonWriter(buffer);
-
-            var converter = new ExpressionOrStringArrayJsonConverter();
-            converter.Write(writer, expression, null);
-
-            writer.Flush();
 
             var expectedJson = "[[\"get\",\"Confirmed\"]]";
-            var expectedBytes = Encoding.UTF8.GetBytes(expectedJson);
-
-            var expectedBytesSet = new System.Collections.Generic.HashSet<byte>(expectedBytes);
-            var writterSet = new System.Collections.Generic.HashSet<byte>(buffer.WrittenSpan.ToArray());
-
-            Assert.Equal(expectedBytes.Length, buffer.WrittenCount);
-            Assert.Subset(expectedBytesSet, writterSet);
+            TestAndAssertWrite(expression, expectedJson);
         }
 
         [Fact]
@@ -269,21 +141,9 @@
         {
             var value = "value";
             var expression = new ExpressionOrStringArray(new[] { value });
-            var buffer = new ArrayBufferWriter<byte>();
-            using var writer = new Utf8JsonWriter(buffer);
 
-            var converter = new ExpressionOrStringArrayJsonConverter();
-            converter.Write(writer, expression, null);
-
-            writer.Flush();
-
-            var expectedBytes = Encoding.UTF8.GetBytes("[\"" + value.ToString() + "\"]");
-
-            var expectedBytesSet = new System.Collections.Generic.HashSet<byte>(expectedBytes);
-            var writterSet = new System.Collections.Generic.HashSet<byte>(buffer.WrittenSpan.ToArray());
-
-            Assert.Equal(expectedBytes.Length, buffer.WrittenCount);
-            Assert.Subset(expectedBytesSet, writterSet);
+            var expectedJson = "[\"" + value.ToString() + "\"]";
+            TestAndAssertWrite(expression, expectedJson);
         }
 
         [Fact]
@@ -291,36 +151,17 @@
         {
             string[] values = null;
             var expression = new ExpressionOrStringArray(values);
-            var buffer = new ArrayBufferWriter<byte>();
-            using var writer = new Utf8JsonWriter(buffer);
 
-            var converter = new ExpressionOrStringArrayJsonConverter();
-            converter.Write(writer, expression, null);
-
-            writer.Flush();
-
-            Assert.Equal(0, buffer.WrittenCount);
+            TestAndAssertEmptytWrite(expression);
         }
 
         [Fact]
         public void Should_WriteStringArray_EmptyCase()
         {
             var expression = new ExpressionOrStringArray(Array.Empty<string>());
-            var buffer = new ArrayBufferWriter<byte>();
-            using var writer = new Utf8JsonWriter(buffer);
 
-            var converter = new ExpressionOrStringArrayJsonConverter();
-            converter.Write(writer, expression, null);
-
-            writer.Flush();
-
-            var expectedBytes = Encoding.UTF8.GetBytes("[]");
-
-            var expectedBytesSet = new System.Collections.Generic.HashSet<byte>(expectedBytes);
-            var writterSet = new System.Collections.Generic.HashSet<byte>(buffer.WrittenSpan.ToArray());
-
-            Assert.Equal(expectedBytes.Length, buffer.WrittenCount);
-            Assert.Subset(expectedBytesSet, writterSet);
+            var expectedJson = "[]";
+            TestAndAssertWrite(expression, expectedJson);
         }
     }
 }

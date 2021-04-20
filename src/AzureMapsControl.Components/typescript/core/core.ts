@@ -297,7 +297,7 @@ export class Core {
         }
     }
 
-    public static addSource(id: string, options: azmaps.DataSourceOptions, type: SourceType): void {
+    public static addSource(id: string, options: azmaps.DataSourceOptions | azmaps.VectorTileSourceOptions, type: SourceType): void {
         if (type === 'datasource') {
             this._map.sources.add(new azmaps.source.DataSource(id, options));
         } else if (type === 'vectortilesource') {

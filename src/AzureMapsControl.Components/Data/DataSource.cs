@@ -361,6 +361,24 @@
             Disposed = true;
         }
 
+        /// <summary>
+        /// Gets the options used by the data source.
+        /// </summary>
+        /// <returns>Current options of the datasource</returns>
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
+        public async ValueTask<DataSourceOptions> GetOptionsAsync()
+        {
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.DataSource_GetOptionsAsync, "DataSource - GetOptionsAsync");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_GetOptionsAsync, $"Id: {Id}");
+
+            EnsureJsRuntimeExists();
+            EnsureNotDisposed();
+
+            Options = await JSRuntime.InvokeAsync<DataSourceOptions>(Constants.JsConstants.Methods.Source.GetOptions.ToSourceNamespace(), Id);
+            return Options;
+        }
+
         private void EnsureJsRuntimeExists()
         {
             if (JSRuntime is null)

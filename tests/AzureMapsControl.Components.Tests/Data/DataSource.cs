@@ -786,5 +786,40 @@
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), dataSource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async void Should_GetOptionsAsync()
+        {
+            var options = new DataSourceOptions();
+            _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<DataSourceOptions>(It.IsAny<string>(), It.IsAny<object[]>())).ReturnsAsync(options);
+            var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
+
+            var result = await dataSource.GetOptionsAsync();
+            Assert.Equal(options, result);
+            Assert.Equal(options, dataSource.Options);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<DataSourceOptions>(Constants.JsConstants.Methods.Source.GetOptions.ToSourceNamespace(), dataSource.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotGetOptions_NotAddedToMapCase_Async()
+        {
+            var dataSource = new DataSource() { };
+
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await dataSource.GetOptionsAsync());
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotGetOptions_DisposedCase_Async()
+        {
+            var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
+            await dataSource.DisposeAsync();
+            await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await dataSource.GetOptionsAsync());
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), dataSource.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
     }
 }

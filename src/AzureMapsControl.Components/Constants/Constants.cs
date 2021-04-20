@@ -97,6 +97,7 @@
                 internal const string ImportDataFromUrl = "importDataFromUrl";
                 internal const string Remove = "remove";
                 internal const string Dispose = "dispose";
+                internal const string GetOptions = "getOptions";
             }
 
             internal static class HtmlMarker

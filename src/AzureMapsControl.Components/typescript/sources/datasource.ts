@@ -31,4 +31,8 @@ export class Datasource {
         (Core.getMap().sources.getById(id) as azmaps.source.DataSource).dispose();
     }
 
+    public static getOptions(id: string): azmaps.DataSourceOptions {
+        return (Core.getMap().sources.getById(id) as azmaps.source.DataSource).getOptions();
+    }
+
 }

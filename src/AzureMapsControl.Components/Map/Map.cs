@@ -235,7 +235,7 @@
 
             _sources.Add(source);
 
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), source.Id, source.GetSourceOptions()?.GenerateJsOptions(), source.SourceType.ToString());
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), source.Id, source.GetSourceOptions(), source.SourceType.ToString());
 
             if (source is DataSource dataSource)
             {
