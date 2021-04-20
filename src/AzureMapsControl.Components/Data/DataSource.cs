@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text.Json;
     using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Atlas;
@@ -211,6 +212,34 @@
         /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
         /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
         public async ValueTask AddAsync(params Feature[] features) => await AddAsync(features as IEnumerable<Feature>);
+
+        /// <summary>
+        /// Add a Json containing a Feature Collection to the datasource
+        /// </summary>
+        /// <param name="json">JSON containing the feature collection</param>
+        /// <returns></returns>
+        /// <exception cref="JsonException">The given string is not a valid JSON</exception>
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
+        public async ValueTask AddAsync(string json) => await AddAsync(JsonDocument.Parse(json));
+
+        /// <summary>
+        /// Add a Json containing a Feature Collection to the datasource
+        /// </summary>
+        /// <param name="json">JSON containing the feature collection</param>
+        /// <returns></returns>
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
+        public async ValueTask AddAsync(JsonDocument json)
+        {
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.DataSource_AddAsync, "Adding json to data source");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_AddAsync, Id);
+
+            EnsureJsRuntimeExists();
+            EnsureNotDisposed();
+
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatureCollection.ToSourceNamespace(), Id, json);
+        }
 
         /// <summary>
         /// Remove shapes and features from the data source

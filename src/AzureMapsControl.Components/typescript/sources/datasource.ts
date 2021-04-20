@@ -15,6 +15,10 @@ export class Datasource {
         (Core.getMap().sources.getById(id) as azmaps.source.DataSource).add(mapsFeatures);
     }
 
+    public static addFeatureCollection(id: string, featureCollection: azmaps.data.FeatureCollection): void {
+        (Core.getMap().sources.getById(id) as azmaps.source.DataSource).add(featureCollection);
+    }
+
     public static clear(id: string): void {
         (Core.getMap().sources.getById(id) as azmaps.source.DataSource).clear();
     }

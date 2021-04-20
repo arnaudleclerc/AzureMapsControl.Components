@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text.Json;
 
     using AzureMapsControl.Components.Atlas;
     using AzureMapsControl.Components.Data;
@@ -920,6 +921,83 @@
             dataSource.OnSourceRemoved += () => eventTriggered = true;
             dataSource.DispatchEvent(eventArgs);
             Assert.True(eventTriggered);
+        }
+
+        [Fact]
+        public async void Should_AddJson_Async()
+        {
+            var shapes = Array.Empty<Shape<Geometry>>();
+            var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
+
+            await dataSource.AddAsync("{}");
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatureCollection.ToSourceNamespace(), dataSource.Id, It.IsAny<JsonDocument>()), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotAddInvalidJson_Async()
+        {
+            var shapes = Array.Empty<Shape<Geometry>>();
+            var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
+
+            await Assert.ThrowsAnyAsync<JsonException>(async() => await dataSource.AddAsync("{"));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotAddJson_NotAddedToMapCase_Async()
+        {
+            var dataSource = new DataSource() { };
+
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await dataSource.AddAsync("{}"));
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotAddJson_DisposedCase_Async()
+        {
+            var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
+            await dataSource.DisposeAsync();
+            await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await dataSource.AddAsync("{}"));
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), dataSource.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_AddJson_JsonVersion_Async()
+        {
+            var shapes = Array.Empty<Shape<Geometry>>();
+            var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
+
+            var jsonDocument = JsonDocument.Parse("{}");
+
+            await dataSource.AddAsync(jsonDocument);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatureCollection.ToSourceNamespace(), dataSource.Id, jsonDocument), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotAddJson_NotAddedToMapCase_JsonVersion_Async()
+        {
+            var dataSource = new DataSource() { };
+            var jsonDocument = JsonDocument.Parse("{}");
+
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await dataSource.AddAsync(jsonDocument));
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotAddJson_DisposedCase_JsonVersion_Async()
+        {
+            var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
+            await dataSource.DisposeAsync();
+            var jsonDocument = JsonDocument.Parse("{}");
+            await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await dataSource.AddAsync(jsonDocument));
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), dataSource.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
     }
 }
