@@ -19,6 +19,8 @@
         internal ILogger Logger { get; set; }
         internal IMapJsRuntime JSRuntime { get; set; }
 
+        public bool Disposed { get; private set; }
+
         public IEnumerable<Shape> Shapes => _shapes;
 
         public IEnumerable<Feature> Features => _features;
@@ -33,6 +35,7 @@
         /// <param name="shapes">Shapes to add</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
         public async ValueTask AddAsync(IEnumerable<Shape> shapes)
         {
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.DataSource_AddAsync, "Adding shapes to data source");
@@ -43,6 +46,7 @@
             }
 
             EnsureJsRuntimeExists();
+            EnsureNotDisposed();
 
             if (_shapes == null)
             {
@@ -108,6 +112,7 @@
         /// <param name="shapes">Shapes to add</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
         public async ValueTask AddAsync(params Shape[] shapes) => await AddAsync(shapes as IEnumerable<Shape>);
 
         /// <summary>
@@ -116,6 +121,7 @@
         /// <param name="features">Features to add</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
         public async ValueTask AddAsync(IEnumerable<Feature> features)
         {
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.DataSource_AddAsync, "Adding features to data source");
@@ -126,6 +132,7 @@
             }
 
             EnsureJsRuntimeExists();
+            EnsureNotDisposed();
 
             if (_features == null)
             {
@@ -191,6 +198,7 @@
         /// <param name="features">Features to add</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
         public async ValueTask AddAsync(params Feature[] features) => await AddAsync(features as IEnumerable<Feature>);
 
         /// <summary>
@@ -199,6 +207,7 @@
         /// <param name="ids">IDs of the shapes and features to remove</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
         public async ValueTask RemoveAsync(IEnumerable<string> ids)
         {
             var shapeIdsToRemove = _shapes?.Where(shape => ids.Contains(shape.Id)).Select(shape => shape.Id);
@@ -219,6 +228,7 @@
             if (idsToRemove.Any())
             {
                 EnsureJsRuntimeExists();
+                EnsureNotDisposed();
 
                 Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.DataSource_RemoveAsync, "Removing geometries from data source");
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_RemoveAsync, $"Id: {Id} | Ids: {string.Join('|', ids)}");
@@ -232,6 +242,7 @@
         /// <param name="ids">IDs of the shapes and features to remove</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
         public async ValueTask RemoveAsync(params string[] ids) => await RemoveAsync(ids as IEnumerable<string>);
 
         /// <summary>
@@ -241,6 +252,7 @@
         /// <param name="features">Features to remove</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
         public async ValueTask RemoveAsync(IEnumerable<Shape> shapes, IEnumerable<Feature> features)
         {
             var ids = new List<string>();
@@ -263,6 +275,7 @@
         /// <param name="shapes">Shapes to remove</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
         public async ValueTask RemoveAsync(IEnumerable<Shape> shapes) => await RemoveAsync(shapes, null);
 
         /// <summary>
@@ -271,6 +284,7 @@
         /// <param name="shapes">Shapes to remove</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
         public async ValueTask RemoveAsync(params Shape[] shapes) => await RemoveAsync(shapes, null);
 
         /// <summary>
@@ -279,6 +293,7 @@
         /// <param name="features">Features to remove</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
         public async ValueTask RemoveAsync(IEnumerable<Feature> features) => await RemoveAsync(null, features);
 
         /// <summary>
@@ -287,6 +302,7 @@
         /// <param name="features">Features to remove</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
         public async ValueTask RemoveAsync(params Feature[] features) => await RemoveAsync(null, features);
 
         /// <summary>
@@ -296,12 +312,14 @@
         /// <param name="url">Url to import the data from</param>
         /// <returns></returns>
         /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
         public async ValueTask ImportDataFromUrlAsync(string url)
         {
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.DataSource_ImportDataFromUrlAsync, "Importing data from url into data source");
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_ImportDataFromUrlAsync, $"Id: {Id} | Url: {url}");
 
             EnsureJsRuntimeExists();
+            EnsureNotDisposed();
 
             await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.ImportDataFromUrl.ToSourceNamespace(), Id, url);
         }
@@ -311,16 +329,36 @@
         /// </summary>
         /// <returns></returns>
         /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
         public async ValueTask ClearAsync()
         {
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.DataSource_ClearAsync, "Clearing data source");
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_ClearAsync, $"Id: {Id}");
 
             EnsureJsRuntimeExists();
+            EnsureNotDisposed();
 
             _shapes = null;
             _features = null;
             await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Clear.ToSourceNamespace(), Id);
+        }
+
+        /// <summary>
+        /// Cleans up any resources this object is consuming.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
+        public async ValueTask DisposeAsync()
+        {
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.DataSource_DisposeAsync, "DataSource - DisposeAsync");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_DisposeAsync, $"Id: {Id}");
+
+            EnsureJsRuntimeExists();
+            EnsureNotDisposed();
+
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), Id);
+            Disposed = true;
         }
 
         private void EnsureJsRuntimeExists()
@@ -328,6 +366,14 @@
             if (JSRuntime is null)
             {
                 throw new Exceptions.ComponentNotAddedToMapException();
+            }
+        }
+
+        private void EnsureNotDisposed()
+        {
+            if (Disposed)
+            {
+                throw new Exceptions.ComponentDisposedException();
             }
         }
     }

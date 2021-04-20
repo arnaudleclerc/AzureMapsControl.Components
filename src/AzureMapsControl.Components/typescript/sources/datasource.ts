@@ -27,4 +27,8 @@ export class Datasource {
         (Core.getMap().sources.getById(id) as azmaps.source.DataSource).remove(geometryIds);
     }
 
+    public static dispose(id: string): void {
+        (Core.getMap().sources.getById(id) as azmaps.source.DataSource).dispose();
+    }
+
 }

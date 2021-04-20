@@ -1,8 +1,8 @@
 ﻿namespace AzureMapsControl.Components.Controls
 {
-    using System;
+    using AzureMapsControl.Components.Exceptions;
 
-    public sealed class ControlDisposedException : Exception
+    public sealed class ControlDisposedException : ComponentDisposedException
     {
         internal ControlDisposedException() : base("This control has already been disposed") { }
     }

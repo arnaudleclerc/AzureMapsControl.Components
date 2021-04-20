@@ -63,6 +63,7 @@
         DataSource_RemoveAsync = 7001,
         DataSource_ImportDataFromUrlAsync = 7002,
         DataSource_ClearAsync = 7003,
+        DataSource_DisposeAsync = 7004,
         HtmlMarker_TogglePopupAsync = 8000,
         GeolocationControl_GetLastKnownPositionAsync = 9000,
         GeolocationControl_DisposeAsync = 9001,

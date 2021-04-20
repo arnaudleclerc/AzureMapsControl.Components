@@ -8,8 +8,6 @@
     using AzureMapsControl.Components.Exceptions;
     using AzureMapsControl.Components.Runtime;
 
-    using Microsoft.CodeAnalysis.CSharp.Syntax;
-
     using Moq;
 
     using Xunit;
@@ -105,7 +103,7 @@
 
 
         [Fact]
-        public async void Should_NotAddShapes_NotAddedToMapCae_Async()
+        public async void Should_NotAddShapes_NotAddedToMapCase_Async()
         {
             var dataSource = new DataSource();
 
@@ -115,6 +113,22 @@
 
             await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await dataSource.AddAsync(shapes));
 
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotAddShapes_DisposedCase_Async()
+        {
+            var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
+            await dataSource.DisposeAsync();
+
+            var shapes = new List<Shape> {
+                new Shape<Point>(new Point())
+            };
+
+            await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await dataSource.AddAsync(shapes));
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), dataSource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -210,6 +224,22 @@
 
             await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await dataSource.AddAsync(features));
 
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotAddFeatures_DisposedCase_Async()
+        {
+            var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
+            await dataSource.DisposeAsync();
+
+            var features = new List<Feature> {
+                new Feature<Point>(),
+            };
+
+            await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await dataSource.AddAsync(features));
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), dataSource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -333,6 +363,20 @@
 
             await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await dataSource.ImportDataFromUrlAsync(url));
 
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotImportDataFromUrl_DisposedCase_Async()
+        {
+            var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
+            await dataSource.DisposeAsync();
+
+            const string url = "someurl";
+
+            await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await dataSource.ImportDataFromUrlAsync(url));
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), dataSource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -698,6 +742,48 @@
 
             await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await dataSource.ClearAsync());
 
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_ClearDataSource_DisposedCase_Async()
+        {
+            var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
+            await dataSource.DisposeAsync();
+
+            await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await dataSource.ClearAsync());
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), dataSource.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_DisposeAsync()
+        {
+            var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
+            await dataSource.DisposeAsync();
+            Assert.True(dataSource.Disposed);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), dataSource.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotDispose_NotAddedToMapCase_Async()
+        {
+            var dataSource = new DataSource();
+
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await dataSource.DisposeAsync());
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotDispose_DisposedCase_Async()
+        {
+            var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
+            await dataSource.DisposeAsync();
+            await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await dataSource.DisposeAsync());
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), dataSource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
     }

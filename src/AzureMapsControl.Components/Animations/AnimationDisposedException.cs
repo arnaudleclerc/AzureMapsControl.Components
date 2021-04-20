@@ -1,8 +1,8 @@
 ﻿namespace AzureMapsControl.Components.Animations
 {
-    using System;
+    using AzureMapsControl.Components.Exceptions;
 
-    public sealed class AnimationDisposedException : Exception
+    public sealed class AnimationDisposedException : ComponentDisposedException
     {
         internal AnimationDisposedException(): base("This animation has already been disposed") { }
     }

@@ -715,7 +715,7 @@
         /// <returns>Current user interactions</returns>
         public async ValueTask<UserInteractionOptions> GetUserInteractionOptionsAsync()
         {
-            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_GetUserInteractionOptionsAsync, "Map - GetTrafficOptionsAsync");
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_GetUserInteractionOptionsAsync, "Map - GetUserInteractionOptionsAsync");
             UserInteractionOptions = await _jsRuntime.InvokeAsync<UserInteractionOptions>(Constants.JsConstants.Methods.Core.GetUserInteraction.ToCoreNamespace());
             return UserInteractionOptions;
         }
