@@ -1,5 +1,6 @@
 ﻿namespace AzureMapsControl.Components.Tests.Data
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -820,6 +821,105 @@
             await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await dataSource.GetOptionsAsync());
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), dataSource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_GetShapesAsync()
+        {
+            var shapes = Array.Empty<Shape<Geometry>>();
+            _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<IEnumerable<Shape<Geometry>>>(It.IsAny<string>(), It.IsAny<object[]>())).ReturnsAsync(shapes);
+            var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
+
+            var result = await dataSource.GetShapesAsync();
+            Assert.Equal(shapes, result);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<IEnumerable<Shape<Geometry>>>(Constants.JsConstants.Methods.Source.GetShapes.ToSourceNamespace(), dataSource.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotGetShapes_NotAddedToMapCase_Async()
+        {
+            var dataSource = new DataSource() { };
+
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await dataSource.GetShapesAsync());
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotGetShapes_DisposedCase_Async()
+        {
+            var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
+            await dataSource.DisposeAsync();
+            await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await dataSource.GetShapesAsync());
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), dataSource.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public void Should_Dispatch_DataAdded()
+        {
+            var dataSource = new DataSource();
+            var eventTriggered = false;
+            var eventArgs = new DataSourceEventArgs {
+                Type = DataSourceEventType.DataAdded.ToString()
+            };
+            dataSource.OnDataAdded += _ => eventTriggered = true;
+            dataSource.DispatchEvent(eventArgs);
+            Assert.True(eventTriggered);
+        }
+
+        [Fact]
+        public void Should_Dispatch_DataRemoved()
+        {
+            var dataSource = new DataSource();
+            var eventTriggered = false;
+            var eventArgs = new DataSourceEventArgs {
+                Type = DataSourceEventType.DataRemoved.ToString()
+            };
+            dataSource.OnDataRemoved += _ => eventTriggered = true;
+            dataSource.DispatchEvent(eventArgs);
+            Assert.True(eventTriggered);
+        }
+
+        [Fact]
+        public void Should_Dispatch_DataSourceUpdated()
+        {
+            var dataSource = new DataSource();
+            var eventTriggered = false;
+            var eventArgs = new DataSourceEventArgs {
+                Type = DataSourceEventType.DataSourceUpdated.ToString()
+            };
+            dataSource.OnDataSourceUpdated += () => eventTriggered = true;
+            dataSource.DispatchEvent(eventArgs);
+            Assert.True(eventTriggered);
+        }
+
+        [Fact]
+        public void Should_Dispatch_SourceAdded()
+        {
+            var dataSource = new DataSource();
+            var eventTriggered = false;
+            var eventArgs = new DataSourceEventArgs {
+                Type = DataSourceEventType.SourceAdded.ToString()
+            };
+            dataSource.OnSourceAdded += () => eventTriggered = true;
+            dataSource.DispatchEvent(eventArgs);
+            Assert.True(eventTriggered);
+        }
+
+        [Fact]
+        public void Should_Dispatch_SourceRemoved()
+        {
+            var dataSource = new DataSource();
+            var eventTriggered = false;
+            var eventArgs = new DataSourceEventArgs {
+                Type = DataSourceEventType.SourceRemoved.ToString()
+            };
+            dataSource.OnSourceRemoved += () => eventTriggered = true;
+            dataSource.DispatchEvent(eventArgs);
+            Assert.True(eventTriggered);
         }
     }
 }

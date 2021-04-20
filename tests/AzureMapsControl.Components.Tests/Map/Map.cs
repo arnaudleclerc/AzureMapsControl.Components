@@ -583,9 +583,11 @@
         [Fact]
         public async void Should_AddDataSource_Async()
         {
-            var dataSource = new DataSource();
+            var dataSource = new DataSource {
+                EventActivationFlags = DataSourceEventActivationFlags.None().Enable(DataSourceEventType.DataAdded)
+            };
 
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, dataSourceEventInvokeHelper: new DataSourceEventInvokeHelper(_ => ValueTask.CompletedTask));
             await map.AddSourceAsync(dataSource);
 
             Assert.Single(map.Sources, dataSource);
@@ -596,6 +598,8 @@
                 parameters[0] as string == dataSource.Id
                 && parameters[1] == null
                 && parameters[2] as string == dataSource.SourceType.ToString()
+                && (parameters[3] as IEnumerable<string>).Single() == DataSourceEventType.DataAdded.ToString()
+                && parameters[4] is DotNetObjectReference<DataSourceEventInvokeHelper>
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -623,7 +627,7 @@
         {
             var dataSource = new DataSource();
 
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, dataSourceEventInvokeHelper: new DataSourceEventInvokeHelper(_ => ValueTask.CompletedTask));
             await map.AddSourceAsync(dataSource);
             await Assert.ThrowsAnyAsync<SourceAlreadyExistingException>(async () => await map.AddSourceAsync(dataSource));
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), It.Is<object[]>(parameters =>
@@ -648,7 +652,7 @@
         {
             var dataSource = new DataSource();
             var dataSource2 = new DataSource();
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, dataSourceEventInvokeHelper: new DataSourceEventInvokeHelper(_ => ValueTask.CompletedTask));
 
             await map.AddSourceAsync(dataSource);
             await map.AddSourceAsync(dataSource2);
@@ -676,7 +680,7 @@
         {
             var dataSource = new DataSource();
             var dataSource2 = new DataSource();
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, dataSourceEventInvokeHelper: new DataSourceEventInvokeHelper(_ => ValueTask.CompletedTask));
 
             await map.AddSourceAsync(dataSource);
             await map.RemoveDataSourceAsync(dataSource2);
@@ -697,7 +701,7 @@
         {
             var dataSource = new DataSource();
             var dataSource2 = new DataSource();
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, dataSourceEventInvokeHelper: new DataSourceEventInvokeHelper(_ => ValueTask.CompletedTask));
 
             await map.AddSourceAsync(dataSource);
             await map.AddSourceAsync(dataSource2);
@@ -725,7 +729,7 @@
         {
             var dataSource = new DataSource();
             var dataSource2 = new DataSource();
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, dataSourceEventInvokeHelper: new DataSourceEventInvokeHelper(_ => ValueTask.CompletedTask));
 
             await map.AddSourceAsync(dataSource);
             await map.RemoveDataSourceAsync(dataSource2.Id);
@@ -747,7 +751,8 @@
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, new DrawingToolbarEventInvokeHelper(eventArgs => ValueTask.CompletedTask),
                 new HtmlMarkerInvokeHelper(eventArgs => ValueTask.CompletedTask),
                 new LayerEventInvokeHelper(eventArgs => ValueTask.CompletedTask),
-                new PopupInvokeHelper(eventArgs => ValueTask.CompletedTask));
+                new PopupInvokeHelper(eventArgs => ValueTask.CompletedTask),
+                new DataSourceEventInvokeHelper(_ => ValueTask.CompletedTask));
 
             await map.AddSourceAsync(new DataSource());
             await map.AddLayerAsync(new BubbleLayer());
@@ -785,7 +790,7 @@
         [Fact]
         public async void Should_ClearDataSources_Async()
         {
-            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, dataSourceEventInvokeHelper: new DataSourceEventInvokeHelper(_ => ValueTask.CompletedTask));
 
             await map.AddSourceAsync(new DataSource());
             await map.ClearDataSourcesAsync();

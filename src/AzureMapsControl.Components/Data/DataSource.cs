@@ -11,6 +11,9 @@
 
     using Microsoft.Extensions.Logging;
 
+    public delegate void DataSourceEvent();
+    public delegate void DataSourceDataEvent(IEnumerable<Shape<Geometry>> shapes);
+
     public sealed class DataSource : Source<DataSourceOptions>
     {
         private List<Shape> _shapes;
@@ -18,6 +21,14 @@
 
         internal ILogger Logger { get; set; }
         internal IMapJsRuntime JSRuntime { get; set; }
+
+        public event DataSourceEvent OnDataSourceUpdated;
+        public event DataSourceDataEvent OnDataAdded;
+        public event DataSourceDataEvent OnDataRemoved;
+        public event DataSourceEvent OnSourceAdded;
+        public event DataSourceEvent OnSourceRemoved;
+
+        public DataSourceEventActivationFlags EventActivationFlags { get; set; }
 
         public bool Disposed { get; private set; }
 
@@ -377,6 +388,49 @@
 
             Options = await JSRuntime.InvokeAsync<DataSourceOptions>(Constants.JsConstants.Methods.Source.GetOptions.ToSourceNamespace(), Id);
             return Options;
+        }
+
+        /// <summary>
+        /// Returns all shapes that are in the DataSource.
+        /// </summary>
+        /// <returns>Shapes existing in the datasource</returns>
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
+        public async ValueTask<IEnumerable<Shape<Geometry>>> GetShapesAsync()
+        {
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.DataSource_GetOptionsAsync, "DataSource - GetShapesAsync");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_GetOptionsAsync, $"Id: {Id}");
+
+            EnsureJsRuntimeExists();
+            EnsureNotDisposed();
+
+            return await JSRuntime.InvokeAsync<IEnumerable<Shape<Geometry>>>(Constants.JsConstants.Methods.Source.GetShapes.ToSourceNamespace(), Id);
+        }
+
+        internal void DispatchEvent(DataSourceEventArgs eventArgs)
+        {
+            switch (eventArgs.Type)
+            {
+                case "dataadded":
+                    OnDataAdded?.Invoke(eventArgs.Shapes);
+                    break;
+
+                case "dataremoved":
+                    OnDataRemoved?.Invoke(eventArgs.Shapes);
+                    break;
+
+                case "datasourceupdated":
+                    OnDataSourceUpdated?.Invoke();
+                    break;
+
+                case "sourceadded":
+                    OnSourceAdded?.Invoke();
+                    break;
+
+                case "sourceremoved":
+                    OnSourceRemoved?.Invoke();
+                    break;
+            }
         }
 
         private void EnsureJsRuntimeExists()

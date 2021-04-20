@@ -12,9 +12,17 @@
     public async Task OnMapReady(MapEventArgs eventArgs)
     {
         const string dataSourceId = "bubbleDataSource";
-        var dataSource = new AzureMapsControl.Components.Data.DataSource(dataSourceId);
-        await eventArgs.Map.AddSourceAsync(dataSource);
+        var dataSource = new AzureMapsControl.Components.Data.DataSource(dataSourceId) {
+            EventActivationFlags = Components.Data.DataSourceEventActivationFlags.None().Enable(Components.Data.DataSourceEventType.DataAdded)
+        };
+        dataSource.OnDataAdded += async (shapes) => {
+            Console.WriteLine("OnDataAdded");
+            Console.WriteLine(shapes.Count());
 
+            var currentShapes = await dataSource.GetShapesAsync();
+            Console.WriteLine(currentShapes.Count());
+        };
+        await eventArgs.Map.AddSourceAsync(dataSource);
 
         var geometries = new List<AzureMapsControl.Components.Atlas.Shape>();
         for (var i = 0; i < 10; i++)

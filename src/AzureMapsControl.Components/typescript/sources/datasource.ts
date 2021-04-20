@@ -35,4 +35,9 @@ export class Datasource {
         return (Core.getMap().sources.getById(id) as azmaps.source.DataSource).getOptions();
     }
 
+    public static getShapes(id: string): Shape[] {
+        const shapes = (Core.getMap().sources.getById(id) as azmaps.source.DataSource).getShapes();
+        return shapes?.map(shape => Core.getSerializableShape(shape));
+    }
+
 }

@@ -98,6 +98,7 @@
                 internal const string Remove = "remove";
                 internal const string Dispose = "dispose";
                 internal const string GetOptions = "getOptions";
+                internal const string GetShapes = "getShapes";
             }
 
             internal static class HtmlMarker

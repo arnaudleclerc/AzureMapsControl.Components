@@ -20,10 +20,6 @@
     #region Fields
 
     private MapEventInvokeHelper _mapEventInvokeHelper;
-    private Markers.HtmlMarkerInvokeHelper _htmlMarkerEventInvokeHelper;
-    private Drawing.DrawingToolbarEventInvokeHelper _drawingToolbarEventInvokeHelper;
-    private Layers.LayerEventInvokeHelper _layerEventInvokeHelper;
-    private Popups.PopupInvokeHelper _popupInvokeHelper;
 
     private string _id;
 
@@ -410,10 +406,6 @@
     {
         Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_OnInitialized, "AzureMap - OnInitialized");
         _mapEventInvokeHelper = new MapEventInvokeHelper(MapEventReceivedAsync);
-        _htmlMarkerEventInvokeHelper = new Markers.HtmlMarkerInvokeHelper(HtmlMarkerEventReceivedAsync);
-        _drawingToolbarEventInvokeHelper = new Drawing.DrawingToolbarEventInvokeHelper(DrawingToolbarEventReceivedAsync);
-        _layerEventInvokeHelper = new Layers.LayerEventInvokeHelper(LayerEventReceivedAsync);
-        _popupInvokeHelper = new Popups.PopupInvokeHelper(PopupEventReceivedAsync);
         base.OnInitialized();
     }
 
@@ -535,7 +527,14 @@
                 UserInteractionOptions,
                 TrafficOptions);
 
-            await MapService.AddMapAsync(new Map(Id, JSRuntime, Logger, _drawingToolbarEventInvokeHelper, _htmlMarkerEventInvokeHelper, _layerEventInvokeHelper, _popupInvokeHelper)
+            await MapService.AddMapAsync(new Map(Id, 
+                JSRuntime, 
+                Logger, 
+                new Drawing.DrawingToolbarEventInvokeHelper(DrawingToolbarEventReceivedAsync), 
+                new Markers.HtmlMarkerInvokeHelper(HtmlMarkerEventReceivedAsync), 
+                new Layers.LayerEventInvokeHelper(LayerEventReceivedAsync), 
+                new Popups.PopupInvokeHelper(PopupEventReceivedAsync),
+                new Data.DataSourceEventInvokeHelper(DataSourceEventReceivedAsync))
             {
                 HtmlMarkers = HtmlMarkers,
                 DrawingToolbarOptions = DrawingToolbarOptions,
@@ -760,6 +759,23 @@
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_PopupEventReceivedAsync, "Dispatching popup event");
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_PopupEventReceivedAsync, $"Id: {eventArgs.Id} | Type: {eventArgs.Type}");
             MapService.Map.Popups.First(popup => popup.Id == eventArgs.Id).DispatchEvent(eventArgs);
+        });
+    }
+
+    #endregion
+
+    #region Data Sources
+
+    private async ValueTask DataSourceEventReceivedAsync(AzureMapsControl.Components.Data.DataSourceEventArgs eventArgs)
+    {
+        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_DataSourceEventReceivedAsync, "AzureMap - DataSourceEventReceived");
+        Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_DataSourceEventReceivedAsync, $"Id: {eventArgs.Id} | Type: {eventArgs.Type}");
+        await Task.Run(
+        () =>
+        {
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_DataSourceEventReceivedAsync, "Dispatching datasource event");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AzureMap_DataSourceEventReceivedAsync, $"Id: {eventArgs.Id} | Type: {eventArgs.Type}");
+            MapService.Map.Sources.OfType<Components.Data.DataSource>().First(dataSource => dataSource.Id == dataSource.Id).DispatchEvent(eventArgs);
         });
     }
 

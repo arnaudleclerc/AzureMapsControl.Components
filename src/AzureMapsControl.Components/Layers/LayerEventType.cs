@@ -25,7 +25,7 @@
         public static LayerEventType TouchStart = new LayerEventType("touchstart");
         public static LayerEventType Wheel = new LayerEventType("wheel");
 
-        internal LayerEventType(string atlasEvent) : base(atlasEvent)
+        private LayerEventType(string atlasEvent) : base(atlasEvent)
         {
         }
     }
