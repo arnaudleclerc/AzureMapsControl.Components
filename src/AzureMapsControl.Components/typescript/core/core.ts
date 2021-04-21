@@ -16,6 +16,7 @@ import { MapEventArgs } from '../map/map-event-args';
 import { mapDataEvents, mapEvents, mapLayerEvents, mapMouseEvents, mapStringEvents, mapTouchEvents } from '../map/map-events';
 import { Feature, Shape } from '../geometries/geometry';
 import { HtmlMarkerLayerInvokeHelper } from '../layers/html-marker-layer-invoke-helper';
+import { DataSourceEventArgs } from '../sources/datasource-event-args';
 
 export class Core {
     private static readonly _popups: Map<string, azmaps.Popup> = new Map<string, azmaps.Popup>();
@@ -177,7 +178,7 @@ export class Core {
                         pixels: e.pixels,
                         position: e.position,
                         positions: e.positions,
-                        shapes: e.shapes?.filter(shape => shape instanceof azmaps.Shape).map(shape => this._getSerializableShape(shape as azmaps.Shape)),
+                        shapes: e.shapes?.filter(shape => shape instanceof azmaps.Shape).map(shape => this.getSerializableShape(shape as azmaps.Shape)),
                         features: e.shapes?.filter(shape => shape instanceof azmaps.data.Feature).map(feature => this._getSerializableFeature(feature as azmaps.data.Feature<azmaps.data.Geometry, unknown>))
                     });
                 });
@@ -242,7 +243,7 @@ export class Core {
                         layerId: mouseEvent.layerId,
                         pixel: mouseEvent.pixel,
                         position: mouseEvent.position,
-                        shapes: mouseEvent.shapes?.filter(shape => shape instanceof azmaps.Shape).map(shape => this._getSerializableShape(shape as azmaps.Shape)),
+                        shapes: mouseEvent.shapes?.filter(shape => shape instanceof azmaps.Shape).map(shape => this.getSerializableShape(shape as azmaps.Shape)),
                         features: mouseEvent.shapes?.filter(shape => shape instanceof azmaps.data.Feature).map(feature => this._getSerializableFeature(feature as azmaps.data.Feature<azmaps.data.Geometry, unknown>))
                     });
                 });
@@ -294,7 +295,7 @@ export class Core {
                         pixels: touchEvent.pixels,
                         position: touchEvent.position,
                         positions: touchEvent.positions,
-                        shapes: touchEvent.shapes?.filter(shape => shape instanceof azmaps.Shape).map(shape => this._getSerializableShape(shape as azmaps.Shape))
+                        shapes: touchEvent.shapes?.filter(shape => shape instanceof azmaps.Shape).map(shape => this.getSerializableShape(shape as azmaps.Shape))
                     });
                 });
             });
@@ -320,9 +321,23 @@ export class Core {
         }
     }
 
-    public static addSource(id: string, options: azmaps.DataSourceOptions, type: SourceType): void {
+    public static addSource(id: string, options: azmaps.DataSourceOptions | azmaps.VectorTileSourceOptions, type: SourceType, events: string[], eventHelper: EventHelper<DataSourceEventArgs>): void {
         if (type === 'datasource') {
-            this._map.sources.add(new azmaps.source.DataSource(id, options));
+            const dataSource = new azmaps.source.DataSource(id, options);
+            this._map.sources.add(dataSource);
+            events?.forEach(event => {
+                this._map.events.add(<any>event, dataSource, (e: azmaps.source.DataSource | azmaps.Shape[]) => {
+                    const args: DataSourceEventArgs = {
+                        type: event,
+                        id
+                    };
+                    if (!(e instanceof azmaps.source.DataSource)) {
+                        args.shapes = e.map(shape => Core.getSerializableShape(shape));
+                    }
+
+                    eventHelper.invokeMethodAsync('NotifyEventAsync', args);
+                });
+            });
         } else if (type === 'vectortilesource') {
             this._map.sources.add(new azmaps.source.VectorTileSource(id, options));
         }
@@ -552,7 +567,7 @@ export class Core {
         };
     }
 
-    private static _getSerializableShape(shape: azmaps.Shape): Shape {
+    public static getSerializableShape(shape: azmaps.Shape): Shape {
         return {
             geometry: shape.toJson().geometry,
             id: shape.getId(),

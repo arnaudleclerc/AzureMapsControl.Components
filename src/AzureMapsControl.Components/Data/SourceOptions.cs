@@ -14,6 +14,7 @@
     internal class SourceOptionsJsonConverter : JsonConverter<SourceOptions>
     {
         public override SourceOptions Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotImplementedException();
+
         public override void Write(Utf8JsonWriter writer, SourceOptions value, JsonSerializerOptions options)
         {
             if (value is DataSourceOptions datasourceOptions)

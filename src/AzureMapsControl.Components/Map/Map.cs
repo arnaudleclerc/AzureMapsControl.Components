@@ -43,6 +43,7 @@
         private readonly HtmlMarkerInvokeHelper _htmlMarkerInvokeHelper;
         private readonly LayerEventInvokeHelper _layerEventInvokeHelper;
         private readonly PopupInvokeHelper _popupInvokeHelper;
+        private readonly DataSourceEventInvokeHelper _dataSourceEventInvokeHelper;
 
         #region Fields
 
@@ -141,7 +142,8 @@
             DrawingToolbarEventInvokeHelper drawingToolbarEventInvokeHelper = null,
             HtmlMarkerInvokeHelper htmlMarkerInvokeHelper = null,
             LayerEventInvokeHelper layerEventInvokeHelper = null,
-            PopupInvokeHelper popupInvokeHelper = null)
+            PopupInvokeHelper popupInvokeHelper = null,
+            DataSourceEventInvokeHelper dataSourceEventInvokeHelper = null)
         {
             Id = id;
             _jsRuntime = jsRuntime;
@@ -150,6 +152,7 @@
             _htmlMarkerInvokeHelper = htmlMarkerInvokeHelper;
             _layerEventInvokeHelper = layerEventInvokeHelper;
             _popupInvokeHelper = popupInvokeHelper;
+            _dataSourceEventInvokeHelper = dataSourceEventInvokeHelper;
         }
 
         # region Controls
@@ -235,12 +238,23 @@
 
             _sources.Add(source);
 
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), source.Id, source.GetSourceOptions(), source.SourceType.ToString());
-
             if (source is DataSource dataSource)
             {
+                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(),
+                    source.Id,
+                    source.GetSourceOptions(),
+                    source.SourceType.ToString(),
+                    dataSource.EventActivationFlags?.EnabledEvents,
+                    DotNetObjectReference.Create(_dataSourceEventInvokeHelper));
                 dataSource.Logger = _logger;
                 dataSource.JSRuntime = _jsRuntime;
+            }
+            else
+            {
+                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(),
+                    source.Id,
+                    source.GetSourceOptions(),
+                    source.SourceType.ToString());
             }
         }
 

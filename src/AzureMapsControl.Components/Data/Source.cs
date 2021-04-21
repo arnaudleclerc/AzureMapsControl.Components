@@ -18,7 +18,6 @@
         }
 
         internal abstract SourceOptions GetSourceOptions();
-
     }
 
     public abstract class Source<TOptions>: Source where TOptions : SourceOptions

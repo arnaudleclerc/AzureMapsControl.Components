@@ -15,6 +15,10 @@ export class Datasource {
         (Core.getMap().sources.getById(id) as azmaps.source.DataSource).add(mapsFeatures);
     }
 
+    public static addFeatureCollection(id: string, featureCollection: azmaps.data.FeatureCollection): void {
+        (Core.getMap().sources.getById(id) as azmaps.source.DataSource).add(featureCollection);
+    }
+
     public static clear(id: string): void {
         (Core.getMap().sources.getById(id) as azmaps.source.DataSource).clear();
     }
@@ -25,6 +29,19 @@ export class Datasource {
 
     public static remove(id: string, geometryIds: string[]): void {
         (Core.getMap().sources.getById(id) as azmaps.source.DataSource).remove(geometryIds);
+    }
+
+    public static dispose(id: string): void {
+        (Core.getMap().sources.getById(id) as azmaps.source.DataSource).dispose();
+    }
+
+    public static getOptions(id: string): azmaps.DataSourceOptions {
+        return (Core.getMap().sources.getById(id) as azmaps.source.DataSource).getOptions();
+    }
+
+    public static getShapes(id: string): Shape[] {
+        const shapes = (Core.getMap().sources.getById(id) as azmaps.source.DataSource).getShapes();
+        return shapes?.map(shape => Core.getSerializableShape(shape));
     }
 
 }

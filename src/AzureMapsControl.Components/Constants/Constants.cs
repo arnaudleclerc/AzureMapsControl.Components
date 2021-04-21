@@ -96,6 +96,10 @@
                 internal const string Clear = "clear";
                 internal const string ImportDataFromUrl = "importDataFromUrl";
                 internal const string Remove = "remove";
+                internal const string Dispose = "dispose";
+                internal const string GetOptions = "getOptions";
+                internal const string GetShapes = "getShapes";
+                internal const string AddFeatureCollection = "addFeatureCollection";
             }
 
             internal static class HtmlMarker
