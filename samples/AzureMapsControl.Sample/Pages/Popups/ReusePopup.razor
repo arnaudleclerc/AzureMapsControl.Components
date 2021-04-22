@@ -1,0 +1,127 @@
+﻿@page "/Popups/ReusePopup"
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          CameraOptions="new CameraOptions { Center= new AzureMapsControl.Components.Atlas.Position(-122.33, 47.641), Zoom = 13}"
+          EventActivationFlags="MapEventActivationFlags
+                                .None()
+                                .Enable(MapEventType.Ready)"
+          OnReady="OnMapReady" />
+
+<style>
+    /* CSS styles used by custom popup template */
+    .customInfobox {
+        max-width: 240px;
+        padding: 10px;
+        font-size: 12px;
+    }
+
+        .customInfobox .name {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+</style>
+
+@code  {
+
+    public async Task OnMapReady(MapEventArgs eventArgs)
+    {
+        var popupTemplate = "<div class=\"customInfobox\"><div class=\"name\">{name}</div>{description}</div>";
+        var datasource = new Components.Data.DataSource
+        {
+            Options = new Components.Data.DataSourceOptions
+            {
+                Cluster = true
+            }
+        };
+        await eventArgs.Map.AddSourceAsync(datasource);
+
+        var point1 = new Components.Atlas.Feature<Components.Atlas.Point>(new Components.Atlas.Point(new Components.Atlas.Position(-122.33, 47.64)),
+        new Dictionary<string, object> {
+    { "name", "Point 1 Title" },
+    { "description", "This is the description 1."}
+        });
+
+        var point2 = new Components.Atlas.Feature<Components.Atlas.Point>(new Components.Atlas.Point(new Components.Atlas.Position(-122.335, 47.645)),
+        new Dictionary<string, object> {
+    { "name", "Point 2 Title" },
+    { "description", "This is the description 2."}
+        });
+
+        var point3 = new Components.Atlas.Feature<Components.Atlas.Point>(new Components.Atlas.Point(new Components.Atlas.Position(-122.325, 47.635)),
+        new Dictionary<string, object> {
+    { "name", "Point 3 Title" },
+    { "description", "This is the description 3."}
+        });
+
+        await datasource.AddAsync(point1, point2, point3);
+
+        var symbolLayer = new Components.Layers.SymbolLayer
+        {
+            Options = new Components.Layers.SymbolLayerOptions
+            {
+                Source = datasource.Id,
+                IconOptions = new Components.Layers.IconOptions
+                {
+                    Image = new Components.Atlas.ExpressionOrString("pin-red")
+                }
+            },
+            EventActivationFlags = Components.Layers.LayerEventActivationFlags.None().Enable(Components.Layers.LayerEventType.Click)
+        };
+
+        await eventArgs.Map.AddLayerAsync(symbolLayer);
+
+        var popup = new Components.Popups.Popup(new Components.Popups.PopupOptions
+        {
+            PixelOffset = new Components.Atlas.Pixel(0, -18),
+        });
+
+        await eventArgs.Map.AddPopupAsync(popup);
+
+        symbolLayer.OnClick += async layerOnClickEventArgs =>
+        {
+            var shape = layerOnClickEventArgs.Shapes?.FirstOrDefault(shape => shape.Geometry?.Type == "Point");
+            var feature = layerOnClickEventArgs.Features?.FirstOrDefault(feature => feature.Geometry?.Type == "Point");
+            if (shape != null)
+            {
+                await popup.SetOptionsAsync(options =>
+                {
+                    options.Content = popupTemplate
+                                .Replace("{name}", shape.Properties["name"].ToString())
+                                .Replace("{description}", shape.Properties["description"].ToString());
+                    options.Position = (shape.Geometry as Components.Atlas.Point).Coordinates;
+                });
+                await popup.OpenAsync();
+            }
+            else if (feature != null)
+            {
+                if (feature.Properties.ContainsKey("cluster") &&
+                    bool.TryParse(feature.Properties["cluster"].ToString(), out var cluster)
+                    && cluster)
+                {
+                    await popup.SetOptionsAsync(options =>
+                    {
+                        options.Content = "<div style=\"padding:10px;\">Cluster of "
+                            + feature.Properties["point_count"].ToString()
+                            + " symbols</div>";
+                        options.Position = (feature.Geometry as Components.Atlas.Point).Coordinates;
+                    });
+                    await popup.OpenAsync();
+                }
+                else
+                {
+                    await popup.SetOptionsAsync(options =>
+                {
+                    options.Content = popupTemplate
+                                .Replace("{name}", shape.Properties["name"].ToString())
+                                .Replace("{description}", shape.Properties["description"].ToString());
+                    options.Position = (shape.Geometry as Components.Atlas.Point).Coordinates;
+                });
+                    await popup.OpenAsync();
+                }
+            }
+        };
+    }
+
+}
