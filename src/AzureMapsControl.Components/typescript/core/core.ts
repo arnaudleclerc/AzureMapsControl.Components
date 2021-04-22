@@ -156,7 +156,7 @@ export class Core {
                         position: e.position,
                         positions: e.positions,
                         shapes: e.shapes?.filter(shape => shape instanceof azmaps.Shape).map(shape => this.getSerializableShape(shape as azmaps.Shape)),
-                        features: e.shapes?.filter(shape => shape instanceof azmaps.data.Feature).map(feature => this._getSerializableFeature(feature as azmaps.data.Feature<azmaps.data.Geometry, unknown>))
+                        features: e.shapes?.filter(shape => shape instanceof azmaps.data.Feature || shape.type === 'Feature').map(feature => this._getSerializableFeature(feature as azmaps.data.Feature<azmaps.data.Geometry, unknown>))
                     });
                 });
             });
@@ -554,12 +554,12 @@ export class Core {
 
     private static _getSerializableFeature(feature: azmaps.data.Feature<azmaps.data.Geometry, any>): Feature {
         return {
-            bbox: {
+            bbox: feature.bbox ? {
                 west: feature.bbox[0],
                 south: feature.bbox[1],
                 east: feature.bbox[2],
                 north: feature.bbox[3]
-            },
+            } : null,
             geometry: feature.geometry,
             id: feature.id,
             properties: feature.properties
