@@ -840,8 +840,7 @@
         public async void Should_NotAddPopup_NullCaseAsync()
         {
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => ValueTask.CompletedTask));
-            await map.AddPopupAsync(null);
-            Assert.Null(map.Popups);
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await map.AddPopupAsync(null));
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -858,6 +857,79 @@
                 && parameters[1] as PopupOptions == popup.Options
                 && parameters[2] is IEnumerable<string>
                 && parameters[3] is DotNetObjectReference<PopupInvokeHelper>
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_AddPopupWithTemplate_Async()
+        {
+            var popup = new Popup(new PopupOptions());
+            var popupTemplate = new PopupTemplate();
+            var properties = new Dictionary<string, object>();
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => ValueTask.CompletedTask));
+            await map.AddPopupAsync(popup, popupTemplate, properties);
+
+            Assert.Contains(popup, map.Popups);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddPopupWithTemplate.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == popup.Id
+                && parameters[1] as PopupOptions == popup.Options
+                && parameters[2] is IDictionary<string, object>
+                && parameters[3] is PopupTemplate
+                && parameters[4] is IEnumerable<string>
+                && parameters[5] is DotNetObjectReference<PopupInvokeHelper>
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotAddPopupWithTemplate_NullCaseAsync()
+        {
+            var popupTemplate = new PopupTemplate();
+            var properties = new Dictionary<string, object>();
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => ValueTask.CompletedTask));
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await map.AddPopupAsync(null, popupTemplate, properties));
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotAddPopupWithTemplate_NullTemplateCaseAsync()
+        {
+            var popup = new Popup(new PopupOptions());
+            var properties = new Dictionary<string, object>();
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => ValueTask.CompletedTask));
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await map.AddPopupAsync(popup, null, properties));
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotAddPopupWithTemplate_NullPropertiesCaseAsync()
+        {
+            var popup = new Popup(new PopupOptions());
+            var popupTemplate = new PopupTemplate();
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => ValueTask.CompletedTask));
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await map.AddPopupAsync(popup, popupTemplate, null));
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotAddTwiceTheSamePopupWithTemplate_Async()
+        {
+            var popup = new Popup(new PopupOptions());
+            var popupTemplate = new PopupTemplate();
+            var properties = new Dictionary<string, object>();
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => ValueTask.CompletedTask));
+            await map.AddPopupAsync(popup, popupTemplate, properties);
+            await Assert.ThrowsAnyAsync<PopupAlreadyExistingException>(async () => await map.AddPopupAsync(popup, popupTemplate, properties));
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddPopupWithTemplate.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == popup.Id
+                && parameters[1] as PopupOptions == popup.Options
+                && parameters[2] is IDictionary<string, object>
+                && parameters[3] is PopupTemplate
+                && parameters[4] is IEnumerable<string>
+                && parameters[5] is DotNetObjectReference<PopupInvokeHelper>
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -1642,7 +1714,7 @@
 
             await map.SetCanvasStylePropertiesAsync(properties);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasStyleProperties.ToCoreNamespace(), It.Is<IEnumerable<KeyValuePair<string, string>>>(dictionary => 
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasStyleProperties.ToCoreNamespace(), It.Is<IEnumerable<KeyValuePair<string, string>>>(dictionary =>
                 dictionary.Single().Key == "cursor" && dictionary.Single().Value == "hand"))
             , Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
@@ -1653,7 +1725,7 @@
         {
             var map = new Map("id", _jsRuntimeMock.Object);
 
-            await Assert.ThrowsAnyAsync<ArgumentNullException>(async() => await map.SetCanvasStylePropertiesAsync(null));
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await map.SetCanvasStylePropertiesAsync(null));
 
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -1742,7 +1814,7 @@
         public async void Should_NotSetCanvasContainerStyleProperties_NullCase_Async()
         {
             var map = new Map("id", _jsRuntimeMock.Object);
-            
+
             await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await map.SetCanvasContainerStylePropertiesAsync(null));
 
             _jsRuntimeMock.VerifyNoOtherCalls();
@@ -1789,7 +1861,7 @@
             await map.SetCanvasContainerStylePropertiesAsync(properties);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
-        
+
         [Fact]
         public async void Should_GetCameraOptionsAsync()
         {

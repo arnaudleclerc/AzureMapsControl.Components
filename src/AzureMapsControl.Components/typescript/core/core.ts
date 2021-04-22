@@ -298,6 +298,16 @@ export class Core {
         }
     }
 
+    public static addPopupWithTemplate(id: string,
+        options: azmaps.PopupOptions,
+        properties: { [key: string]: any },
+        template: azmaps.PopupTemplate,
+        events: string[],
+        eventHelper: EventHelper<MapEventArgs>): void {
+        options.content = azmaps.PopupTemplate.applyTemplate(properties, template);
+        this.addPopup(id, options, events, eventHelper);
+    }
+
     public static addSource(id: string, options: azmaps.DataSourceOptions | azmaps.VectorTileSourceOptions, type: SourceType, events: string[], eventHelper: EventHelper<DataSourceEventArgs>): void {
         if (type === 'datasource') {
             const dataSource = new azmaps.source.DataSource(id, options);

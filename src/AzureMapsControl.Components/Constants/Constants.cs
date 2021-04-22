@@ -48,6 +48,7 @@
                 internal const string AddLayer = "addLayer";
                 internal const string AddMap = "addMap";
                 internal const string AddPopup = "addPopup";
+                internal const string AddPopupWithTemplate = "addPopupWithTemplate";
                 internal const string AddSource = "addSource";
                 internal const string ClearHtmlMarkers = "clearHtmlMarkers";
                 internal const string ClearLayers = "clearLayers";
