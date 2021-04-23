@@ -7,6 +7,7 @@
     using System.Text.Json.Serialization;
 
     using AzureMapsControl.Components.Atlas;
+    using AzureMapsControl.Components.Atlas.FormatOptions;
 
     /// <summary>
     /// A layout template for a popup.

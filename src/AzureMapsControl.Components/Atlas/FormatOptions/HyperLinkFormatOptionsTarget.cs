@@ -1,4 +1,4 @@
-﻿namespace AzureMapsControl.Components.Atlas
+﻿namespace AzureMapsControl.Components.Atlas.FormatOptions
 {
     using System;
     using System.Text.Json;

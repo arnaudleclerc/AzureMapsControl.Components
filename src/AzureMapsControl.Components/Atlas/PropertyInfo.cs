@@ -2,6 +2,8 @@
 {
     using System.Diagnostics.CodeAnalysis;
 
+    using AzureMapsControl.Components.Atlas.FormatOptions;
+
     /// <summary>
     /// Species details of how a property is to be displayed.
     /// </summary>
