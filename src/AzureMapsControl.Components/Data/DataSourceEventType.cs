@@ -7,11 +7,11 @@
     [ExcludeFromCodeCoverage]
     public sealed class DataSourceEventType : AtlasEventType
     {
-        public static DataSourceEventType DataSourceUpdated = new DataSourceEventType("datasourceupdated");
-        public static DataSourceEventType DataAdded = new DataSourceEventType("dataadded");
-        public static DataSourceEventType DataRemoved = new DataSourceEventType("dataremoved");
-        public static DataSourceEventType SourceAdded = new DataSourceEventType("sourceadded");
-        public static DataSourceEventType SourceRemoved = new DataSourceEventType("sourceremoved");
+        public static readonly DataSourceEventType DataSourceUpdated = new DataSourceEventType("datasourceupdated");
+        public static readonly DataSourceEventType DataAdded = new DataSourceEventType("dataadded");
+        public static readonly DataSourceEventType DataRemoved = new DataSourceEventType("dataremoved");
+        public static readonly DataSourceEventType SourceAdded = new DataSourceEventType("sourceadded");
+        public static readonly DataSourceEventType SourceRemoved = new DataSourceEventType("sourceremoved");
 
         private DataSourceEventType(string atlasEvent) : base(atlasEvent)
         {

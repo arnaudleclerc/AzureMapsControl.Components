@@ -12,10 +12,10 @@
     {
         private readonly string _type;
 
-        public static HyperLinkFormatOptionsTarget Blank = new HyperLinkFormatOptionsTarget("_blank");
-        public static HyperLinkFormatOptionsTarget Self = new HyperLinkFormatOptionsTarget("_self");
-        public static HyperLinkFormatOptionsTarget Parent = new HyperLinkFormatOptionsTarget("_parent");
-        public static HyperLinkFormatOptionsTarget Top = new HyperLinkFormatOptionsTarget("_top");
+        public static readonly HyperLinkFormatOptionsTarget Blank = new HyperLinkFormatOptionsTarget("_blank");
+        public static readonly HyperLinkFormatOptionsTarget Self = new HyperLinkFormatOptionsTarget("_self");
+        public static readonly HyperLinkFormatOptionsTarget Parent = new HyperLinkFormatOptionsTarget("_parent");
+        public static readonly HyperLinkFormatOptionsTarget Top = new HyperLinkFormatOptionsTarget("_top");
 
         private HyperLinkFormatOptionsTarget(string type) => _type = type;
 

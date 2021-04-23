@@ -38,7 +38,7 @@
         /// </summary>
         public bool Visible { get; set; } = true;
 
-        public static DrawingToolbarUpdateOptions FromOptions(DrawingToolbarUpdateOptions options)
+        public static DrawingToolbarUpdateOptions FromOptions(DrawingToolbarOptions options)
         {
             return new DrawingToolbarUpdateOptions {
                 Buttons = options.Buttons,

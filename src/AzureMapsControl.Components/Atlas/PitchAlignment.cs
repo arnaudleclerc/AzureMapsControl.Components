@@ -9,17 +9,17 @@
     {
         private readonly string _type;
 
-        public static PitchAlignment Auto = new PitchAlignment("auto");
+        public static readonly PitchAlignment Auto = new PitchAlignment("auto");
 
         /// <summary>
         /// The circle is aligned to the plane of the map.
         /// </summary>
-        public static PitchAlignment Map = new PitchAlignment("map");
+        public static readonly PitchAlignment Map = new PitchAlignment("map");
 
         /// <summary>
         /// The circle is aligned to the plane of the viewport
         /// </summary>
-        public static PitchAlignment ViewPort = new PitchAlignment("viewport");
+        public static readonly PitchAlignment ViewPort = new PitchAlignment("viewport");
 
         private PitchAlignment(string type) => _type = type;
 

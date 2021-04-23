@@ -7,14 +7,14 @@
     {
         private readonly string _units;
 
-        public static ScaleBarControlUnits Imperial = new ScaleBarControlUnits("imperial");
-        public static ScaleBarControlUnits Metric = new ScaleBarControlUnits("metric");
-        public static ScaleBarControlUnits Meters = new ScaleBarControlUnits("meters");
-        public static ScaleBarControlUnits Kilometers = new ScaleBarControlUnits("kilometers");
-        public static ScaleBarControlUnits Yards = new ScaleBarControlUnits("yards");
-        public static ScaleBarControlUnits Feet = new ScaleBarControlUnits("feet");
-        public static ScaleBarControlUnits Miles = new ScaleBarControlUnits("miles");
-        public static ScaleBarControlUnits NauticalMiles = new ScaleBarControlUnits("nauticalMiles");
+        public static readonly ScaleBarControlUnits Imperial = new ScaleBarControlUnits("imperial");
+        public static readonly ScaleBarControlUnits Metric = new ScaleBarControlUnits("metric");
+        public static readonly ScaleBarControlUnits Meters = new ScaleBarControlUnits("meters");
+        public static readonly ScaleBarControlUnits Kilometers = new ScaleBarControlUnits("kilometers");
+        public static readonly ScaleBarControlUnits Yards = new ScaleBarControlUnits("yards");
+        public static readonly ScaleBarControlUnits Feet = new ScaleBarControlUnits("feet");
+        public static readonly ScaleBarControlUnits Miles = new ScaleBarControlUnits("miles");
+        public static readonly ScaleBarControlUnits NauticalMiles = new ScaleBarControlUnits("nauticalMiles");
 
         private ScaleBarControlUnits(string units) => _units = units;
 

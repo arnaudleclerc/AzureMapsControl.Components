@@ -12,10 +12,10 @@
     {
         internal int Degrees { get; }
 
-        public static Bearing North = new Bearing(0);
-        public static Bearing East = new Bearing(90);
-        public static Bearing South = new Bearing(180);
-        public static Bearing West = new Bearing(270);
+        public static readonly Bearing North = new Bearing(0);
+        public static readonly Bearing East = new Bearing(90);
+        public static readonly Bearing South = new Bearing(180);
+        public static readonly Bearing West = new Bearing(270);
 
         private Bearing(int degrees) => Degrees = degrees;
 
