@@ -293,7 +293,7 @@ export class Core {
             });
         });
 
-        if (options.openOnAdd) {
+        if (options?.openOnAdd) {
             popup.open();
         }
     }

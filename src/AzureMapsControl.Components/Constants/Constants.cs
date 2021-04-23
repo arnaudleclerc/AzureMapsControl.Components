@@ -88,6 +88,7 @@
                 internal const string Open = "open";
                 internal const string Remove = "remove";
                 internal const string SetOptions = "setOptions";
+                internal const string ApplyTemplate = "applyTemplate";
             }
 
             internal static class Source

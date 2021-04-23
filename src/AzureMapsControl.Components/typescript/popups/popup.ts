@@ -41,4 +41,9 @@ export class Popup {
             popup.setOptions(popupOptions);
         }
     }
+
+    public static applyTemplate(id: string, options: azmaps.PopupOptions, properties: { [key: string]: any }, template: azmaps.PopupTemplate): void {
+        options.content = azmaps.PopupTemplate.applyTemplate(properties, template);
+        this.setOptions(id, options);
+    }
 }
