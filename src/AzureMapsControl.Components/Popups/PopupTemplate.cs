@@ -23,6 +23,11 @@
         public Either<string, IEnumerable<PropertyInfo>, IEnumerable<Either<string, IEnumerable<PropertyInfo>>>> Content { get; set; }
 
         /// <summary>
+        /// If the property is a date object, these options specify how it should be formatted when displayed.
+        /// </summary>
+        public DateTimeFormatOptions DateFormat { get; set; }
+
+        /// <summary>
         /// Specifies if hyperlinks and email addresses should automatically be detected and rendered as clickable links.
         /// </summary>
         public bool? DetectHyperlinks { get; set; }
@@ -86,7 +91,7 @@
                     }
                     else if (value.Content.HasSecondChoice)
                     {
-                        JsonSerializer.Serialize(writer, value.Content.SecondChoice);
+                        JsonSerializer.Serialize(writer, value.Content.SecondChoice, options);
                     }
                     else
                     {
@@ -99,11 +104,17 @@
                             }
                             else
                             {
-                                JsonSerializer.Serialize(choice.SecondChoice);
+                                JsonSerializer.Serialize(writer, choice.SecondChoice, options);
                             }
                         }
                         writer.WriteEndArray();
                     }
+                }
+
+                if (value.DateFormat is not null)
+                {
+                    writer.WritePropertyName("dateFormat");
+                    JsonSerializer.Serialize(writer, value.DateFormat, options);
                 }
 
                 if (value.DetectHyperlinks.HasValue)
@@ -119,13 +130,13 @@
                 if (value.HyperlinkFormat is not null)
                 {
                     writer.WritePropertyName("hyperlinkFormat");
-                    JsonSerializer.Serialize(writer, value.HyperlinkFormat);
+                    JsonSerializer.Serialize(writer, value.HyperlinkFormat, options);
                 }
 
                 if (value.NumberFormat is not null)
                 {
                     writer.WritePropertyName("numberFormat");
-                    JsonSerializer.Serialize(writer, value.NumberFormat);
+                    JsonSerializer.Serialize(writer, value.NumberFormat, options);
                 }
 
                 if (value.SandboxContent.HasValue)

@@ -10,7 +10,7 @@ export class GeolocationControl {
         const position = this._getGeolocationControl(controlId).getLastKnownPosition();
         return {
             geometry: position.geometry,
-            properties: position.properties
+            properties: Core.formatProperties(position.properties)
         } as Feature;
     }
 
@@ -43,7 +43,7 @@ export class GeolocationControl {
                             north: args.bbox[3]
                         } : null,
                         geometry: args.geometry,
-                        properties: args.properties
+                        properties: Core.formatProperties(args.properties)
                     },
                     type: event
                 });

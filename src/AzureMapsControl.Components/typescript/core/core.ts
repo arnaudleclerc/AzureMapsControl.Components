@@ -304,7 +304,7 @@ export class Core {
         template: azmaps.PopupTemplate,
         events: string[],
         eventHelper: EventHelper<MapEventArgs>): void {
-        options.content = azmaps.PopupTemplate.applyTemplate(properties, template);
+        options.content = azmaps.PopupTemplate.applyTemplate(Core.formatProperties(properties), template);
         this.addPopup(id, options, events, eventHelper);
     }
 
@@ -560,6 +560,20 @@ export class Core {
             id: shape.getId(),
             properties: shape.getProperties()
         } as Shape;
+    }
+
+    public static formatProperties(properties: { [key: string]: any }): { [key: string]: any } {
+        if (properties) {
+            for (const key in properties) {
+                if (typeof properties[key] === 'string') {
+                    const date = Date.parse(properties[key]);
+                    if (!isNaN(date)) {
+                        properties[key] = new Date(date);
+                    }
+                }
+            }
+        }
+        return properties;
     }
 
     private static _getSerializableFeature(feature: azmaps.data.Feature<azmaps.data.Geometry, any>): Feature {

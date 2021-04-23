@@ -16,7 +16,7 @@
 
     public class Either<T1, T2, T3> : Either<T1, T2>
     {
-        internal bool HasSecondChoice { get; set; }
+        internal bool HasSecondChoice => SecondChoice is not null;
 
         internal T3 ThirdChoice { get; set; }
 

@@ -1,11 +1,12 @@
 import * as azmaps from 'azure-maps-control';
+import { Core } from '../core/core';
 import { Feature, Geometry, Shape } from './geometry';
 
 export class GeometryBuilder {
 
     public static buildFeature(feature: Feature): azmaps.data.Feature<azmaps.data.Geometry, any> {
         const geometry = this.buildGeometry(feature.geometry);
-        return new azmaps.data.Feature(geometry, feature.properties, feature.id,
+        return new azmaps.data.Feature(geometry, Core.formatProperties(feature.properties), feature.id,
             feature.bbox ?
                 new azmaps.data.BoundingBox(
                     new azmaps.data.Position(feature.bbox.south, feature.bbox.west)

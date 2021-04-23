@@ -26,20 +26,22 @@
             }
         };
 
-        var feature = new Components.Atlas.Feature<Components.Atlas.Point>(new Components.Atlas.Point(new Components.Atlas.Position(0, 0)), new Dictionary<string, object>
+        var properties = new Dictionary<string, object>
         {
             { "title", "Template 1 - String template" },
             { "value1", 1.2345678},
             { "value2", new PropertySubValues { SubValue = "Pizza" } },
             { "arrayValue", new [] { 3,4,5,6 } }
-        });
+        };
+
+        var position = new Components.Atlas.Position(0, 0);
 
         var popup = new Components.Popups.Popup(new Components.Popups.PopupOptions {
-            Position = feature.Geometry.Coordinates,
+            Position = position,
             OpenOnAdd = true
         });
 
-        await eventArgs.Map.AddPopupAsync(popup, template, feature.Properties);
+        await eventArgs.Map.AddPopupAsync(popup, template, properties);
     }
 
 }

@@ -27,6 +27,18 @@
         public bool? HideLabel { get; set; }
 
         /// <summary>
+        /// If the property is a date object, these options specify how it should be formatted when displayed.
+        /// If not specified, will fallback to the popup templates date format setting.
+        /// </summary>
+        public DateTimeFormatOptions DateFormat { get; set; }
+
+        /// <summary>
+        /// If the property is a number, these options specify how it should be formatted when displayed.
+        /// If not specified, will fallback to the popup templates number format setting.
+        /// </summary>
+        public NumberFormatOptions NumberFormat { get; set; }
+
+        /// <summary>
         /// Format options for hyperlink strings
         /// </summary>
         public HyperLinkFormatOptions HyperlinkFormat { get; set; }
