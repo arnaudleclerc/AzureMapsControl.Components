@@ -151,3 +151,9 @@ It also needs to fetch the token to send to the requests of the atlas library. F
 - [Traffic](docs/traffic)
 - [Expressions](docs/expressions)
 - [Animations](docs/animations)
+
+## Want to contribute ?
+
+Contributions are welcome! One of the best way to start is to take a look at the list of [issues where help is wanted](https://github.com/arnaudleclerc/AzureMapsControl.Components/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22).
+
+If you need a new feature which is not listed on the [issues](https://github.com/arnaudleclerc/AzureMapsControl.Components/issues), feel free to open a new one. Take also a look at the [Contributing guidelines](https://github.com/arnaudleclerc/AzureMapsControl.Components/blob/develop/CONTRIBUTING.md).
