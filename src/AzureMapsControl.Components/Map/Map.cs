@@ -934,12 +934,11 @@
         /// </summary>
         /// <param name="poup">Popup to add to the map</param>
         /// <returns></returns>
+        ///<exception cref="PopupAlreadyExistingException">A popup with the same id already exists</exception>
+        ///<exception cref="ArgumentNullException">The given popup is null</exception>
         public async ValueTask AddPopupAsync(Popup popup)
         {
-            if (popup == null)
-            {
-                return;
-            }
+            Require.NotNull(popup, nameof(popup));
 
             if (_popups == null)
             {
@@ -951,9 +950,58 @@
                 throw new PopupAlreadyExistingException(popup.Id);
             }
 
-            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddPopupAsync, "Adding popup");
-            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_AddPopupAsync, $"Id: {popup.Id} | Events: {string.Join('|', popup.EventActivationFlags.EnabledEvents)}");
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddPopupAsync, "Map - AddPopupAsync");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_AddPopupAsync, $"Id: {popup.Id}");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_AddPopupAsync, $"Events: {string.Join('|', popup.EventActivationFlags.EnabledEvents)}");
             await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddPopup.ToCoreNamespace(), popup.Id, popup.Options, popup.EventActivationFlags.EnabledEvents, DotNetObjectReference.Create(_popupInvokeHelper));
+
+            popup.JSRuntime = _jsRuntime;
+            popup.Logger = _logger;
+
+            popup.OnRemoved += () => RemovePopup(popup.Id);
+
+            _popups.Add(popup);
+        }
+
+        /// <summary>
+        /// Add a new popup with the given template and properties to the map
+        /// </summary>
+        /// <param name="popup">Popup to add to the map</param>
+        /// <param name="template">Template of the popup</param>
+        /// <param name="properties">Properties to apply to the template</param>
+        /// <returns></returns>
+        /// <exception cref="PopupAlreadyExistingException">A popup with the same id already exists</exception>
+        /// <exception cref="ArgumentNullException">The popup, the template or the properties are null</exception>
+        public async ValueTask AddPopupAsync(Popup popup, PopupTemplate template, IDictionary<string, object> properties)
+        {
+            Require.NotNull(popup, nameof(popup));
+            Require.NotNull(template, nameof(template));
+            Require.NotNull(properties, nameof(properties));
+
+            if (_popups == null)
+            {
+                _popups = new List<Popup>();
+            }
+
+            if (_popups.Any(p => p.Id == popup.Id))
+            {
+                throw new PopupAlreadyExistingException(popup.Id);
+            }
+
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddPopupAsync, "Map - AddPopupAsync");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_AddPopupAsync, $"Id: {popup.Id}");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_AddPopupAsync, $"Events: {string.Join('|', popup.EventActivationFlags.EnabledEvents)}");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_AddPopupAsync, $"Template: {template}");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_AddPopupAsync, $"Properties: {string.Join('|', properties.Select(kvp => kvp.Key + " : " + kvp.Value))}");
+
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddPopupWithTemplate.ToCoreNamespace(),
+                popup.Id,
+                popup.Options,
+                properties,
+                template,
+                popup.EventActivationFlags.EnabledEvents,
+                DotNetObjectReference.Create(_popupInvokeHelper)
+            );
 
             popup.JSRuntime = _jsRuntime;
             popup.Logger = _logger;

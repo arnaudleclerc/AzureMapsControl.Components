@@ -16,48 +16,48 @@
         /// <summary>
         /// The blank style provides a blank canvas for visualizing data
         /// </summary>
-        public static MapStyle Blank = new MapStyle("blank");
+        public static readonly MapStyle Blank = new MapStyle("blank");
 
         /// <summary>
         /// The blank_accessible map styles provides a blank canvas for visualizing data. 
         /// The blank_accessible style will continue to provide screen reader updates with map's location details, even though the base map isn't displayed.
         /// </summary>
-        public static MapStyle BlankAccessible = new MapStyle("blank_accessible");
+        public static readonly MapStyle BlankAccessible = new MapStyle("blank_accessible");
 
         /// <summary>
         /// The satellite style is a combination of satellite and aerial imagery.
         /// </summary>
-        public static MapStyle Satellite = new MapStyle("satellite");
+        public static readonly MapStyle Satellite = new MapStyle("satellite");
 
         /// <summary>
         /// This map style is a hybrid of roads and labels overlaid on top of satellite and aerial imagery.
         /// </summary>
-        public static MapStyle SatelliteRoadLabels = new MapStyle("satellite_road_labels");
+        public static readonly MapStyle SatelliteRoadLabels = new MapStyle("satellite_road_labels");
 
         /// <summary>
         /// grayscale dark is a dark version of the road map style.
         /// </summary>
-        public static MapStyle GrayscaleDark = new MapStyle("grayscale_dark");
+        public static readonly MapStyle GrayscaleDark = new MapStyle("grayscale_dark");
 
         /// <summary>
         /// grayscale light is a light version of the road map style.
         /// </summary>
-        public static MapStyle GrayscaleLight = new MapStyle("grayscale_light");
+        public static readonly MapStyle GrayscaleLight = new MapStyle("grayscale_light");
 
         /// <summary>
         /// night is a dark version of the road map style with colored roads and symbols.
         /// </summary>
-        public static MapStyle Night = new MapStyle("night");
+        public static readonly MapStyle Night = new MapStyle("night");
 
         /// <summary>
         /// road shaded relief is an Azure Maps main style completed with contours of the Earth.
         /// </summary>
-        public static MapStyle RoadShadedRelief = new MapStyle("road_shaded_relief");
+        public static readonly MapStyle RoadShadedRelief = new MapStyle("road_shaded_relief");
 
         /// <summary>
         /// high_contrast_dark is a dark map style with a higher contrast than the other styles.
         /// </summary>
-        public static MapStyle HighContrastDark = new MapStyle("high_contrast_dark");
+        public static readonly MapStyle HighContrastDark = new MapStyle("high_contrast_dark");
 
         private MapStyle(string style) => _style = style;
 

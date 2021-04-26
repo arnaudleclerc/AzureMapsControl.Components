@@ -9,15 +9,15 @@
     {
         private readonly string _interpolation;
 
-        public static Interpolation Linear = new Interpolation("linear");
+        public static readonly Interpolation Linear = new Interpolation("linear");
 
-        public static Interpolation Nearest = new Interpolation("nearest");
+        public static readonly Interpolation Nearest = new Interpolation("nearest");
 
-        public static Interpolation Min = new Interpolation("min");
+        public static readonly Interpolation Min = new Interpolation("min");
 
-        public static Interpolation Max = new Interpolation("max");
+        public static readonly Interpolation Max = new Interpolation("max");
 
-        public static Interpolation Avg = new Interpolation("avg");
+        public static readonly Interpolation Avg = new Interpolation("avg");
 
         private Interpolation(string interpolation) => _interpolation = interpolation;
 

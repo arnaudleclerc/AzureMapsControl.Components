@@ -1,0 +1,216 @@
+﻿@page "/Popups/NoDefinedTemplate"
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          EventActivationFlags="MapEventActivationFlags
+                                .None()
+                                .Enable(MapEventType.Ready)"
+          OnReady="OnMapReady" />
+
+@code  {
+
+    public class PropertySubValues
+    {
+        public string SubValue { get; set; }
+    }
+
+    public async Task OnMapReady(MapEventArgs eventArgs)
+    {
+        var datasource = new Components.Data.DataSource();
+        await eventArgs.Map.AddSourceAsync(datasource);
+
+        await datasource.AddAsync(
+            new Components.Atlas.Feature<Components.Atlas.Point>(
+                "feature1",
+                new Components.Atlas.Point(new Components.Atlas.Position(-20, 20))
+            ),
+            new Components.Atlas.Feature<Components.Atlas.Point>(
+                "feature2",
+                new Components.Atlas.Point(new Components.Atlas.Position(20, 20))
+            ),
+            new Components.Atlas.Feature<Components.Atlas.Point>(
+                "feature3",
+                new Components.Atlas.Point(new Components.Atlas.Position(40, 0))
+            ),
+            new Components.Atlas.Feature<Components.Atlas.Point>(
+                "feature4",
+                new Components.Atlas.Point(new Components.Atlas.Position(-20, -20))
+            ),
+            new Components.Atlas.Feature<Components.Atlas.Point>(
+                "feature5",
+                new Components.Atlas.Point(new Components.Atlas.Position(20, -20))
+            ),
+            new Components.Atlas.Feature<Components.Atlas.Point>(
+                "feature6",
+                new Components.Atlas.Point(new Components.Atlas.Position(0, 0))
+            )
+        );
+
+        var layer = new Components.Layers.BubbleLayer
+        {
+            Options = new Components.Layers.BubbleLayerOptions
+            {
+                Source = datasource.Id
+            },
+            EventActivationFlags = Components.Layers.LayerEventActivationFlags.None().Enable(Components.Layers.LayerEventType.Click)
+        };
+        await eventArgs.Map.AddLayerAsync(layer);
+
+        var popup = new Components.Popups.Popup();
+        await eventArgs.Map.AddPopupAsync(popup);
+
+        layer.OnClick += async clickEventArgs =>
+        {
+            if (clickEventArgs.Shapes != null && clickEventArgs.Shapes.Any())
+            {
+                var shape = clickEventArgs.Shapes.First();
+                Components.Popups.PopupTemplate template = null;
+                Dictionary<string, object> properties = null;
+                switch (shape.Id)
+                {
+                    case "feature1":
+                        properties = new Dictionary<string, object> {
+                        { "title", "No template - title/description" },
+                        { "description", "This point doesn't have a template defined, fallback to title and description properties."}
+                         };
+                        break;
+                    case "feature2":
+                        properties = new Dictionary<string, object> {
+                        { "title", "No template - property table" },
+                        { "message", "This point doesn't have a template defined, fallback to title and table of properties."},
+                        { "randomValue", 10 },
+                        { "url", "https://aka.ms/AzureMapsSamples" },
+                        { "imageLink", "https://azuremapscodesamples.azurewebsites.net/common/images/Pike_Market.jpg" },
+                        { "email", "info@microsoft.com" }
+                        };
+                        break;
+                    case "feature3":
+                        template = new Components.Popups.PopupTemplate { DetectHyperlinks = false };
+
+                        properties = new Dictionary<string, object> {
+                        { "title", "No template - hyperlink detection disabled" },
+                        { "message", "This point doesn't have a template defined, fallback to title and table of properties." },
+                        { "randomValue", 10 },
+                        { "url", "https://aka.ms/AzureMapsSamples" },
+                        { "email", "info@microsoft.com" }
+                        };
+                        break;
+
+                    case "feature4":
+                        template = new Components.Popups.PopupTemplate
+                        {
+                            Content = new Components.Atlas.Either<string, IEnumerable<Components.Atlas.PropertyInfo>, IEnumerable<Components.Atlas.Either<string, IEnumerable<Components.Atlas.PropertyInfo>>>>(
+                                "This template uses a string template with placeholders.<br/><br/> - Value 1 = {value1}<br/> - Value 2 = {value2/subValue}<br/> - Array value [2] = {arrayValue/2}"
+                            ),
+                            NumberFormat = new Components.Atlas.FormatOptions.NumberFormatOptions
+                            {
+                                MaximumFractionDigits = 2
+                            }
+                        };
+
+                        properties = new Dictionary<string, object> {
+                        { "title", "Template 1 - String template" },
+                        { "value1", 1.2345678},
+                        { "value2", new PropertySubValues { SubValue = "Pizza"} },
+                        { "arrayValue", new [] { 3,4,5,6 } }
+                        };
+                        break;
+
+                    case "feature5":
+                        template = new Components.Popups.PopupTemplate
+                        {
+                            Content = new Components.Atlas.Either<string, IEnumerable<Components.Atlas.PropertyInfo>, IEnumerable<Components.Atlas.Either<string, IEnumerable<Components.Atlas.PropertyInfo>>>>(
+                                new[] {
+                            new Components.Atlas.PropertyInfo {
+                                PropertyPath = "createDate",
+                                Label = "Created Date"
+                            },
+                            new Components.Atlas.PropertyInfo {
+                                PropertyPath = "dateNumber",
+                                Label = "Formatted date from number",
+                                DateFormat = new Components.Atlas.FormatOptions.DateTimeFormatOptions {
+                                    Weekday = Components.Atlas.FormatOptions.DateTime.Weekday.Long,
+                                    Year = Components.Atlas.FormatOptions.DateTime.Year.Numeric,
+                                    Month = Components.Atlas.FormatOptions.DateTime.Month.Long,
+                                    Day = Components.Atlas.FormatOptions.DateTime.Day.Numeric,
+                                    TimeZone = "UTC",
+                                    TimeZoneName = Components.Atlas.FormatOptions.DateTime.TimeZoneName.Short
+                                }
+                            },
+                            new Components.Atlas.PropertyInfo {
+                                PropertyPath = "url",
+                                Label = "Code samples",
+                                HideLabel = true,
+                                HyperlinkFormat = new Components.Atlas.FormatOptions.HyperLinkFormatOptions {
+                                    Label = "Go to code samples!",
+                                    Target = Components.Atlas.FormatOptions.HyperLinkFormatOptionsTarget.Blank
+                                }
+                            },
+                            new Components.Atlas.PropertyInfo {
+                                PropertyPath = "email",
+                                Label = "Email Us",
+                                HideLabel = true,
+                                HyperlinkFormat = new Components.Atlas.FormatOptions.HyperLinkFormatOptions {
+                                    Target = Components.Atlas.FormatOptions.HyperLinkFormatOptionsTarget.Blank,
+                                    Scheme = "mailto:"
+                                }
+                            }
+                                }
+                            )
+                        };
+
+                        properties = new Dictionary<string, object> {
+                        { "title", "Template 2 - PropertyInfo" },
+                        { "createDate", DateTime.Now },
+                        { "dateNumber", 1569880860542 },
+                        { "url", "https://aka.ms/AzureMapsSamples" },
+                        { "email", "info@microsoft.com" }
+                        };
+                        break;
+
+                    case "feature6":
+                        template = new Components.Popups.PopupTemplate
+                        {
+                            Content = new Components.Atlas.Either<string, IEnumerable<Components.Atlas.PropertyInfo>, IEnumerable<Components.Atlas.Either<string, IEnumerable<Components.Atlas.PropertyInfo>>>>(
+                                new[] {
+                            new Components.Atlas.Either<string, IEnumerable<Components.Atlas.PropertyInfo>>
+                            ("This template has two pieces of content; a string template with placeholders and a array of property info which renders a full width image.<br/><br/> - Value 1 = {value1}<br/> - Value 2 = {value2/subValue}<br/> - Array value [2] = {arrayValue/2}"),
+                            new Components.Atlas.Either<string, IEnumerable<Components.Atlas.PropertyInfo>>
+                            (
+                                new [] {
+                                    new Components.Atlas.PropertyInfo {
+                                        PropertyPath = "imageLink",
+                                        Label = "Image",
+                                        HideLabel = true,
+                                        HyperlinkFormat = new Components.Atlas.FormatOptions.HyperLinkFormatOptions {
+                                            IsImage = true
+                                        }
+                                    }
+                                }
+                            )}
+                            ),
+                            NumberFormat = new Components.Atlas.FormatOptions.NumberFormatOptions
+                            {
+                                MaximumFractionDigits = 2
+                            }
+                        };
+
+                        properties = new Dictionary<string, object> {
+                        { "title", "Template 3 - Multiple content template" },
+                        { "value1", 1.2345678},
+                        { "value2", new PropertySubValues { SubValue = "Pizza" } },
+                        { "arrayValue", new [] { 3,4,5,6 } },
+                        { "imageLink", "https://azuremapscodesamples.azurewebsites.net/common/images/Pike_Market.jpg"}
+                        };
+                        break;
+                }
+
+                await popup.ApplyTemplateAsync(template, properties, options => options.Position = (shape.Geometry as Components.Atlas.Point).Coordinates);
+                await popup.OpenAsync();
+            }
+        };
+
+
+    }
+
+}

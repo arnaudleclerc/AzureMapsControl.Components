@@ -179,7 +179,7 @@ export class Core {
                         position: e.position,
                         positions: e.positions,
                         shapes: e.shapes?.filter(shape => shape instanceof azmaps.Shape).map(shape => this.getSerializableShape(shape as azmaps.Shape)),
-                        features: e.shapes?.filter(shape => shape instanceof azmaps.data.Feature).map(feature => this._getSerializableFeature(feature as azmaps.data.Feature<azmaps.data.Geometry, unknown>))
+                        features: e.shapes?.filter(shape => shape instanceof azmaps.data.Feature || shape.type === 'Feature').map(feature => this._getSerializableFeature(feature as azmaps.data.Feature<azmaps.data.Geometry, unknown>))
                     });
                 });
             });
@@ -316,9 +316,19 @@ export class Core {
             });
         });
 
-        if (options.openOnAdd) {
+        if (options?.openOnAdd) {
             popup.open();
         }
+    }
+
+    public static addPopupWithTemplate(id: string,
+        options: azmaps.PopupOptions,
+        properties: { [key: string]: any },
+        template: azmaps.PopupTemplate,
+        events: string[],
+        eventHelper: EventHelper<MapEventArgs>): void {
+        options.content = azmaps.PopupTemplate.applyTemplate(Core.formatProperties(properties), template);
+        this.addPopup(id, options, events, eventHelper);
     }
 
     public static addSource(id: string, options: azmaps.DataSourceOptions | azmaps.VectorTileSourceOptions, type: SourceType, events: string[], eventHelper: EventHelper<DataSourceEventArgs>): void {
@@ -575,14 +585,28 @@ export class Core {
         } as Shape;
     }
 
+    public static formatProperties(properties: { [key: string]: any }): { [key: string]: any } {
+        if (properties) {
+            for (const key in properties) {
+                if (typeof properties[key] === 'string') {
+                    const date = Date.parse(properties[key]);
+                    if (!isNaN(date)) {
+                        properties[key] = new Date(date);
+                    }
+                }
+            }
+        }
+        return properties;
+    }
+
     private static _getSerializableFeature(feature: azmaps.data.Feature<azmaps.data.Geometry, any>): Feature {
         return {
-            bbox: {
+            bbox: feature.bbox ? {
                 west: feature.bbox[0],
                 south: feature.bbox[1],
                 east: feature.bbox[2],
                 north: feature.bbox[3]
-            },
+            } : null,
             geometry: feature.geometry,
             id: feature.id,
             properties: feature.properties

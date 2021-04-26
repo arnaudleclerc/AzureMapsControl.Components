@@ -47,18 +47,18 @@
         /// The label is placed along the line of the geometry.
         /// Can only be used on LineString and Polygon geometries.
         /// </summary>
-        public static SymbolLayerPlacement Line = new SymbolLayerPlacement("line");
+        public static readonly SymbolLayerPlacement Line = new SymbolLayerPlacement("line");
 
         /// <summary>
         /// The label is placed at the center of the line of the geometry.
         /// Can only be used on `LineString` and `Polygon` geometries
         /// </summary>
-        public static SymbolLayerPlacement LineCenter = new SymbolLayerPlacement("line-center");
+        public static readonly SymbolLayerPlacement LineCenter = new SymbolLayerPlacement("line-center");
 
         /// <summary>
         /// The label is placed at the point where the geometry is located.
         /// </summary>
-        public static SymbolLayerPlacement Point = new SymbolLayerPlacement("point");
+        public static readonly SymbolLayerPlacement Point = new SymbolLayerPlacement("point");
 
         private SymbolLayerPlacement(string type) => _type = type;
 

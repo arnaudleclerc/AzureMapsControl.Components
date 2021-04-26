@@ -60,6 +60,7 @@
         Popup_RemoveAsync = 6002,
         Popup_UpdateAsync = 6003,
         Popup_SetOptionsAsync = 6004,
+        Popup_ApplyTemplateAsync = 6005,
         DataSource_AddAsync = 7000,
         DataSource_RemoveAsync = 7001,
         DataSource_ImportDataFromUrlAsync = 7002,

@@ -1,5 +1,8 @@
 ﻿namespace AzureMapsControl.Components.Tests.Popups
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Reflection.PortableExecutable;
 
     using AzureMapsControl.Components.Exceptions;
     using AzureMapsControl.Components.Popups;
@@ -65,6 +68,19 @@
         }
 
         [Fact]
+        public async void Should_NotOpen_RemovedCase_Async()
+        {
+            var popup = new Popup(new PopupOptions()) {
+                JSRuntime = _jsRuntimeMock.Object,
+                IsRemoved = true
+            };
+
+            await Assert.ThrowsAnyAsync<PopupAlreadyRemovedException>(async () => await popup.OpenAsync());
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async void Should_CloseAsync()
         {
             var popup = new Popup(new PopupOptions()) {
@@ -79,7 +95,18 @@
         public async void Should_NotClose_NotAddedToMapCase_Async()
         {
             var popup = new Popup(new PopupOptions());
-            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async() => await popup.CloseAsync());
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await popup.CloseAsync());
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotClose_RemovedCase_Async()
+        {
+            var popup = new Popup(new PopupOptions()) {
+                JSRuntime = _jsRuntimeMock.Object,
+                IsRemoved = true
+            };
+            await Assert.ThrowsAnyAsync<PopupAlreadyRemovedException>(async () => await popup.CloseAsync());
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -103,7 +130,7 @@
         public async void Should_NotRemove_NotAddedToMapCase_Async()
         {
             var popup = new Popup(new PopupOptions());
-            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async() => await popup.RemoveAsync());
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await popup.RemoveAsync());
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -145,7 +172,20 @@
         {
             var popup = new Popup(new PopupOptions());
             var updatedContent = "updatedContent";
-            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async() => await popup.UpdateAsync(options => options.Content = updatedContent));
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await popup.UpdateAsync(options => options.Content = updatedContent));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotUpdate_RemovedCase_Async()
+        {
+            var popup = new Popup(new PopupOptions()) {
+                JSRuntime = _jsRuntimeMock.Object,
+                IsRemoved = true
+            };
+            var updatedContent = "updatedContent";
+            await Assert.ThrowsAnyAsync<PopupAlreadyRemovedException>(async () => await popup.UpdateAsync(options => options.Content = updatedContent));
 
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -173,6 +213,19 @@
             var popup = new Popup(new PopupOptions());
             var updatedContent = "updatedContent";
             await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await popup.SetOptionsAsync(options => options.Content = updatedContent));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotSetOptions_RemovedCase_Async()
+        {
+            var popup = new Popup(new PopupOptions()) {
+                JSRuntime = _jsRuntimeMock.Object,
+                IsRemoved = true
+            };
+            var updatedContent = "updatedContent";
+            await Assert.ThrowsAnyAsync<PopupAlreadyRemovedException>(async () => await popup.SetOptionsAsync(options => options.Content = updatedContent));
 
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -245,6 +298,142 @@
             popup.OnClose += e => assertEvent = e == eventArgs;
             popup.DispatchEvent(eventArgs);
             Assert.True(assertEvent);
+        }
+
+        [Fact]
+        public async void Should_ApplyTemplateAsync()
+        {
+            var popup = new Popup() {
+                JSRuntime = _jsRuntimeMock.Object
+            };
+
+            var template = new PopupTemplate();
+            var properties = new Dictionary<string, object>();
+
+            await popup.ApplyTemplateAsync(template, properties);
+
+            Assert.NotNull(popup.Options);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.ApplyTemplate.ToPopupNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == popup.Id
+                && parameters[1] as PopupOptions == popup.Options
+                && parameters[2] as Dictionary<string, object> == properties
+                && parameters[3] as PopupTemplate == template
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotApplyTemplate_NotAddedToMapCaseAsync()
+        {
+            var popup = new Popup();
+
+            var template = new PopupTemplate();
+            var properties = new Dictionary<string, object>();
+
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await popup.ApplyTemplateAsync(template, properties));
+
+            Assert.Null(popup.Options);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotApplyTemplate_RemovedCaseAsync()
+        {
+            var popup = new Popup() {
+                JSRuntime = _jsRuntimeMock.Object,
+                IsRemoved = true
+            };
+            var template = new PopupTemplate();
+            var properties = new Dictionary<string, object>();
+
+            await Assert.ThrowsAnyAsync<PopupAlreadyRemovedException>(async () => await popup.ApplyTemplateAsync(template, properties));
+
+            Assert.Null(popup.Options);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotApplyTemplateWithNullPropertiesAsync()
+        {
+            var popup = new Popup() {
+                JSRuntime = _jsRuntimeMock.Object
+            };
+
+            var template = new PopupTemplate();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await popup.ApplyTemplateAsync(template, null));
+
+            Assert.Null(popup.Options);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_ApplyTemplateWithOptionsAsync()
+        {
+            var popup = new Popup() {
+                JSRuntime = _jsRuntimeMock.Object
+            };
+
+            var template = new PopupTemplate();
+            var properties = new Dictionary<string, object>();
+
+            await popup.ApplyTemplateAsync(template, properties, options => options.FillColor = "fillColor");
+
+            Assert.Equal("fillColor", popup.Options.FillColor);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.ApplyTemplate.ToPopupNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == popup.Id
+                && parameters[1] as PopupOptions == popup.Options
+                && parameters[2] as Dictionary<string, object> == properties
+                && parameters[3] as PopupTemplate == template
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotApplyTemplateWithOptions_NotAddedToMapCaseAsync()
+        {
+            var popup = new Popup();
+
+            var template = new PopupTemplate();
+            var properties = new Dictionary<string, object>();
+
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await popup.ApplyTemplateAsync(template, properties, options => options.FillColor = "fillColor"));
+
+            Assert.Null(popup.Options);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotApplyTemplateWithOptions_RemovedCaseAsync()
+        {
+            var popup = new Popup() {
+                JSRuntime = _jsRuntimeMock.Object,
+                IsRemoved = true
+            };
+            var template = new PopupTemplate();
+            var properties = new Dictionary<string, object>();
+
+            await Assert.ThrowsAnyAsync<PopupAlreadyRemovedException>(async () => await popup.ApplyTemplateAsync(template, properties, options => options.FillColor = "fillColor"));
+
+            Assert.Null(popup.Options);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotApplyTemplateWithOptionsWithNullPropertiesAsync()
+        {
+            var popup = new Popup() {
+                JSRuntime = _jsRuntimeMock.Object
+            };
+
+            var template = new PopupTemplate();
+
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await popup.ApplyTemplateAsync(template, null, options => options.FillColor = "fillColor"));
+
+            Assert.Null(popup.Options);
+            _jsRuntimeMock.VerifyNoOtherCalls();
         }
     }
 }

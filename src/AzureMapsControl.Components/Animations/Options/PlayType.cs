@@ -9,9 +9,9 @@
     {
         private readonly string _type;
 
-        public static PlayType Together = new PlayType("together");
-        public static PlayType Sequential = new PlayType("sequential");
-        public static PlayType Interval = new PlayType("interval");
+        public static readonly PlayType Together = new PlayType("together");
+        public static readonly PlayType Sequential = new PlayType("sequential");
+        public static readonly PlayType Interval = new PlayType("interval");
 
         private PlayType(string type) => _type = type;
 

@@ -7,11 +7,11 @@
     [ExcludeFromCodeCoverage]
     public sealed class PopupEventType : AtlasEventType
     {
-        public static PopupEventType Close = new PopupEventType("close");
-        public static PopupEventType Drag = new PopupEventType("drag");
-        public static PopupEventType DragEnd = new PopupEventType("dragend");
-        public static PopupEventType DragStart = new PopupEventType("dragstart");
-        public static PopupEventType Open = new PopupEventType("open");
+        public static readonly PopupEventType Close = new PopupEventType("close");
+        public static readonly PopupEventType Drag = new PopupEventType("drag");
+        public static readonly PopupEventType DragEnd = new PopupEventType("dragend");
+        public static readonly PopupEventType DragStart = new PopupEventType("dragstart");
+        public static readonly PopupEventType Open = new PopupEventType("open");
 
         private PopupEventType(string type) : base(type) { }
     }

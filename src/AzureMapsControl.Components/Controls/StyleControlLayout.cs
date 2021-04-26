@@ -13,12 +13,12 @@
         /// <summary>
         /// A row of clickable icons for each style.
         /// </summary>
-        public static StyleControlLayout Icons = new StyleControlLayout("icons");
+        public static readonly StyleControlLayout Icons = new StyleControlLayout("icons");
 
         /// <summary>
         /// A scrollable list with the icons and names for each style.
         /// </summary>
-        public static StyleControlLayout List = new StyleControlLayout("list");
+        public static readonly StyleControlLayout List = new StyleControlLayout("list");
 
         private StyleControlLayout(string layout) => _layout = layout;
 

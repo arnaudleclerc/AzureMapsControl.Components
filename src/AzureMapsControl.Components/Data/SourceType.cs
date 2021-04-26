@@ -4,8 +4,8 @@
     {
         private readonly string _type;
 
-        public static SourceType DataSource = new SourceType("datasource");
-        public static SourceType VectorTileSource = new SourceType("vectortilesource");
+        public static readonly SourceType DataSource = new SourceType("datasource");
+        public static readonly SourceType VectorTileSource = new SourceType("vectortilesource");
         
         public SourceType(string type) => _type = type;
 

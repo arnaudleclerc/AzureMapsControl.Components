@@ -10,18 +10,18 @@
         /// <summary>
         /// The control will be in the light style.
         /// </summary>
-        public static ControlStyle Light = new ControlStyle("light");
+        public static readonly ControlStyle Light = new ControlStyle("light");
 
         /// <summary>
         /// The control will be in the dark style.
         /// </summary>
-        public static ControlStyle Dark = new ControlStyle("dark");
+        public static readonly ControlStyle Dark = new ControlStyle("dark");
 
         /// <summary>
         /// The control will automatically switch styles based on the style of the map.
         /// If a control doesn't support automatic styling the light style will be used by default.
         /// </summary>
-        public static ControlStyle Auto = new ControlStyle("auto");
+        public static readonly ControlStyle Auto = new ControlStyle("auto");
 
         private ControlStyle(string style) => _style = style;
 
