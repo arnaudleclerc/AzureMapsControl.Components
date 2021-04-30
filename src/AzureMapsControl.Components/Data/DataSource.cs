@@ -353,6 +353,7 @@
         /// <returns></returns>
         /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
         /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
+        /// <exception cref="Microsoft.JSInterop.JSException">The call to importDataFromUrl failed</exception>
         public async ValueTask ImportDataFromUrlAsync(string url)
         {
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.DataSource_ImportDataFromUrlAsync, "Importing data from url into data source");
