@@ -23,8 +23,8 @@ export class Datasource {
         (Core.getMap().sources.getById(id) as azmaps.source.DataSource).clear();
     }
 
-    public static importDataFromUrl(id: string, url: string): void {
-        (Core.getMap().sources.getById(id) as azmaps.source.DataSource).importDataFromUrl(url);
+    public static async importDataFromUrl(id: string, url: string): Promise<void> {
+        return await (Core.getMap().sources.getById(id) as azmaps.source.DataSource).importDataFromUrl(url);
     }
 
     public static remove(id: string, geometryIds: string[]): void {
