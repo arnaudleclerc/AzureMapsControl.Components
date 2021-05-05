@@ -6,11 +6,11 @@
     using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Logger;
+    using AzureMapsControl.Components.Map;
     using AzureMapsControl.Components.Runtime;
 
     using Microsoft.Extensions.Logging;
 
-    [JsonConverter(typeof(OverviewMapControlJsonConverter))]
     public sealed class OverviewMapControl : Control<OverviewMapControlOptions>
     {
         internal override string Type => "overviewmap";
@@ -87,7 +87,7 @@
                 {
                     writer.WriteBoolean("interactive", value.Options.Interactive.Value);
                 }
-                if (value.Options.MapStyle is not null)
+                if (value.Options.MapStyle.ToString() != default(MapStyle).ToString())
                 {
                     writer.WriteString("mapStyle", value.Options.MapStyle.ToString());
                 }
@@ -148,7 +148,7 @@
                 {
                     writer.WriteBoolean("minimized", value.Options.Minimized.Value);
                 }
-                if (value.Options.Overlay is not null)
+                if (value.Options.Overlay.ToString() != default(OverviewMapControlOverlay).ToString())
                 {
                     writer.WriteString("overlay", value.Options.Overlay.ToString());
                 }

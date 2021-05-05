@@ -8,7 +8,6 @@
     /// <summary>
     /// A control for changing the rotation of the map.
     /// </summary>
-    [JsonConverter(typeof(CompassControlJsonConverter))]
     [ExcludeFromCodeCoverage]
     public sealed class CompassControl : Control<CompassControlOptions>
     {
@@ -40,7 +39,7 @@
                 {
                     writer.WriteNumber("rotationDegreesDelta", value.Options.RotationDegreesDelta.Value);
                 }
-                if (value.Options.Style is not null)
+                if (value.Options.Style.ToString() != default(ControlStyle).ToString())
                 {
                     writer.WriteString("style", value.Options.Style.ToString());
                 }

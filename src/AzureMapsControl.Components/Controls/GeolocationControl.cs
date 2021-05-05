@@ -208,7 +208,7 @@
                     writer.WriteBoolean("showUserLocation", value.Options.ShowUserLocation.Value);
                 }
 
-                if (value.Options.Style is not null)
+                if (value.Options.Style.ToString() != default(ControlPosition).ToString())
                 {
                     writer.WriteString("style", value.Options.Style.ToString());
                 }

@@ -25,7 +25,6 @@
 
     [ExcludeFromCodeCoverage]
     public abstract class Control<T> : Control
-        where T : IControlOptions
     {
         /// <summary>
         /// Options of the control

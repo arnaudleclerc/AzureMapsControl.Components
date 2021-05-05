@@ -3,7 +3,7 @@
     using System.Diagnostics.CodeAnalysis;
 
     [ExcludeFromCodeCoverage]
-    public sealed class ScaleBarControlUnits
+    public struct ScaleBarControlUnits
     {
         private readonly string _units;
 
