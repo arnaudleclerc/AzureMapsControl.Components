@@ -1,0 +1,12 @@
+﻿@page "/Controls/FullScreen"
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          Controls="new Components.Controls.Control[]
+          {
+              new AzureMapsControl.Components.Controls.FullScreenControl(new Components.Controls.FullScreenControlOptions
+              {
+                  Style = new Components.Atlas.Either<Components.Controls.ControlStyle, string>(Components.Controls.ControlStyle.Auto)
+              },
+              AzureMapsControl.Components.Controls.ControlPosition.TopRight),
+          }" />
