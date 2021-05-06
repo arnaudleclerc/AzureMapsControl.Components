@@ -62,6 +62,9 @@
                 case "geolocation":
                     GeolocationControlJsonConverter.Write(writer, value as GeolocationControl);
                     break;
+                case "fullscreen":
+                    FullScreenControlJsonConverter.Write(writer, value as FullScreenControl);
+                    break;
             }
         }
     }

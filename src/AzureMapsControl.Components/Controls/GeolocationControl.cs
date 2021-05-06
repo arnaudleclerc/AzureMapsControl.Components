@@ -184,7 +184,7 @@
 
                 if (value.Options.PositionOptions is not null)
                 {
-                    writer.WriteStartObject();
+                    writer.WriteStartObject("positionOptions");
                     if (value.Options.PositionOptions.EnableHighAccuracy.HasValue)
                     {
                         writer.WriteBoolean("enableHighAccuracy", value.Options.PositionOptions.EnableHighAccuracy.Value);
