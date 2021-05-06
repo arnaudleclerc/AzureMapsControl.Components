@@ -1,12 +1,25 @@
 ﻿@page "/Controls/FullScreen"
 
+@inject AzureMapsControl.Components.FullScreen.IFullScreenService FullScreenService
+
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
-          Controls="new Components.Controls.Control[]
+          EventActivationFlags ="AzureMapsControl.Components.Map.MapEventActivationFlags.None().Enable(MapEventType.Ready)"
+          OnReady="OnMapReady"/>
+
+@code {
+    public async Task OnMapReady(MapEventArgs eventArgs)
+    {
+        if(await FullScreenService.IsSupportedAsync())
+        {
+            await eventArgs.Map.AddControlsAsync(new Components.Controls.Control[]
           {
-              new AzureMapsControl.Components.Controls.FullScreenControl(new Components.Controls.FullScreenControlOptions
-              {
-                  Style = new Components.Atlas.Either<Components.Controls.ControlStyle, string>(Components.Controls.ControlStyle.Auto)
-              },
-              AzureMapsControl.Components.Controls.ControlPosition.TopRight),
-          }" />
+          new AzureMapsControl.Components.Controls.FullScreenControl(new Components.Controls.FullScreenControlOptions
+          {
+              Style = new Components.Atlas.Either<Components.Controls.ControlStyle, string>(Components.Controls.ControlStyle.Auto)
+          },
+          AzureMapsControl.Components.Controls.ControlPosition.TopRight),
+          });
+        }
+    }
+}

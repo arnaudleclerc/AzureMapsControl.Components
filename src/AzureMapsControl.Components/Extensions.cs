@@ -5,6 +5,7 @@
     using AzureMapsControl.Components.Animations;
     using AzureMapsControl.Components.Configuration;
     using AzureMapsControl.Components.Constants;
+    using AzureMapsControl.Components.FullScreen;
     using AzureMapsControl.Components.Geolocation;
     using AzureMapsControl.Components.Map;
     using AzureMapsControl.Components.Runtime;
@@ -28,6 +29,7 @@
                 .AddScoped<IAnimationService, AnimationService>()
                 .AddScoped<IMapJsRuntime, MapJsRuntime>()
                 .AddScoped<IGeolocationService, GeolocationService>()
+                .AddScoped<IFullScreenService, FullScreenService>()
                 .AddOptions<AzureMapsConfiguration>()
                 .Configure(configure)
                 .Validate(configuration => configuration.Validate(), "The given AzureMapsConfiguration is invalid");
@@ -43,5 +45,6 @@
         internal static string ToHtmlMarkerNamespace(this string method) => $"{JsConstants.Namespaces.AzureMapsControl}.{JsConstants.Namespaces.HtmlMarker}.{method}";
         internal static string ToGeolocationControlNamespace(this string method) => $"{JsConstants.Namespaces.AzureMapsControl}.{JsConstants.Namespaces.GeolocationControl}.{method}";
         internal static string ToOverviewMapControlNamespace(this string method) => $"{JsConstants.Namespaces.AzureMapsControl}.{JsConstants.Namespaces.OverviewMapControl}.{method}";
+        internal static string ToFullScreenControlNamespace(this string method) => $"{JsConstants.Namespaces.AzureMapsControl}.{JsConstants.Namespaces.FullScreenControl}.{method}";
     }
 }

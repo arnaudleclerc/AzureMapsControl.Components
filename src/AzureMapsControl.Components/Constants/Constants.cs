@@ -17,6 +17,7 @@
             internal const string HtmlMarker = "HtmlMarker";
             internal const string OverviewMapControl = "OverviewMapControl";
             internal const string GeolocationControl = "GeolocationControl";
+            internal const string FullScreenControl = "FullscreenControl";
         }
 
         internal static class Methods
@@ -121,6 +122,11 @@
                 internal const string Dispose = "dispose";
                 internal const string SetOptions = "setOptions";
                 internal const string AddEvents = "addEvents";
+            }
+
+            internal static class FullScreenControl
+            {
+                internal const string IsFullScreenSupported = "isFullscreenSupported";
             }
         }
     }

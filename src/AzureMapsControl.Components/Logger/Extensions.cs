@@ -74,6 +74,7 @@
         GeolocationControl_SetOptionsAsync = 9002,
         GeolocationControl_AddEventsAsync = 9003,
         GeolocationService_IsGeolocationSupportedAsync = 9100,
+        FullScreenService_IsFullScreenSupportedAsync = 10000
     }
 
     internal static class Extensions

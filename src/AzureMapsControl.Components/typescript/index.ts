@@ -7,3 +7,4 @@ export { Datasource } from './sources/datasource';
 export { HtmlMarker } from './html-markers/html-marker';
 export { GeolocationControl } from './controls/geolocation-control';
 export { OverviewMapControl } from './controls/overviewmap-control';
+export { FullscreenControl } from './controls/fullscreen-control';
