@@ -3,7 +3,7 @@
     using System.Diagnostics.CodeAnalysis;
 
     [ExcludeFromCodeCoverage]
-    public sealed class OverviewMapControlOverlay
+    public struct OverviewMapControlOverlay
     {
         private readonly string _overlay;
 

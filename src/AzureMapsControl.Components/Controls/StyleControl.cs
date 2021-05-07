@@ -8,7 +8,6 @@
     /// <summary>
     /// A control for changing the style of the map.
     /// </summary>
-    [JsonConverter(typeof(StyleControlJsonConverter))]
     [ExcludeFromCodeCoverage]
     public sealed class StyleControl : Control<StyleControlOptions>
     {
@@ -46,11 +45,11 @@
                     }
                     writer.WriteEndArray();
                 }
-                if (value.Options.Style is not null)
+                if (value.Options.Style.ToString() != default(ControlStyle).ToString())
                 {
                     writer.WriteString("style", value.Options.Style.ToString());
                 }
-                if (value.Options.StyleControlLayout is not null)
+                if (value.Options.StyleControlLayout.ToString() != default(StyleControlLayout).ToString())
                 {
                     writer.WriteString("styleControlLayout", value.Options.StyleControlLayout.ToString());
                 }

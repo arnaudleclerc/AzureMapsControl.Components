@@ -2,7 +2,7 @@
 
 The `Geolocation` control is not part of the `atlas` library, so you need to include the js file of the control into your application and reference it with a `script` tag on your razor page. It can be found on the [GitHub repository of the geolocation control](https://github.com/Azure-Samples/azure-maps-geolocation-control).
 
-Before adding the control, you might want to check if the browser supports the geolocation. You can inject an instance of `IGeolocationService` on your pages and call its `IsGeolocationSupportedAsync method` to do so.
+Before adding the control, you might want to check if the browser supports the geolocation. You can inject an instance of `IGeolocationService` on your pages and call its `IsGeolocationSupportedAsync` method to do so.
 
 You can also react to two events on this control : 
 

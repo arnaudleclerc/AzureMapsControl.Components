@@ -9,7 +9,7 @@
     /// The map styles
     /// </summary>
     [JsonConverter(typeof(MapStyleJsonConverter))]
-    public sealed class MapStyle
+    public struct MapStyle
     {
         private readonly string _style;
 
@@ -110,7 +110,7 @@
                 case "high_contrast_dark":
                     return HighContrastDark;
                 default:
-                    return null;
+                    return default;
             }
         }
     }

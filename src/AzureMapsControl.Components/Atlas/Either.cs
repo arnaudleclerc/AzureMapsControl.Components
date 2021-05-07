@@ -2,7 +2,7 @@
 {
     public class Either<T1, T2>
     {
-        internal bool HasFirstChoice => FirstChoice is not null;
+        internal bool HasFirstChoice => FirstChoice is not null && FirstChoice.ToString() != default(T1)?.ToString();
 
         internal T1 FirstChoice { get; }
         internal T2 SecondChoice { get; }
@@ -16,7 +16,7 @@
 
     public class Either<T1, T2, T3> : Either<T1, T2>
     {
-        internal bool HasSecondChoice => SecondChoice is not null;
+        internal bool HasSecondChoice => SecondChoice is not null && SecondChoice.ToString() != default(T2)?.ToString();
 
         internal T3 ThirdChoice { get; set; }
 

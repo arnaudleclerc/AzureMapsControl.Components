@@ -8,6 +8,7 @@ import { Control } from '../controls/control';
 import * as scalebar from 'azure-maps-control-scalebar';
 import * as overviewmap from 'azure-maps-control-overviewmap';
 import * as geolocationcontrol from 'azure-maps-control-geolocation';
+import * as fullscreencontrol from 'azure-maps-control-fullscreen';
 import { MapImageTemplate } from './map-image-template';
 import { HtmlMarkerEventArgs, toMarkerEvent } from '../html-markers/html-marker-event-args';
 import { HtmlMarkerDefinition } from '../html-markers/html-marker-options';
@@ -45,6 +46,9 @@ export class Core {
                     break;
                 case 'geolocation':
                     mapControl = new geolocationcontrol.control.GeolocationControl(control.options);
+                    break;
+                case 'fullscreen':
+                    mapControl = new fullscreencontrol.control.FullscreenControl(control.options);
                     break;
             }
 

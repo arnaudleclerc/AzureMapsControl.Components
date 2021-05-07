@@ -5,7 +5,6 @@
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
-    [JsonConverter(typeof(PitchControlJsonConverter))]
     [ExcludeFromCodeCoverage]
     public sealed class PitchControl : Control<PitchControlOptions>
     {
@@ -37,7 +36,7 @@
                 {
                     writer.WriteNumber("pitchDegreesDelta", value.Options.PitchDegreesDelta.Value);
                 }
-                if (value.Options.Style is not null)
+                if (value.Options.Style.ToString() != default(ControlStyle).ToString())
                 {
                     writer.WriteString("style", value.Options.Style.ToString());
                 }

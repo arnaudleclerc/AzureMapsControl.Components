@@ -1,0 +1,23 @@
+﻿@page "/Markers/HtmlMarkersOnReady"
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          EventActivationFlags="MapEventActivationFlags
+                                .None()
+                                .Enable(MapEventType.Ready)"
+          OnReady="OnMapReady"/>
+
+@code  {
+    public async Task OnMapReady(MapEventArgs events)
+    {
+        await events.Map.AddHtmlMarkersAsync
+        (
+            new AzureMapsControl.Components.Markers.HtmlMarker(
+            new Components.Markers.HtmlMarkerOptions
+            {
+                Position = new Components.Atlas.Position(0, 0),
+                Draggable = true
+            })
+        );
+    }
+}

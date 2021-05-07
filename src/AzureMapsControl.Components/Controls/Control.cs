@@ -5,6 +5,8 @@
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
+    internal delegate void ControlDisposed();
+
     [JsonConverter(typeof(ControlJsonConverter))]
     [ExcludeFromCodeCoverage]
     public abstract class Control
@@ -25,7 +27,6 @@
 
     [ExcludeFromCodeCoverage]
     public abstract class Control<T> : Control
-        where T : IControlOptions
     {
         /// <summary>
         /// Options of the control
@@ -62,6 +63,9 @@
                     break;
                 case "geolocation":
                     GeolocationControlJsonConverter.Write(writer, value as GeolocationControl);
+                    break;
+                case "fullscreen":
+                    FullScreenControlJsonConverter.Write(writer, value as FullScreenControl);
                     break;
             }
         }
