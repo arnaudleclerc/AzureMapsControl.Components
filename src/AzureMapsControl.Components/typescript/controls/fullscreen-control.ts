@@ -1,5 +1,6 @@
 import * as fullscreencontrol from 'azure-maps-control-fullscreen';
 import { Core } from '../core/core';
+import { EventHelper } from '../events/event-helper';
 
 export class FullscreenControl {
 
@@ -17,6 +18,17 @@ export class FullscreenControl {
 
     public static async isFullscreen(id: string): Promise<boolean> {
         return await Promise.resolve(this._getFullscreenControl(id).isFullscreen());
+    }
+
+    public static addEvents(controlId: string, events: string[], eventHelper: EventHelper<boolean>): void {
+        const control = this._getFullscreenControl(controlId);
+        const map = Core.getMap();
+
+        events.forEach(event => {
+            map.events.add(event as any, control, (_: any) => {
+                eventHelper.invokeMethodAsync('NotifyEventAsync', control.isFullscreen());
+            });
+        })
     }
 
     private static _getFullscreenControl(controlId: string): fullscreencontrol.control.FullscreenControl {

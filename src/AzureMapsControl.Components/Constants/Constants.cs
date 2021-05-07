@@ -130,6 +130,7 @@
                 internal const string Dispose = "dispose";
                 internal const string SetOptions = "setOptions";
                 internal const string IsFullScreen = "isFullscreen";
+                internal const string AddEvents = "addEvents";
             }
         }
     }

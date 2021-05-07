@@ -2,15 +2,20 @@
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Text.Json;
     using System.Text.Json.Serialization;
     using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Exceptions;
+    using AzureMapsControl.Components.FullScreen;
     using AzureMapsControl.Components.Logger;
     using AzureMapsControl.Components.Runtime;
 
     using Microsoft.Extensions.Logging;
+    using Microsoft.JSInterop;
+
+    public delegate void FullScreenChanged(bool isFullScreen);
 
     /// <summary>
     /// A control that toggles the map or a specific container from its defined size to a fullscreen size.
@@ -18,11 +23,15 @@
     [ExcludeFromCodeCoverage]
     public sealed class FullScreenControl : Control<FullScreenControlOptions>
     {
+        private readonly FullScreenEventInvokeHelper _eventInvokeHelper;
+        private readonly FullScreenEventActivationFlags _eventFlags;
+
+        internal event ControlDisposed OnDisposed;
+        public event FullScreenChanged OnFullScreenChanged;
+
         internal override string Type => "fullscreen";
 
         internal override int Order => 0;
-
-        internal event ControlDisposed OnDisposed;
 
         internal IMapJsRuntime JsRuntime { get; set; }
         internal ILogger Logger { get; set; }
@@ -32,7 +41,11 @@
         /// </summary>
         public bool Disposed { get; private set; }
 
-        public FullScreenControl(FullScreenControlOptions options = null, ControlPosition position = default) : base(options, position) { }
+        public FullScreenControl(FullScreenControlOptions options = null, ControlPosition position = default, FullScreenEventActivationFlags eventFlags = null) : base(options, position)
+        {
+            _eventInvokeHelper = new(DispatchEventAsync);
+            _eventFlags = eventFlags;
+        }
 
         /// <summary>
         /// Disposes the control.
@@ -94,6 +107,23 @@
 
             return await JsRuntime.InvokeAsync<bool>(Constants.JsConstants.Methods.FullScreenControl.IsFullScreen.ToFullScreenControlNamespace(), Id);
         }
+
+        internal async ValueTask AddEventsAsync()
+        {
+            if (_eventFlags?.EnabledEvents is not null && _eventFlags.EnabledEvents.Any())
+            {
+                Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.FullScreenControl_AddEventsAsync, "FullScreenControl - AddEventsAsync");
+                Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.FullScreenControl_AddEventsAsync, $"Id: {Id}");
+                Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.FullScreenControl_AddEventsAsync, $"Events: {_eventFlags.EnabledEvents}");
+
+                await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.AddEvents.ToFullScreenControlNamespace(),
+                    Id,
+                    _eventFlags.EnabledEvents,
+                    DotNetObjectReference.Create(_eventInvokeHelper));
+            }
+        }
+
+        private async ValueTask DispatchEventAsync(bool isFullScreen) => await Task.Run(() => OnFullScreenChanged?.Invoke(isFullScreen));
 
         private void EnsureNotDisposed()
         {
