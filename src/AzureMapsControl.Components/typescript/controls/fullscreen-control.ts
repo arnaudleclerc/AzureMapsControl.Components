@@ -4,7 +4,7 @@ import { Core } from '../core/core';
 export class FullscreenControl {
 
     public static async isFullscreenSupported(): Promise<boolean> {
-        return Promise.resolve(fullscreencontrol.control.FullscreenControl.isSupported());
+        return await Promise.resolve(fullscreencontrol.control.FullscreenControl.isSupported());
     }
 
     public static dispose(id: string): void {
@@ -13,6 +13,10 @@ export class FullscreenControl {
 
     public static setOptions(id: string, options: fullscreencontrol.FullscreenControlOptions): void {
         this._getFullscreenControl(id).setOptions(options);
+    }
+
+    public static async isFullscreen(id: string): Promise<boolean> {
+        return await Promise.resolve(this._getFullscreenControl(id).isFullscreen());
     }
 
     private static _getFullscreenControl(controlId: string): fullscreencontrol.control.FullscreenControl {

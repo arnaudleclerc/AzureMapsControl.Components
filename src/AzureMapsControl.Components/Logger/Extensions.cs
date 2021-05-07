@@ -76,7 +76,8 @@
         GeolocationService_IsGeolocationSupportedAsync = 9100,
         FullScreenService_IsFullScreenSupportedAsync = 10000,
         FullScreenControl_DisposeAsync = 10100,
-        FullScreenControl_SetOptionsAsync = 10101
+        FullScreenControl_SetOptionsAsync = 10101,
+        FullScreenControl_IsFullScreenAsync = 10102
     }
 
     internal static class Extensions

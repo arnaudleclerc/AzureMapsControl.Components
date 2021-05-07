@@ -78,6 +78,23 @@
             await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.SetOptions.ToFullScreenControlNamespace(), Id, Options);
         }
 
+        /// <summary>
+        /// Checks if the map or specified container is in fullscreen mode or not.
+        /// </summary>
+        /// <returns>True if the map or specified container is in fullscreen mode, otherwise false</returns>
+        /// <exception cref="ControlDisposedException">The control has already been disposed</exception>
+        /// <exception cref="ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        public async ValueTask<bool> IsFullScreenAsync()
+        {
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.FullScreenControl_DisposeAsync, "FullScreenControl - IsFullScreenAsync");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.FullScreenControl_DisposeAsync, $"Id : {Id}");
+
+            EnsureJsRuntimeExists();
+            EnsureNotDisposed();
+
+            return await JsRuntime.InvokeAsync<bool>(Constants.JsConstants.Methods.FullScreenControl.IsFullScreen.ToFullScreenControlNamespace(), Id);
+        }
+
         private void EnsureNotDisposed()
         {
             if (Disposed)

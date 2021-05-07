@@ -178,5 +178,48 @@
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.Dispose.ToFullScreenControlNamespace(), control.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async void Should_GetIsFullScreenAsync()
+        {
+            var isFullScreen = true;
+            _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<bool>(It.IsAny<string>(), It.IsAny<object[]>())).ReturnsAsync(isFullScreen);
+            var control = new FullScreenControl(new FullScreenControlOptions()) {
+                JsRuntime = _jsRuntimeMock.Object,
+                Logger = _loggerMock.Object
+            };
+
+            var result = await control.IsFullScreenAsync();
+            Assert.Equal(isFullScreen, result);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<bool>(Constants.JsConstants.Methods.FullScreenControl.IsFullScreen.ToFullScreenControlNamespace(), control.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotGetIsFullScreen_NotAddedToMapCase_Async()
+        {
+            var control = new FullScreenControl() {
+                Logger = _loggerMock.Object
+            };
+
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await control.IsFullScreenAsync());
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotGetIsFullScreen_DisposedCase_Async()
+        {
+            var control = new FullScreenControl(new FullScreenControlOptions()) {
+                JsRuntime = _jsRuntimeMock.Object,
+                Logger = _loggerMock.Object
+            };
+
+            await control.DisposeAsync();
+            await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await control.IsFullScreenAsync());
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.Dispose.ToFullScreenControlNamespace(), control.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
     }
 }
