@@ -4,17 +4,12 @@
 <AzureMap Id="map"
           EventActivationFlags="MapEventActivationFlags
                                 .None()
-                                .Enable(MapEventType.Wheel)"
-          OnWheel="OnMapWheel" />
+                                .Enable(MapEventType.Click)"
+          OnClick="OnMapClick" />
 
 @code  {
 
     private AzureMapsControl.Components.Markers.HtmlMarker _marker;
-
-    public async Task OnMapWheel(MapEventArgs eventArgs)
-    {
-        var options = await eventArgs.Map.GetCameraOptionsAsync();
-    }
 
     public async Task OnMapClick(MapMouseEventArgs args)
     {
