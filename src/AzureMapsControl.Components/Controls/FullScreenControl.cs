@@ -53,6 +53,31 @@
             OnDisposed?.Invoke();
         }
 
+        /// <summary>
+        /// Sets the options of the control. 
+        /// </summary>
+        /// <param name="update">Update to apply on the options</param>
+        /// <returns></returns>
+        /// <exception cref="ControlDisposedException">The control has already been disposed</exception>
+        /// <exception cref="ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        public async ValueTask SetOptionsAsync(Action<FullScreenControlOptions> update)
+        {
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.FullScreenControl_DisposeAsync, "FullScreenControl - SetOptionsAsync");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.FullScreenControl_DisposeAsync, $"Id : {Id}");
+
+            EnsureJsRuntimeExists();
+            EnsureNotDisposed();
+
+            if (Options is null)
+            {
+                Options = new();
+            }
+
+            update(Options);
+
+            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.SetOptions.ToFullScreenControlNamespace(), Id, Options);
+        }
+
         private void EnsureNotDisposed()
         {
             if (Disposed)

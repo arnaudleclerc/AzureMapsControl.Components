@@ -11,6 +11,10 @@ export class FullscreenControl {
         this._getFullscreenControl(id).dispose();
     }
 
+    public static setOptions(id: string, options: fullscreencontrol.FullscreenControlOptions): void {
+        this._getFullscreenControl(id).setOptions(options);
+    }
+
     private static _getFullscreenControl(controlId: string): fullscreencontrol.control.FullscreenControl {
         return Core.getMap().controls.getControls().find(ctrl => (ctrl as any).amc && (ctrl as any).amc.id === controlId) as fullscreencontrol.control.FullscreenControl;
     }

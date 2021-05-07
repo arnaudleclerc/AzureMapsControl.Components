@@ -6,6 +6,7 @@
     using AzureMapsControl.Components.Tests.Json;
 
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
 
     using Moq;
 
@@ -115,6 +116,64 @@
 
             Assert.True(control.Disposed);
             Assert.True(eventTriggered);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.Dispose.ToFullScreenControlNamespace(), control.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_SetOptionsAsync()
+        {
+            var control = new FullScreenControl(new FullScreenControlOptions()) {
+                JsRuntime = _jsRuntimeMock.Object,
+                Logger = _loggerMock.Object
+            };
+
+            await control.SetOptionsAsync(options => options.Container = "container");
+
+            Assert.Equal("container", control.Options.Container);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.SetOptions.ToFullScreenControlNamespace(), control.Id, control.Options), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_SetOptions_NoOptionsCase_Async()
+        {
+            var control = new FullScreenControl {
+                JsRuntime = _jsRuntimeMock.Object,
+                Logger = _loggerMock.Object
+            };
+
+            await control.SetOptionsAsync(options => options.Container = "container");
+
+            Assert.Equal("container", control.Options.Container);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.SetOptions.ToFullScreenControlNamespace(), control.Id, control.Options), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotSetOptions_NotAddedToMapCase_Async()
+        {
+            var control = new FullScreenControl(new FullScreenControlOptions()) {
+                Logger = _loggerMock.Object
+            };
+
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await control.SetOptionsAsync(options => options.Container = "container"));
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotSetOptions_DisposedCase_Async()
+        {
+            var control = new FullScreenControl(new FullScreenControlOptions()) {
+                JsRuntime = _jsRuntimeMock.Object,
+                Logger = _loggerMock.Object
+            };
+
+            await control.DisposeAsync();
+            await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await control.SetOptionsAsync(options => options.Container = "container"));
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.Dispose.ToFullScreenControlNamespace(), control.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();

@@ -128,6 +128,7 @@
             {
                 internal const string IsFullScreenSupported = "isFullscreenSupported";
                 internal const string Dispose = "dispose";
+                internal const string SetOptions = "setOptions";
             }
         }
     }
