@@ -14,7 +14,6 @@
     using Microsoft.Extensions.Logging;
     using Microsoft.JSInterop;
 
-    internal delegate void GeolocationControlDisposed();
     public delegate void GeolocationSuccess(GeolocationSuccessEventArgs eventArgs);
     public delegate void GeolocationError(GeolocationErrorEventArgs eventArgs);
 
@@ -30,9 +29,12 @@
         internal IMapJsRuntime JsRuntime { get; set; }
         internal ILogger Logger { get; set; }
 
+        /// <summary>
+        /// Flag indicating if the control has been disposed
+        /// </summary>
         public bool Disposed { get; private set; }
 
-        internal event GeolocationControlDisposed OnDisposed;
+        internal event ControlDisposed OnDisposed;
         public event GeolocationSuccess GeolocationSuccess;
         public event GeolocationError GeolocationError;
 

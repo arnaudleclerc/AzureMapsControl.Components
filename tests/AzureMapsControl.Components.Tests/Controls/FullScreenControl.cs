@@ -1,7 +1,13 @@
 ﻿namespace AzureMapsControl.Components.Tests.Controls
 {
     using AzureMapsControl.Components.Controls;
+    using AzureMapsControl.Components.Exceptions;
+    using AzureMapsControl.Components.Runtime;
     using AzureMapsControl.Components.Tests.Json;
+
+    using Microsoft.Extensions.Logging;
+
+    using Moq;
 
     using Xunit;
 
@@ -55,5 +61,63 @@
             TestAndAssertWrite(control, expectedJson);
         }
 
+    }
+
+    public class FullScreenControlTests
+    {
+        private readonly Mock<IMapJsRuntime> _jsRuntimeMock = new();
+        private readonly Mock<ILogger> _loggerMock = new();
+
+        [Fact]
+        public async void Should_DisposeAsync()
+        {
+            var control = new FullScreenControl {
+                JsRuntime = _jsRuntimeMock.Object,
+                Logger = _loggerMock.Object
+            };
+
+            var eventTriggered = false;
+            control.OnDisposed += () => eventTriggered = true;
+
+            await control.DisposeAsync();
+            Assert.True(control.Disposed);
+            Assert.True(eventTriggered);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.Dispose.ToFullScreenControlNamespace(), control.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotDispose_NotAddedToMapCase_Async()
+        {
+            var control = new FullScreenControl {
+                Logger = _loggerMock.Object
+            };
+
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await control.DisposeAsync());
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotDisposeTwice_Async()
+        {
+            var control = new FullScreenControl {
+                JsRuntime = _jsRuntimeMock.Object,
+                Logger = _loggerMock.Object
+            };
+
+            var eventTriggered = false;
+            control.OnDisposed += () => eventTriggered = true;
+
+            await control.DisposeAsync();
+            await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await control.DisposeAsync());
+
+            Assert.True(control.Disposed);
+            Assert.True(eventTriggered);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.Dispose.ToFullScreenControlNamespace(), control.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
     }
 }

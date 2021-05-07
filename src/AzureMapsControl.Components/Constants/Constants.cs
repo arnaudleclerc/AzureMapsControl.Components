@@ -127,6 +127,7 @@
             internal static class FullScreenControl
             {
                 internal const string IsFullScreenSupported = "isFullscreenSupported";
+                internal const string Dispose = "dispose";
             }
         }
     }

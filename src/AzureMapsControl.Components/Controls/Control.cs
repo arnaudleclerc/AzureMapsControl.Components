@@ -5,6 +5,8 @@
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
+    internal delegate void ControlDisposed();
+
     [JsonConverter(typeof(ControlJsonConverter))]
     [ExcludeFromCodeCoverage]
     public abstract class Control

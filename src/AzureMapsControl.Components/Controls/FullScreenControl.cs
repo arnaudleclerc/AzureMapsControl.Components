@@ -4,6 +4,13 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Text.Json;
     using System.Text.Json.Serialization;
+    using System.Threading.Tasks;
+
+    using AzureMapsControl.Components.Exceptions;
+    using AzureMapsControl.Components.Logger;
+    using AzureMapsControl.Components.Runtime;
+
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// A control that toggles the map or a specific container from its defined size to a fullscreen size.
@@ -15,7 +22,52 @@
 
         internal override int Order => 0;
 
+        internal event ControlDisposed OnDisposed;
+
+        internal IMapJsRuntime JsRuntime { get; set; }
+        internal ILogger Logger { get; set; }
+
+        /// <summary>
+        /// Flag indicating if the control has been disposed
+        /// </summary>
+        public bool Disposed { get; private set; }
+
         public FullScreenControl(FullScreenControlOptions options = null, ControlPosition position = default) : base(options, position) { }
+
+        /// <summary>
+        /// Disposes the control.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        /// <exception cref="ComponentDisposedException">The control has already been disposed</exception>
+        public async ValueTask DisposeAsync()
+        {
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.FullScreenControl_DisposeAsync, "FullScreenControl - DisposeAsync");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.FullScreenControl_DisposeAsync, $"Id : {Id}");
+
+            EnsureJsRuntimeExists();
+            EnsureNotDisposed();
+
+            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.Dispose.ToFullScreenControlNamespace(), Id);
+            Disposed = true;
+            OnDisposed?.Invoke();
+        }
+
+        private void EnsureNotDisposed()
+        {
+            if (Disposed)
+            {
+                throw new ComponentDisposedException();
+            }
+        }
+
+        private void EnsureJsRuntimeExists()
+        {
+            if (JsRuntime is null)
+            {
+                throw new ComponentNotAddedToMapException();
+            }
+        }
     }
 
     internal class FullScreenControlJsonConverter : JsonConverter<FullScreenControl>
