@@ -218,6 +218,8 @@
                 {
                     control.Logger = _logger;
                     control.JsRuntime = _jsRuntime;
+
+                    control.OnDisposed += () => _controls.Remove(control);
                 }
             }
         }
