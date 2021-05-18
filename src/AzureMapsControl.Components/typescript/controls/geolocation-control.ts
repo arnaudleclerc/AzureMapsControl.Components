@@ -36,12 +36,7 @@ export class GeolocationControl {
                     code: args.code,
                     message: args.message,
                     feature: {
-                        bbox: args.bbox ? {
-                            west: args.bbox[0],
-                            south: args.bbox[1],
-                            east: args.bbox[2],
-                            north: args.bbox[3]
-                        } : null,
+                        bbox: args.bbox,
                         geometry: args.geometry,
                         properties: Core.formatProperties(args.properties)
                     },

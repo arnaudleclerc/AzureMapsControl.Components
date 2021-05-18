@@ -582,12 +582,7 @@ export class Core {
 
     private static _getSerializableFeature(feature: azmaps.data.Feature<azmaps.data.Geometry, any>): Feature {
         return {
-            bbox: feature.bbox ? {
-                west: feature.bbox[0],
-                south: feature.bbox[1],
-                east: feature.bbox[2],
-                north: feature.bbox[3]
-            } : null,
+            bbox: feature.bbox,
             geometry: feature.geometry,
             id: feature.id,
             properties: feature.properties
