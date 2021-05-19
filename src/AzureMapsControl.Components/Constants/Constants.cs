@@ -18,6 +18,7 @@
             internal const string OverviewMapControl = "OverviewMapControl";
             internal const string GeolocationControl = "GeolocationControl";
             internal const string FullScreenControl = "FullscreenControl";
+            internal const string Indoor = "Indoor";
         }
 
         internal static class Methods
@@ -131,6 +132,11 @@
                 internal const string SetOptions = "setOptions";
                 internal const string IsFullScreen = "isFullscreen";
                 internal const string AddEvents = "addEvents";
+            }
+
+            internal static class Indoor
+            {
+                internal const string CreateIndoorManager = "createIndoorManager";
             }
         }
     }

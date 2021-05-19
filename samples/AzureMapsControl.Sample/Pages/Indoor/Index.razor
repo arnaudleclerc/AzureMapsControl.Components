@@ -1,0 +1,33 @@
+﻿@page "/Indoor"
+
+@using AzureMapsControl.Components.Map
+@using Microsoft.Extensions.Configuration
+
+@inject AzureMapsControl.Components.Indoor.IIndoorService IndoorService
+@inject IConfiguration Configuration
+
+<AzureMap Id="map"
+          CameraOptions="new CameraOptions { Center= new AzureMapsControl.Components.Atlas.Position(-122.13315, 47.63637), Zoom = 19 }"
+          StyleOptions="new StyleOptions { Style = MapStyle.Blank }" 
+          EventActivationFlags="AzureMapsControl.Components.Map.MapEventActivationFlags.None().Enable(AzureMapsControl.Components.Map.MapEventType.Ready)"
+          OnReady="OnMapReadyAsync"/>
+
+@code {
+
+    public async Task OnMapReadyAsync(MapEventArgs eventArgs)
+    {
+        var levelControl = new AzureMapsControl.Components.Indoor.LevelControl(new AzureMapsControl.Components.Indoor.LevelControlOptions {
+            Position = AzureMapsControl.Components.Controls.ControlPosition.TopRight
+        });
+
+        var indoorManager = await IndoorService.CreateIndoorManagerAsync(
+            new AzureMapsControl.Components.Indoor.IndoorManagerOptions {
+                LevelControl = levelControl,
+                StatesetId = Configuration["Indoor:StatesetId"],
+                TilesetId = Configuration["Indoor:TilesetId"],
+                Theme = AzureMapsControl.Components.Indoor.IndoorLayerTheme.Auto
+            }
+        );
+    }
+
+}
