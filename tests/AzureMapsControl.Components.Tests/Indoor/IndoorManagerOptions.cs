@@ -27,8 +27,7 @@
 
             var expectedJson = "{"
                 + "\"levelControl\":{"
-                + "\"id\":\"" + levelControl.Id + "\""
-                + ",\"options\":{"
+                + "\"options\":{"
                 + "\"position\":\"bottom-left\""
                 + ",\"style\":\"auto\""
                 + "}"

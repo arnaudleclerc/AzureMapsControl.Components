@@ -7,9 +7,9 @@
 @inject IConfiguration Configuration
 
 <AzureMap Id="map"
-          CameraOptions="new CameraOptions { Center= new AzureMapsControl.Components.Atlas.Position(-122.13315, 47.63637), Zoom = 19 }"
+          CameraOptions="new CameraOptions { Center= new AzureMapsControl.Components.Atlas.Position(-122.13214, 47.63647), Zoom = 19 }"
           StyleOptions="new StyleOptions { Style = MapStyle.Blank }" 
-          EventActivationFlags="AzureMapsControl.Components.Map.MapEventActivationFlags.None().Enable(AzureMapsControl.Components.Map.MapEventType.Ready)"
+          EventActivationFlags="AzureMapsControl.Components.Map.MapEventActivationFlags.None().Enable(AzureMapsControl.Components.Map.MapEventType.Ready, AzureMapsControl.Components.Map.MapEventType.Click)"
           OnReady="OnMapReadyAsync"/>
 
 @code {

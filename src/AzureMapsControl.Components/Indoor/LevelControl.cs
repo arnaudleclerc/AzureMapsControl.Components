@@ -12,7 +12,6 @@
     [JsonConverter(typeof(LevelControlJsonConverter))]
     public sealed class LevelControl
     {
-        internal readonly string Id = Guid.NewGuid().ToString();
         internal readonly LevelControlOptions Options;
 
         /// <summary>
@@ -28,7 +27,6 @@
         public override void Write(Utf8JsonWriter writer, LevelControl value, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
-            writer.WriteString("id", value.Id);
             if (value.Options is not null)
             {
                 writer.WritePropertyName("options");

@@ -137,6 +137,8 @@
             internal static class Indoor
             {
                 internal const string CreateIndoorManager = "createIndoorManager";
+                internal const string Initialize = "initialize";
+                internal const string Dispose = "dispose";
             }
         }
     }

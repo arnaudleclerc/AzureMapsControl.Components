@@ -79,7 +79,9 @@
         FullScreenControl_SetOptionsAsync = 10101,
         FullScreenControl_IsFullScreenAsync = 10102,
         FullScreenControl_AddEventsAsync = 10103,
-        IndoorService_CreateIndoorManagerAsync = 11000
+        IndoorService_CreateIndoorManagerAsync = 11000,
+        IndoorManager_InitializeAsync = 11100,
+        IndoorManager_DisposeAsync = 11101
     }
 
     internal static class Extensions

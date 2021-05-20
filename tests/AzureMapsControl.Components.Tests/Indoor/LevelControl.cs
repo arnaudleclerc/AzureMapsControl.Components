@@ -20,8 +20,7 @@
             });
 
             var expectedJson = "{"
-                + "\"id\":\"" + levelControl.Id + "\""
-                + ",\"options\":{"
+                + "\"options\":{"
                 + "\"position\":\"bottom-left\""
                 + ",\"stype\":\"auto\""
                 + "}"
