@@ -154,7 +154,7 @@
 
     internal class GeolocationControlJsonConverter : JsonConverter<GeolocationControl>
     {
-        public override GeolocationControl Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotImplementedException();
+        public override GeolocationControl Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotSupportedException();
         public override void Write(Utf8JsonWriter writer, GeolocationControl value, JsonSerializerOptions options) => Write(writer, value);
 
         public static void Write(Utf8JsonWriter writer, GeolocationControl value)

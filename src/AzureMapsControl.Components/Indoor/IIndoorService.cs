@@ -9,6 +9,6 @@
         /// </summary>
         /// <param name="options">Options of the indoor manager</param>
         /// <returns>Indoor Manager</returns>
-        ValueTask<IndoorManager> CreateIndoorManagerAsync(IndoorManagerOptions options = null);
+        ValueTask<IndoorManager> CreateIndoorManagerAsync(IndoorManagerOptions options);
     }
 }

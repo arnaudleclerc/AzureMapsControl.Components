@@ -18,7 +18,7 @@
             _logger = logger;
         }
 
-        public async ValueTask<IndoorManager> CreateIndoorManagerAsync(IndoorManagerOptions options = null)
+        public async ValueTask<IndoorManager> CreateIndoorManagerAsync(IndoorManagerOptions options)
         {
             _logger.LogAzureMapsControlInfo(AzureMapLogEvent.IndoorService_CreateIndoorManagerAsync, "IndoorService - CreateIndoorManagerAsync");
             _logger.LogAzureMapsControlDebug(AzureMapLogEvent.IndoorService_CreateIndoorManagerAsync, "Options", options);

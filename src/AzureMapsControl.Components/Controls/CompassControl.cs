@@ -19,7 +19,7 @@
 
     internal class CompassControlJsonConverter : JsonConverter<CompassControl>
     {
-        public override CompassControl Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotImplementedException();
+        public override CompassControl Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotSupportedException();
         public override void Write(Utf8JsonWriter writer, CompassControl value, JsonSerializerOptions options) => Write(writer, value);
 
         internal static void Write(Utf8JsonWriter writer, CompassControl value)

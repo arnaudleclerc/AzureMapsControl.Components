@@ -39,5 +39,20 @@
 
             TestAndAssertWrite(options, expectedJson);
         }
+
+        [Fact]
+        public void Should_Read()
+        {
+            var json = "{"
+                + "\"statesetId\":\"statesetId\""
+                + ",\"theme\":\"auto\""
+                + ",\"tilesetId\":\"tilesetId\""
+                + "}";
+
+            var result = Read(json);
+            Assert.Equal("statesetId", result.StatesetId);
+            Assert.Equal(IndoorLayerTheme.Auto, result.Theme);
+            Assert.Equal("tilesetId", result.TilesetId);
+        }
     }
 }

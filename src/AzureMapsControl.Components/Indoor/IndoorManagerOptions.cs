@@ -7,12 +7,12 @@
 
     [ExcludeFromCodeCoverage]
     [JsonConverter(typeof(IndoorManagerOptionsJsonConverter))]
-    public sealed class IndoorManagerOptions
+    public struct IndoorManagerOptions
     {
         /// <summary>
         /// A level picker to display as a control for the indoor manager.
         /// </summary>
-        public LevelControl LevelControl { get; set; }
+        public LevelControl? LevelControl { get; set; }
 
         /// <summary>
         /// The state set id to pass with requests.
@@ -32,14 +32,57 @@
 
     internal class IndoorManagerOptionsJsonConverter : JsonConverter<IndoorManagerOptions>
     {
-        public override IndoorManagerOptions Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotImplementedException();
+        public override IndoorManagerOptions Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            string statesetId = null, tilesetId = null;
+            IndoorLayerTheme theme = default;
+
+            if (reader.TokenType == JsonTokenType.None)
+            {
+                reader.Read();
+            }
+
+            if (reader.TokenType == JsonTokenType.StartObject)
+            {
+                while (reader.Read())
+                {
+                    if (reader.TokenType == JsonTokenType.PropertyName)
+                    {
+                        if (reader.GetString() == "statesetId")
+                        {
+                            reader.Read();
+                            statesetId = reader.GetString();
+                        }
+                        else if (reader.GetString() == "theme")
+                        {
+                            reader.Read();
+                            theme = IndoorLayerTheme.FromString(reader.GetString());
+                        }
+                        else if (reader.GetString() == "tilesetId")
+                        {
+                            reader.Read();
+                            tilesetId = reader.GetString();
+                        }
+                    }
+                }
+
+                return new IndoorManagerOptions {
+                    StatesetId = statesetId,
+                    Theme = theme,
+                    TilesetId = tilesetId
+                };
+            }
+
+            return default;
+        }
+
         public override void Write(Utf8JsonWriter writer, IndoorManagerOptions value, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
-            if (value.LevelControl is not null)
+            if (value.LevelControl.HasValue)
             {
                 writer.WritePropertyName("levelControl");
-                JsonSerializer.Serialize(writer, value.LevelControl, options);
+                JsonSerializer.Serialize(writer, value.LevelControl.Value, options);
             }
             writer.WriteString("statesetId", value.StatesetId);
             if (value.Theme.ToString() != default(IndoorLayerTheme).ToString())

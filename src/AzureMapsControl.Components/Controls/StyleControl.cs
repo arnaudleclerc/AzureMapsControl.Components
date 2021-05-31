@@ -19,7 +19,7 @@
 
     internal sealed class StyleControlJsonConverter : JsonConverter<StyleControl>
     {
-        public override StyleControl Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotImplementedException();
+        public override StyleControl Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotSupportedException();
         public override void Write(Utf8JsonWriter writer, StyleControl value, JsonSerializerOptions options) => Write(writer, value);
 
         internal static void Write(Utf8JsonWriter writer, StyleControl value)

@@ -25,15 +25,5 @@
             _jsRuntime.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Indoor.CreateIndoorManager.ToIndoorNamespace(), It.IsAny<string>(), options), Times.Once);
             _jsRuntime.VerifyNoOtherCalls();
         }
-
-        [Fact]
-        public async void Should_CreateIndoorManager_NullOptions_Async()
-        {
-            var service = new IndoorService(_jsRuntime.Object, _logger.Object);
-            Assert.NotNull(await service.CreateIndoorManagerAsync());
-
-            _jsRuntime.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Indoor.CreateIndoorManager.ToIndoorNamespace(), It.IsAny<string>(), null), Times.Once);
-            _jsRuntime.VerifyNoOtherCalls();
-        }
     }
 }

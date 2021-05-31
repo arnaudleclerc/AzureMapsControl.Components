@@ -24,7 +24,7 @@
 
     internal class LevelControlOptionsJsonConverter : JsonConverter<LevelControlOptions>
     {
-        public override LevelControlOptions Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotImplementedException();
+        public override LevelControlOptions Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotSupportedException();
         public override void Write(Utf8JsonWriter writer, LevelControlOptions value, JsonSerializerOptions options)
         {
             writer.WriteStartObject();

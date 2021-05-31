@@ -14,5 +14,15 @@
         private IndoorLayerTheme(string theme) => _theme = theme;
 
         public override string ToString() => _theme;
+
+        internal static IndoorLayerTheme FromString(string theme)
+        {
+            return theme switch {
+                "auto" => Auto,
+                "dark" => Dark,
+                "light" => Light,
+                _ => default
+            };
+        }
     }
 }

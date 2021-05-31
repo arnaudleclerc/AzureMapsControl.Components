@@ -28,7 +28,7 @@
 
     internal class DateTimeFormatOptionsJsonConverter : JsonConverter<DateTimeFormatOptions>
     {
-        public override DateTimeFormatOptions Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotImplementedException();
+        public override DateTimeFormatOptions Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotSupportedException();
         public override void Write(Utf8JsonWriter writer, DateTimeFormatOptions value, JsonSerializerOptions options)
         {
             if (value is not null)

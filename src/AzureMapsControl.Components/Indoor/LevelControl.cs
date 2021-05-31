@@ -10,7 +10,7 @@
     /// </summary>
     [ExcludeFromCodeCoverage]
     [JsonConverter(typeof(LevelControlJsonConverter))]
-    public sealed class LevelControl
+    public struct LevelControl
     {
         internal readonly LevelControlOptions Options;
 
@@ -23,7 +23,7 @@
 
     internal class LevelControlJsonConverter : JsonConverter<LevelControl>
     {
-        public override LevelControl Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotImplementedException();
+        public override LevelControl Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotSupportedException();
         public override void Write(Utf8JsonWriter writer, LevelControl value, JsonSerializerOptions options)
         {
             writer.WriteStartObject();

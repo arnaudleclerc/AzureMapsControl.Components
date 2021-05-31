@@ -139,6 +139,12 @@
                 internal const string CreateIndoorManager = "createIndoorManager";
                 internal const string Initialize = "initialize";
                 internal const string Dispose = "dispose";
+                internal const string GetCurrentFacility = "getCurrentFacility";
+                internal const string GetOptions = "getOptions";
+                internal const string GetStyleDefinition = "getStyleDefinition";
+                internal const string SetDynamicStyling = "setDynamicStyling";
+                internal const string SetFacility = "setFacility";
+                internal const string SetOptions = "setOptions";
             }
         }
     }

@@ -1,7 +1,7 @@
 import * as indoor from 'azure-maps-indoor';
 
 export interface IndoorManagerOptions {
-    levelControl: {
+    levelControl?: {
         options: indoor.control.LevelControlOptions;
     };
     statesetId: string;
