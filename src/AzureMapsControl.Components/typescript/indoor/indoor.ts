@@ -1,12 +1,14 @@
 import * as indoor from 'azure-maps-indoor';
 import { Core } from '../core/core';
+import { EventHelper } from '../events/event-helper';
+import { IndoorEventArgs } from './indoor-event-args';
 import { IndoorManagerOptions } from './options';
 
 export class Indoor {
 
     private static readonly _indoorManagers = new Map<string, indoor.indoor.IndoorManager>();
 
-    public static createIndoorManager(id: string, options: IndoorManagerOptions): void {
+    public static createIndoorManager(id: string, options: IndoorManagerOptions, events: string[], eventHelper: EventHelper<IndoorEventArgs>): void {
         let levelControl: indoor.control.LevelControl;
         if (options.levelControl) {
             levelControl = new indoor.control.LevelControl(options.levelControl.options);
@@ -16,12 +18,27 @@ export class Indoor {
             options.theme = 'auto';
         }
 
-        const indoorManager = new indoor.indoor.IndoorManager(Core.getMap(), {
+        const map = Core.getMap();
+        const indoorManager = new indoor.indoor.IndoorManager(map, {
             levelControl,
             statesetId: options.statesetId,
             theme: options.theme,
             tilesetId: options.tilesetId
         });
+
+        if (events) {
+            for (const event of events) {
+                map.events.add(event as any, indoorManager, (e: indoor.indoor.IFacilityChangeEvent | indoor.indoor.ILevelChangeEvent): void => {
+                    eventHelper.invokeMethodAsync('NotifyEventAsync', {
+                        facilityId: e.facilityId,
+                        levelNumber: e.levelNumber,
+                        prevFacilityId: e.prevFacilityId,
+                        prevLevelNumber: e.prevLevelNumber,
+                        type: event
+                    });
+                });
+            }
+        }
 
         this._indoorManagers.set(id, indoorManager);
     }

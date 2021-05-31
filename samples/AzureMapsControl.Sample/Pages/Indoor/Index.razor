@@ -23,13 +23,28 @@
 
         var statesetId = Configuration["Indoor:StatesetId"];
 
-        var options = new AzureMapsControl.Components.Indoor.IndoorManagerOptions {
-                LevelControl = levelControl,
-                StatesetId = statesetId,
-                TilesetId = Configuration["Indoor:TilesetId"]
-            };
+        var options = new AzureMapsControl.Components.Indoor.IndoorManagerOptions
+        {
+            LevelControl = levelControl,
+            StatesetId = statesetId,
+            TilesetId = Configuration["Indoor:TilesetId"]
+        };
 
-        var indoorManager = await IndoorService.CreateIndoorManagerAsync(options);
+        var indoorManager = await IndoorService.CreateIndoorManagerAsync(options, Components.Indoor.IndoorManagerEventActivationFlags.All());
+
+        indoorManager.OnFacilityChanged += eventArgs =>
+        {
+            Console.WriteLine("OnFacilityChanged");
+            Console.WriteLine($"Switched facility from {eventArgs.PrevFacilityId} to {eventArgs.FacilityId}");
+            Console.WriteLine($"Switched level from {eventArgs.PrevLevelNumber} to {eventArgs.LevelNumber}");
+        };
+
+        indoorManager.OnLevelChanged += eventArgs =>
+        {
+            Console.WriteLine("OnLevelChanged");
+            Console.WriteLine($"Switched facility from {eventArgs.PrevFacilityId} to {eventArgs.FacilityId}");
+            Console.WriteLine($"Switched level from {eventArgs.PrevLevelNumber} to {eventArgs.LevelNumber}");
+        };
 
         if (!string.IsNullOrWhiteSpace(statesetId))
         {

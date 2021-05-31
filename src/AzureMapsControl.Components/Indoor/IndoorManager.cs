@@ -10,19 +10,29 @@
 
     using Microsoft.Extensions.Logging;
 
+    public delegate void IndoorManagerEvent(IndoorManagerEventArgs eventArgs);
+
     public sealed class IndoorManager
     {
         internal readonly string Id;
         private readonly IMapJsRuntime _jsRuntime;
         private readonly ILogger _logger;
+        private readonly IndoorManagerEventHelper _eventHelper;
 
         public bool Disposed { get; private set; }
+
+        internal IndoorManagerEventHelper EventHelper => _eventHelper;
+
+        public event IndoorManagerEvent OnFacilityChanged;
+        public event IndoorManagerEvent OnLevelChanged;
 
         internal IndoorManager(IMapJsRuntime jsRuntime, ILogger logger)
         {
             _jsRuntime = jsRuntime;
             _logger = logger;
             Id = Guid.NewGuid().ToString();
+
+            _eventHelper = new IndoorManagerEventHelper(DispatchEventAsync);
         }
 
         /// <summary>
@@ -154,6 +164,30 @@
             EnsureNotDisposed();
 
             await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Indoor.SetOptions.ToIndoorNamespace(), Id, options);
+        }
+
+        private async ValueTask DispatchEventAsync(IndoorManagerJsEventArgs eventArgs)
+        {
+            await Task.Run(() => {
+
+                var arguments = new IndoorManagerEventArgs {
+                    FacilityId = eventArgs.FacilityId,
+                    LevelNumber = eventArgs.LevelNumber,
+                    PrevFacilityId = eventArgs.PrevFacilityId,
+                    PrevLevelNumber = eventArgs.PrevLevelNumber
+                };
+
+                switch (eventArgs.Type)
+                {
+                    case "facilitychanged":
+                        OnFacilityChanged?.Invoke(arguments);
+                        break;
+
+                    case "levelchanged":
+                        OnLevelChanged?.Invoke(arguments);
+                        break;
+                }
+            });
         }
 
         private void EnsureNotDisposed()
