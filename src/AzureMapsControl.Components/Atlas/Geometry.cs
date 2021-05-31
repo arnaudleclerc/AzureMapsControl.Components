@@ -68,7 +68,7 @@
             };
         }
 
-        public override void Write(Utf8JsonWriter writer, Geometry value, JsonSerializerOptions options) => throw new NotImplementedException();
+        public override void Write(Utf8JsonWriter writer, Geometry value, JsonSerializerOptions options) => throw new NotSupportedException();
 
         internal static dynamic ReadCoordinates(ref Utf8JsonReader reader)
         {

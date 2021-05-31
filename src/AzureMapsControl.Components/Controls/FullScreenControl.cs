@@ -144,7 +144,7 @@
 
     internal class FullScreenControlJsonConverter : JsonConverter<FullScreenControl>
     {
-        public override FullScreenControl Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotImplementedException();
+        public override FullScreenControl Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotSupportedException();
         public override void Write(Utf8JsonWriter writer, FullScreenControl value, JsonSerializerOptions options) => Write(writer, value);
 
         internal static void Write(Utf8JsonWriter writer, FullScreenControl value)

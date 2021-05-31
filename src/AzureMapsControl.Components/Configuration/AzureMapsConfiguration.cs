@@ -57,7 +57,7 @@
 
     internal sealed class AzureMapsConfigurationJsonConverter : JsonConverter<AzureMapsConfiguration>
     {
-        public override AzureMapsConfiguration Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotImplementedException();
+        public override AzureMapsConfiguration Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotSupportedException();
         public override void Write(Utf8JsonWriter writer, AzureMapsConfiguration value, JsonSerializerOptions options)
         {
             writer.WriteStartObject();

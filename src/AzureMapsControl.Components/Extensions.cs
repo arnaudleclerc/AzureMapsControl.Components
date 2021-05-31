@@ -7,6 +7,7 @@
     using AzureMapsControl.Components.Constants;
     using AzureMapsControl.Components.FullScreen;
     using AzureMapsControl.Components.Geolocation;
+    using AzureMapsControl.Components.Indoor;
     using AzureMapsControl.Components.Map;
     using AzureMapsControl.Components.Runtime;
 
@@ -30,6 +31,7 @@
                 .AddScoped<IMapJsRuntime, MapJsRuntime>()
                 .AddScoped<IGeolocationService, GeolocationService>()
                 .AddScoped<IFullScreenService, FullScreenService>()
+                .AddScoped<IIndoorService, IndoorService>()
                 .AddOptions<AzureMapsConfiguration>()
                 .Configure(configure)
                 .Validate(configuration => configuration.Validate(), "The given AzureMapsConfiguration is invalid");
@@ -46,5 +48,6 @@
         internal static string ToGeolocationControlNamespace(this string method) => $"{JsConstants.Namespaces.AzureMapsControl}.{JsConstants.Namespaces.GeolocationControl}.{method}";
         internal static string ToOverviewMapControlNamespace(this string method) => $"{JsConstants.Namespaces.AzureMapsControl}.{JsConstants.Namespaces.OverviewMapControl}.{method}";
         internal static string ToFullScreenControlNamespace(this string method) => $"{JsConstants.Namespaces.AzureMapsControl}.{JsConstants.Namespaces.FullScreenControl}.{method}";
+        internal static string ToIndoorNamespace(this string method) => $"{JsConstants.Namespaces.AzureMapsControl}.{JsConstants.Namespaces.Indoor}.{method}";
     }
 }
