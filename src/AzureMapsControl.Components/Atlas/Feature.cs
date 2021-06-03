@@ -87,7 +87,7 @@
                 }
                 else
                 {
-                    writer.WriteStringValue(JsonSerializer.Serialize(kvp.Value));
+                    JsonSerializer.Serialize(writer, kvp.Value);
                 }
             }
             writer.WriteEndObject();
