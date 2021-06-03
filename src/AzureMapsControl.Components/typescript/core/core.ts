@@ -569,8 +569,8 @@ export class Core {
     public static formatProperties(properties: { [key: string]: any }): { [key: string]: any } {
         if (properties) {
             for (const key in properties) {
-                if (typeof properties[key] === 'string') {
-                    const date = Date.parse(properties[key]);
+                if (typeof properties[key] === 'string' && properties[key].startsWith('azureMapsControl.datetime:')) {
+                    const date = Date.parse(properties[key].replace('azureMapsControl.datetime:', ''));
                     if (!isNaN(date)) {
                         properties[key] = new Date(date);
                     }

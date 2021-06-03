@@ -7,7 +7,6 @@
                                 .None()
                                 .Enable(MapEventType.Ready, MapEventType.Click)"
           OnReady="OnMapReady" />
-i
 @code  {
     public async Task OnMapReady(MapEventArgs eventArgs)
     {
@@ -18,7 +17,7 @@ i
         var feature = new AzureMapsControl.Components.Atlas.Feature<AzureMapsControl.Components.Atlas.Point>(new AzureMapsControl.Components.Atlas.Point(
                     new AzureMapsControl.Components.Atlas.Position(-122.13284, 47.63699)
                 ), new Dictionary<string, object> {
-                { "title", "Cafeteria" },
+                { "title", new DateTime(2021, 6, 3) },
                 { "subtitle", "Building 40"}
                 });
 
