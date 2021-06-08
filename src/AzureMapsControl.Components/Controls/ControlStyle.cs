@@ -3,7 +3,7 @@
     /// <summary>
     /// Available styles for a control
     /// </summary>
-    public sealed class ControlStyle
+    public struct ControlStyle
     {
         private readonly string _style;
 

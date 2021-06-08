@@ -42,5 +42,14 @@
 
             Assert.Equal(0, buffer.WrittenCount);
         }
+
+        protected TValue Read(string expectedJson)
+        {
+            var bytes = Encoding.UTF8.GetBytes(expectedJson);
+            var reader = new Utf8JsonReader(bytes);
+
+            var result = _converter.Read(ref reader, typeof(TValue), null);
+            return result;
+        }
     }
 }

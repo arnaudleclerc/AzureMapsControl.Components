@@ -8,7 +8,6 @@
     /// <summary>
     /// A control for changing the style of the map.
     /// </summary>
-    [JsonConverter(typeof(StyleControlJsonConverter))]
     [ExcludeFromCodeCoverage]
     public sealed class StyleControl : Control<StyleControlOptions>
     {
@@ -20,7 +19,7 @@
 
     internal sealed class StyleControlJsonConverter : JsonConverter<StyleControl>
     {
-        public override StyleControl Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotImplementedException();
+        public override StyleControl Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotSupportedException();
         public override void Write(Utf8JsonWriter writer, StyleControl value, JsonSerializerOptions options) => Write(writer, value);
 
         internal static void Write(Utf8JsonWriter writer, StyleControl value)
@@ -46,11 +45,11 @@
                     }
                     writer.WriteEndArray();
                 }
-                if (value.Options.Style is not null)
+                if (value.Options.Style.ToString() != default(ControlStyle).ToString())
                 {
                     writer.WriteString("style", value.Options.Style.ToString());
                 }
-                if (value.Options.StyleControlLayout is not null)
+                if (value.Options.StyleControlLayout.ToString() != default(StyleControlLayout).ToString())
                 {
                     writer.WriteString("styleControlLayout", value.Options.StyleControlLayout.ToString());
                 }

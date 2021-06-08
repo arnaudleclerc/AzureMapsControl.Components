@@ -1,0 +1,40 @@
+﻿@page "/Layers/HeatmapLayerOnReady"
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          CameraOptions="new CameraOptions { Zoom = 2 }"
+          StyleOptions="StyleOptions"
+          EventActivationFlags="MapEventActivationFlags
+                                .None()
+                                .Enable(MapEventType.Ready)"
+          OnReady="OnMapReady" />
+
+@code  {
+
+    public StyleOptions StyleOptions = new StyleOptions
+    {
+        Style = MapStyle.GrayscaleDark
+    };
+
+    public async Task OnMapReady(MapEventArgs events)
+    {
+        const string dataSourceId = "heatmapDataSource";
+        var dataSource = new AzureMapsControl.Components.Data.DataSource(dataSourceId);
+        await events.Map.AddSourceAsync(dataSource);
+        await dataSource.ImportDataFromUrlAsync("https://services1.arcgis.com/0MSEUqKaxRlEPj5g/arcgis/rest/services/ncov_cases/FeatureServer/1/query?where=1%3D1&f=geojson&outFields=*");
+
+        var weightExpressionJsonString = "[\"get\", \"Confirmed\"]";
+
+        var layer = new AzureMapsControl.Components.Layers.HeatmapLayer
+        {
+            Options = new Components.Layers.HeatmapLayerOptions
+            {
+                Weight = new Components.Atlas.ExpressionOrNumber(System.Text.Json.JsonDocument.Parse(weightExpressionJsonString)),
+                Radius = new Components.Atlas.ExpressionOrNumber(20),
+                Source = dataSourceId
+            }
+        };
+
+        await events.Map.AddLayerAsync(layer);
+    }
+}

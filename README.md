@@ -4,7 +4,7 @@ This library allows you to use `Azure Maps` inside your razor application.
 
 ## Install the Nuget Package
 
-This library is available on Nuget as `AzureMapsControl.Components`.
+This library is available on [Nuget](https://www.nuget.org/packages/AzureMapsControl.Components/) as `AzureMapsControl.Components`.
 
 ## Setup
 
@@ -27,16 +27,6 @@ Or use the minimized version :
 ```
 <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
 <script src="_content/AzureMapsControl.Components/azure-maps-control.min.js"></script>
-```
-
-If you plan to use the drawing toolbar, you also need to include the following css and scripts :
-
-```
-<link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/drawing/0.1/atlas-drawing.min.css" type="text/css" />
-```
-
-```
-<script src="https://atlas.microsoft.com/sdk/javascript/drawing/0.1/atlas-drawing.min.js"></script>
 ```
 
 ### Register the Components
@@ -151,6 +141,7 @@ It also needs to fetch the token to send to the requests of the atlas library. F
 - [Traffic](docs/traffic)
 - [Expressions](docs/expressions)
 - [Animations](docs/animations)
+- [Indoor Module](docs/indoor)
 
 ## Want to contribute ?
 

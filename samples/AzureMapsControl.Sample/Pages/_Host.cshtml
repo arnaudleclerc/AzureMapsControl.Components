@@ -7,13 +7,18 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AzureMapsControl.Sample</title>
     <base href="~/" />
-    <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css" type="text/css" />
-    <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/drawing/0.1/atlas-drawing.min.css" type="text/css" />
+    <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css"
+        type="text/css" />
+    <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/drawing/0.1/atlas-drawing.min.css"
+        type="text/css" />
+    <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/indoor/0.1/atlas-indoor.min.css"
+        type="text/css" />
     <style>
         body {
             margin: 0;
@@ -27,17 +32,20 @@
         }
     </style>
 </head>
+
 <body>
     <app>
         <component type="typeof(App)" render-mode="ServerPrerendered" />
     </app>
     <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
     <script src="https://atlas.microsoft.com/sdk/javascript/drawing/0.1/atlas-drawing.min.js"></script>
+    <script src="https://atlas.microsoft.com/sdk/javascript/indoor/0.1/atlas-indoor.js"></script>
     <script src="~/azure-maps-scale-bar-control.min.js"></script>
     <script src="~/azure-maps-overview-map.min.js"></script>
     <script src="~/azure-maps-animations.min.js"></script>
     <script src="~/azure-maps-geolocation-control.min.js"></script>
     <script src="~/azure-maps-html-marker-layer.min.js"></script>
+    <script src="~/azure-maps-fullscreen-control.min.js"></script>
     <script src="_content/AzureMapsControl.Components/azure-maps-control.js"></script>
     <script src="_framework/blazor.server.js"></script>
     <script type="text/javascript">
@@ -51,4 +59,5 @@
         };
     </script>
 </body>
+
 </html>

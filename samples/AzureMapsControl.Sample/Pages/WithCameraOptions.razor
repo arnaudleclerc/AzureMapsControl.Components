@@ -2,7 +2,7 @@
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
-          CameraOptions="new CameraOptions { Center= new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534), Zoom= 8.5, MinZoom = 3, MaxZoom = 12.5 }"
+          CameraOptions="new CameraOptions { Bounds = new Components.Atlas.BoundingBox(-9, 38, 38, -9), Zoom= 8.5, MinZoom = 3, MaxZoom = 12.5 }"
           StyleOptions="StyleOptions"
             EventActivationFlags="MapEventActivationFlags
                                 .None()

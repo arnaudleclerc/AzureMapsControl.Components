@@ -74,6 +74,20 @@
         GeolocationControl_SetOptionsAsync = 9002,
         GeolocationControl_AddEventsAsync = 9003,
         GeolocationService_IsGeolocationSupportedAsync = 9100,
+        FullScreenService_IsFullScreenSupportedAsync = 10000,
+        FullScreenControl_DisposeAsync = 10100,
+        FullScreenControl_SetOptionsAsync = 10101,
+        FullScreenControl_IsFullScreenAsync = 10102,
+        FullScreenControl_AddEventsAsync = 10103,
+        IndoorService_CreateIndoorManagerAsync = 11000,
+        IndoorManager_InitializeAsync = 11100,
+        IndoorManager_DisposeAsync = 11101,
+        IndoorManager_GetCurrentFacilityAsync = 11102,
+        IndoorManager_GetOptionsAsync = 11103,
+        IndoorManager_GetStyleDefinitionAsync = 11104,
+        IndoorManager_SetDynamicStylingAsync = 11105,
+        IndoorManager_SetFacilityAsync = 11106,
+        IndoorManager_SetOptionsAsync = 11107,
     }
 
     internal static class Extensions

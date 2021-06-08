@@ -189,21 +189,39 @@
             //Following : https://github.com/Azure-Samples/azure-maps-overview-map/issues/1
             await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddControls.ToCoreNamespace(), Controls?.OrderBy(control => control.Order));
 
-            var overviewMapControl = controls.OfType<OverviewMapControl>().FirstOrDefault();
-            if (overviewMapControl is not null)
+            var overviewMapControls = controls.OfType<OverviewMapControl>();
+            if (overviewMapControls.Any())
             {
-                overviewMapControl.Logger = _logger;
-                overviewMapControl.JsRuntime = _jsRuntime;
+                foreach (var control in overviewMapControls)
+                {
+                    control.Logger = _logger;
+                    control.JsRuntime = _jsRuntime;
+                }
             }
 
-            var geolocationControl = controls.OfType<GeolocationControl>().FirstOrDefault();
-            if (geolocationControl is not null)
+            var geolocationControls = controls.OfType<GeolocationControl>();
+            if (geolocationControls.Any())
             {
-                geolocationControl.Logger = _logger;
-                geolocationControl.JsRuntime = _jsRuntime;
+                foreach (var control in geolocationControls)
+                {
+                    control.Logger = _logger;
+                    control.JsRuntime = _jsRuntime;
 
-                geolocationControl.OnDisposed += () => _controls.Remove(geolocationControl);
-                await geolocationControl.AddEventsAsync();
+                    control.OnDisposed += () => _controls.Remove(control);
+                    await control.AddEventsAsync();
+                }
+            }
+            var fullscreenControls = controls.OfType<FullScreenControl>();
+            if (fullscreenControls.Any())
+            {
+                foreach (var control in fullscreenControls)
+                {
+                    control.Logger = _logger;
+                    control.JsRuntime = _jsRuntime;
+
+                    control.OnDisposed += () => _controls.Remove(control);
+                    await control.AddEventsAsync();
+                }
             }
         }
 

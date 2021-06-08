@@ -9,9 +9,10 @@
     [ExcludeFromCodeCoverage]
     public abstract class Feature
     {
-        [JsonConverter(typeof(StringConverter))]
+        [JsonConverter(typeof(FeatureIdConverter))]
         public string Id { get; set; }
 
+        [JsonConverter(typeof(FeaturePropertiesConverter))]
         public IDictionary<string, object> Properties { get; set; }
         public BoundingBox BBox { get; set; }
 
@@ -30,8 +31,7 @@
 
         public TGeometry Geometry
         {
-            get 
-            {
+            get {
                 if (_geometry != null && _geometry.Id != Id)
                 {
                     _geometry.Id = Id;
@@ -55,7 +55,7 @@
         public Feature(string id, TGeometry geometry, IDictionary<string, object> properties) : base(id, properties) => Geometry = geometry;
     }
 
-    internal sealed class StringConverter : JsonConverter<string>
+    internal sealed class FeatureIdConverter : JsonConverter<string>
     {
         public override string Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
@@ -69,5 +69,28 @@
         }
 
         public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options) => writer.WriteStringValue(value);
+    }
+
+    internal sealed class FeaturePropertiesConverter : JsonConverter<IDictionary<string, object>>
+    {
+        public override IDictionary<string, object> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => JsonSerializer.Deserialize<Dictionary<string, object>>(ref reader, options);
+        public override void Write(Utf8JsonWriter writer, IDictionary<string, object> value, JsonSerializerOptions options)
+        {
+            writer.WriteStartObject();
+            foreach (var kvp in value)
+            {
+                writer.WritePropertyName(kvp.Key);
+                if (kvp.Value.GetType() == typeof(DateTime) ||
+                    (kvp.Value.GetType() == typeof(string) && DateTime.TryParse(kvp.Value.ToString(), out _)))
+                {
+                    writer.WriteStringValue($"azureMapsControl.datetime:{kvp.Value}");
+                }
+                else
+                {
+                    JsonSerializer.Serialize(writer, kvp.Value);
+                }
+            }
+            writer.WriteEndObject();
+        }
     }
 }

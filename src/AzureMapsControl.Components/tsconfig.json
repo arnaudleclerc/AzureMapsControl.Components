@@ -36,6 +36,12 @@
       ],
       "azure-maps-html-marker-layer": [
         "typings/HtmlMarkerLayer"
+      ],
+      "azure-maps-control-fullscreen": [
+        "typings/FullScreenControl"
+      ],
+      "azure-maps-indoor": [
+        "typings/Indoor"
       ]
     }
   },

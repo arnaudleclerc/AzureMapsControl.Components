@@ -5,7 +5,6 @@
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
-    [JsonConverter(typeof(PitchControlJsonConverter))]
     [ExcludeFromCodeCoverage]
     public sealed class PitchControl : Control<PitchControlOptions>
     {
@@ -17,7 +16,7 @@
 
     internal class PitchControlJsonConverter : JsonConverter<PitchControl>
     {
-        public override PitchControl Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotImplementedException();
+        public override PitchControl Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotSupportedException();
         public override void Write(Utf8JsonWriter writer, PitchControl value, JsonSerializerOptions options) => Write(writer, value);
 
         internal static void Write(Utf8JsonWriter writer, PitchControl value)
@@ -37,7 +36,7 @@
                 {
                     writer.WriteNumber("pitchDegreesDelta", value.Options.PitchDegreesDelta.Value);
                 }
-                if (value.Options.Style is not null)
+                if (value.Options.Style.ToString() != default(ControlStyle).ToString())
                 {
                     writer.WriteString("style", value.Options.Style.ToString());
                 }

@@ -8,7 +8,6 @@
     /// <summary>
     /// A control for changing the rotation of the map.
     /// </summary>
-    [JsonConverter(typeof(CompassControlJsonConverter))]
     [ExcludeFromCodeCoverage]
     public sealed class CompassControl : Control<CompassControlOptions>
     {
@@ -20,7 +19,7 @@
 
     internal class CompassControlJsonConverter : JsonConverter<CompassControl>
     {
-        public override CompassControl Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotImplementedException();
+        public override CompassControl Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotSupportedException();
         public override void Write(Utf8JsonWriter writer, CompassControl value, JsonSerializerOptions options) => Write(writer, value);
 
         internal static void Write(Utf8JsonWriter writer, CompassControl value)
@@ -40,7 +39,7 @@
                 {
                     writer.WriteNumber("rotationDegreesDelta", value.Options.RotationDegreesDelta.Value);
                 }
-                if (value.Options.Style is not null)
+                if (value.Options.Style.ToString() != default(ControlStyle).ToString())
                 {
                     writer.WriteString("style", value.Options.Style.ToString());
                 }

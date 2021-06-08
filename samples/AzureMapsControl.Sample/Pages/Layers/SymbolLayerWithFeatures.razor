@@ -1,0 +1,68 @@
+﻿@page "/Layers/SymbolLayerWithFeatures"
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          CameraOptions="new CameraOptions { Zoom = 16, Center = new Components.Atlas.Position(-122.13284, 47.63699) }"
+          EventActivationFlags="MapEventActivationFlags
+                                .None()
+                                .Enable(MapEventType.Ready, MapEventType.Click)"
+          OnReady="OnMapReady" />
+@code  {
+    public async Task OnMapReady(MapEventArgs eventArgs)
+    {
+        var datasourceId = "datasourceId";
+        var datasource = new AzureMapsControl.Components.Data.DataSource(datasourceId);
+        await eventArgs.Map.AddSourceAsync(datasource);
+
+        var feature = new AzureMapsControl.Components.Atlas.Feature<AzureMapsControl.Components.Atlas.Point>(new AzureMapsControl.Components.Atlas.Point(
+                    new AzureMapsControl.Components.Atlas.Position(-122.13284, 47.63699)
+                ), new Dictionary<string, object> {
+                { "title", "Cafeteria" },
+                { "subtitle", "Building 40"}
+                });
+
+        await datasource.AddAsync(feature);
+
+        var textFieldExpressionJsonString = "[\"format\", [\"get\", \"title\"], {\"text-font\": [\"literal\", [\"StandardFont-Bold\"]], \"font-scale\": 1.25}, \"\\n\", {}, [\"get\", \"subtitle\"], {\"font-scale\": 0.75}]";
+
+        var layer = new AzureMapsControl.Components.Layers.SymbolLayer
+        {
+            Options = new Components.Layers.SymbolLayerOptions
+            {
+                Source = datasourceId,
+                TextOptions = new Components.Layers.TextOptions
+                {
+                    TextField = new Components.Atlas.ExpressionOrString(
+                        System.Text.Json.JsonDocument.Parse(textFieldExpressionJsonString)
+                    )
+                }
+            },
+            EventActivationFlags = Components.Layers.LayerEventActivationFlags.None().Enable(Components.Layers.LayerEventType.Click)
+        };
+
+        layer.OnClick += eventArgs =>
+        {
+            var firstShape = eventArgs.Shapes?.FirstOrDefault();
+            if (firstShape != null)
+            {
+                if(firstShape.Geometry is AzureMapsControl.Components.Atlas.Point point)
+                {
+                    Console.WriteLine(point.Coordinates.Longitude);
+                    Console.WriteLine(point.Coordinates.Latitude);
+                }
+            }
+
+            var firstFeature = eventArgs.Features?.FirstOrDefault();
+            if (firstFeature != null)
+            {
+                if(firstFeature.Geometry is AzureMapsControl.Components.Atlas.Point point)
+                {
+                    Console.WriteLine(point.Coordinates.Longitude);
+                    Console.WriteLine(point.Coordinates.Latitude);
+                }
+            }
+        };
+
+        await eventArgs.Map.AddLayerAsync(layer);
+    }
+}

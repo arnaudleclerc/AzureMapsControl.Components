@@ -39,6 +39,11 @@
     {
         public override Pixel Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
+            if(reader.TokenType == JsonTokenType.None)
+            {
+                reader.Read();
+            }
+
             var pixel = new Pixel();
             if (reader.TokenType == JsonTokenType.StartArray)
             {

@@ -9,6 +9,7 @@
     using AzureMapsControl.Components.Exceptions;
     using AzureMapsControl.Components.Geolocation;
     using AzureMapsControl.Components.Runtime;
+    using AzureMapsControl.Components.Tests.Json;
 
     using Microsoft.JSInterop;
 
@@ -180,6 +181,52 @@
             await control.AddEventsAsync();
 
             _mapJsRuntimeMock.VerifyNoOtherCalls();
+        }
+    }
+
+    public class GeolocationControlJsonConverterTests : JsonConverterTests<GeolocationControl>
+    {
+        public GeolocationControlJsonConverterTests() : base(new GeolocationControlJsonConverter()) { }
+
+        [Fact]
+        public void Should_Write()
+        {
+            var control = new GeolocationControl(new GeolocationControlOptions {
+                CalculateMissingValues = true,
+                MarkerColor = "markerColor",
+                MaxZoom = 1,
+                PositionOptions = new PositionOptions {
+                    EnableHighAccuracy = false,
+                    MaximumAge = 2,
+                    Timeout = 3,
+                },
+                ShowUserLocation = true,
+                TrackUserLocation = false,
+                UpdateMapCamera = true,
+                Style = ControlStyle.Auto
+            }, ControlPosition.BottomLeft);
+
+            var expectedJson = "{"
+                + "\"id\":\"" + control.Id + "\""
+                + ",\"type\":\"" + control.Type + "\""
+                + ",\"position\":\"" + control.Position.ToString() + "\""
+                + ",\"options\":{"
+                + "\"calculateMissingValues\":" + control.Options.CalculateMissingValues.Value
+                + ",\"markerColor\":\"" + control.Options.MarkerColor.ToString() + "\""
+                + ",\"maxZoom\":" + control.Options.MaxZoom.Value
+                + ",\"positionOptions\":{"
+                + "\"enableHighAccuracy\":" + control.Options.PositionOptions.EnableHighAccuracy.Value
+                + ",\"maximumAge\":" + control.Options.PositionOptions.MaximumAge.Value
+                + ",\"timeout\":" + control.Options.PositionOptions.Timeout.Value
+                + "}"
+                + ",\"showUserLocation\":" + control.Options.ShowUserLocation.Value
+                + ",\"style\":\"" + control.Options.Style.ToString() + "\""
+                + ",\"trackUserLocation\":" + control.Options.TrackUserLocation.Value
+                + ",\"updateMapCamera\":" + control.Options.UpdateMapCamera.Value
+                + "}"
+                + "}";
+
+            TestAndAssertWrite(control, expectedJson);
         }
     }
 }
