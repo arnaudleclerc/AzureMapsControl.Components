@@ -23,7 +23,8 @@ export class Indoor {
             levelControl,
             statesetId: options.statesetId,
             theme: options.theme,
-            tilesetId: options.tilesetId
+            tilesetId: options.tilesetId,
+            geography: options.geography
         });
 
         if (events) {
@@ -66,7 +67,8 @@ export class Indoor {
         return {
             statesetId: options.statesetId,
             theme: options.theme,
-            tilesetId: options.tilesetId
+            tilesetId: options.tilesetId,
+            geography: options.geography
         };
     }
 

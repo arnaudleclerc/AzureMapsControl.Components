@@ -20,6 +20,11 @@
         public string StatesetId { get; set; }
 
         /// <summary>
+        /// The geography of the Creator resources.
+        /// </summary>
+        public string Geography { get; set; }
+
+        /// <summary>
         /// The theme for indoor layer styles.
         /// </summary>
         public IndoorLayerTheme Theme { get; set; }
@@ -89,6 +94,7 @@
             {
                 writer.WriteString("theme", value.Theme.ToString());
             }
+            writer.WriteString("geography", value.Geography.ToString());
             writer.WriteString("tilesetId", value.TilesetId);
             writer.WriteEndObject();
         }

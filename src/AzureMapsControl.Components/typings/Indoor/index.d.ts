@@ -288,7 +288,7 @@ declare namespace atlas {
              * The geography of the Creator resource.
              * @default "United States";
              */
-            public geography?: "United States";
+            public geography?: string;
 
             /**
              * A level picker to display as a control for the indoor manager.
