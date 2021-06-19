@@ -7,5 +7,5 @@ export interface IndoorManagerOptions {
     statesetId: string;
     theme: 'auto' | 'dark' | 'light';
     tilesetId: string;
-    geography: string;
+    geography: 'us' | 'eu';
 }

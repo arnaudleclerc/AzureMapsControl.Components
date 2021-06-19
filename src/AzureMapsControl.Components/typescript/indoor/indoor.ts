@@ -17,6 +17,9 @@ export class Indoor {
         if (!options.theme) {
             options.theme = 'auto';
         }
+        if (!options.geography) {
+            options.geography = 'us';
+        }
 
         const map = Core.getMap();
         const indoorManager = new indoor.indoor.IndoorManager(map, {
