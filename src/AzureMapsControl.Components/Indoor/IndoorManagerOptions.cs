@@ -21,6 +21,7 @@
 
         /// <summary>
         /// The geography of the Creator resources.
+        /// Possible values: "us" or "eu"
         /// </summary>
         public string Geography { get; set; }
 
