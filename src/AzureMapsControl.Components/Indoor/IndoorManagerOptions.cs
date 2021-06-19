@@ -40,7 +40,7 @@
     {
         public override IndoorManagerOptions Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            string statesetId = null, tilesetId = null;
+            string statesetId = null, tilesetId = null, geography = null;
             IndoorLayerTheme theme = default;
 
             if (reader.TokenType == JsonTokenType.None)
@@ -69,13 +69,19 @@
                             reader.Read();
                             tilesetId = reader.GetString();
                         }
+                        else if (reader.GetString() == "geography")
+                        {
+                            reader.Read();
+                            geography = reader.GetString();
+                        }
                     }
                 }
 
                 return new IndoorManagerOptions {
                     StatesetId = statesetId,
                     Theme = theme,
-                    TilesetId = tilesetId
+                    TilesetId = tilesetId,
+                    Geography = geography
                 };
             }
 
@@ -95,7 +101,8 @@
             {
                 writer.WriteString("theme", value.Theme.ToString());
             }
-            writer.WriteString("geography", value.Geography);
+
+            writer.WriteString("geography", value.Geography ?? "us");
             writer.WriteString("tilesetId", value.TilesetId);
             writer.WriteEndObject();
         }
