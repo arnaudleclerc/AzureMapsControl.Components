@@ -22,7 +22,8 @@
                 LevelControl = levelControl,
                 StatesetId = "statesetId",
                 Theme = IndoorLayerTheme.Auto,
-                TilesetId = "tilesetId"
+                TilesetId = "tilesetId",
+                Geography = "us"
             };
 
             var expectedJson = "{"
@@ -35,6 +36,7 @@
                 + ",\"statesetId\":\"statesetId\""
                 + ",\"theme\":\"auto\""
                 + ",\"tilesetId\":\"tilesetId\""
+                + ",\"geography\":\"us\""
                 + "}";
 
             TestAndAssertWrite(options, expectedJson);
