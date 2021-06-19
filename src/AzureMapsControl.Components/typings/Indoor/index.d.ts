@@ -286,9 +286,9 @@ declare namespace atlas {
         export class IndoorManagerOptions {
             /**
              * The geography of the Creator resource.
-             * @default "United States";
+             * @default "us";
              */
-            public geography?: string;
+            public geography?: "us" | "eu";
 
             /**
              * A level picker to display as a control for the indoor manager.

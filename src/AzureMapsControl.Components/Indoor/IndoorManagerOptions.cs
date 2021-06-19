@@ -94,7 +94,7 @@
             {
                 writer.WriteString("theme", value.Theme.ToString());
             }
-            writer.WriteString("geography", value.Geography.ToString());
+            writer.WriteString("geography", value.Geography);
             writer.WriteString("tilesetId", value.TilesetId);
             writer.WriteEndObject();
         }
