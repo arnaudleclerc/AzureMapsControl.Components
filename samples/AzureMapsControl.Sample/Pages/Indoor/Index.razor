@@ -25,6 +25,7 @@
 
         var options = new AzureMapsControl.Components.Indoor.IndoorManagerOptions
         {
+            Geography = Configuration["AzureMaps:Geography"],
             LevelControl = levelControl,
             StatesetId = statesetId,
             TilesetId = Configuration["Indoor:TilesetId"]

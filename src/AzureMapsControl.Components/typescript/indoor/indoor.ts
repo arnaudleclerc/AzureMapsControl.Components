@@ -17,13 +17,17 @@ export class Indoor {
         if (!options.theme) {
             options.theme = 'auto';
         }
+        if (!options.geography) {
+            options.geography = 'us';
+        }
 
         const map = Core.getMap();
         const indoorManager = new indoor.indoor.IndoorManager(map, {
             levelControl,
             statesetId: options.statesetId,
             theme: options.theme,
-            tilesetId: options.tilesetId
+            tilesetId: options.tilesetId,
+            geography: options.geography
         });
 
         if (events) {
@@ -66,7 +70,8 @@ export class Indoor {
         return {
             statesetId: options.statesetId,
             theme: options.theme,
-            tilesetId: options.tilesetId
+            tilesetId: options.tilesetId,
+            geography: options.geography
         };
     }
 

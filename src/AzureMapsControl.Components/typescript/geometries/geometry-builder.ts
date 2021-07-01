@@ -14,7 +14,8 @@ export class GeometryBuilder {
     public static buildShape(shape: Shape): azmaps.Shape {
         return new azmaps.Shape(
             this.buildGeometry(shape.geometry),
-            shape.id
+            shape.id,
+            Core.formatProperties(shape.properties)
         );
     }
 
