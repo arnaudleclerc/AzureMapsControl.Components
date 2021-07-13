@@ -504,18 +504,8 @@ export class Core {
         });
     }
 
-    public static getCamera(): azmaps.CameraOptions {
-        const camera = this._map.getCamera();
-        return <azmaps.CameraOptions>{
-            bearing: camera.bearing,
-            center: camera.center,
-            centerOffset: camera.centerOffset,
-            maxBounds: camera.maxBounds,
-            maxZoom: camera.maxZoom,
-            minZoom: camera.minZoom,
-            pitch: camera.pitch,
-            zoom: camera.zoom
-        };
+    public static getCamera(): azmaps.CameraOptions & azmaps.CameraBoundsOptions {
+        return this._map.getCamera();
     }
 
     public static getStyle(): azmaps.StyleOptions {
