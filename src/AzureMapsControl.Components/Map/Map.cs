@@ -693,9 +693,10 @@
         }
 
         /// <summary>
-        /// Update the camera options of the map
+        /// Update the camera options of the map.
+        /// If this method updates the Bounds and the Center properties, the Bounds will be used to move the map and the Center and ZoomLevel will be ignored.
         /// </summary>
-        /// <param name="configure">Action setting the camera options</param>
+        /// <param name="configure">Action setting the camera options.</param>
         /// <returns></returns>
         public async ValueTask SetCameraOptionsAsync(Action<CameraOptions> configure)
         {
@@ -703,7 +704,26 @@
             {
                 CameraOptions = new CameraOptions();
             }
+
+            //Before calling the configure action, UpdatedBounds and UpdatedCenter should be set to false.
+            //This allows us to identify if there was any change on one of this properties.
+            CameraOptions.UpdatedBounds = false;
+            CameraOptions.UpdatedCenter = false;
+
             configure.Invoke(CameraOptions);
+
+            //If the bounds were updated, we set the center to null, so the bounds are used to move the map.
+            //If the center has been updated and if the bounds did not change, the center will be used to move the map.s
+
+            if (CameraOptions.UpdatedBounds)
+            {
+                CameraOptions.Center = null;
+            }
+            else if (CameraOptions.UpdatedCenter)
+            {
+                CameraOptions.Bounds = null;
+            }
+
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_SetCameraOptionsAsync, "Setting camera options");
             await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCameraOptions.ToCoreNamespace(), CameraOptions);
         }

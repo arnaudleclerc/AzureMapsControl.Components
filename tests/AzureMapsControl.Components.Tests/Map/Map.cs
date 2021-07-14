@@ -1011,6 +1011,50 @@
         }
 
         [Fact]
+        public async void Should_UpdateCameraOptions_WithCenter_Async()
+        {
+            var center = new Position(10, 10);
+            var initialCameraOptions = new CameraOptions {
+                Duration = 10
+            };
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object) {
+                CameraOptions = initialCameraOptions
+            };
+
+            await map.SetCameraOptionsAsync(options => options.Center = center);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCameraOptions.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                (parameters[0] as CameraOptions).Duration == 10 && (parameters[0] as CameraOptions).Center.Longitude == 10 && (parameters[0] as CameraOptions).Center.Latitude == 10
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_UpdateCameraOptions_WithBounds_Async()
+        {
+            var bounds = new BoundingBox(-10, 10, 10, -10);
+            var initialCameraOptions = new CameraOptions {
+                Duration = 10
+            };
+            var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object) {
+                CameraOptions = initialCameraOptions
+            };
+
+            await map.SetCameraOptionsAsync(options => {
+                options.Bounds = bounds;
+                options.Center = new Position(0, 0);
+            });
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCameraOptions.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                (parameters[0] as CameraOptions).Duration == 10 && (parameters[0] as CameraOptions).Center == null && (parameters[0] as CameraOptions).Bounds.West == -10
+                && (parameters[0] as CameraOptions).Bounds.South == 10
+                && (parameters[0] as CameraOptions).Bounds.East == 10
+                && (parameters[0] as CameraOptions).Bounds.North == -10
+            )), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
         public async void Should_UpdateCameraOptions_NoCameraOptionsDefined_Async()
         {
             var center = new Position(10, 10);
