@@ -28,6 +28,7 @@
     public delegate void MapLayerEvent(MapLayerEventArgs eventArgs);
     public delegate void MapTouchEvent(MapTouchEventArgs eventArgs);
     public delegate void MapMessageEvent(MapMessageEventArgs eventArgs);
+    public delegate void MapSourceEvent(MapSourceEventArgs eventArgs);
 
     public delegate void DrawingToolbarModeEvent(DrawingToolbarModeEventArgs eventArgs);
     public delegate void DrawingToolbarEvent(DrawingToolbarEventArgs eventArgs);
@@ -113,9 +114,9 @@
         public event MapEvent OnRotate;
         public event MapEvent OnRotateEnd;
         public event MapEvent OnRotateStart;
-        public event MapDataEvent OnSourceAdded;
+        public event MapSourceEvent OnSourceAdded;
         public event MapDataEvent OnSourceData;
-        public event MapDataEvent OnSourceRemoved;
+        public event MapSourceEvent OnSourceRemoved;
         public event MapStyleDataEvent OnStyleData;
         public event MapMessageEvent OnStyleImageMissing;
         public event MapEvent OnTokenAcquired;
@@ -918,13 +919,13 @@
                     OnRotateStart?.Invoke(new MapEventArgs(this, eventArgs.Type));
                     break;
                 case "sourceadded":
-                    OnSourceAdded?.Invoke(new MapDataEventArgs(this, eventArgs));
+                    OnSourceAdded?.Invoke(new MapSourceEventArgs(this, eventArgs));
                     break;
                 case "sourcedata":
                     OnSourceData?.Invoke(new MapDataEventArgs(this, eventArgs));
                     break;
                 case "sourceremoved":
-                    OnSourceRemoved?.Invoke(new MapDataEventArgs(this, eventArgs));
+                    OnSourceRemoved?.Invoke(new MapSourceEventArgs(this, eventArgs));
                     break;
                 case "styledata":
                     OnStyleData?.Invoke(new MapStyleDataEventArgs(this, eventArgs));

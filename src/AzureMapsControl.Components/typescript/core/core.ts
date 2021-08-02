@@ -13,7 +13,7 @@ import { MapImageTemplate } from './map-image-template';
 import { HtmlMarkerEventArgs, toMarkerEvent } from '../html-markers/html-marker-event-args';
 import { HtmlMarkerDefinition } from '../html-markers/html-marker-options';
 import { MapEventArgs } from '../map/map-event-args';
-import { mapDataEvents, mapEvents, mapLayerEvents, mapMouseEvents, mapStringEvents, mapTouchEvents } from '../map/map-events';
+import { mapDataEvents, mapEvents, mapLayerEvents, mapMouseEvents, mapSourceEvents, mapStringEvents, mapTouchEvents } from '../map/map-events';
 import { Feature, Shape } from '../geometries/geometry';
 import { DataSourceEventArgs } from '../sources/datasource-event-args';
 
@@ -254,6 +254,17 @@ export class Core {
                     eventHelper.invokeMethodAsync('NotifyEventAsync', {
                         type: value,
                         id: layer.getId()
+                    });
+                });
+            });
+
+            mapSourceEvents.filter(value => enabledEvents.includes(value)).forEach(value => {
+                map.events.add(value as any, (source: azmaps.source.Source) => {
+                    eventHelper.invokeMethodAsync('NotifyEventAsync', {
+                        type: value,
+                        source: {
+                            id: source.getId()
+                        }
                     });
                 });
             });
