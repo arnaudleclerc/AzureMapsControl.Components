@@ -6,10 +6,13 @@
           StyleOptions="StyleOptions"
           EventActivationFlags="MapEventActivationFlags
                                 .None()
-                                .Enable(MapEventType.Ready)"
-          OnReady="OnMapReady" />
+                                .Enable(MapEventType.Ready, MapEventType.SourceAdded)"
+          OnReady="OnMapReady"
+          OnSourceAdded="OnDatasourceAdded"/>
 
 @code  {
+
+    private readonly string _sourceId = "sourceId";
 
     public StyleOptions StyleOptions = new StyleOptions
     {
@@ -18,8 +21,7 @@
 
     public async Task OnMapReady(MapEventArgs events)
     {
-        var sourceId = "dataSourceId";
-        var source = new AzureMapsControl.Components.Data.VectorTileSource(sourceId)
+        var source = new AzureMapsControl.Components.Data.VectorTileSource(_sourceId)
         {
             Options = new Components.Data.VectorTileSourceOptions
             {
@@ -31,12 +33,15 @@
         };
 
         await events.Map.AddSourceAsync(source);
+    }
 
+    public async Task OnDatasourceAdded(MapSourceEventArgs eventArgs)
+    {
         var layer = new AzureMapsControl.Components.Layers.LineLayer
         {
             Options = new Components.Layers.LineLayerOptions
             {
-                Source = sourceId,
+                Source = _sourceId,
                 SourceLayer = "Traffic flow",
                 StrokeColor = new Components.Atlas.ExpressionOrString(
                     new[] {
@@ -72,6 +77,6 @@
             }
         };
 
-        await events.Map.AddLayerAsync(layer, "labels");
+        await eventArgs.Map.AddLayerAsync(layer, "labels");
     }
 }

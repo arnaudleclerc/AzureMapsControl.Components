@@ -6,23 +6,28 @@
           StyleOptions="StyleOptions"
           EventActivationFlags="MapEventActivationFlags
                                 .None()
-                                .Enable(MapEventType.Ready)"
-          OnReady="OnMapReady" />
+                                .Enable(MapEventType.Ready, MapEventType.SourceAdded)"
+          OnReady="OnMapReady"
+          OnSourceAdded="OnDatasourceAdded"/>
 
 @code  {
+
+    private readonly string _datasourceId = "heatmapDataSource";
 
     public StyleOptions StyleOptions = new StyleOptions
     {
         Style = MapStyle.GrayscaleDark
     };
 
-    public async Task OnMapReady(MapEventArgs events)
+    public async Task OnMapReady(MapEventArgs eventArgs)
     {
-        const string dataSourceId = "heatmapDataSource";
-        var dataSource = new AzureMapsControl.Components.Data.DataSource(dataSourceId);
-        await events.Map.AddSourceAsync(dataSource);
+        var dataSource = new AzureMapsControl.Components.Data.DataSource(_datasourceId);
+        await eventArgs.Map.AddSourceAsync(dataSource);
         await dataSource.ImportDataFromUrlAsync("https://services1.arcgis.com/0MSEUqKaxRlEPj5g/arcgis/rest/services/ncov_cases/FeatureServer/1/query?where=1%3D1&f=geojson&outFields=*");
+    }
 
+    public async Task OnDatasourceAdded(MapSourceEventArgs eventArgs)
+    {
         var weightExpressionJsonString = "[\"get\", \"Confirmed\"]";
 
         var layer = new AzureMapsControl.Components.Layers.HeatmapLayer
@@ -31,10 +36,10 @@
             {
                 Weight = new Components.Atlas.ExpressionOrNumber(System.Text.Json.JsonDocument.Parse(weightExpressionJsonString)),
                 Radius = new Components.Atlas.ExpressionOrNumber(20),
-                Source = dataSourceId
+                Source = _datasourceId
             }
         };
 
-        await events.Map.AddLayerAsync(layer);
+        await eventArgs.Map.AddLayerAsync(layer);
     }
 }

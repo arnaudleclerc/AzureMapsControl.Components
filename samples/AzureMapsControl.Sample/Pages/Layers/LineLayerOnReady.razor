@@ -6,27 +6,30 @@
           StyleOptions="StyleOptions"
           EventActivationFlags="MapEventActivationFlags
                                 .None()
-                                .Enable(MapEventType.Ready)"
-          OnReady="OnMapReady" />
+                                .Enable(MapEventType.Ready, MapEventType.SourceAdded)"
+          OnReady="OnMapReady"
+          OnSourceAdded="OnDatasourceAdded"/>
 
 @code  {
+
+    private readonly string _dataSourceId = "dataSource";
+
 
     public StyleOptions StyleOptions = new StyleOptions
     {
         Style = MapStyle.GrayscaleDark
     };
 
-    public async Task OnMapReady(MapEventArgs events)
+    public async Task OnMapReady(MapEventArgs eventArgs)
     {
-        const string dataSourceId = "dataSource";
-        var dataSource = new AzureMapsControl.Components.Data.DataSource(dataSourceId)
+        var dataSource = new AzureMapsControl.Components.Data.DataSource(_dataSourceId)
         {
             Options = new Components.Data.DataSourceOptions
             {
                 LineMetrics = true
             }
         };
-        await events.Map.AddSourceAsync(dataSource);
+        await eventArgs.Map.AddSourceAsync(dataSource);
 
         await dataSource.AddAsync(new AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.LineString>(
         new AzureMapsControl.Components.Atlas.LineString(new[] {
@@ -46,6 +49,7 @@
         {
             { "Color", "#00FF00" }
         }));
+
         await dataSource.AddAsync(new AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.LineString>(
         new AzureMapsControl.Components.Atlas.LineString(new[] {
             new AzureMapsControl.Components.Atlas.Position(11.585458, 48.145596),
@@ -63,12 +67,15 @@
         {
             { "Color", "#FF0000" }
         }));
+    }
 
+    public async Task OnDatasourceAdded(MapSourceEventArgs eventArgs)
+    {
         var layer = new AzureMapsControl.Components.Layers.LineLayer
         {
             Options = new AzureMapsControl.Components.Layers.LineLayerOptions
             {
-                Source = dataSourceId,
+                Source = _dataSourceId,
                 StrokeWidth = new AzureMapsControl.Components.Atlas.ExpressionOrNumber(6),
                 StrokeColor = new AzureMapsControl.Components.Atlas.ExpressionOrString(
                     new AzureMapsControl.Components.Atlas.Expression[]
@@ -79,6 +86,6 @@
             }
         };
 
-        await events.Map.AddLayerAsync(layer);
+        await eventArgs.Map.AddLayerAsync(layer);
     }
 }

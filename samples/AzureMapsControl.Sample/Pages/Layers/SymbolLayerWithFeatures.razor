@@ -5,13 +5,16 @@
           CameraOptions="new CameraOptions { Zoom = 16, Center = new Components.Atlas.Position(-122.13284, 47.63699) }"
           EventActivationFlags="MapEventActivationFlags
                                 .None()
-                                .Enable(MapEventType.Ready, MapEventType.Click)"
-          OnReady="OnMapReady" />
+                                .Enable(MapEventType.Ready, MapEventType.Click, MapEventType.SourceAdded)"
+          OnReady="OnMapReady"
+          OnSourceAdded="OnDatasourceAdded"/>
 @code  {
+
+    private readonly string _datasourceId = "datasourceId";
+
     public async Task OnMapReady(MapEventArgs eventArgs)
     {
-        var datasourceId = "datasourceId";
-        var datasource = new AzureMapsControl.Components.Data.DataSource(datasourceId);
+        var datasource = new AzureMapsControl.Components.Data.DataSource(_datasourceId);
         await eventArgs.Map.AddSourceAsync(datasource);
 
         var feature = new AzureMapsControl.Components.Atlas.Feature<AzureMapsControl.Components.Atlas.Point>(new AzureMapsControl.Components.Atlas.Point(
@@ -22,14 +25,17 @@
                 });
 
         await datasource.AddAsync(feature);
+    }
 
+    public async Task OnDatasourceAdded(MapSourceEventArgs sourceEventArgs)
+    {
         var textFieldExpressionJsonString = "[\"format\", [\"get\", \"title\"], {\"text-font\": [\"literal\", [\"StandardFont-Bold\"]], \"font-scale\": 1.25}, \"\\n\", {}, [\"get\", \"subtitle\"], {\"font-scale\": 0.75}]";
 
         var layer = new AzureMapsControl.Components.Layers.SymbolLayer
         {
             Options = new Components.Layers.SymbolLayerOptions
             {
-                Source = datasourceId,
+                Source = _datasourceId,
                 TextOptions = new Components.Layers.TextOptions
                 {
                     TextField = new Components.Atlas.ExpressionOrString(
@@ -63,6 +69,6 @@
             }
         };
 
-        await eventArgs.Map.AddLayerAsync(layer);
+        await sourceEventArgs.Map.AddLayerAsync(layer);
     }
 }
