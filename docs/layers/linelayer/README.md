@@ -5,7 +5,7 @@ A line layer can be used to render `LineString` and `MultiLineString` features a
 ![Line Layer](../../assets/linelayer.png)
 
 ```
-@page "/LineLayerOnReady"
+@page "/Layers/LineLayerOnReady"
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
@@ -13,27 +13,30 @@ A line layer can be used to render `LineString` and `MultiLineString` features a
           StyleOptions="StyleOptions"
           EventActivationFlags="MapEventActivationFlags
                                 .None()
-                                .Enable(MapEventType.Ready)"
-          OnReady="OnMapReady" />
+                                .Enable(MapEventType.Ready, MapEventType.SourceAdded)"
+          OnReady="OnMapReady"
+          OnSourceAdded="OnDatasourceAdded"/>
 
 @code  {
+
+    private readonly string _dataSourceId = "dataSource";
+
 
     public StyleOptions StyleOptions = new StyleOptions
     {
         Style = MapStyle.GrayscaleDark
     };
 
-    public async Task OnMapReady(MapEventArgs events)
+    public async Task OnMapReady(MapEventArgs eventArgs)
     {
-        const string dataSourceId = "dataSource";
-        var dataSource = new AzureMapsControl.Components.Data.DataSource(dataSourceId)
+        var dataSource = new AzureMapsControl.Components.Data.DataSource(_dataSourceId)
         {
             Options = new Components.Data.DataSourceOptions
             {
                 LineMetrics = true
             }
         };
-        await events.Map.AddSourceAsync(dataSource);
+        await eventArgs.Map.AddSourceAsync(dataSource);
 
         await dataSource.AddAsync(new AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.LineString>(
         new AzureMapsControl.Components.Atlas.LineString(new[] {
@@ -47,7 +50,15 @@ A line layer can be used to render `LineString` and `MultiLineString` features a
             new AzureMapsControl.Components.Atlas.Position(11.581155, 48.141852),
             new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534),
             new AzureMapsControl.Components.Atlas.Position(11.583355, 48.143896),
-            new AzureMapsControl.Components.Atlas.Position(11.583662, 48.144258),
+            new AzureMapsControl.Components.Atlas.Position(11.583662, 48.144258)
+        }),
+        new Dictionary<string, object>()
+        {
+            { "Color", "#00FF00" }
+        }));
+
+        await dataSource.AddAsync(new AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.LineString>(
+        new AzureMapsControl.Components.Atlas.LineString(new[] {
             new AzureMapsControl.Components.Atlas.Position(11.585458, 48.145596),
             new AzureMapsControl.Components.Atlas.Position(11.587910, 48.145779),
             new AzureMapsControl.Components.Atlas.Position(11.589632, 48.146608),
@@ -58,45 +69,31 @@ A line layer can be used to render `LineString` and `MultiLineString` features a
             new AzureMapsControl.Components.Atlas.Position(11.593594, 48.151084),
             new AzureMapsControl.Components.Atlas.Position(11.594028, 48.151803),
             new AzureMapsControl.Components.Atlas.Position(11.592281, 48.152074)
-        })));
+        }),
+        new Dictionary<string, object>()
+        {
+            { "Color", "#FF0000" }
+        }));
+    }
 
+    public async Task OnDatasourceAdded(MapSourceEventArgs eventArgs)
+    {
         var layer = new AzureMapsControl.Components.Layers.LineLayer
         {
-            Options = new Components.Layers.LineLayerOptions
+            Options = new AzureMapsControl.Components.Layers.LineLayerOptions
             {
-                Source = dataSourceId,
-                StrokeWidth = new Components.Atlas.ExpressionOrNumber(6),
-                StrokeGradient = new Components.Atlas.Expression(
+                Source = _dataSourceId,
+                StrokeWidth = new AzureMapsControl.Components.Atlas.ExpressionOrNumber(6),
+                StrokeColor = new AzureMapsControl.Components.Atlas.ExpressionOrString(
                     new AzureMapsControl.Components.Atlas.Expression[]
                     {
-                        new AzureMapsControl.Components.Atlas.ExpressionOrString("interpolate"),
-                        new Components.Atlas.Expression(
-                            new AzureMapsControl.Components.Atlas.Expression[]
-                            {
-                                new AzureMapsControl.Components.Atlas.ExpressionOrString("linear")
-                            }),
-                        new Components.Atlas.Expression(
-                            new AzureMapsControl.Components.Atlas.Expression[]
-                            {
-                                new AzureMapsControl.Components.Atlas.ExpressionOrString("line-progress")
-                            }),
-                        new AzureMapsControl.Components.Atlas.ExpressionOrNumber(0),
-                        new AzureMapsControl.Components.Atlas.ExpressionOrString("blue"),
-                        new AzureMapsControl.Components.Atlas.ExpressionOrNumber(0.1),
-                        new AzureMapsControl.Components.Atlas.ExpressionOrString("royalBlue"),
-                        new AzureMapsControl.Components.Atlas.ExpressionOrNumber(0.3),
-                        new AzureMapsControl.Components.Atlas.ExpressionOrString("cyan"),
-                        new AzureMapsControl.Components.Atlas.ExpressionOrNumber(0.5),
-                        new AzureMapsControl.Components.Atlas.ExpressionOrString("lime"),
-                        new AzureMapsControl.Components.Atlas.ExpressionOrNumber(0.7),
-                        new AzureMapsControl.Components.Atlas.ExpressionOrString("yellow"),
-                        new AzureMapsControl.Components.Atlas.ExpressionOrNumber(1),
-                        new AzureMapsControl.Components.Atlas.ExpressionOrString("red"),
+                        new AzureMapsControl.Components.Atlas.ExpressionOrString("get"),
+                        new AzureMapsControl.Components.Atlas.ExpressionOrString("Color")
                     })
             }
         };
 
-        await events.Map.AddLayerAsync(layer);
+        await eventArgs.Map.AddLayerAsync(layer);
     }
 }
 ```

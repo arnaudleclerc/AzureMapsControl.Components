@@ -6,12 +6,12 @@
     "lint": "eslint . --ext .ts"
   },
   "private": true,
-  "dependencies": {},
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.15.1",
     "@typescript-eslint/parser": "^4.15.1",
-    "azure-maps-control": "^2.0.31",
+    "azure-maps-control": "^2.1.2",
     "azure-maps-drawing-tools": "^0.1.6",
+    "azure-maps-indoor": "^0.1.2",
     "eslint": "^7.20.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsdoc": "^32.0.2",

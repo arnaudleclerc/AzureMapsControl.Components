@@ -7,23 +7,28 @@ Symbol layers are rendered using WebGL. Use a symbol layer to render large colle
 ![Symbol Layer](../../assets/symbollayer.png)
 
 ```
-@page "/SymbolLayerOnReady"
+@page "/Layers/SymbolLayerOnReady"
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
           CameraOptions="new CameraOptions { Zoom = 2 }"
           EventActivationFlags="MapEventActivationFlags
                                 .None()
-                                .Enable(MapEventType.Ready)"
-          OnReady="OnMapReady" />
+                                .Enable(MapEventType.Ready, MapEventType.SourceAdded)"
+          OnReady="OnMapReady"
+          OnSourceAdded="OnDatasourceAdded"/>
 
 @code  {
+
+    private readonly string _blueDatasourceId = "blueDatasource";
+    private readonly string _redDatasourceId = "redDatasource";
+
     public async Task OnMapReady(MapEventArgs events)
     {
-        var blueDataSource = new AzureMapsControl.Components.Data.DataSource("blueDataSource");
+        var blueDataSource = new AzureMapsControl.Components.Data.DataSource(_blueDatasourceId);
         await events.Map.AddSourceAsync(blueDataSource);
 
-        var redDataSource = new AzureMapsControl.Components.Data.DataSource("redDataSource");
+        var redDataSource = new AzureMapsControl.Components.Data.DataSource(_redDatasourceId);
         await events.Map.AddSourceAsync(redDataSource);
 
         var bluePoints = new List<AzureMapsControl.Components.Atlas.Shape>();
@@ -37,29 +42,27 @@ Symbol layers are rendered using WebGL. Use a symbol layer to render large colle
 
         await blueDataSource.AddAsync(bluePoints);
         await redDataSource.AddAsync(redPoints);
+    }
 
-        var blueLayer = new AzureMapsControl.Components.Layers.SymbolLayer
+    public async Task OnDatasourceAdded(MapSourceEventArgs eventArgs)
+    {
+        var layer = new AzureMapsControl.Components.Layers.SymbolLayer
         {
             Options = new Components.Layers.SymbolLayerOptions
             {
-                Source = "blueDataSource"
+                Source = eventArgs.Source.Id
             }
         };
 
-        var redLayer = new AzureMapsControl.Components.Layers.SymbolLayer
+        if (eventArgs.Source.Id == _redDatasourceId)
         {
-            Options = new Components.Layers.SymbolLayerOptions
+            layer.Options.IconOptions = new Components.Layers.IconOptions
             {
-                Source = "redDataSource",
-                IconOptions = new Components.Layers.IconOptions
-                {
-                    Image = new Components.Atlas.ExpressionOrString("pin-red")
-                }
-            }
-        };
+                Image = new Components.Atlas.ExpressionOrString("pin-red")
+            };
+        }
 
-        await events.Map.AddLayerAsync(blueLayer);
-        await events.Map.AddLayerAsync(redLayer);
+        await eventArgs.Map.AddLayerAsync(layer);
     }
 }
 ```

@@ -24,7 +24,7 @@
 
     internal class HyperLinkFormatOptionsTargetJsonConverter : JsonConverter<HyperLinkFormatOptionsTarget>
     {
-        public override HyperLinkFormatOptionsTarget Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotImplementedException();
+        public override HyperLinkFormatOptionsTarget Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotSupportedException();
         public override void Write(Utf8JsonWriter writer, HyperLinkFormatOptionsTarget value, JsonSerializerOptions options) => writer.WriteStringValue(value.ToString());
     }
 }

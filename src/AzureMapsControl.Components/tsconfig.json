@@ -33,6 +33,12 @@
       ],
       "azure-maps-control-geolocation": [
         "typings/GeolocationControl"
+      ],
+      "azure-maps-control-fullscreen": [
+        "typings/FullScreenControl"
+      ],
+      "azure-maps-indoor": [
+        "typings/Indoor"
       ]
     }
   },

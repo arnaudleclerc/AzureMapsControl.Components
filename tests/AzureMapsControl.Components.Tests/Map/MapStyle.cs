@@ -16,6 +16,7 @@
         [InlineData("night")]
         [InlineData("road_shaded_relief")]
         [InlineData("high_contrast_dark")]
+        [InlineData("road")]
         public static void Should_ReturnMapStyleFromString(string mapStyleType)
         {
             var mapStyle = MapStyle.FromString(mapStyleType);

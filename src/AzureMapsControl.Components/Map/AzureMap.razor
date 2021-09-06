@@ -288,7 +288,7 @@
     /// Fired when a DataSource or VectorTileSource is added to the map.
     /// </summary>
     [Parameter]
-    public EventCallback<MapDataEventArgs> OnSourceAdded { get; set; }
+    public EventCallback<MapSourceEventArgs> OnSourceAdded { get; set; }
 
     /// <summary>
     /// Fired when one of the map's sources loads or changes, including if a tile belonging to a source loads or changes.
@@ -300,7 +300,7 @@
     /// Fired when a DataSource or VectorTileSource is removed from the map.
     /// </summary>
     [Parameter]
-    public EventCallback<MapDataEventArgs> OnSourceRemoved { get; set; }
+    public EventCallback<MapSourceEventArgs> OnSourceRemoved { get; set; }
 
     /// <summary>
     /// Fired when the map's style loads or changes.
@@ -687,7 +687,7 @@
                     break;
                 case "sourceadded":
                     Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_MapEventReceivedAsync, "Emitting OnSourceAdded");
-                    await OnSourceAdded.InvokeAsync(new MapDataEventArgs(MapService.Map, mapEvent));
+                    await OnSourceAdded.InvokeAsync(new MapSourceEventArgs(MapService.Map, mapEvent));
                     break;
                 case "sourcedata":
                     Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_MapEventReceivedAsync, "Emitting OnSourceData");
@@ -695,7 +695,7 @@
                     break;
                 case "sourceremoved":
                     Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_MapEventReceivedAsync, "Emitting OnSourceRemoved");
-                    await OnSourceRemoved.InvokeAsync(new MapDataEventArgs(MapService.Map, mapEvent));
+                    await OnSourceRemoved.InvokeAsync(new MapSourceEventArgs(MapService.Map, mapEvent));
                     break;
                 case "styledata":
                     Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_MapEventReceivedAsync, "Emitting OnStyleData");

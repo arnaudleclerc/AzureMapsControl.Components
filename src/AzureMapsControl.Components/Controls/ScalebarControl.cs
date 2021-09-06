@@ -5,7 +5,6 @@
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
-    [JsonConverter(typeof(ScaleBarControlJsonConverter))]
     [ExcludeFromCodeCoverage]
     public sealed class ScaleBarControl : Control<ScaleBarControlOptions>
     {
@@ -16,7 +15,7 @@
 
     internal class ScaleBarControlJsonConverter : JsonConverter<ScaleBarControl>
     {
-        public override ScaleBarControl Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotImplementedException();
+        public override ScaleBarControl Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotSupportedException();
         public override void Write(Utf8JsonWriter writer, ScaleBarControl value, JsonSerializerOptions options) => Write(writer, value);
 
         internal static void Write(Utf8JsonWriter writer, ScaleBarControl value)
@@ -36,7 +35,7 @@
                 {
                     writer.WriteNumber("maxBarLength", value.Options.MaxBarLength.Value);
                 }
-                if (value.Options.Units is not null)
+                if (value.Options.Units.ToString() != default(ScaleBarControlUnits).ToString())
                 {
                     writer.WriteString("units", value.Options.Units.ToString());
                 }

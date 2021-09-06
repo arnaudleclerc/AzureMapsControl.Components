@@ -7,6 +7,21 @@
     [ExcludeFromCodeCoverage]
     public sealed class CameraOptions
     {
+        private BoundingBox _bounds;
+        private Position _center;
+
+        /// <summary>
+        /// Flag indicating if the bounds have been updated.
+        /// If true, the bounds will be used while setting the camera options in favor of the center
+        /// </summary>
+        internal bool UpdatedBounds { get; set; }
+
+        /// <summary>
+        /// Flag indicating if the center has been updated.
+        /// If true and if the bounds have not been updated, the center will be used to set the camera options
+        /// </summary>
+        internal bool UpdatedCenter { get; set; }
+
         /// <summary>
         /// The bearing of the map (rotation).
         /// default: North
@@ -16,12 +31,26 @@
         /// <summary>
         /// The bounds of the map control's camera
         /// </summary>
-        public BoundingBox Bounds { get; set; }
+        public BoundingBox Bounds
+        {
+            get => _bounds;
+            set {
+                _bounds = value;
+                UpdatedBounds = true;
+            }
+        }
 
         /// <summary>
         /// The position to align the center of the map view with
         /// </summary>
-        public Position Center { get; set; }
+        public Position Center
+        {
+            get => _center; 
+            set {
+                _center = value;
+                UpdatedCenter = true;
+            }
+        }
 
         /// <summary>
         /// A pixel offset to apply to the center of the map.

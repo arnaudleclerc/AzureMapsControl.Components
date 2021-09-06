@@ -2,7 +2,15 @@
 
 ![Drawing Toolbar](../assets/drawingtoolbar.png)
 
-A Drawing toolbar can be added to the map by providing the `DrawingToolbarOptions` parameter on the `AzureMap` component.
+A Drawing toolbar can be added to the map by providing the `DrawingToolbarOptions` parameter on the `AzureMap` component. You will need to include the following css and script into your application :
+
+```
+<link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/drawing/0.1/atlas-drawing.min.css" type="text/css" />
+```
+
+```
+<script src="https://atlas.microsoft.com/sdk/javascript/drawing/0.1/atlas-drawing.min.js"></script>
+```
 
 ```
 @page "/DrawingToolbar"
@@ -62,7 +70,7 @@ It can also be added once the map is ready.
 You can specify the events to enable or disable on the `DrawingToolbarOptions` of the toolbar. By default, all events are deactivated. The following events are available : 
 
 | Event | Description |
-| -- | -- | -- |
+| -- | -- |
 | `DrawingChanged` | Fired when any coordinate in a shape has been added or changed. |
 | `DrawingChanging` | Fired when any preview coordinate for a shape is being displayed. For example, this event will fire multiple times as a coordinate is dragged. |
 | `DrawingComplete` | Fired when a shape has finished being drawn or taken out of edit mode. |

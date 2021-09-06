@@ -6,7 +6,7 @@
     /// The layout to display the styles in.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public sealed class StyleControlLayout
+    public struct StyleControlLayout
     {
         private readonly string _layout;
 

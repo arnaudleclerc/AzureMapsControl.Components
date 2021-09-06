@@ -28,6 +28,7 @@
     public delegate void MapLayerEvent(MapLayerEventArgs eventArgs);
     public delegate void MapTouchEvent(MapTouchEventArgs eventArgs);
     public delegate void MapMessageEvent(MapMessageEventArgs eventArgs);
+    public delegate void MapSourceEvent(MapSourceEventArgs eventArgs);
 
     public delegate void DrawingToolbarModeEvent(DrawingToolbarModeEventArgs eventArgs);
     public delegate void DrawingToolbarEvent(DrawingToolbarEventArgs eventArgs);
@@ -113,9 +114,9 @@
         public event MapEvent OnRotate;
         public event MapEvent OnRotateEnd;
         public event MapEvent OnRotateStart;
-        public event MapDataEvent OnSourceAdded;
+        public event MapSourceEvent OnSourceAdded;
         public event MapDataEvent OnSourceData;
-        public event MapDataEvent OnSourceRemoved;
+        public event MapSourceEvent OnSourceRemoved;
         public event MapStyleDataEvent OnStyleData;
         public event MapMessageEvent OnStyleImageMissing;
         public event MapEvent OnTokenAcquired;
@@ -189,21 +190,39 @@
             //Following : https://github.com/Azure-Samples/azure-maps-overview-map/issues/1
             await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddControls.ToCoreNamespace(), Controls?.OrderBy(control => control.Order));
 
-            var overviewMapControl = controls.OfType<OverviewMapControl>().FirstOrDefault();
-            if (overviewMapControl is not null)
+            var overviewMapControls = controls.OfType<OverviewMapControl>();
+            if (overviewMapControls.Any())
             {
-                overviewMapControl.Logger = _logger;
-                overviewMapControl.JsRuntime = _jsRuntime;
+                foreach (var control in overviewMapControls)
+                {
+                    control.Logger = _logger;
+                    control.JsRuntime = _jsRuntime;
+                }
             }
 
-            var geolocationControl = controls.OfType<GeolocationControl>().FirstOrDefault();
-            if (geolocationControl is not null)
+            var geolocationControls = controls.OfType<GeolocationControl>();
+            if (geolocationControls.Any())
             {
-                geolocationControl.Logger = _logger;
-                geolocationControl.JsRuntime = _jsRuntime;
+                foreach (var control in geolocationControls)
+                {
+                    control.Logger = _logger;
+                    control.JsRuntime = _jsRuntime;
 
-                geolocationControl.OnDisposed += () => _controls.Remove(geolocationControl);
-                await geolocationControl.AddEventsAsync();
+                    control.OnDisposed += () => _controls.Remove(control);
+                    await control.AddEventsAsync();
+                }
+            }
+            var fullscreenControls = controls.OfType<FullScreenControl>();
+            if (fullscreenControls.Any())
+            {
+                foreach (var control in fullscreenControls)
+                {
+                    control.Logger = _logger;
+                    control.JsRuntime = _jsRuntime;
+
+                    control.OnDisposed += () => _controls.Remove(control);
+                    await control.AddEventsAsync();
+                }
             }
         }
 
@@ -675,9 +694,10 @@
         }
 
         /// <summary>
-        /// Update the camera options of the map
+        /// Update the camera options of the map.
+        /// If this method updates the Bounds and the Center properties, the Bounds will be used to move the map and the Center and ZoomLevel will be ignored.
         /// </summary>
-        /// <param name="configure">Action setting the camera options</param>
+        /// <param name="configure">Action setting the camera options.</param>
         /// <returns></returns>
         public async ValueTask SetCameraOptionsAsync(Action<CameraOptions> configure)
         {
@@ -685,7 +705,26 @@
             {
                 CameraOptions = new CameraOptions();
             }
+
+            //Before calling the configure action, UpdatedBounds and UpdatedCenter should be set to false.
+            //This allows us to identify if there was any change on one of this properties.
+            CameraOptions.UpdatedBounds = false;
+            CameraOptions.UpdatedCenter = false;
+
             configure.Invoke(CameraOptions);
+
+            //If the bounds were updated, we set the center to null, so the bounds are used to move the map.
+            //If the center has been updated and if the bounds did not change, the center will be used to move the map.s
+
+            if (CameraOptions.UpdatedBounds)
+            {
+                CameraOptions.Center = null;
+            }
+            else if (CameraOptions.UpdatedCenter)
+            {
+                CameraOptions.Bounds = null;
+            }
+
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_SetCameraOptionsAsync, "Setting camera options");
             await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCameraOptions.ToCoreNamespace(), CameraOptions);
         }
@@ -880,13 +919,13 @@
                     OnRotateStart?.Invoke(new MapEventArgs(this, eventArgs.Type));
                     break;
                 case "sourceadded":
-                    OnSourceAdded?.Invoke(new MapDataEventArgs(this, eventArgs));
+                    OnSourceAdded?.Invoke(new MapSourceEventArgs(this, eventArgs));
                     break;
                 case "sourcedata":
                     OnSourceData?.Invoke(new MapDataEventArgs(this, eventArgs));
                     break;
                 case "sourceremoved":
-                    OnSourceRemoved?.Invoke(new MapDataEventArgs(this, eventArgs));
+                    OnSourceRemoved?.Invoke(new MapSourceEventArgs(this, eventArgs));
                     break;
                 case "styledata":
                     OnStyleData?.Invoke(new MapStyleDataEventArgs(this, eventArgs));

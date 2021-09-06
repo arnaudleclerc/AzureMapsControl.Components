@@ -50,6 +50,11 @@
     {
         public override Position Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
+            if (reader.TokenType == JsonTokenType.None)
+            {
+                reader.Read();
+            }
+
             if (reader.TokenType == JsonTokenType.StartArray)
             {
                 var position = new Position();

@@ -86,7 +86,9 @@ let rollupError = false;
             "azure-maps-control-scalebar",
             "azure-maps-control-overviewmap",
             "azure-maps-control-animations",
-            "azure-maps-control-geolocation"
+            "azure-maps-control-geolocation",
+            "azure-maps-control-fullscreen",
+            "azure-maps-indoor"
         ],
         onwarn: rollupWarn,
         input: inputPath,
@@ -111,7 +113,9 @@ let rollupError = false;
             "azure-maps-control-scalebar": "atlas",
             "azure-maps-control-overviewmap": "atlas",
             "azure-maps-control-animations": "atlas",
-            "azure-maps-control-geolocation": "atlas"
+            "azure-maps-control-geolocation": "atlas",
+            "azure-maps-control-fullscreen": "atlas",
+            "azure-maps-indoor": "atlas"
         }
     };
 

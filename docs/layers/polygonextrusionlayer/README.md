@@ -5,25 +5,31 @@ The polygon extrusion layer renders areas of `Polygon` and `MultiPolygon` featur
 ![Polygon Extrusion Layer](../../assets/polygonextrusionlayer.png)
 
 ```
-@page "/PolygonExtrusionLayerOnReady"
+@page "/Layers/PolygonExtrusionLayerOnReady"
 
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
           CameraOptions="new CameraOptions { Center = new Components.Atlas.Position(11.581990, 48.143534), Zoom = 4, Pitch = 45 }"
           EventActivationFlags="MapEventActivationFlags
                                 .None()
-                                .Enable(MapEventType.Ready)"
-          OnReady="OnMapReady" />
+                                .Enable(MapEventType.Ready, MapEventType.SourceAdded)"
+          OnReady="OnMapReady"
+          OnSourceAdded="OnDatasourceAdded"/>
 
 @code  {
-    public async Task OnMapReady(MapEventArgs events)
+
+    private readonly string _datasourceId = "dataSource";
+
+    public async Task OnMapReady(MapEventArgs eventArgs)
     {
-        const string dataSourceId = "dataSource";
-        var dataSource = new AzureMapsControl.Components.Data.DataSource(dataSourceId);
-        await events.Map.AddSourceAsync(dataSource);
+        var dataSource = new AzureMapsControl.Components.Data.DataSource(_datasourceId);
+        await eventArgs.Map.AddSourceAsync(dataSource);
 
         await dataSource.ImportDataFromUrlAsync("https://raw.githubusercontent.com/arnaudleclerc/ng-azure-maps/main/assets/data/countries.geojson.json");
+    }
 
+    public async Task OnDatasourceAdded(MapSourceEventArgs eventArgs)
+    {
         var fillColorExpressionJsonString = "[\"step\", [\"get\", \"DENSITY\"], \"#00ff80\", 10, \"#09e076\", 20, \"#0bbf67\", 50, \"#f7e305\", 100, \"#f7c707\", 200, \"#f78205\", 500, \"#f75e05\", 1000, \"#f72505\", 10000, \"#6b0a05\"]";
         var heightExpressionJsonString = "[\"interpolate\", [\"linear\"], [\"get\", \"DENSITY\"], 0, 100, 1200, 960000]";
 
@@ -31,7 +37,7 @@ The polygon extrusion layer renders areas of `Polygon` and `MultiPolygon` featur
         {
             Options = new Components.Layers.PolygonExtrusionLayerOptions
             {
-                Source = dataSourceId,
+                Source = _datasourceId,
                 Base = new Components.Atlas.ExpressionOrNumber(100),
                 FillColor = new Components.Atlas.ExpressionOrString(System.Text.Json.JsonDocument.Parse(fillColorExpressionJsonString)),
                 FillOpacity = 0.7,
@@ -40,7 +46,7 @@ The polygon extrusion layer renders areas of `Polygon` and `MultiPolygon` featur
         };
 
 
-        await events.Map.AddLayerAsync(layer, "labels");
+        await eventArgs.Map.AddLayerAsync(layer, "labels");
     }
 }
 ```

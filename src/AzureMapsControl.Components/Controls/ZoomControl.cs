@@ -20,7 +20,7 @@
 
     internal sealed class ZoomControlJsonConverter : JsonConverter<ZoomControl>
     {
-        public override ZoomControl Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotImplementedException();
+        public override ZoomControl Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotSupportedException();
         public override void Write(Utf8JsonWriter writer, ZoomControl value, JsonSerializerOptions options) => Write(writer, value);
 
         internal static void Write(Utf8JsonWriter writer, ZoomControl value)
@@ -40,7 +40,7 @@
                 {
                     writer.WriteNumber("zoomDelta", value.Options.ZoomDelta.Value);
                 }
-                if (value.Options.Style is not null)
+                if (value.Options.Style.ToString() != default(ControlStyle).ToString())
                 {
                     writer.WriteString("style", value.Options.Style.ToString());
                 }

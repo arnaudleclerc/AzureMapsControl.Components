@@ -8,11 +8,12 @@ import { Control } from '../controls/control';
 import * as scalebar from 'azure-maps-control-scalebar';
 import * as overviewmap from 'azure-maps-control-overviewmap';
 import * as geolocationcontrol from 'azure-maps-control-geolocation';
+import * as fullscreencontrol from 'azure-maps-control-fullscreen';
 import { MapImageTemplate } from './map-image-template';
 import { HtmlMarkerEventArgs, toMarkerEvent } from '../html-markers/html-marker-event-args';
 import { HtmlMarkerDefinition } from '../html-markers/html-marker-options';
 import { MapEventArgs } from '../map/map-event-args';
-import { mapDataEvents, mapEvents, mapLayerEvents, mapMouseEvents, mapStringEvents, mapTouchEvents } from '../map/map-events';
+import { mapDataEvents, mapEvents, mapLayerEvents, mapMouseEvents, mapSourceEvents, mapStringEvents, mapTouchEvents } from '../map/map-events';
 import { Feature, Shape } from '../geometries/geometry';
 import { DataSourceEventArgs } from '../sources/datasource-event-args';
 
@@ -45,6 +46,9 @@ export class Core {
                     break;
                 case 'geolocation':
                     mapControl = new geolocationcontrol.control.GeolocationControl(control.options);
+                    break;
+                case 'fullscreen':
+                    mapControl = new fullscreencontrol.control.FullscreenControl(control.options);
                     break;
             }
 
@@ -250,6 +254,17 @@ export class Core {
                     eventHelper.invokeMethodAsync('NotifyEventAsync', {
                         type: value,
                         id: layer.getId()
+                    });
+                });
+            });
+
+            mapSourceEvents.filter(value => enabledEvents.includes(value)).forEach(value => {
+                map.events.add(value as any, (source: azmaps.source.Source) => {
+                    eventHelper.invokeMethodAsync('NotifyEventAsync', {
+                        type: value,
+                        source: {
+                            id: source.getId()
+                        }
                     });
                 });
             });
@@ -500,18 +515,8 @@ export class Core {
         });
     }
 
-    public static getCamera(): azmaps.CameraOptions {
-        const camera = this._map.getCamera();
-        return <azmaps.CameraOptions>{
-            bearing: camera.bearing,
-            center: camera.center,
-            centerOffset: camera.centerOffset,
-            maxBounds: camera.maxBounds,
-            maxZoom: camera.maxZoom,
-            minZoom: camera.minZoom,
-            pitch: camera.pitch,
-            zoom: camera.zoom
-        };
+    public static getCamera(): azmaps.CameraOptions & azmaps.CameraBoundsOptions {
+        return this._map.getCamera();
     }
 
     public static getStyle(): azmaps.StyleOptions {
@@ -565,8 +570,8 @@ export class Core {
     public static formatProperties(properties: { [key: string]: any }): { [key: string]: any } {
         if (properties) {
             for (const key in properties) {
-                if (typeof properties[key] === 'string') {
-                    const date = Date.parse(properties[key]);
+                if (typeof properties[key] === 'string' && properties[key].startsWith('azureMapsControl.datetime:')) {
+                    const date = Date.parse(properties[key].replace('azureMapsControl.datetime:', ''));
                     if (!isNaN(date)) {
                         properties[key] = new Date(date);
                     }
@@ -578,12 +583,7 @@ export class Core {
 
     private static _getSerializableFeature(feature: azmaps.data.Feature<azmaps.data.Geometry, any>): Feature {
         return {
-            bbox: feature.bbox ? {
-                west: feature.bbox[0],
-                south: feature.bbox[1],
-                east: feature.bbox[2],
-                north: feature.bbox[3]
-            } : null,
+            bbox: feature.bbox,
             geometry: feature.geometry,
             id: feature.id,
             properties: feature.properties

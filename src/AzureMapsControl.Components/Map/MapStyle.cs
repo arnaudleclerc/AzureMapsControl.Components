@@ -9,7 +9,7 @@
     /// The map styles
     /// </summary>
     [JsonConverter(typeof(MapStyleJsonConverter))]
-    public sealed class MapStyle
+    public struct MapStyle
     {
         private readonly string _style;
 
@@ -50,6 +50,11 @@
         public static readonly MapStyle Night = new MapStyle("night");
 
         /// <summary>
+        /// A road map is a standard map that displays roads. It also displays natural and artificial features, and the labels for those features.
+        /// </summary>
+        public static readonly MapStyle Road = new MapStyle("road");
+
+        /// <summary>
         /// road shaded relief is an Azure Maps main style completed with contours of the Earth.
         /// </summary>
         public static readonly MapStyle RoadShadedRelief = new MapStyle("road_shaded_relief");
@@ -73,6 +78,7 @@
             GrayscaleDark,
             GrayscaleLight,
             Night,
+            Road,
             RoadShadedRelief,
             HighContrastDark
         };
@@ -97,12 +103,14 @@
                     return GrayscaleLight;
                 case "night":
                     return Night;
+                case "road":
+                    return Road;
                 case "road_shaded_relief":
                     return RoadShadedRelief;
                 case "high_contrast_dark":
                     return HighContrastDark;
                 default:
-                    return null;
+                    return default;
             }
         }
     }
