@@ -16,6 +16,7 @@ import { MapEventArgs } from '../map/map-event-args';
 import { mapDataEvents, mapEvents, mapLayerEvents, mapMouseEvents, mapSourceEvents, mapStringEvents, mapTouchEvents } from '../map/map-events';
 import { Feature, Shape } from '../geometries/geometry';
 import { DataSourceEventArgs } from '../sources/datasource-event-args';
+import * as griddeddatasource from 'azure-maps-gridded-data-source';
 
 export class Core {
     private static readonly _popups: Map<string, azmaps.Popup> = new Map<string, azmaps.Popup>();
@@ -323,7 +324,7 @@ export class Core {
         this.addPopup(id, options, events, eventHelper);
     }
 
-    public static addSource(id: string, options: azmaps.DataSourceOptions | azmaps.VectorTileSourceOptions, type: SourceType, events: string[], eventHelper: EventHelper<DataSourceEventArgs>): void {
+    public static addSource(id: string, options: azmaps.DataSourceOptions | azmaps.VectorTileSourceOptions | griddeddatasource.GriddedDataSourceOptions, type: SourceType, events: string[], eventHelper: EventHelper<DataSourceEventArgs>): void {
         if (type === 'datasource') {
             const dataSource = new azmaps.source.DataSource(id, options);
             this._map.sources.add(dataSource);
@@ -342,6 +343,9 @@ export class Core {
             });
         } else if (type === 'vectortilesource') {
             this._map.sources.add(new azmaps.source.VectorTileSource(id, options));
+        } else if (type === 'griddeddatasource') {
+            const griddedDatasource = new griddeddatasource.source.GriddedDataSource(id, options);
+            this._map.sources.add(griddedDatasource);
         }
     }
 

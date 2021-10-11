@@ -4,6 +4,7 @@ export { Drawing } from './drawing/drawing';
 export { Extensions } from './extensions/extensions';
 export { Popup } from './popups/popup';
 export { Datasource } from './sources/datasource';
+export { Source } from './sources/source';
 export { HtmlMarker } from './html-markers/html-marker';
 export { GeolocationControl } from './controls/geolocation-control';
 export { OverviewMapControl } from './controls/overviewmap-control';

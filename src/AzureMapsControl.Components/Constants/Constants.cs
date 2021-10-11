@@ -13,7 +13,8 @@
             internal const string Core = "Core";
             internal const string Drawing = "Drawing";
             internal const string Popup = "Popup";
-            internal const string Source = "Datasource";
+            internal const string Source = "Source";
+            internal const string Datasource = "Datasource";
             internal const string HtmlMarker = "HtmlMarker";
             internal const string OverviewMapControl = "OverviewMapControl";
             internal const string GeolocationControl = "GeolocationControl";
@@ -102,8 +103,13 @@
                 internal const string Remove = "remove";
                 internal const string Dispose = "dispose";
                 internal const string GetOptions = "getOptions";
-                internal const string GetShapes = "getShapes";
                 internal const string AddFeatureCollection = "addFeatureCollection";
+                internal const string SetOptions = "setOptions";
+            }
+
+            internal static class Datasource
+            {
+                internal const string GetShapes = "getShapes";
             }
 
             internal static class HtmlMarker

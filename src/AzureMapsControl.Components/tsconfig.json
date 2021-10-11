@@ -39,6 +39,9 @@
       ],
       "azure-maps-indoor": [
         "typings/Indoor"
+      ],
+      "azure-maps-gridded-data-source": [
+        "typings/GriddedDataSource"
       ]
     }
   },

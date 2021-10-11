@@ -3,6 +3,7 @@
     using System.Text.Json;
 
     using AzureMapsControl.Components.Data;
+    using AzureMapsControl.Components.Data.Grid;
     using AzureMapsControl.Components.Tests.Json;
 
     using Xunit;
@@ -41,6 +42,17 @@
                 },
                 TileSize = 7,
                 Url = "url"
+            };
+
+            var expectedJson = JsonSerializer.Serialize(options, null);
+            TestAndAssertWrite(options, expectedJson);
+        }
+
+        [Fact]
+        public void Should_SerializeGriddedDataSourceOptions()
+        {
+            var options = new GriddedDataSourceOptions {
+                CellWidth = 1
             };
 
             var expectedJson = JsonSerializer.Serialize(options, null);

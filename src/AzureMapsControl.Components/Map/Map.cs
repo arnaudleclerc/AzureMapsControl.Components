@@ -7,6 +7,7 @@
 
     using AzureMapsControl.Components.Controls;
     using AzureMapsControl.Components.Data;
+    using AzureMapsControl.Components.Data.Grid;
     using AzureMapsControl.Components.Drawing;
     using AzureMapsControl.Components.Exceptions;
     using AzureMapsControl.Components.Guards;
@@ -274,6 +275,11 @@
                     source.Id,
                     source.GetSourceOptions(),
                     source.SourceType.ToString());
+                if (source is GriddedDataSource griddedDataSource)
+                {
+                    griddedDataSource.Logger = _logger;
+                    griddedDataSource.JSRuntime = _jsRuntime;
+                }
             }
         }
 

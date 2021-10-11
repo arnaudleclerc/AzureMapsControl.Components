@@ -1,0 +1,72 @@
+﻿@page "/Sources/ExtrudedGriddedDatasource"
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          EventActivationFlags="MapEventActivationFlags
+                                .None()
+                                .Enable(MapEventType.Ready, MapEventType.SourceAdded)"
+          CameraOptions="CameraOptions"
+          StyleOptions="StyleOptions"
+          OnReady="OnMapReady"
+          OnSourceAdded="OnSourceAdded"/>
+
+@code {
+    private readonly string _datasourceId = "datasourceId";
+
+    public CameraOptions CameraOptions = new CameraOptions { Center = new AzureMapsControl.Components.Atlas.Position(-105.03, 40.54), Zoom = 11, Pitch = 45 };
+
+    public StyleOptions StyleOptions = new StyleOptions { Style = MapStyle.GrayscaleDark };
+
+    public async Task OnMapReady(MapEventArgs eventArgs)
+    {
+        var source = new Components.Data.Grid.GriddedDataSource(_datasourceId)
+        {
+            Options = new Components.Data.Grid.GriddedDataSourceOptions
+            {
+                CellWidth = 0.25,
+                DistanceUnits = Components.Atlas.Math.DistanceUnits.Miles,
+                Coverage = 0.8,
+                CenterLatitude = 40.54,
+                GridType = Components.Data.Grid.GridType.Hexagon
+            }
+        };
+        await eventArgs.Map.AddSourceAsync(source);
+
+        await source.ImportDataFromUrlAsync("https://azuremapscodesamples.azurewebsites.net/Common/data/geojson/address.json");
+    }
+
+    public async Task OnSourceAdded(MapSourceEventArgs eventArgs)
+    {
+        var steppedExpJsonString = "[\"step\", [\"get\", \"point_count\"], \"#ffffb2\", 100, \"#fecc5c\", 200, \"#fd8d3c\", 300, \"#f03b20\", 400, \"#bd0026\"]";
+        var heightExp = "[\"interpolate\", [\"linear\"], [\"get\", \"point_count\"], 1, 10, 1000, 5000]";
+        var filterExp = "[\"==\", [\"get\", \"cell_id\"], \"\"]";
+
+        var polygonLayer = new Components.Layers.PolygonExtrusionLayer
+        {
+            Options = new Components.Layers.PolygonExtrusionLayerOptions
+            {
+                Source = _datasourceId,
+                FillColor = new Components.Atlas.ExpressionOrString(System.Text.Json.JsonDocument.Parse(steppedExpJsonString)),
+                FillOpacity = 0.8,
+                Height = new Components.Atlas.ExpressionOrNumber(System.Text.Json.JsonDocument.Parse(heightExp))
+            }
+        };
+
+        await eventArgs.Map.AddLayerAsync(polygonLayer, "labels");
+
+        var polygonHoverLayer = new Components.Layers.PolygonExtrusionLayer
+        {
+            Options = new Components.Layers.PolygonExtrusionLayerOptions
+            {
+                Source = _datasourceId,
+                FillColor = new Components.Atlas.ExpressionOrString(System.Text.Json.JsonDocument.Parse(steppedExpJsonString)),
+                FillOpacity = 1,
+                Height = new Components.Atlas.ExpressionOrNumber(System.Text.Json.JsonDocument.Parse(heightExp)),
+                Filter = new Components.Atlas.Expression(System.Text.Json.JsonDocument.Parse(filterExp))
+            }
+        };
+
+        await eventArgs.Map.AddLayerAsync(polygonHoverLayer, "labels");
+    }
+
+}

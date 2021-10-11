@@ -5,6 +5,8 @@
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
+    using AzureMapsControl.Components.Data.Grid;
+
     [ExcludeFromCodeCoverage]
     [JsonConverter(typeof(SourceOptionsJsonConverter))]
     public abstract class SourceOptions
@@ -24,6 +26,10 @@
             else if (value is VectorTileSourceOptions vectorTileSourceOptions)
             {
                 JsonSerializer.Serialize(writer, vectorTileSourceOptions, options);
+            }
+            else if (value is GriddedDataSourceOptions griddedDataSourceOptions)
+            {
+                JsonSerializer.Serialize(writer, griddedDataSourceOptions, options);
             }
         }
     }
