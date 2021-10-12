@@ -1,6 +1,28 @@
 ﻿@page "/Sources/ExtrudedGriddedDatasource"
-
 @using AzureMapsControl.Components.Map
+@inject IMapService MapService
+
+<style>
+    #legend {
+        position: absolute;
+        top: 1px;
+        left: 5px;
+        font-family: Arial;
+        font-size: 12px;
+        background-color: white;
+        border-radius: 5px;
+        padding: 5px;
+        line-height: 20px;
+    }
+
+        #legend i {
+            width: 18px;
+            height: 18px;
+            float: left;
+            margin-right: 8px;
+        }
+</style>
+
 <AzureMap Id="map"
           EventActivationFlags="MapEventActivationFlags
                                 .None()
@@ -8,7 +30,21 @@
           CameraOptions="CameraOptions"
           StyleOptions="StyleOptions"
           OnReady="OnMapReady"
-          OnSourceAdded="OnSourceAdded"/>
+          OnSourceAdded="OnSourceAdded" />
+
+<div id="legend">
+    <b>Addresses per cell</b><br />
+    <div id="legendColors"><i style="background:#ffffb2"></i> 1 - 100<br><i style="background:#fecc5c"></i> 100 - 200<br><i style="background:#fd8d3c"></i> 200 - 300<br><i style="background:#f03b20"></i> 300 - 400<br><i style="background:#bd0026"></i> 400+</div><br />
+    <b>Grid type:</b><br />
+    <select @onchange="ChangeGridType">
+        <option value="circle">Circle</option>
+        <option selected="selected" value="hexagon">Hexagon</option>
+        <option value="hexCircle">Hex Circle</option>
+        <option value="pointyHexagon">Pointy Hexagon</option>
+        <option value="square">Square</option>
+        <option value="triangle">Triangle</option>
+    </select>
+</div>
 
 @code {
     private readonly string _datasourceId = "datasourceId";
@@ -43,6 +79,7 @@
 
         var polygonLayer = new Components.Layers.PolygonExtrusionLayer
         {
+            EventActivationFlags = Components.Layers.LayerEventActivationFlags.None().Enable(Components.Layers.LayerEventType.MouseMove, Components.Layers.LayerEventType.MouseLeave),
             Options = new Components.Layers.PolygonExtrusionLayerOptions
             {
                 Source = _datasourceId,
@@ -67,6 +104,16 @@
         };
 
         await eventArgs.Map.AddLayerAsync(polygonHoverLayer, "labels");
+    }
+
+    public async Task ChangeGridType(ChangeEventArgs eventArgs)
+    {
+        var datasource = MapService
+            .Map
+            .Sources
+            .First(source => source.Id == _datasourceId) as Components.Data.Grid.GriddedDataSource;
+
+        await datasource.SetOptionsAsync(options => options.GridType = Components.Data.Grid.GridType.FromString(eventArgs.Value.ToString()));
     }
 
 }

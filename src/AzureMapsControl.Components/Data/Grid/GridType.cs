@@ -48,7 +48,7 @@
 
         public override string ToString() => _type;
 
-        internal static GridType FromString(string gridType)
+        public static GridType FromString(string gridType)
         {
             return gridType switch {
                 "circle" => Circle,
