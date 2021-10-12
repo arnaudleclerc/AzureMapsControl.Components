@@ -46,7 +46,12 @@
 
         public override string ToString() => _unit;
 
-        internal static DistanceUnits FromString(string unit)
+        /// <summary>
+        /// Return a DistanceUnits corresponding to the given value
+        /// </summary>
+        /// <param name="unit">Value of the Interpolation</param>
+        /// <returns>DistanceUnits corresponding to the given value. If none was found, returns `default`</returns>
+        public static DistanceUnits FromString(string unit)
         {
             return unit switch {
                 "meters" => Meters,

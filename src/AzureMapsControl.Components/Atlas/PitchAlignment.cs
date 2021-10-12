@@ -7,40 +7,37 @@
     [JsonConverter(typeof(PitchAlignmentJsonConverter))]
     public struct PitchAlignment
     {
-        private readonly string _type;
+        private readonly string _pitchAlignment;
 
-        public static readonly PitchAlignment Auto = new PitchAlignment("auto");
+        public static readonly PitchAlignment Auto = new("auto");
 
         /// <summary>
         /// The circle is aligned to the plane of the map.
         /// </summary>
-        public static readonly PitchAlignment Map = new PitchAlignment("map");
+        public static readonly PitchAlignment Map = new("map");
 
         /// <summary>
         /// The circle is aligned to the plane of the viewport
         /// </summary>
-        public static readonly PitchAlignment ViewPort = new PitchAlignment("viewport");
+        public static readonly PitchAlignment ViewPort = new("viewport");
 
-        private PitchAlignment(string type) => _type = type;
+        private PitchAlignment(string type) => _pitchAlignment = type;
 
-        public override string ToString() => _type;
+        public override string ToString() => _pitchAlignment;
 
-        internal static PitchAlignment FromString(string type)
+        /// <summary>
+        /// Return a PitchAlignment corresponding to the given value
+        /// </summary>
+        /// <param name="pitchAlignment">Value of the PitchAlignment</param>
+        /// <returns>PitchAlignment corresponding to the given value. If none was found, returns `default`</returns>
+        public static PitchAlignment FromString(string pitchAlignment)
         {
-            switch (type)
-            {
-                case "auto":
-                    return Auto;
-
-                case "map":
-                    return Map;
-
-                case "viewport":
-                    return ViewPort;
-
-                default:
-                    return default;
-            }
+            return pitchAlignment switch {
+                "auto" => Auto,
+                "map" => Map,
+                "viewport" => ViewPort,
+                _ => default,
+            };
         }
     }
 

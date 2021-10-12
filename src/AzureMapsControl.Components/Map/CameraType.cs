@@ -9,27 +9,27 @@
     {
         private readonly string _type;
 
-        public static readonly CameraType Ease = new CameraType("ease");
-        public static readonly CameraType Fly = new CameraType("fly");
-        public static readonly CameraType Jump = new CameraType("jump");
+        public static readonly CameraType Ease = new("ease");
+        public static readonly CameraType Fly = new("fly");
+        public static readonly CameraType Jump = new("jump");
 
         private CameraType(string type) => _type = type;
 
         public override string ToString() => _type;
 
-        internal static CameraType FromString(string type)
+        /// <summary>
+        /// Return a CameraType corresponding to the given value
+        /// </summary>
+        /// <param name="type">Value of the CameraType</param>
+        /// <returns>CameraType corresponding to the given value. If none was found, returns `default`</returns>
+        public static CameraType FromString(string type)
         {
-            switch (type)
-            {
-                case "ease":
-                    return Ease;
-                case "fly":
-                    return Fly;
-                case "jump":
-                    return Jump;
-                default:
-                    return default;
-            }
+            return type switch {
+                "ease" => Ease,
+                "fly" => Fly,
+                "jump" => Jump,
+                _ => default,
+            };
         }
     }
 

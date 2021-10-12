@@ -7,15 +7,20 @@
     {
         private readonly string _theme;
 
-        public static readonly IndoorLayerTheme Auto = new IndoorLayerTheme("auto");
-        public static readonly IndoorLayerTheme Dark = new IndoorLayerTheme("dark");
-        public static readonly IndoorLayerTheme Light = new IndoorLayerTheme("light");
+        public static readonly IndoorLayerTheme Auto = new("auto");
+        public static readonly IndoorLayerTheme Dark = new("dark");
+        public static readonly IndoorLayerTheme Light = new("light");
 
         private IndoorLayerTheme(string theme) => _theme = theme;
 
         public override string ToString() => _theme;
 
-        internal static IndoorLayerTheme FromString(string theme)
+        /// <summary>
+        /// Return an IndoorLayerTheme corresponding to the given value
+        /// </summary>
+        /// <param name="theme">Value of the IndoorLayerTheme</param>
+        /// <returns>IndoorLayerTheme corresponding to the given value. If none was found, returns `default`</returns>
+        public static IndoorLayerTheme FromString(string theme)
         {
             return theme switch {
                 "auto" => Auto,

@@ -1,7 +1,6 @@
 ﻿namespace AzureMapsControl.Components.Data.Grid
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
@@ -11,7 +10,7 @@
     [JsonConverter(typeof(GridTypeJsonConverter))]
     public struct GridType
     {
-        private readonly string _type;
+        private readonly string _gridType;
 
         /// <summary>
         /// Renders data within a square grid as circles.
@@ -44,10 +43,15 @@
         public static GridType Triangle = new("triangle");
         
 
-        private GridType(string type) => _type = type;
+        private GridType(string type) => _gridType = type;
 
-        public override string ToString() => _type;
+        public override string ToString() => _gridType;
 
+        /// <summary>
+        /// Return a GridType corresponding to the given value
+        /// </summary>
+        /// <param name="gridType">Value of the GridType</param>
+        /// <returns>GridType corresponding to the given value. If none was found, returns `default`</returns>
         public static GridType FromString(string gridType)
         {
             return gridType switch {

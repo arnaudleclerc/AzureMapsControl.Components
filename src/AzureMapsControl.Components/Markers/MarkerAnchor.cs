@@ -8,27 +8,32 @@
     /// Indicates the marker's location relative to its position on the map.
     /// </summary>
     [JsonConverter(typeof(MarkerAnchorJsonConverter))]
-    public sealed class MarkerAnchor
+    public struct MarkerAnchor
     {
         private readonly string _anchor;
 
-        public static readonly MarkerAnchor Bottom = new MarkerAnchor("bottom");
-        public static readonly MarkerAnchor BottomLeft = new MarkerAnchor("bottom-left");
-        public static readonly MarkerAnchor BottomRight = new MarkerAnchor("bottom-right");
-        public static readonly MarkerAnchor Center = new MarkerAnchor("center");
-        public static readonly MarkerAnchor Left = new MarkerAnchor("left");
-        public static readonly MarkerAnchor Right = new MarkerAnchor("right");
-        public static readonly MarkerAnchor Top = new MarkerAnchor("top");
-        public static readonly MarkerAnchor TopLeft = new MarkerAnchor("top-left");
-        public static readonly MarkerAnchor TopRight = new MarkerAnchor("top-right");
+        public static readonly MarkerAnchor Bottom = new("bottom");
+        public static readonly MarkerAnchor BottomLeft = new("bottom-left");
+        public static readonly MarkerAnchor BottomRight = new("bottom-right");
+        public static readonly MarkerAnchor Center = new("center");
+        public static readonly MarkerAnchor Left = new("left");
+        public static readonly MarkerAnchor Right = new("right");
+        public static readonly MarkerAnchor Top = new("top");
+        public static readonly MarkerAnchor TopLeft = new("top-left");
+        public static readonly MarkerAnchor TopRight = new("top-right");
 
         private MarkerAnchor(string anchor) => _anchor = anchor;
 
         public override string ToString() => _anchor;
 
-        internal static MarkerAnchor FromString(string type)
+        /// <summary>
+        /// Return a MarkerAnchor corresponding to the given value
+        /// </summary>
+        /// <param name="markerAnchor">Value of the MarkerAnchor</param>
+        /// <returns>MarkerAnchor corresponding to the given value. If none was found, returns `default`</returns>
+        public static MarkerAnchor FromString(string markerAnchor)
         {
-            return type switch {
+            return markerAnchor switch {
                 "bottom" => Bottom,
                 "bottom-left" => BottomLeft,
                 "bottom-right" => BottomRight,
@@ -38,7 +43,7 @@
                 "top" => Top,
                 "top-left" => TopLeft,
                 "top-right" => TopRight,
-                _ => null,
+                _ => default,
             };
         }
     }

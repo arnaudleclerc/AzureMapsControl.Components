@@ -7,19 +7,24 @@
     [JsonConverter(typeof(PlayTypeJsonConverter))]
     public struct PlayType
     {
-        private readonly string _type;
+        private readonly string _playType;
 
-        public static readonly PlayType Together = new PlayType("together");
-        public static readonly PlayType Sequential = new PlayType("sequential");
-        public static readonly PlayType Interval = new PlayType("interval");
+        public static readonly PlayType Together = new("together");
+        public static readonly PlayType Sequential = new("sequential");
+        public static readonly PlayType Interval = new("interval");
 
-        private PlayType(string type) => _type = type;
+        private PlayType(string type) => _playType = type;
 
-        public override string ToString() => _type;
+        public override string ToString() => _playType;
 
-        internal static PlayType FromString(string type)
+        /// <summary>
+        /// Return a PlayType corresponding to the given value
+        /// </summary>
+        /// <param name="playType">Value of the PlayType</param>
+        /// <returns>PlayType corresponding to the given value. If none was found, returns `default`</returns>
+        public static PlayType FromString(string playType)
         {
-            return type switch {
+            return playType switch {
                 "together" => Together,
                 "sequential" => Sequential,
                 "interval" => Interval,

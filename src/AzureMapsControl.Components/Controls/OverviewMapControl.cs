@@ -94,7 +94,7 @@
                 if (value.Options.MarkerOptions is not null)
                 {
                     writer.WriteStartObject("markerOptions");
-                    if (value.Options.MarkerOptions.Anchor is not null)
+                    if (value.Options.MarkerOptions.Anchor.ToString() != default(Markers.MarkerAnchor).ToString())
                     {
                         writer.WriteString("anchor", value.Options.MarkerOptions.Anchor.ToString());
                     }

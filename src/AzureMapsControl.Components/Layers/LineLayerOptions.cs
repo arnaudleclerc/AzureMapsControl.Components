@@ -12,43 +12,40 @@
     [ExcludeFromCodeCoverage]
     public sealed class LineCap
     {
-        private readonly string _type;
+        private readonly string _lineCap;
 
         /// <summary>
         /// A cap with a squared-off end which is drawn to the exact endpoint of the line.
         /// </summary>
-        public static readonly LineCap Butt = new LineCap("butt");
+        public static readonly LineCap Butt = new("butt");
 
         /// <summary>
         ///  A cap with a rounded end which is drawn beyond the endpoint of the line at a radius of one-half of the lines width and centered on the endpoint of the line
         /// </summary>
-        public static readonly LineCap Round = new LineCap("round");
+        public static readonly LineCap Round = new("round");
 
         /// <summary>
         /// A cap with a squared-off end which is drawn beyond the endpoint of the line at a distance of one-half of the line width
         /// </summary>
-        public static readonly LineCap Square = new LineCap("square");
+        public static readonly LineCap Square = new("square");
 
-        private LineCap(string type) => _type = type;
+        private LineCap(string lineCap) => _lineCap = lineCap;
 
-        public override string ToString() => _type;
+        public override string ToString() => _lineCap;
 
-        internal static LineCap FromString(string type)
+        /// <summary>
+        /// Return a LineCap corresponding to the given value
+        /// </summary>
+        /// <param name="lineCap">Value of the LineCap</param>
+        /// <returns>LineCap corresponding to the given value. If none was found, returns `default`</returns>
+        public static LineCap FromString(string lineCap)
         {
-            switch (type)
-            {
-                case "butt":
-                    return Butt;
-
-                case "round":
-                    return Round;
-
-                case "square":
-                    return Square;
-
-                default:
-                    return null;
-            }
+            return lineCap switch {
+                "butt" => Butt,
+                "round" => Round,
+                "square" => Square,
+                _ => null,
+            };
         }
     }
 
@@ -62,43 +59,40 @@
     [JsonConverter(typeof(LineJoinJsonConverter))]
     public struct LineJoin
     {
-        private readonly string _type;
+        private readonly string _lineJoin;
 
         /// <summary>
         /// A join with a squared-off end which is drawn beyond the endpoint of the line at a distance of one-half of the lines width
         /// </summary>
-        public static readonly LineJoin Bevel = new LineJoin("bevel");
+        public static readonly LineJoin Bevel = new("bevel");
 
         /// <summary>
         /// A join with a sharp, angled corner which is drawn with the outer sides beyond the endpoint of the path until they meet
         /// </summary>
-        public static readonly LineJoin Miter = new LineJoin("miter");
+        public static readonly LineJoin Miter = new("miter");
 
         /// <summary>
         /// A join with a rounded end which is drawn beyond the endpoint of the line at a radius of one-half of the lines width and centered on the endpoint of the line
         /// </summary>
-        public static readonly LineJoin Round = new LineJoin("round");
+        public static readonly LineJoin Round = new("round");
 
-        private LineJoin(string type) => _type = type;
+        private LineJoin(string lineJoin) => _lineJoin = lineJoin;
 
-        public override string ToString() => _type;
+        public override string ToString() => _lineJoin;
 
-        internal static LineJoin FromString(string type)
+        /// <summary>
+        /// Return a LineJoin corresponding to the given value
+        /// </summary>
+        /// <param name="lineJoin">Value of the LineJoin</param>
+        /// <returns>LineJoin corresponding to the given value. If none was found, returns `default`</returns>
+        public static LineJoin FromString(string lineJoin)
         {
-            switch (type)
-            {
-                case "bevel":
-                    return Bevel;
-
-                case "miter":
-                    return Miter;
-
-                case "round":
-                    return Round;
-
-                default:
-                    return default;
-            }
+            return lineJoin switch {
+                "bevel" => Bevel,
+                "miter" => Miter,
+                "round" => Round,
+                _ => default,
+            };
         }
     }
 

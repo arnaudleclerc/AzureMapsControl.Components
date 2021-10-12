@@ -168,7 +168,12 @@
 
         public override string ToString() => _easing;
 
-        internal static Easing FromString(string easing)
+        /// <summary>
+        /// Return an Easing corresponding to the given value
+        /// </summary>
+        /// <param name="easing">Value of the Easing</param>
+        /// <returns>Easing corresponding to the given value. If none was found, returns `default`</returns>
+        public static Easing FromString(string easing)
         {
             return easing switch {
                 "linear" => Linear,

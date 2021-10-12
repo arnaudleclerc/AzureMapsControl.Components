@@ -41,45 +41,42 @@
     [JsonConverter(typeof(SymbolLayerPlacementJsonConverter))]
     public struct SymbolLayerPlacement
     {
-        private readonly string _type;
+        private readonly string _symbolLayerPlacement;
 
         /// <summary>
         /// The label is placed along the line of the geometry.
         /// Can only be used on LineString and Polygon geometries.
         /// </summary>
-        public static readonly SymbolLayerPlacement Line = new SymbolLayerPlacement("line");
+        public static readonly SymbolLayerPlacement Line = new("line");
 
         /// <summary>
         /// The label is placed at the center of the line of the geometry.
         /// Can only be used on `LineString` and `Polygon` geometries
         /// </summary>
-        public static readonly SymbolLayerPlacement LineCenter = new SymbolLayerPlacement("line-center");
+        public static readonly SymbolLayerPlacement LineCenter = new("line-center");
 
         /// <summary>
         /// The label is placed at the point where the geometry is located.
         /// </summary>
-        public static readonly SymbolLayerPlacement Point = new SymbolLayerPlacement("point");
+        public static readonly SymbolLayerPlacement Point = new("point");
 
-        private SymbolLayerPlacement(string type) => _type = type;
+        private SymbolLayerPlacement(string symbolLayerPlacement) => _symbolLayerPlacement = symbolLayerPlacement;
 
-        public override string ToString() => _type;
+        public override string ToString() => _symbolLayerPlacement;
 
-        internal static SymbolLayerPlacement FromString(string type)
+        /// <summary>
+        /// Return a SymbolLayerPlacement corresponding to the given value
+        /// </summary>
+        /// <param name="symbolLayerPlacement">Value of the SymbolLayerPlacement</param>
+        /// <returns>SymbolLayerPlacement corresponding to the given value. If none was found, returns `default`</returns>
+        public static SymbolLayerPlacement FromString(string symbolLayerPlacement)
         {
-            switch (type)
-            {
-                case "line":
-                    return Line;
-
-                case "line-center":
-                    return LineCenter;
-
-                case "point":
-                    return Point;
-
-                default:
-                    return default;
-            }
+            return symbolLayerPlacement switch {
+                "line" => Line,
+                "line-center" => LineCenter,
+                "point" => Point,
+                _ => default,
+            };
         }
     }
 
