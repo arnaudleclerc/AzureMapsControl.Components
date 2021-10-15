@@ -626,7 +626,7 @@
                 layer.Id,
                 before,
                 layer.Type.ToString(),
-                layer.GetLayerOptions()?.GenerateJsOptions(),
+                layer.GetLayerOptions(),
                 layer.EventActivationFlags.EnabledEvents,
                 DotNetObjectReference.Create(_layerEventInvokeHelper));
         }

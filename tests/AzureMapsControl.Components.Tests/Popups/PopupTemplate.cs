@@ -221,6 +221,6 @@
         }
 
         [Fact]
-        public void Should_NotWrite() => TestAndAssertEmptytWrite(null);
+        public void Should_NotWrite() => TestAndAssertEmptyWrite(null);
     }
 }

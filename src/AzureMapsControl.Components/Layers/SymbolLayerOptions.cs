@@ -12,6 +12,7 @@
     /// Options used when rendering geometries in a SymbolLayer.
     /// </summary>
     [ExcludeFromCodeCoverage]
+    [JsonConverter(typeof(SymbolLayerOptionsJsonConverter))]
     public sealed class SymbolLayerOptions : SourceLayerOptions
     {
         /// <summary>
@@ -35,55 +36,81 @@
         public SymbolLayerPlacement Placement { get; set; }
     }
 
-    /// <summary>
-    /// Specifies the label placement relative to its geometry.
-    /// </summary>
-    [JsonConverter(typeof(SymbolLayerPlacementJsonConverter))]
-    public struct SymbolLayerPlacement
+    internal sealed class SymbolLayerOptionsJsonConverter : SourceLayerOptionsJsonConverter<SymbolLayerOptions>
     {
-        private readonly string _symbolLayerPlacement;
-
-        /// <summary>
-        /// The label is placed along the line of the geometry.
-        /// Can only be used on LineString and Polygon geometries.
-        /// </summary>
-        public static readonly SymbolLayerPlacement Line = new("line");
-
-        /// <summary>
-        /// The label is placed at the center of the line of the geometry.
-        /// Can only be used on `LineString` and `Polygon` geometries
-        /// </summary>
-        public static readonly SymbolLayerPlacement LineCenter = new("line-center");
-
-        /// <summary>
-        /// The label is placed at the point where the geometry is located.
-        /// </summary>
-        public static readonly SymbolLayerPlacement Point = new("point");
-
-        private SymbolLayerPlacement(string symbolLayerPlacement) => _symbolLayerPlacement = symbolLayerPlacement;
-
-        public override string ToString() => _symbolLayerPlacement;
-
-        /// <summary>
-        /// Return a SymbolLayerPlacement corresponding to the given value
-        /// </summary>
-        /// <param name="symbolLayerPlacement">Value of the SymbolLayerPlacement</param>
-        /// <returns>SymbolLayerPlacement corresponding to the given value. If none was found, returns `default`</returns>
-        public static SymbolLayerPlacement FromString(string symbolLayerPlacement)
+        public override SymbolLayerOptions Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            return symbolLayerPlacement switch {
-                "line" => Line,
-                "line-center" => LineCenter,
-                "point" => Point,
-                _ => default,
-            };
+            var depth = reader.CurrentDepth;
+            var result = new SymbolLayerOptions();
+            while (reader.TokenType != JsonTokenType.EndObject || depth != reader.CurrentDepth)
+            {
+                reader.Read();
+                if (reader.TokenType == JsonTokenType.PropertyName)
+                {
+                    var propertyName = reader.GetString();
+                    if (IsSourceLayerOptionsProperty(propertyName))
+                    {
+                        ReadSourceLayerOptionsProperty(propertyName, reader, result);
+                    }
+                    else
+                    {
+                        reader.Read();
+                        switch (propertyName)
+                        {
+                            case "iconOptions":
+                                result.IconOptions = reader.TokenType == JsonTokenType.Null ? null : JsonSerializer.Deserialize<IconOptions>(ref reader, options);
+                                break;
+
+                            case "textOptions":
+                                result.TextOptions = reader.TokenType == JsonTokenType.Null ? null : JsonSerializer.Deserialize<TextOptions>(ref reader, options);
+                                break;
+
+                            case "placement":
+                                result.Placement = reader.TokenType == JsonTokenType.Null ? default : SymbolLayerPlacement.FromString(reader.GetString());
+                                break;
+                        }
+                    }
+                }
+            }
+            return result;
         }
-    }
 
-    internal class SymbolLayerPlacementJsonConverter : JsonConverter<SymbolLayerPlacement>
-    {
-        public override SymbolLayerPlacement Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => SymbolLayerPlacement.FromString(reader.GetString());
+        public override void Write(Utf8JsonWriter writer, SymbolLayerOptions value, JsonSerializerOptions options)
+        {
+            if (value is null)
+            {
+                writer.WriteNullValue();
+                return;
+            }
 
-        public override void Write(Utf8JsonWriter writer, SymbolLayerPlacement value, JsonSerializerOptions options) => writer.WriteStringValue(value.ToString());
+            writer.WriteStartObject();
+
+            WriteSourceLayerOptionsProperties(writer, value, options);
+
+            if (value.IconOptions is not null)
+            {
+                writer.WritePropertyName("iconOptions");
+                JsonSerializer.Serialize(writer, value.IconOptions);
+            }
+
+            if (value.LineSpacing is not null)
+            {
+                writer.WritePropertyName("lineSpacing");
+                JsonSerializer.Serialize(writer, value.LineSpacing);
+            }
+
+            if (value.Placement.ToString() != default(SymbolLayerPlacement).ToString())
+            {
+                writer.WriteString("placement", value.Placement.ToString());
+            }
+
+            if (value.TextOptions is not null)
+            {
+                writer.WritePropertyName("textOptions");
+                JsonSerializer.Serialize(writer, value.TextOptions);
+            }
+
+            writer.WriteEndObject();
+        }
     }
 }

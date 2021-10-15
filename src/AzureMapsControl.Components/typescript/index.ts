@@ -10,3 +10,4 @@ export { GeolocationControl } from './controls/geolocation-control';
 export { OverviewMapControl } from './controls/overviewmap-control';
 export { FullscreenControl } from './controls/fullscreen-control';
 export { Indoor } from './indoor/indoor';
+export { Layer } from './layers/layer';

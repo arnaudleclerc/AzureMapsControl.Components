@@ -4,7 +4,6 @@
     using System.Collections.Generic;
 
     using AzureMapsControl.Components.Animations;
-    using AzureMapsControl.Components.Animations.Options;
     using AzureMapsControl.Components.Runtime;
 
     using Moq;

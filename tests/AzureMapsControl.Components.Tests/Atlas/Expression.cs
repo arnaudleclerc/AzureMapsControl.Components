@@ -72,7 +72,7 @@
             double? value = null;
             var expression = new ExpressionOrNumber(value);
 
-            TestAndAssertEmptytWrite(expression);
+            TestAndAssertEmptyWrite(expression);
         }
     }
 
@@ -152,7 +152,7 @@
             string[] values = null;
             var expression = new ExpressionOrStringArray(values);
 
-            TestAndAssertEmptytWrite(expression);
+            TestAndAssertEmptyWrite(expression);
         }
 
         [Fact]

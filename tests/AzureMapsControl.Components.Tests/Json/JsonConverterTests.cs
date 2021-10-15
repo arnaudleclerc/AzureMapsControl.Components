@@ -31,7 +31,7 @@
             Assert.Subset(expectedBytesSet, writterSet);
         }
 
-        protected void TestAndAssertEmptytWrite(TValue value)
+        protected void TestAndAssertEmptyWrite(TValue value)
         {
             var buffer = new ArrayBufferWriter<byte>();
             using var writer = new Utf8JsonWriter(buffer);
