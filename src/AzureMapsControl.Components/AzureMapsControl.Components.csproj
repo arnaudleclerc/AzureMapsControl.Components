@@ -10,7 +10,7 @@
     <PackageTags>azure-maps azure-maps-control razor razor-components</PackageTags>
     <Description>Azure Maps Control Razor Components</Description>
     <PackageProjectUrl>https://github.com/arnaudleclerc/AzureMapsControl.Components</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/arnaudleclerc/AzureMapsControl.Components/blob/main/LICENSE</PackageLicenseUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
@@ -24,6 +24,10 @@
 
   <ItemGroup>
     <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
