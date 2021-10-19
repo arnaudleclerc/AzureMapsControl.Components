@@ -1,6 +1,5 @@
 ﻿namespace AzureMapsControl.Components.Constants
 {
-    using System.Data;
     using System.Diagnostics.CodeAnalysis;
 
     [ExcludeFromCodeCoverage]
@@ -20,6 +19,7 @@
             internal const string GeolocationControl = "GeolocationControl";
             internal const string FullScreenControl = "FullscreenControl";
             internal const string Indoor = "Indoor";
+            internal const string Layer = "Layer";
         }
 
         internal static class Methods
@@ -150,6 +150,11 @@
                 internal const string GetStyleDefinition = "getStyleDefinition";
                 internal const string SetDynamicStyling = "setDynamicStyling";
                 internal const string SetFacility = "setFacility";
+                internal const string SetOptions = "setOptions";
+            }
+
+            internal static class Layer
+            {
                 internal const string SetOptions = "setOptions";
             }
         }

@@ -1,8 +1,14 @@
 ﻿namespace AzureMapsControl.Components.Layers
 {
     using System;
+    using System.Threading.Tasks;
 
+    using AzureMapsControl.Components.Exceptions;
+    using AzureMapsControl.Components.Logger;
     using AzureMapsControl.Components.Map;
+    using AzureMapsControl.Components.Runtime;
+
+    using Microsoft.Extensions.Logging;
 
     public delegate void LayerMouseEvent(MapMouseEventArgs eventArgs);
     public delegate void LayerTouchEvent(MapTouchEventArgs eventArgs);
@@ -41,6 +47,7 @@
         }
 
         internal abstract LayerOptions GetLayerOptions();
+        internal abstract void AddInterop(IMapJsRuntime jsRuntime, ILogger logger);
 
         internal void DispatchEvent(Map map, MapJsEventArgs eventArgs)
         {
@@ -117,15 +124,54 @@
 
     }
 
-    public abstract class Layer<T> : Layer
-        where T : LayerOptions
+    public abstract class Layer<TOptions> : Layer
+        where TOptions : LayerOptions, new()
     {
-        public T Options { get; set; }
+        internal IMapJsRuntime _mapJsRuntime;
+        internal ILogger _logger;
+
+        public TOptions Options { get; set; }
 
         internal Layer(string id, LayerType type) : base(id, type)
         {
         }
 
+        /// <summary>
+        /// Set the options of a layer
+        /// </summary>
+        /// <param name="update">Update to apply on the options</param>
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        /// <returns></returns>
+        public async ValueTask SetOptionsAsync(Action<TOptions> update)
+        {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Layer_SetOptionsAsync, "Layer - SetOptionsAsync");
+            _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Layer_SetOptionsAsync, $"Id: {Id}");
+
+            EnsureJsRuntimeExists();
+
+            if (Options is null)
+            {
+                Options = new();
+            }
+
+            update(Options);
+
+            await _mapJsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Layer.SetOptions.ToLayerNamespace(), Id, Options);
+        }
+
         internal override LayerOptions GetLayerOptions() => Options;
+        internal override void AddInterop(IMapJsRuntime jsRuntime, ILogger logger)
+        {
+            _mapJsRuntime = jsRuntime;
+            _logger = logger;
+        }
+
+        private void EnsureJsRuntimeExists()
+        {
+            if (_mapJsRuntime is null)
+            {
+                throw new ComponentNotAddedToMapException();
+            }
+        }
     }
 }

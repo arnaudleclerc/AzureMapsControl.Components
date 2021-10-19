@@ -4,7 +4,7 @@
 
     [ExcludeFromCodeCoverage]
     public abstract class DataSourceLayer<T> : Layer<T>
-        where T : LayerOptions
+        where T : LayerOptions, new()
     {
         public string DataSourceId { get; }
 

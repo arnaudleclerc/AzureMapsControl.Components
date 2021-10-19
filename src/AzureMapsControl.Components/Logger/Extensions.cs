@@ -51,8 +51,8 @@
         Map_SetCanvasContainerStylePropertiesAsync = 4024,
         Map_GetCameraOptionsAsync = 4025,
         Map_GetStyleOptionsAsync = 4026,
-        Map_GetTrafficOptionsAsync = 4026,
         Map_GetUserInteractionOptionsAsync = 4027,
+        Map_GetTrafficOptionsAsync = 4028,
         OverviewMapControl_UpdateAsync = 5000,
         OverviewMapControl_SetOptionsAsync = 5001,
         Popup_OpenAsync = 6000,
@@ -89,6 +89,7 @@
         IndoorManager_SetDynamicStylingAsync = 11105,
         IndoorManager_SetFacilityAsync = 11106,
         IndoorManager_SetOptionsAsync = 11107,
+        Layer_SetOptionsAsync = 12000
     }
 
     internal static class Extensions

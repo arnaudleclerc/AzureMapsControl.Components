@@ -77,20 +77,6 @@
         var heightExp = "[\"interpolate\", [\"linear\"], [\"get\", \"point_count\"], 1, 10, 1000, 5000]";
         var filterExp = "[\"==\", [\"get\", \"cell_id\"], \"\"]";
 
-        var polygonLayer = new Components.Layers.PolygonExtrusionLayer
-        {
-            EventActivationFlags = Components.Layers.LayerEventActivationFlags.None().Enable(Components.Layers.LayerEventType.MouseMove, Components.Layers.LayerEventType.MouseLeave),
-            Options = new Components.Layers.PolygonExtrusionLayerOptions
-            {
-                Source = _datasourceId,
-                FillColor = new Components.Atlas.ExpressionOrString(System.Text.Json.JsonDocument.Parse(steppedExpJsonString)),
-                FillOpacity = 0.8,
-                Height = new Components.Atlas.ExpressionOrNumber(System.Text.Json.JsonDocument.Parse(heightExp))
-            }
-        };
-
-        await eventArgs.Map.AddLayerAsync(polygonLayer, "labels");
-
         var polygonHoverLayer = new Components.Layers.PolygonExtrusionLayer
         {
             Options = new Components.Layers.PolygonExtrusionLayerOptions
@@ -103,6 +89,28 @@
             }
         };
 
+        var polygonLayer = new Components.Layers.PolygonExtrusionLayer
+        {
+            EventActivationFlags = Components.Layers.LayerEventActivationFlags.None().Enable(Components.Layers.LayerEventType.Click),
+            Options = new Components.Layers.PolygonExtrusionLayerOptions
+            {
+                Source = _datasourceId,
+                FillColor = new Components.Atlas.ExpressionOrString(System.Text.Json.JsonDocument.Parse(steppedExpJsonString)),
+                FillOpacity = 0.8,
+                Height = new Components.Atlas.ExpressionOrNumber(System.Text.Json.JsonDocument.Parse(heightExp))
+            }
+        };
+
+        polygonLayer.OnClick += async clickEvent =>
+        {
+            var cellId = clickEvent.Shapes.First().Properties["cell_id"];
+            Console.WriteLine(cellId);
+            await polygonHoverLayer.SetOptionsAsync(options => options.Filter = new Components.Atlas.Expression(
+                    System.Text.Json.JsonDocument.Parse($"[\"==\", [\"get\", \"cell_id\"], \"{cellId}\"]")
+                ));
+        };
+
+        await eventArgs.Map.AddLayerAsync(polygonLayer, "labels");
         await eventArgs.Map.AddLayerAsync(polygonHoverLayer, "labels");
     }
 

@@ -15,7 +15,7 @@
     [JsonConverter(typeof(TileLayerOptionsJsonConverter))]
     public sealed class TileLayerOptions : MediaLayerOptions
     {
-        internal TileLayerOptions() { }
+        public TileLayerOptions() { }
         public TileLayerOptions(Uri tileUrl) => TileUrl = tileUrl.ToString();
         public TileLayerOptions(string tileUrl) => TileUrl = tileUrl;
 

@@ -619,6 +619,7 @@
             }
 
             _layers.Add(layer);
+            layer.AddInterop(_jsRuntime, _logger);
 
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddLayerAsync, "Adding layer");
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_AddLayerAsync, $"Id: {layer.Id} | Type: {layer.Type} | Events: {string.Join('|', layer.EventActivationFlags.EnabledEvents)} | Before: {before}");

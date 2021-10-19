@@ -50,5 +50,6 @@
         internal static string ToOverviewMapControlNamespace(this string method) => $"{JsConstants.Namespaces.AzureMapsControl}.{JsConstants.Namespaces.OverviewMapControl}.{method}";
         internal static string ToFullScreenControlNamespace(this string method) => $"{JsConstants.Namespaces.AzureMapsControl}.{JsConstants.Namespaces.FullScreenControl}.{method}";
         internal static string ToIndoorNamespace(this string method) => $"{JsConstants.Namespaces.AzureMapsControl}.{JsConstants.Namespaces.Indoor}.{method}";
+        internal static string ToLayerNamespace(this string method) => $"{JsConstants.Namespaces.AzureMapsControl}.{JsConstants.Namespaces.Layer}.{method}";
     }
 }

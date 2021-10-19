@@ -22,13 +22,13 @@
         /// </summary>
         public IEnumerable<Position> Coordinates { get; internal set; }
 
+        public ImageLayerOptions() { }
+
         public ImageLayerOptions(string url, IEnumerable<Position> coordinates)
         {
             Url = url;
             Coordinates = coordinates;
         }
-
-        internal ImageLayerOptions() { }
     }
 
     internal sealed class ImageLayerOptionsJsonConverter : MediaLayerOptionsJsonConverter<ImageLayerOptions>
