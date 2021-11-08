@@ -14,6 +14,7 @@
             internal const string Popup = "Popup";
             internal const string Source = "Source";
             internal const string Datasource = "Datasource";
+            internal const string GriddedDatasource = "GriddedDatasource";
             internal const string HtmlMarker = "HtmlMarker";
             internal const string OverviewMapControl = "OverviewMapControl";
             internal const string GeolocationControl = "GeolocationControl";
@@ -110,6 +111,14 @@
             internal static class Datasource
             {
                 internal const string GetShapes = "getShapes";
+            }
+
+            internal static class GriddedDatasource
+            {
+                internal const string GetCellChildren = "getCellChildren";
+                internal const string GetGridCells = "getGridCells";
+                internal const string GetPoints = "getPoints";
+                internal const string SetFeatureCollectionPoints = "setFeatureCollectionPoints";
             }
 
             internal static class HtmlMarker

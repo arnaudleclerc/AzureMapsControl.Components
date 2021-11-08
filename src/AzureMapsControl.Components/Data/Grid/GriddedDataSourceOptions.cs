@@ -16,6 +16,11 @@
     public sealed class GriddedDataSourceOptions : SourceOptions
     {
         /// <summary>
+        /// Defines custom properties that are calculated using expressions against all the points within each grid cell and added to the properties of each grid cell polygon.
+        /// </summary>
+        public System.Collections.Generic.IDictionary<string, Expression> AggregateProperties { get; set; }
+
+        /// <summary>
         /// The spatial width of each cell in the grid in the specified distance units.
         /// </summary>
         public double? CellWidth { get; set; }
@@ -125,6 +130,19 @@
             }
 
             writer.WriteStartObject();
+
+            if (value.AggregateProperties is not null)
+            {
+                writer.WritePropertyName("aggregateProperties");
+                writer.WriteStartObject();
+                foreach (var property in value.AggregateProperties)
+                {
+                    writer.WritePropertyName(property.Key);
+                    JsonSerializer.Serialize(writer, property.Value, options);
+                }
+                writer.WriteEndObject();
+            }
+
             if (value.CellWidth.HasValue)
             {
                 writer.WriteNumber("cellWidth", value.CellWidth.Value);

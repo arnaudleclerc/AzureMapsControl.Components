@@ -1,5 +1,9 @@
 ﻿namespace AzureMapsControl.Components.Tests.Data.Grid
 {
+    using System.Collections.Generic;
+    using System.Text.Json;
+
+    using AzureMapsControl.Components.Atlas;
     using AzureMapsControl.Components.Data.Grid;
     using AzureMapsControl.Components.Tests.Json;
 
@@ -20,12 +24,18 @@
                 GridType = GridType.Circle,
                 MaxZoom = 4,
                 MinCellWidth = 5,
-                ScaleExpression = new Components.Atlas.Expression(System.Text.Json.JsonDocument.Parse("[\"==\", [\"get\", \"cell_id\"], \"\"]")),
-                ScaleProperty = "scaleProperty"
+                ScaleExpression = new Expression(JsonDocument.Parse("[\"==\", [\"get\", \"cell_id\"], \"\"]")),
+                ScaleProperty = "scaleProperty",
+                AggregateProperties = new Dictionary<string, Expression> {
+                    { "total", new Expression(JsonDocument.Parse("[\"==\", [\"get\", \"cell_id\"], \"\"]")) }
+                }
             };
 
             var expectedJson = "{"
-                + "\"cellWidth\":1"
+                + "\"aggregateProperties\":{"
+                + "\"total\":[\"==\",[\"get\",\"cell_id\"],\"\"]"
+                + "}"
+                + ",\"cellWidth\":1"
                 + ",\"centerLatitude\":2"
                 + ",\"coverage\":3"
                 + ",\"distanceUnits\":\"meters\""
@@ -46,7 +56,10 @@
         public void Should_Read()
         {
             var json = "{"
-                + "\"cellWidth\":1"
+                + "\"aggregateProperties\":{"
+                + "\"total\":[\"\u002B\",[\"get\",\"value\"]]"
+                + "}"
+                + ",\"cellWidth\":1"
                 + ",\"centerLatitude\":2"
                 + ",\"coverage\":3"
                 + ",\"distanceUnits\":\"meters\""
@@ -59,6 +72,7 @@
 
             var options = Read(json);
 
+            Assert.Null(options.AggregateProperties);
             Assert.Equal(1, options.CellWidth);
             Assert.Equal(2, options.CenterLatitude);
             Assert.Equal(3, options.Coverage);

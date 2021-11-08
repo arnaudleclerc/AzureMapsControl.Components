@@ -1,0 +1,89 @@
+﻿@*@page "/Sources/GriddedDatasourceOptions"
+@using AzureMapsControl.Components.Map
+@inject AzureMapsControl.Components.Map.IMapService MapService
+
+<AzureMap Id="map"
+          EventActivationFlags="MapEventActivationFlags
+                                .None()
+                                .Enable(MapEventType.Ready, MapEventType.SourceAdded)"
+          CameraOptions="CameraOptions"
+          StyleOptions="StyleOptions"
+          UserInteractionOptions="UserInteractionOptions"
+          OnReady="OnMapReady"
+          OnSourceAdded="OnSourceAdded" />
+
+@code {
+    private readonly Components.Data.Grid.GriddedDataSource _datasource = "datasourceId";
+    private readonly Components.Atlas.Position _center = new(-122.3378, 47.6129);
+
+    public CameraOptions CameraOptions = new CameraOptions { Center = _center, Zoom = 10 };
+
+    public StyleOptions StyleOptions = new StyleOptions { Style = MapStyle.GrayscaleDark };
+
+    public UserInteractionOptions UserInteractionOptions = new UserInteractionOptions { Interactive = false };
+
+    public async Task OnMapReady(MapEventArgs eventArgs)
+    {
+        _datasource = new Components.Data.Grid.GriddedDataSource(_datasourceId)
+            {
+                Options = new Components.Data.Grid.GriddedDataSourceOptions
+                {
+                    CellWidth = 2,
+                    DistanceUnits = Components.Atlas.Math.DistanceUnits.Miles,
+                    AggregateProperties = new Dictionary<string, Components.Atlas.Expression> {
+                    { "total", new Components.Atlas.Expression(System.Text.Json.JsonDocument.Parse("[\"+\", [\"get\", \"value\"]]")) }
+                }
+                }
+            };
+        await eventArgs.Map.AddSourceAsync(_datasource);
+    }
+
+    public async Task OnSourceAdded(MapSourceEventArgs eventArgs)
+    {
+        var layer = new Components.Layers.PolygonLayer
+            {
+                Options = new Components.Layers.PolygonLayerOptions
+                {
+                    Source = _datasource.Id,
+                    FillColor = new Components.Atlas.ExpressionOrString("[\"interpolate\", [\"linear\"], [\"get\", \"total\", [\"get\", \"aggregateProperties\"]], 0, \"#ffffcc\", 1000, \"#41b6c4\", 10000, \"#253494\"]"),
+                    FillOpacity = new Components.Atlas.ExpressionOrNumber(0.7)
+                }
+            };
+
+        var outlineLayer = new Components.Layers.LineLayer
+            {
+                Options = new Components.Layers.LineLayerOptions
+                {
+                    Source = _datasource.Id,
+                    StrokeColor = new Components.Atlas.ExpressionOrString("black")
+                }
+            };
+
+        await eventArgs.Map.AddLayerAsync(layer, "labels");
+        await eventArgs.Map.AddLayerAsync(outlineLayer, "labels");
+    }
+
+    public async Task UpdateNumPointsAsync(int numPoints)
+    {
+        var points = new List<Components.Atlas.Point>();
+        var random = new Random();
+
+        foreach (var num in numPoints)
+        {
+            points.Add(
+                new Components.Atlas.Feature<Components.Atlas.Point>(
+                    new Components.Atlas.Point(
+                        new Components.Atlas.Position(random.Next(0, 1) + _center.Longitude, random.Next(0, 1) + _center.Latitude)
+                    )
+                )
+                    {
+                        Properties = new Dictionary<string, object> {
+                            { "value", random.Next(0,100) }
+                        }
+                    }
+            );
+        }
+
+        _datasource.AddAsync
+    }
+}*@

@@ -23,6 +23,11 @@
         public bool? Cluster { get; set; }
 
         /// <summary>
+        /// Defines custom properties that are calculated using expressions against all the points within each cluster and added to the properties of each cluster point.
+        /// </summary>
+        public System.Collections.Generic.IDictionary<string, Atlas.Expression> ClusterProperties { get; set; }
+
+        /// <summary>
         /// The maximum zoom level in which to cluster points.
         /// </summary>
         public int? ClusterMaxZoom { get; set; }
@@ -113,6 +118,18 @@
             if (value.ClusterMaxZoom.HasValue)
             {
                 writer.WriteNumber("clusterMaxZoom", value.ClusterMaxZoom.Value);
+            }
+
+            if (value.ClusterProperties is not null)
+            {
+                writer.WritePropertyName("clusterProperties");
+                writer.WriteStartObject();
+                foreach (var property in value.ClusterProperties)
+                {
+                    writer.WritePropertyName(property.Key);
+                    JsonSerializer.Serialize(writer, property.Value, options);
+                }
+                writer.WriteEndObject();
             }
 
             if (value.ClusterRadius.HasValue)

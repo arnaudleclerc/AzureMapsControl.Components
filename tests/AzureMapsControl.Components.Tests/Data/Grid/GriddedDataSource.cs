@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text.Json;
 
     using AzureMapsControl.Components.Atlas;
     using AzureMapsControl.Components.Data.Grid;
@@ -723,6 +724,174 @@
             await datasource.DisposeAsync();
 
             await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await datasource.SetOptionsAsync(options => options.CenterLatitude = 2));
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), datasource.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_GetCellChildren_Async()
+        {
+            var datasource = new GriddedDataSource {
+                JSRuntime = _jsRuntimeMock.Object
+            };
+
+            var cellChildren = System.ArraySegment<Feature<Point>>.Empty;
+            _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<IEnumerable<Feature<Point>>>(It.IsAny<string>(), It.IsAny<object[]>()))
+                .ReturnsAsync(cellChildren);
+
+            var cellId = "cellId";
+            var result = await datasource.GetCellChildrenAsync(cellId);
+
+            Assert.Equal(cellChildren, result);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<IEnumerable<Feature<Point>>>(Constants.JsConstants.Methods.GriddedDatasource.GetCellChildren.ToGriddedDatasourceNamespace(), datasource.Id, cellId), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotGetCellChildren_NotAddedToMapCase_Async()
+        {
+            var datasource = new GriddedDataSource();
+
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await datasource.GetCellChildrenAsync("cellId"));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotGetCellChildren_DisposedCase_Async()
+        {
+            var datasource = new GriddedDataSource {
+                JSRuntime = _jsRuntimeMock.Object
+            };
+
+            await datasource.DisposeAsync();
+            await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await datasource.GetCellChildrenAsync("cellId"));
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), datasource.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_GetGridCells_Async()
+        {
+            var datasource = new GriddedDataSource {
+                JSRuntime = _jsRuntimeMock.Object
+            };
+
+            var gridCells = System.ArraySegment<Feature<Polygon>>.Empty;
+            _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<IEnumerable<Feature<Polygon>>>(It.IsAny<string>(), It.IsAny<object[]>()))
+                .ReturnsAsync(gridCells);
+
+            var result = await datasource.GetGridCellsAsync();
+            Assert.Equal(gridCells, result);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<IEnumerable<Feature<Polygon>>>(Constants.JsConstants.Methods.GriddedDatasource.GetGridCells.ToGriddedDatasourceNamespace(), datasource.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotGetGridCells_NotAddedToMapCase_Async()
+        {
+            var datasource = new GriddedDataSource();
+
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await datasource.GetGridCellsAsync());
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotGetGridCells_DisposedCase_Async()
+        {
+            var datasource = new GriddedDataSource {
+                JSRuntime = _jsRuntimeMock.Object
+            };
+
+            await datasource.DisposeAsync();
+            await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await datasource.GetGridCellsAsync());
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), datasource.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_GetPoints_Async()
+        {
+            var datasource = new GriddedDataSource {
+                JSRuntime = _jsRuntimeMock.Object
+            };
+
+            var points = System.ArraySegment<Feature<Point>>.Empty;
+            _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<IEnumerable<Feature<Point>>>(It.IsAny<string>(), It.IsAny<object[]>()))
+                .ReturnsAsync(points);
+
+            var result = await datasource.GetPointsAsync();
+            Assert.Equal(points, result);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<IEnumerable<Feature<Point>>>(Constants.JsConstants.Methods.GriddedDatasource.GetPoints.ToGriddedDatasourceNamespace(), datasource.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotGetPoint_NotAddedToMapCase_Async()
+        {
+            var datasource = new GriddedDataSource();
+
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await datasource.GetPointsAsync());
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotGetPoints_DisposedCase_Async()
+        {
+            var datasource = new GriddedDataSource {
+                JSRuntime = _jsRuntimeMock.Object
+            };
+
+            await datasource.DisposeAsync();
+            await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await datasource.GetPointsAsync());
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), datasource.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_SetPoints_WithFeatureCollection_Async()
+        {
+            var datasource = new GriddedDataSource {
+                JSRuntime = _jsRuntimeMock.Object
+            };
+
+            var featureCollection = JsonDocument.Parse("{}");
+            await datasource.SetPointsAsync(featureCollection);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.GriddedDatasource.SetFeatureCollectionPoints.ToGriddedDatasourceNamespace(), datasource.Id, featureCollection), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotSetPoints_WithFeatureCollection__NotAddedToMapCase_Async()
+        {
+            var datasource = new GriddedDataSource();
+
+            var featureCollection = JsonDocument.Parse("{}");
+            await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await datasource.SetPointsAsync(featureCollection));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async void Should_NotSetPoints_WithFeatureCollection__DisposedCase_Async()
+        {
+            var datasource = new GriddedDataSource {
+                JSRuntime = _jsRuntimeMock.Object
+            };
+
+            await datasource.DisposeAsync();
+            var featureCollection = JsonDocument.Parse("{}");
+            await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await datasource.SetPointsAsync(featureCollection));
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), datasource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();

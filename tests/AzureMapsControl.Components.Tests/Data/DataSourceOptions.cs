@@ -1,5 +1,9 @@
 ﻿namespace AzureMapsControl.Components.Tests.Data
 {
+    using System.Collections.Generic;
+    using System.Text.Json;
+
+    using AzureMapsControl.Components.Atlas;
     using AzureMapsControl.Components.Data;
     using AzureMapsControl.Components.Tests.Json;
 
@@ -19,13 +23,19 @@
                 ClusterRadius = 3,
                 LineMetrics = true,
                 MaxZoom = 4,
-                Tolerance = 5
+                Tolerance = 5,
+                ClusterProperties = new Dictionary<string, Expression> {
+                    { "total", new Expression(JsonDocument.Parse("[\"==\", [\"get\", \"cell_id\"], \"\"]")) }
+                }
             };
 
             var expectedJson = "{"
                 + "\"buffer\":1"
                 + ",\"cluster\":true"
                 + ",\"clusterMaxZoom\":2"
+                + ",\"clusterProperties\":{"
+                + "\"total\":[\"==\",[\"get\",\"cell_id\"],\"\"]"
+                + "}"
                 + ",\"clusterRadius\":3"
                 + ",\"lineMetrics\":true"
                 + ",\"maxZoom\":4"
@@ -45,6 +55,9 @@
                 + "\"buffer\":1"
                 + ",\"cluster\":true"
                 + ",\"clusterMaxZoom\":2"
+                + ",\"clusterProperties\":{"
+                + "\"total\":[\"==\",[\"get\",\"cell_id\"],\"\"]"
+                + "}"
                 + ",\"clusterRadius\":3"
                 + ",\"lineMetrics\":true"
                 + ",\"maxZoom\":4"
@@ -55,6 +68,7 @@
             Assert.Equal(1, options.Buffer);
             Assert.True(options.Cluster);
             Assert.Equal(2, options.ClusterMaxZoom);
+            Assert.Null(options.ClusterProperties);
             Assert.Equal(3, options.ClusterRadius);
             Assert.True(options.LineMetrics);
             Assert.Equal(4, options.MaxZoom);

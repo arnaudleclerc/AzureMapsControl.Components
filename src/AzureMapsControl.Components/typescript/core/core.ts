@@ -161,7 +161,7 @@ export class Core {
                         position: e.position,
                         positions: e.positions,
                         shapes: e.shapes?.filter(shape => shape instanceof azmaps.Shape).map(shape => this.getSerializableShape(shape as azmaps.Shape)),
-                        features: e.shapes?.filter(shape => shape instanceof azmaps.data.Feature || shape.type === 'Feature').map(feature => this._getSerializableFeature(feature as azmaps.data.Feature<azmaps.data.Geometry, unknown>))
+                        features: e.shapes?.filter(shape => shape instanceof azmaps.data.Feature || shape.type === 'Feature').map(feature => this.getSerializableFeature(feature as azmaps.data.Feature<azmaps.data.Geometry, unknown>))
                     });
                 });
             });
@@ -226,7 +226,7 @@ export class Core {
                         pixel: mouseEvent.pixel,
                         position: mouseEvent.position,
                         shapes: mouseEvent.shapes?.filter(shape => shape instanceof azmaps.Shape).map(shape => this.getSerializableShape(shape as azmaps.Shape)),
-                        features: mouseEvent.shapes?.filter(shape => shape instanceof azmaps.data.Feature).map(feature => this._getSerializableFeature(feature as azmaps.data.Feature<azmaps.data.Geometry, unknown>))
+                        features: mouseEvent.shapes?.filter(shape => shape instanceof azmaps.data.Feature).map(feature => this.getSerializableFeature(feature as azmaps.data.Feature<azmaps.data.Geometry, unknown>))
                     });
                 });
             });
@@ -585,7 +585,7 @@ export class Core {
         return properties;
     }
 
-    private static _getSerializableFeature(feature: azmaps.data.Feature<azmaps.data.Geometry, any>): Feature {
+    public static getSerializableFeature(feature: azmaps.data.Feature<azmaps.data.Geometry, any>): Feature {
         return {
             bbox: feature.bbox,
             geometry: feature.geometry,
