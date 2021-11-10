@@ -25,7 +25,7 @@
                 Tolerance = 6
             };
 
-            var expectedJson = JsonSerializer.Serialize(options, null);
+            var expectedJson = JsonSerializer.Serialize(options);
             TestAndAssertWrite(options, expectedJson);
         }
 
@@ -44,7 +44,7 @@
                 Url = "url"
             };
 
-            var expectedJson = JsonSerializer.Serialize(options, null);
+            var expectedJson = JsonSerializer.Serialize(options);
             TestAndAssertWrite(options, expectedJson);
         }
 

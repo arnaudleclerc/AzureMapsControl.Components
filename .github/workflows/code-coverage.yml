@@ -27,16 +27,21 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Setup .NET Core
+    - name: Setup .NET 5.0
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
+    - name: Setup .NET 6.0
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+        include-prerelease: true
     - name: Install dependencies
       run: dotnet restore ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj
     - name: Build
       run: dotnet build --configuration Release --no-restore ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj
     - name: Test
-      run: dotnet test ./tests/AzureMapsControl.Components.Tests/AzureMapsControl.Components.Tests.csproj --collect:"XPlat Code Coverage" -r ./tests/AzureMapsControl.Components.Tests/testresults
+      run: dotnet test --configuration Release ./tests/AzureMapsControl.Components.Tests/AzureMapsControl.Components.Tests.csproj --collect:"XPlat Code Coverage" -r ./tests/AzureMapsControl.Components.Tests/testresults
     - name: Upload code coverage
       uses: codecov/codecov-action@v2
       with:
