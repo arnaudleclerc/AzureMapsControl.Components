@@ -55,7 +55,7 @@
                 CellWidth = 1
             };
 
-            var expectedJson = JsonSerializer.Serialize(options, null);
+            var expectedJson = JsonSerializer.Serialize(options);
             TestAndAssertWrite(options, expectedJson);
         }
     }
