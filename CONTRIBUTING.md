@@ -46,7 +46,7 @@ Please consider the following points when creating your pull request :
 
 - You will need an Azure Maps Account. More information here: [https://docs.microsoft.com/en-us/azure/azure-maps/quick-demo-map-app#create-an-azure-maps-account](https://docs.microsoft.com/en-us/azure/azure-maps/quick-demo-map-app#create-an-azure-maps-account)
 - You need to be able restore the packages using `npm`.
-- You will need to be able to compile with .NET 5. Please ensure this version is installed on your machine. 
+- This library supports .NET 5 and .NET 6. Please be sure you use one of those versions.
 
 ### Structure of the repository
 
