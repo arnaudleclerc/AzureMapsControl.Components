@@ -8,6 +8,9 @@
     using AzureMapsControl.Components.Atlas;
     using AzureMapsControl.Components.Logger;
 
+    /// <summary>
+    /// A data source for aggregating point features into cells of a grid system. 
+    /// </summary>
     public sealed class GriddedDataSource : BaseSource<GriddedDataSourceOptions>
     {
         public GriddedDataSource() : this(Guid.NewGuid().ToString()) { }
@@ -118,6 +121,8 @@
         /// </summary>
         /// <param name="featureCollection">The feature collection containing the new points to add</param>
         /// <returns></returns>
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
         public async ValueTask SetPointsAsync(JsonDocument featureCollection)
         {
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.GriddedDataSource_SetPoints, "Set points of gridded data source with feature collection");
@@ -127,6 +132,60 @@
             EnsureNotDisposed();
 
             await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.GriddedDatasource.SetFeatureCollectionPoints.ToGriddedDatasourceNamespace(), Id, featureCollection);
+        }
+
+        /// <summary>
+        /// Overwrites all points in the data source with the given features
+        /// </summary>
+        /// <param name="features"The new features to add</param>
+        /// <returns></returns>
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
+        public async ValueTask SetPointsAsync(IEnumerable<Feature<Point>> features)
+        {
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.GriddedDataSource_SetPoints, "Set points of gridded data source with feature points");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.GriddedDataSource_SetPoints, $"ID: { Id }");
+
+            EnsureJsRuntimeExists();
+            EnsureNotDisposed();
+
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.GriddedDatasource.SetFeaturePoints.ToGriddedDatasourceNamespace(), Id, features);
+        }
+
+        /// <summary>
+        /// Overwrites all points in the data source with the given points
+        /// </summary>
+        /// <param name="points"The new points to add</param>
+        /// <returns></returns>
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
+        public async ValueTask SetPointsAsync(IEnumerable<Point> points)
+        {
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.GriddedDataSource_SetPoints, "Set points of gridded data source with points");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.GriddedDataSource_SetPoints, $"ID: { Id }");
+
+            EnsureJsRuntimeExists();
+            EnsureNotDisposed();
+
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.GriddedDatasource.SetPoints.ToGriddedDatasourceNamespace(), Id, points);
+        }
+
+        /// <summary>
+        /// Overwrites all points in the data source with the given shapes
+        /// </summary>
+        /// <param name="shapes"The new shapes to add</param>
+        /// <returns></returns>
+        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+        /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
+        public async ValueTask SetPointsAsync(IEnumerable<Shape<Point>> shapes)
+        {
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.GriddedDataSource_SetPoints, "Set points of gridded data source with shapes");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.GriddedDataSource_SetPoints, $"ID: { Id }");
+
+            EnsureJsRuntimeExists();
+            EnsureNotDisposed();
+
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.GriddedDatasource.SetShapePoints.ToGriddedDatasourceNamespace(), Id, shapes);
         }
     }
 }

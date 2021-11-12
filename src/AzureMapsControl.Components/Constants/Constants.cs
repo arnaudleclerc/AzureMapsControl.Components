@@ -119,6 +119,9 @@
                 internal const string GetGridCells = "getGridCells";
                 internal const string GetPoints = "getPoints";
                 internal const string SetFeatureCollectionPoints = "setFeatureCollectionPoints";
+                internal const string SetFeaturePoints = "setFeaturePoints";
+                internal const string SetPoints = "setPoints";
+                internal const string SetShapePoints = "setShapePoints";
             }
 
             internal static class HtmlMarker

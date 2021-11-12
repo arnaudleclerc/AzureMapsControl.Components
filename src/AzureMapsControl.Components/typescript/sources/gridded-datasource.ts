@@ -1,10 +1,10 @@
 import { Core } from '../core/core';
-import { Feature } from '../geometries/geometry';
+import { Feature, Geometry, Shape } from '../geometries/geometry';
 import * as azmapsgriddeddatasource from 'azure-maps-gridded-data-source';
 import * as azmaps from 'azure-maps-control';
 import { GeometryBuilder } from '../geometries/geometry-builder';
 
-export class GriddedDataource {
+export class GriddedDatasource {
 
     public static getCellChildren(sourceId: string, cellId: string): Feature[] {
         return (Core.getMap().sources.getById(sourceId) as azmapsgriddeddatasource.source.GriddedDataSource)
@@ -26,8 +26,18 @@ export class GriddedDataource {
         (Core.getMap().sources.getById(sourceId) as azmapsgriddeddatasource.source.GriddedDataSource).setPoints(featureCollection);
     }
 
-    public static setFeaturesPoints(sourceId: string, features: Feature[]): void {
+    public static setFeaturePoints(sourceId: string, features: Feature[]): void {
         const points = features.map(feature => GeometryBuilder.buildFeature(feature) as azmaps.data.Feature<azmaps.data.Point, any>);
+        (Core.getMap().sources.getById(sourceId) as azmapsgriddeddatasource.source.GriddedDataSource).setPoints(points);
+    }
+
+    public static setPoints(sourceId: string, geometries: Geometry[]): void {
+        const points = geometries.map(geometry => GeometryBuilder.buildPoint(geometry));
+        (Core.getMap().sources.getById(sourceId) as azmapsgriddeddatasource.source.GriddedDataSource).setPoints(points);
+    }
+
+    public static setShapePoints(sourceId: string, shapes: Shape[]): void {
+        const points = shapes.map(shape => GeometryBuilder.buildShape(shape));
         (Core.getMap().sources.getById(sourceId) as azmapsgriddeddatasource.source.GriddedDataSource).setPoints(points);
     }
 

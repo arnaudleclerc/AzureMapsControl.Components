@@ -37,12 +37,12 @@
     <div id="legendColors"><i style="background:#ffffb2"></i> 1 - 100<br><i style="background:#fecc5c"></i> 100 - 200<br><i style="background:#fd8d3c"></i> 200 - 300<br><i style="background:#f03b20"></i> 300 - 400<br><i style="background:#bd0026"></i> 400+</div><br />
     <b>Grid type:</b><br />
     <select @onchange="ChangeGridType">
-        <option value="circle">Circle</option>
-        <option selected="selected" value="hexagon">Hexagon</option>
-        <option value="hexCircle">Hex Circle</option>
-        <option value="pointyHexagon">Pointy Hexagon</option>
-        <option value="square">Square</option>
-        <option value="triangle">Triangle</option>
+        <option value="@Components.Data.Grid.GridType.Circle.ToString()">Circle</option>
+        <option selected="selected" value="@Components.Data.Grid.GridType.Hexagon.ToString()">Hexagon</option>
+        <option value="@Components.Data.Grid.GridType.HexCircle.ToString()">Hex Circle</option>
+        <option value="@Components.Data.Grid.GridType.PointyHexagon.ToString()">Pointy Hexagon</option>
+        <option value="@Components.Data.Grid.GridType.Square.ToString()">Square</option>
+        <option value="@Components.Data.Grid.GridType.Triangle.ToString()">Triangle</option>
     </select>
 </div>
 
@@ -56,16 +56,16 @@
     public async Task OnMapReady(MapEventArgs eventArgs)
     {
         var source = new Components.Data.Grid.GriddedDataSource(_datasourceId)
-        {
-            Options = new Components.Data.Grid.GriddedDataSourceOptions
             {
-                CellWidth = 0.25,
-                DistanceUnits = Components.Atlas.Math.DistanceUnits.Miles,
-                Coverage = 0.8,
-                CenterLatitude = 40.54,
-                GridType = Components.Data.Grid.GridType.Hexagon
-            }
-        };
+                Options = new Components.Data.Grid.GriddedDataSourceOptions
+                {
+                    CellWidth = 0.25,
+                    DistanceUnits = Components.Atlas.Math.DistanceUnits.Miles,
+                    Coverage = 0.8,
+                    CenterLatitude = 40.54,
+                    GridType = Components.Data.Grid.GridType.Hexagon
+                }
+            };
         await eventArgs.Map.AddSourceAsync(source);
 
         await source.ImportDataFromUrlAsync("https://azuremapscodesamples.azurewebsites.net/Common/data/geojson/address.json");
@@ -78,28 +78,28 @@
         var filterExp = "[\"==\", [\"get\", \"cell_id\"], \"\"]";
 
         var polygonHoverLayer = new Components.Layers.PolygonExtrusionLayer
-        {
-            Options = new Components.Layers.PolygonExtrusionLayerOptions
             {
-                Source = _datasourceId,
-                FillColor = new Components.Atlas.ExpressionOrString(System.Text.Json.JsonDocument.Parse(steppedExpJsonString)),
-                FillOpacity = 1,
-                Height = new Components.Atlas.ExpressionOrNumber(System.Text.Json.JsonDocument.Parse(heightExp)),
-                Filter = new Components.Atlas.Expression(System.Text.Json.JsonDocument.Parse(filterExp))
-            }
-        };
+                Options = new Components.Layers.PolygonExtrusionLayerOptions
+                {
+                    Source = _datasourceId,
+                    FillColor = new Components.Atlas.ExpressionOrString(System.Text.Json.JsonDocument.Parse(steppedExpJsonString)),
+                    FillOpacity = 1,
+                    Height = new Components.Atlas.ExpressionOrNumber(System.Text.Json.JsonDocument.Parse(heightExp)),
+                    Filter = new Components.Atlas.Expression(System.Text.Json.JsonDocument.Parse(filterExp))
+                }
+            };
 
         var polygonLayer = new Components.Layers.PolygonExtrusionLayer
-        {
-            EventActivationFlags = Components.Layers.LayerEventActivationFlags.None().Enable(Components.Layers.LayerEventType.Click),
-            Options = new Components.Layers.PolygonExtrusionLayerOptions
             {
-                Source = _datasourceId,
-                FillColor = new Components.Atlas.ExpressionOrString(System.Text.Json.JsonDocument.Parse(steppedExpJsonString)),
-                FillOpacity = 0.8,
-                Height = new Components.Atlas.ExpressionOrNumber(System.Text.Json.JsonDocument.Parse(heightExp))
-            }
-        };
+                EventActivationFlags = Components.Layers.LayerEventActivationFlags.None().Enable(Components.Layers.LayerEventType.Click),
+                Options = new Components.Layers.PolygonExtrusionLayerOptions
+                {
+                    Source = _datasourceId,
+                    FillColor = new Components.Atlas.ExpressionOrString(System.Text.Json.JsonDocument.Parse(steppedExpJsonString)),
+                    FillOpacity = 0.8,
+                    Height = new Components.Atlas.ExpressionOrNumber(System.Text.Json.JsonDocument.Parse(heightExp))
+                }
+            };
 
         polygonLayer.OnClick += async clickEvent =>
         {
