@@ -104,7 +104,6 @@
         polygonLayer.OnClick += async clickEvent =>
         {
             var cellId = clickEvent.Shapes.First().Properties["cell_id"];
-            Console.WriteLine(cellId);
             await polygonHoverLayer.SetOptionsAsync(options => options.Filter = new Components.Atlas.Expression(
                     System.Text.Json.JsonDocument.Parse($"[\"==\", [\"get\", \"cell_id\"], \"{cellId}\"]")
                 ));
