@@ -2,7 +2,7 @@
 
 This library allows you to use `Azure Maps` inside your razor application.
 
-![Custom Azure Map](./assets/map.png) 
+![Custom Azure Map](./docs/assets/map.png) 
 
 ## Install the Nuget Package
 
