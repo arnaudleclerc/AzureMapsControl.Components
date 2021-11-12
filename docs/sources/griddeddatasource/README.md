@@ -1,6 +1,6 @@
 ## Gridded Datasource
 
-The `Gridded Datasource` is not part of the `atlas` library, so you need to include the js file of the control into your application and reference it with a `script` tag on your razor page. It can be found on the [GitHub repository of the geolocation control](https://github.com/Azure-Samples/azure-maps-gridded-data-source).
+The `Gridded Datasource` is not part of the `atlas` library, so you need to include the js file of the control into your application and reference it with a `script` tag on your razor page. It can be found on the [GitHub repository of the gridded datasource module](https://github.com/Azure-Samples/azure-maps-gridded-data-source).
 
 This datasource clusters data points into cells of a grid area.
 
