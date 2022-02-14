@@ -145,6 +145,10 @@ It also needs to fetch the token to send to the requests of the atlas library. F
 - [Animations](docs/animations)
 - [Indoor Module](docs/indoor)
 
+## Community links
+
+- [Creating Azure Maps Applications In Blazor](https://blazorhelpwebsite.com/ViewBlogPost/59)
+
 ## Want to contribute ?
 
 Contributions are welcome! One of the best way to start is to take a look at the list of [issues where help is wanted](https://github.com/arnaudleclerc/AzureMapsControl.Components/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22).
