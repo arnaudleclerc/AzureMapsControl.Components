@@ -148,6 +148,7 @@ It also needs to fetch the token to send to the requests of the atlas library. F
 ## Community links
 
 - [Creating Azure Maps Applications In Blazor](https://blazorhelpwebsite.com/ViewBlogPost/59)
+- [Blazor Store Finder](https://github.com/ADefWebserver/BlazorStoreFinder)
 
 ## Want to contribute ?
 
