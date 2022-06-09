@@ -7,7 +7,7 @@
     using System.Text.Json.Serialization;
 
     [ExcludeFromCodeCoverage]
-    public abstract class Feature
+    public class Feature
     {
         [JsonConverter(typeof(FeatureIdConverter))]
         public string Id { get; set; }
