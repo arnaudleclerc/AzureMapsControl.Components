@@ -8,7 +8,7 @@
     [ExcludeFromCodeCoverage]
     public sealed class DrawingToolbarEventArgs : MapEventArgs
     {
-        public Feature Data { get; }
+        public Feature<Geometry> Data { get; }
 
         internal DrawingToolbarEventArgs(Map map, DrawingToolbarJsEventArgs eventArgs) : base(map, eventArgs.Type) => Data = eventArgs.Data;
     }

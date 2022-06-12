@@ -13,11 +13,17 @@
                                      Events = AzureMapsControl.Components.Drawing.DrawingToolbarEventActivationFlags.All()
                                  }"
           OnDrawingModeChanged="OnDrawingModeChanged"
+          OnDrawingComplete="OnDrawingComplete"
           />
 
 @code {
     public async Task OnDrawingModeChanged(AzureMapsControl.Components.Drawing.DrawingToolbarModeEventArgs eventArgs)
     {
         Console.WriteLine(eventArgs.NewMode);
+    }
+
+    public async Task OnDrawingComplete(AzureMapsControl.Components.Drawing.DrawingToolbarEventArgs eventArgs)
+    {
+        Console.WriteLine(eventArgs.Data);
     }
 }

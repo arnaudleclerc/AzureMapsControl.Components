@@ -7,36 +7,6 @@
 
     using Xunit;
 
-
-    public class FeatureJsonConverterTests : JsonConverterTests<Feature>
-    {
-        public FeatureJsonConverterTests() : base(new FeatureJsonConverter()) { }
-
-        [Fact]
-        public void Should_ReadFeature()
-        {
-            var feature = new Feature<Polygon>("adsf-asfda", new Polygon() {
-                GeometryType = "Polygon",
-                Coordinates = new[] {
-                    new [] {
-                        new Position(0, 1),
-                        new Position(2, 3)
-                    }
-                },
-                Id = "d93d484e-b60e-4ef9-afec-977c09344370",
-
-
-            });
-            var json = JsonSerializer.Serialize(feature);
-            var result = Read(json);
-            Assert.IsType<Feature<Polygon>>(result);
-            Assert.Equal(json, JsonSerializer.Serialize(result));
-        }
-
-    }
-
-
-
     public class GeometryJsonConverterTests : JsonConverterTests<Geometry>
     {
         public GeometryJsonConverterTests() : base(new GeometryJsonConverter()) { }

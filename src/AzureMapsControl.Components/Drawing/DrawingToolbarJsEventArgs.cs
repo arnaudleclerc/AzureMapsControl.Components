@@ -9,6 +9,6 @@
     {
         public string Type { get; set; }
         public string NewMode { get; set; }
-        public Feature Data { get; set; }
+        public Feature<Geometry> Data { get; set; }
     }
 }
