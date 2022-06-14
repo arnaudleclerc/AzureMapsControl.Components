@@ -7,6 +7,7 @@
     using System.Text.Json.Serialization;
 
     [ExcludeFromCodeCoverage]
+    [JsonConverter(typeof(FeatureJsonConverter))]
     public abstract class Feature
     {
         [JsonConverter(typeof(FeatureIdConverter))]
@@ -55,6 +56,44 @@
         public Feature(string id, TGeometry geometry, IDictionary<string, object> properties) : base(id, properties) => Geometry = geometry;
     }
 
+    internal class FeatureJsonConverter : JsonConverter<Feature>
+    {
+        public override Feature Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            var originalDepth = reader.CurrentDepth;
+
+            string Id = null;
+            IDictionary<string, object> Properties = null;
+            Geometry geometry = null;
+
+            while (reader.TokenType != JsonTokenType.EndObject || originalDepth != reader.CurrentDepth)
+            {
+                reader.Read();
+
+                if (reader.TokenType == JsonTokenType.PropertyName && reader.GetString() == "id")
+                {
+                    reader.Read();
+                    var converter = new FeatureIdConverter();
+                    Id = converter.Read(ref reader, typeof(string), options);
+                }
+
+                if (reader.TokenType == JsonTokenType.PropertyName && reader.GetString() == "properties")
+                {
+                    var converter = new FeaturePropertiesConverter();
+                    Properties = converter.Read(ref reader, typeof(IDictionary<string, object>), options);
+                }
+
+            }
+
+
+            return new Feature<Geometry>(Id, geometry, Properties);
+        }
+
+        public override void Write(Utf8JsonWriter writer, Feature value, JsonSerializerOptions options) => throw new NotSupportedException();
+
+
+    }
+
     internal sealed class FeatureIdConverter : JsonConverter<string>
     {
         public override string Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
@@ -93,4 +132,63 @@
             writer.WriteEndObject();
         }
     }
+
+    internal class FeatureJsonConverter<TGeometry> : JsonConverter<Feature<TGeometry>> where TGeometry : Geometry
+    {
+        public FeatureJsonConverter() { }
+
+        public override Feature<TGeometry> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            var originalDepth = reader.CurrentDepth;
+
+            string Id = null;
+            IDictionary<string, object> Properties = null;
+            TGeometry geometry = null;
+
+            while (reader.TokenType != JsonTokenType.EndObject || originalDepth != reader.CurrentDepth)
+            {
+                reader.Read();
+
+                if (reader.TokenType == JsonTokenType.PropertyName && reader.GetString() == "id")
+                {
+                    reader.Read();
+                    var converter = new FeatureIdConverter();
+                    Id = converter.Read(ref reader, typeof(string), options);
+                }
+
+                if (reader.TokenType == JsonTokenType.PropertyName && reader.GetString() == "geometry")
+                {
+                    var converter = new GeometryJsonConverter<TGeometry>();
+                    geometry = converter.Read(ref reader, typeof(TGeometry), options);
+                }
+
+                if (reader.TokenType == JsonTokenType.PropertyName && reader.GetString() == "properties")
+                {
+                    var converter = new FeaturePropertiesConverter();
+                    Properties = converter.Read(ref reader, typeof(IDictionary<string, object>), options);
+                }
+
+            }
+
+
+            return new Feature<TGeometry>(Id, geometry, Properties);
+        }
+
+        public override void Write(Utf8JsonWriter writer, Feature<TGeometry> value, JsonSerializerOptions options)
+        {
+            writer.WriteStartObject();
+            writer.WritePropertyName("geometry");
+            JsonSerializer.Serialize(writer, value.Geometry);
+            writer.WriteString("id", value.Id);
+            writer.WritePropertyName("properties");
+            JsonSerializer.Serialize(writer, value.Properties);
+            writer.WritePropertyName("bbox");
+            JsonSerializer.Serialize(writer, value.BBox);
+            writer.WriteEndObject();
+        }
+
+    }
+
+
+
 }
