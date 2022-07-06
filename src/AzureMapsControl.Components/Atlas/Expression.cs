@@ -24,13 +24,13 @@
         internal Expression() { }
 
         /// <summary>
-        /// Creates an expression
+        /// Creates an expression.
         /// </summary>
         /// <param name="expressions">Expressions to include in this expression</param>
         public Expression(IEnumerable<Expression> expressions) => Expressions = expressions;
 
         /// <summary>
-        /// Creates an expression
+        /// Creates an expression.
         /// </summary>
         /// <param name="json">Json representation of the expression</param>
         public Expression(JsonDocument json) => Json = json;
@@ -58,7 +58,7 @@
         public ExpressionOrNumber(JsonDocument json) : base(json) { }
 
         /// <summary>
-        /// Creates an expression
+        /// Creates an expression.
         /// </summary>
         /// <param name="value">Value which will be used instead of the expression</param>
         public ExpressionOrNumber(double? value) => Value = value;
@@ -114,7 +114,7 @@
         public ExpressionOrStringArray(JsonDocument json): base(json) { }
 
         /// <summary>
-        /// Creates an expression
+        /// Creates an expression.
         /// </summary>
         /// <param name="values">Values of the expression</param>
         public ExpressionOrStringArray(IEnumerable<string> values) => Values = values;
