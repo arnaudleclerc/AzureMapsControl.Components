@@ -56,6 +56,16 @@
         public static Expression HasProperty(string propertyName) => new(new[] { new ExpressionOrString("has"), new ExpressionOrString(propertyName) });
 
         /// <summary>
+        /// An expression conditionally evaluating either <paramref name="ifTrue"/> or <paramref name="ifFalse"/> based on <paramref name="condition"/>.
+        /// <para>Typically used during cluster/leaf property fetch, as cluster has only aggregated properties, while leaf level has more.</para>
+        /// </summary>
+        /// <param name="condition">The expression evaluating to <see cref="bool"/> (f.e. <see cref="IsCluster"/>).</param>
+        /// <param name="ifTrue">The expression to evaluate if <paramref name="condition"/> was <c>true</c>.</param>
+        /// <param name="ifFalse">The expression to evaluate if <paramref name="condition"/> was <c>false</c>.</param>
+        /// <returns>An expression conditionally evaluating either expression based on <paramref name="condition"/>.</returns>
+        public static Expression Conditional(Expression condition, Expression ifTrue, Expression ifFalse) => new(new[] { new ExpressionOrString("case"), condition, ifTrue, ifFalse });
+
+        /// <summary>
         /// An expression checking if node is cluster, or leaf.
         /// <para>See <seealso cref="Data.DataSourceOptions.Cluster"/></para>
         /// </summary>
