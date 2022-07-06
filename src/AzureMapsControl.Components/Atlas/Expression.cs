@@ -36,6 +36,21 @@
         public Expression(JsonDocument json) => Json = json;
 
         /// <summary>
+        /// An expression checking if <paramref name="propertyName"/> is defined in node.
+        /// <para>Typically used during data clustering to check if cluster node has property</para>
+        /// <para>See <seealso cref="Data.DataSourceOptions.ClusterProperties"/>.</para>
+        /// </summary>
+        /// <param name="propertyName">The property name to check existance.</param>
+        /// <returns>Expression that will evaluate into <c>true</c> if cluster has property; <c>false</c> otherwise.</returns>
+        public static Expression HasProperty(string propertyName) => new(new[] { new ExpressionOrString("has"), new ExpressionOrString(propertyName) });
+
+        /// <summary>
+        /// An expression checking if node is cluster, or leaf.
+        /// <para>See <seealso cref="Data.DataSourceOptions.Cluster"/></para>
+        /// </summary>
+        public static readonly Expression IsCluster = HasProperty(ClusterProperties.PointCount);
+
+        /// <summary>
         /// Holds cluster-specific properties provided by clustering engine, see <seealso cref="Data.DataSourceOptions.Cluster"/>.
         /// <para>
         ///     <seealso cref="https://docs.microsoft.com/en-us/azure/azure-maps/clustering-point-data-web-sdk"/>
