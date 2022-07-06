@@ -35,6 +35,16 @@
         /// <param name="json">Json representation of the expression.</param>
         public Expression(JsonDocument json) => Json = json;
 
+        /// <summary>
+        /// Converts <see cref="this"/> resulting value to number.
+        /// <para>Wrapper around 'to-number': <see cref="https://docs.microsoft.com/en-us/azure/azure-maps/data-driven-style-expressions-web-sdk"/>.</para>
+        /// </summary>
+        /// <returns>An expression converting supplied expression result into number.</returns>
+        public ExpressionOrNumber ToNumber()
+            => this is ExpressionOrNumber alreadyNumber
+            ? alreadyNumber
+            : (new(new[] { new ExpressionOrString("to-number"), this }));
+
         private static readonly Expression s_getter = new ExpressionOrString("get");
 
         /// <summary>
