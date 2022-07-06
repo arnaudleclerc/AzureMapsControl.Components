@@ -34,6 +34,20 @@
         /// </summary>
         /// <param name="json">Json representation of the expression.</param>
         public Expression(JsonDocument json) => Json = json;
+
+        /// <summary>
+        /// Holds cluster-specific properties provided by clustering engine, see <seealso cref="Data.DataSourceOptions.Cluster"/>.
+        /// <para>
+        ///     <seealso cref="https://docs.microsoft.com/en-us/azure/azure-maps/clustering-point-data-web-sdk"/>
+        /// </para>
+        /// </summary>
+        private struct ClusterProperties
+        {
+            /// <summary>
+            /// Point count exists only for cluster-level; leaf-level nodes do not have it.
+            /// </summary>
+            public static readonly string PointCount = "point_count";
+        }
     }
 
     /// <summary>
