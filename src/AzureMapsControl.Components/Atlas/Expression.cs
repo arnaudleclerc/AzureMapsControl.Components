@@ -26,13 +26,13 @@
         /// <summary>
         /// Creates an expression.
         /// </summary>
-        /// <param name="expressions">Expressions to include in this expression</param>
+        /// <param name="expressions">Expressions to include in this expression.</param>
         public Expression(IEnumerable<Expression> expressions) => Expressions = expressions;
 
         /// <summary>
         /// Creates an expression.
         /// </summary>
-        /// <param name="json">Json representation of the expression</param>
+        /// <param name="json">Json representation of the expression.</param>
         public Expression(JsonDocument json) => Json = json;
     }
 
@@ -46,15 +46,15 @@
         internal double? Value { get; }
 
         /// <summary>
-        /// Creates an expression
+        /// <inheritdoc cref="Expression(IEnumerable{Expression})"/>
         /// </summary>
-        /// <param name="expressions">Expressions to include in this expression</param>
+        /// <param name="expressions"><inheritdoc/></param>
         public ExpressionOrNumber(IEnumerable<Expression> expressions) : base(expressions) { }
 
         /// <summary>
-        /// Creates an expression
+        /// <inheritdoc cref="Expression(JsonDocument)"/>
         /// </summary>
-        /// <param name="json">Json representation of the expression</param>
+        /// <param name="json"><inheritdoc/></param>
         public ExpressionOrNumber(JsonDocument json) : base(json) { }
 
         /// <summary>
@@ -74,15 +74,15 @@
         internal string Value { get; }
 
         /// <summary>
-        /// Creates an expression
+        /// <inheritdoc cref="Expression(IEnumerable{Expression})"/>
         /// </summary>
-        /// <param name="expressions">Expressions to include in this expression</param>
+        /// <param name="expressions"><inheritdoc/></param>
         public ExpressionOrString(IEnumerable<Expression> expressions) : base(expressions) { }
 
         /// <summary>
-        /// Creates an expression
+        /// <inheritdoc cref="Expression(JsonDocument)"/>
         /// </summary>
-        /// <param name="json">Json representation of the expression</param>
+        /// <param name="json"><inheritdoc/></param>
         public ExpressionOrString(JsonDocument json) : base(json) { }
 
         /// <summary>
@@ -102,15 +102,15 @@
         internal IEnumerable<string> Values { get; }
 
         /// <summary>
-        /// Creates an expression
+        /// <inheritdoc cref="Expression(IEnumerable{Expression})"/>
         /// </summary>
-        /// <param name="expressions">Expressions to include in this expression</param>
+        /// <param name="expressions"><inheritdoc/></param>
         public ExpressionOrStringArray(IEnumerable<Expression> expressions) : base(expressions) { }
 
         /// <summary>
-        /// Creates an expression
+        /// <inheritdoc cref="Expression(JsonDocument)"/>
         /// </summary>
-        /// <param name="json">Json representation of the expression</param>
+        /// <param name="json"><inheritdoc/></param>
         public ExpressionOrStringArray(JsonDocument json): base(json) { }
 
         /// <summary>
