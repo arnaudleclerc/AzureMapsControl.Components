@@ -2,8 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
@@ -91,6 +91,7 @@
     /// </summary>
     [JsonConverter(typeof(ExpressionOrNumberJsonConverter))]
     [ExcludeFromCodeCoverage]
+    [DebuggerDisplay("{" + nameof(Value) + "}")]
     public sealed class ExpressionOrNumber : Expression
     {
         internal double? Value { get; }
@@ -119,6 +120,7 @@
     /// </summary>
     [JsonConverter(typeof(ExpressionOrStringJsonConverter))]
     [ExcludeFromCodeCoverage]
+    [DebuggerDisplay("{" + nameof(Value) + "}")]
     public sealed class ExpressionOrString : Expression
     {
         internal string Value { get; }
