@@ -35,6 +35,17 @@
         /// <param name="json">Json representation of the expression.</param>
         public Expression(JsonDocument json) => Json = json;
 
+        private static readonly Expression s_getter = new ExpressionOrString("get");
+
+        /// <summary>
+        /// An expression getting property value by <paramref name="propertyName"/>.
+        /// <para>Cluster properties are supplied via <seealso cref="Data.DataSourceOptions.ClusterProperties"/>.</para>
+        /// <para>Leaf level properties are supplied in data itself (f.e. <see cref="Feature.Properties"/>).</para>
+        /// </summary>
+        /// <param name="propertyName">The property name to get value.</param>
+        /// <returns>An expression to fetch property value.</returns>
+        public static Expression GetProperty(string propertyName) => new(new[] { s_getter, new ExpressionOrString(propertyName) });
+
         /// <summary>
         /// An expression checking if <paramref name="propertyName"/> is defined in node.
         /// <para>Typically used during data clustering to check if cluster node has property</para>
