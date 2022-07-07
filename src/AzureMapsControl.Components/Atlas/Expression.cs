@@ -2,8 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
     using System.Text.Json;
     using System.Text.Json.Serialization;
 
@@ -24,16 +24,76 @@
         internal Expression() { }
 
         /// <summary>
-        /// Creates an expression
+        /// Creates an expression.
         /// </summary>
-        /// <param name="expressions">Expressions to include in this expression</param>
+        /// <param name="expressions">Expressions to include in this expression.</param>
         public Expression(IEnumerable<Expression> expressions) => Expressions = expressions;
 
         /// <summary>
-        /// Creates an expression
+        /// Creates an expression.
         /// </summary>
-        /// <param name="json">Json representation of the expression</param>
+        /// <param name="json">Json representation of the expression.</param>
         public Expression(JsonDocument json) => Json = json;
+
+        /// <summary>
+        /// Converts <see cref="this"/> resulting value to number.
+        /// <para>Wrapper around 'to-number': <see cref="https://docs.microsoft.com/en-us/azure/azure-maps/data-driven-style-expressions-web-sdk"/>.</para>
+        /// </summary>
+        /// <returns>An expression converting supplied expression result into number.</returns>
+        public ExpressionOrNumber ToNumber()
+            => this is ExpressionOrNumber alreadyNumber
+            ? alreadyNumber
+            : (new(new[] { new ExpressionOrString("to-number"), this }));
+
+        private static readonly Expression s_getter = new ExpressionOrString("get");
+
+        /// <summary>
+        /// An expression getting property value by <paramref name="propertyName"/>.
+        /// <para>Cluster properties are supplied via <seealso cref="Data.DataSourceOptions.ClusterProperties"/>.</para>
+        /// <para>Leaf level properties are supplied in data itself (f.e. <see cref="Feature.Properties"/>).</para>
+        /// </summary>
+        /// <param name="propertyName">The property name to get value.</param>
+        /// <returns>An expression to fetch property value.</returns>
+        public static Expression GetProperty(string propertyName) => new(new[] { s_getter, new ExpressionOrString(propertyName) });
+
+        /// <summary>
+        /// An expression checking if <paramref name="propertyName"/> is defined in node.
+        /// <para>Typically used during data clustering to check if cluster node has property</para>
+        /// <para>See <seealso cref="Data.DataSourceOptions.ClusterProperties"/>.</para>
+        /// </summary>
+        /// <param name="propertyName">The property name to check existance.</param>
+        /// <returns>Expression that will evaluate into <c>true</c> if cluster has property; <c>false</c> otherwise.</returns>
+        public static Expression HasProperty(string propertyName) => new(new[] { new ExpressionOrString("has"), new ExpressionOrString(propertyName) });
+
+        /// <summary>
+        /// An expression conditionally evaluating either <paramref name="ifTrue"/> or <paramref name="ifFalse"/> based on <paramref name="condition"/>.
+        /// <para>Typically used during cluster/leaf property fetch, as cluster has only aggregated properties, while leaf level has more.</para>
+        /// </summary>
+        /// <param name="condition">The expression evaluating to <see cref="bool"/> (f.e. <see cref="IsCluster"/>).</param>
+        /// <param name="ifTrue">The expression to evaluate if <paramref name="condition"/> was <c>true</c>.</param>
+        /// <param name="ifFalse">The expression to evaluate if <paramref name="condition"/> was <c>false</c>.</param>
+        /// <returns>An expression conditionally evaluating either expression based on <paramref name="condition"/>.</returns>
+        public static Expression Conditional(Expression condition, Expression ifTrue, Expression ifFalse) => new(new[] { new ExpressionOrString("case"), condition, ifTrue, ifFalse });
+
+        /// <summary>
+        /// An expression checking if node is cluster, or leaf.
+        /// <para>See <seealso cref="Data.DataSourceOptions.Cluster"/></para>
+        /// </summary>
+        public static readonly Expression IsCluster = HasProperty(ClusterProperties.PointCount);
+
+        /// <summary>
+        /// Holds cluster-specific properties provided by clustering engine, see <seealso cref="Data.DataSourceOptions.Cluster"/>.
+        /// <para>
+        ///     <seealso cref="https://docs.microsoft.com/en-us/azure/azure-maps/clustering-point-data-web-sdk"/>
+        /// </para>
+        /// </summary>
+        private struct ClusterProperties
+        {
+            /// <summary>
+            /// Point count exists only for cluster-level; leaf-level nodes do not have it.
+            /// </summary>
+            public static readonly string PointCount = "point_count";
+        }
     }
 
     /// <summary>
@@ -41,24 +101,25 @@
     /// </summary>
     [JsonConverter(typeof(ExpressionOrNumberJsonConverter))]
     [ExcludeFromCodeCoverage]
+    [DebuggerDisplay("{" + nameof(Value) + "}")]
     public sealed class ExpressionOrNumber : Expression
     {
         internal double? Value { get; }
 
         /// <summary>
-        /// Creates an expression
+        /// <inheritdoc cref="Expression(IEnumerable{Expression})"/>
         /// </summary>
-        /// <param name="expressions">Expressions to include in this expression</param>
+        /// <param name="expressions"><inheritdoc/></param>
         public ExpressionOrNumber(IEnumerable<Expression> expressions) : base(expressions) { }
 
         /// <summary>
-        /// Creates an expression
+        /// <inheritdoc cref="Expression(JsonDocument)"/>
         /// </summary>
-        /// <param name="json">Json representation of the expression</param>
+        /// <param name="json"><inheritdoc/></param>
         public ExpressionOrNumber(JsonDocument json) : base(json) { }
 
         /// <summary>
-        /// Creates an expression
+        /// Creates an expression.
         /// </summary>
         /// <param name="value">Value which will be used instead of the expression</param>
         public ExpressionOrNumber(double? value) => Value = value;
@@ -69,20 +130,21 @@
     /// </summary>
     [JsonConverter(typeof(ExpressionOrStringJsonConverter))]
     [ExcludeFromCodeCoverage]
+    [DebuggerDisplay("{" + nameof(Value) + "}")]
     public sealed class ExpressionOrString : Expression
     {
         internal string Value { get; }
 
         /// <summary>
-        /// Creates an expression
+        /// <inheritdoc cref="Expression(IEnumerable{Expression})"/>
         /// </summary>
-        /// <param name="expressions">Expressions to include in this expression</param>
+        /// <param name="expressions"><inheritdoc/></param>
         public ExpressionOrString(IEnumerable<Expression> expressions) : base(expressions) { }
 
         /// <summary>
-        /// Creates an expression
+        /// <inheritdoc cref="Expression(JsonDocument)"/>
         /// </summary>
-        /// <param name="json">Json representation of the expression</param>
+        /// <param name="json"><inheritdoc/></param>
         public ExpressionOrString(JsonDocument json) : base(json) { }
 
         /// <summary>
@@ -102,19 +164,19 @@
         internal IEnumerable<string> Values { get; }
 
         /// <summary>
-        /// Creates an expression
+        /// <inheritdoc cref="Expression(IEnumerable{Expression})"/>
         /// </summary>
-        /// <param name="expressions">Expressions to include in this expression</param>
+        /// <param name="expressions"><inheritdoc/></param>
         public ExpressionOrStringArray(IEnumerable<Expression> expressions) : base(expressions) { }
 
         /// <summary>
-        /// Creates an expression
+        /// <inheritdoc cref="Expression(JsonDocument)"/>
         /// </summary>
-        /// <param name="json">Json representation of the expression</param>
+        /// <param name="json"><inheritdoc/></param>
         public ExpressionOrStringArray(JsonDocument json): base(json) { }
 
         /// <summary>
-        /// Creates an expression
+        /// Creates an expression.
         /// </summary>
         /// <param name="values">Values of the expression</param>
         public ExpressionOrStringArray(IEnumerable<string> values) => Values = values;

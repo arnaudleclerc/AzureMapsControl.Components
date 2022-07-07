@@ -1,6 +1,8 @@
 ﻿namespace AzureMapsControl.Components.Tests.Json
 {
+    using System;
     using System.Buffers;
+    using System.IO;
     using System.Text;
     using System.Text.Json;
     using System.Text.Json.Serialization;
@@ -22,12 +24,16 @@
 
             writer.Flush();
 
+            var serializedBytes = buffer.WrittenSpan.ToArray();
+
+            var restored = Encoding.UTF8.GetString(serializedBytes);
             var expectedBytes = Encoding.UTF8.GetBytes(expectedJson);
 
             var expectedBytesSet = new System.Collections.Generic.HashSet<byte>(expectedBytes);
-            var writterSet = new System.Collections.Generic.HashSet<byte>(buffer.WrittenSpan.ToArray());
+            var writterSet = new System.Collections.Generic.HashSet<byte>(serializedBytes);
 
-            Assert.Equal(expectedBytes.Length, buffer.WrittenCount);
+            var haveSameLength = expectedBytes.Length == buffer.WrittenCount;
+            Assert.True(haveSameLength, userMessage: $"Different length detected, expected:{Environment.NewLine}'{expectedJson}'{Environment.NewLine}Actual:{Environment.NewLine}'{restored}'");
             Assert.Subset(expectedBytesSet, writterSet);
         }
 

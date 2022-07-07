@@ -1,6 +1,7 @@
 ﻿namespace AzureMapsControl.Components.Tests.Atlas
 {
     using System;
+    using System.Diagnostics;
     using System.Text.Json;
 
     using AzureMapsControl.Components.Atlas;
@@ -30,6 +31,61 @@
 
             var expectedJson = "[[\"get\",\"Confirmed\"]]";
             TestAndAssertWrite(expression, expectedJson);
+        }
+
+        [Fact]
+        public void GetProperty_WhenCalled_ProducesCompliantJson()
+        {
+            var propertyName = "Confirmed";
+            var expression = Expression.GetProperty(propertyName);
+            TestAndAssertWrite(expression, @$"[""get"",""{propertyName}""]");
+        }
+
+        [Fact]
+        public void HasProperty_WhenCalled_ProducesCompliantJson()
+        {
+            var propertyName = "Confirmed";
+            var expression = Expression.HasProperty(propertyName);
+            TestAndAssertWrite(expression, @$"[""has"",""{propertyName}""]");
+        }
+
+        [Fact]
+        public void IsCluster_WhenCalled_ProducesCompliantJson()
+            => TestAndAssertWrite(Expression.IsCluster, expectedJson: @"[""has"",""point_count""]");
+
+        [Fact]
+        public void Conditional_WhenCalled_ProducesCompliantJson()
+        {
+            var clusterProp = Expression.GetProperty("clusterValue");
+            var leafProp = Expression.GetProperty("leafValue");
+            var expression = Expression.Conditional(Expression.IsCluster, clusterProp, leafProp);
+            TestAndAssertWrite(expression, @"[""case"",[""has"",""point_count""],[""get"",""clusterValue""],[""get"",""leafValue""]]");
+        }
+
+        [Fact]
+        public void ToNumber_WhenNotYetNumber_Wraps()
+        {
+            var propGetter = Expression.GetProperty("iAmNumber");
+            var expression = propGetter.ToNumber();
+            TestAndAssertWrite(expression, @"[""to-number"",[""get"",""iAmNumber""]]");
+        }
+    }
+
+    public class ExpressionOrNumberTests
+    {
+        [Fact]
+        public void Type_Is_DebugFriendly()
+        {
+            var attributes = typeof(ExpressionOrNumber).GetCustomAttributesData();
+            Assert.Contains(attributes, attribute => attribute.AttributeType == typeof(DebuggerDisplayAttribute));
+        }
+
+        [Fact]
+        public void ToNumber_WhenAlreadyNumber_ReturnsSelf()
+        {
+            Expression alreadyNumber = new ExpressionOrNumber(5);
+            var expression = alreadyNumber.ToNumber();
+            Assert.Same(alreadyNumber, expression);
         }
     }
 
@@ -73,6 +129,16 @@
             var expression = new ExpressionOrNumber(value);
 
             TestAndAssertEmptyWrite(expression);
+        }
+    }
+
+    public class ExpressionOrStringTests
+    {
+        [Fact]
+        public void Type_Is_DebugFriendly()
+        {
+            var attributes = typeof(ExpressionOrString).GetCustomAttributesData();
+            Assert.Contains(attributes, attribute => attribute.AttributeType == typeof(DebuggerDisplayAttribute));
         }
     }
 
