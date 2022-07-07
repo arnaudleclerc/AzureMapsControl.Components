@@ -74,6 +74,13 @@
     public class ExpressionOrNumberTests
     {
         [Fact]
+        public void Number_WhenSupplied_CanBeExpressionWithoutBoilerplate()
+        {
+            var radius = Expression.Conditional(Expression.IsCluster, new ExpressionOrNumber(10), new ExpressionOrNumber(5));
+            Assert.IsType<Expression>(radius);
+        }
+
+        [Fact]
         public void Type_Is_DebugFriendly()
         {
             var attributes = typeof(ExpressionOrNumber).GetCustomAttributesData();
