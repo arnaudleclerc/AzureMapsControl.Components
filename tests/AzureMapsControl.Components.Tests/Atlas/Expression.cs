@@ -38,7 +38,7 @@
         {
             var propertyName = "Confirmed";
             var expression = Expression.GetProperty(propertyName);
-            TestAndAssertWrite(expression, @$"[""get"", ""{propertyName}""]");
+            TestAndAssertWrite(expression, @$"[""get"",""{propertyName}""]");
         }
 
         [Fact]
@@ -67,7 +67,7 @@
         {
             var propGetter = Expression.GetProperty("iAmNumber");
             var expression = propGetter.ToNumber();
-            TestAndAssertWrite(expression, @"[to-number,[""get"",""iAmNumber""]]");
+            TestAndAssertWrite(expression, @"[""to-number"",[""get"",""iAmNumber""]]");
         }
     }
 
