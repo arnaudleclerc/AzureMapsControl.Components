@@ -81,6 +81,21 @@
         }
 
         [Fact]
+        public void Cast_ForNull_IsNull()
+        {
+            ExpressionOrNumber expression = null;
+            Assert.Null(expression);
+        }
+
+        [Fact]
+        public void Cast_ForNullableDouble_IsExpression()
+        {
+            double? value = null;
+            ExpressionOrNumber expression = value;
+            Assert.NotNull(expression);
+        }
+
+        [Fact]
         public void Number_WhenSupplied_CanBeExpressionWithoutBoilerplate()
         {
             var radius = Expression.Conditional(Expression.IsCluster, 10, 5);
