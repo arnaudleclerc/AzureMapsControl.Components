@@ -50,7 +50,7 @@ var leafProp = Expression.GetProperty("leafValue");
 
 #### Double is treated as `ExpressionOrNumber`
 
-A portion of APIs require end expression to be evaluated to number, like bubble radius. Since `ExpressionOrNumber` has `implicit` cast from `double?`, you can simply specify number:
+A portion of APIs require an expression to be evaluated to number, like bubble radius. Since `ExpressionOrNumber` has `implicit` cast from `double?`, you can simply specify number:
 
 ```
 ExpressionOrNumber smallRadius = 10;
