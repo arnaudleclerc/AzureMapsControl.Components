@@ -74,6 +74,35 @@
     public class ExpressionOrNumberTests
     {
         [Fact]
+        public void Number_WhenSupplied_IsExpressionWithoutBoilerplate()
+        {
+            ExpressionOrNumber smallRadius = 10;
+            Assert.IsType<ExpressionOrNumber>(smallRadius);
+        }
+
+        [Fact]
+        public void Cast_ForNull_IsNull()
+        {
+            ExpressionOrNumber expression = null;
+            Assert.Null(expression);
+        }
+
+        [Fact]
+        public void Cast_ForNullableDouble_IsExpression()
+        {
+            double? value = null;
+            ExpressionOrNumber expression = value;
+            Assert.NotNull(expression);
+        }
+
+        [Fact]
+        public void Number_WhenSupplied_CanBeExpressionWithoutBoilerplate()
+        {
+            var radius = Expression.Conditional(Expression.IsCluster, 10, 5);
+            Assert.IsType<Expression>(radius);
+        }
+
+        [Fact]
         public void Type_Is_DebugFriendly()
         {
             var attributes = typeof(ExpressionOrNumber).GetCustomAttributesData();
@@ -116,8 +145,8 @@
         [Fact]
         public void Should_WriteNumberValue()
         {
-            var value = 1;
-            var expression = new ExpressionOrNumber(value);
+            double value = 1;
+            ExpressionOrNumber expression = value;
 
             TestAndAssertWrite(expression, value.ToString());
         }

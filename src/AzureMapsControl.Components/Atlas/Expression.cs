@@ -94,6 +94,8 @@
             /// </summary>
             public static readonly string PointCount = "point_count";
         }
+
+        public static implicit operator Expression(double? value) => new ExpressionOrNumber(value);
     }
 
     /// <summary>
@@ -123,6 +125,8 @@
         /// </summary>
         /// <param name="value">Value which will be used instead of the expression</param>
         public ExpressionOrNumber(double? value) => Value = value;
+
+        public static implicit operator ExpressionOrNumber(double? value) => new(value);
     }
 
     /// <summary>

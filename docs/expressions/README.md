@@ -32,6 +32,44 @@ var layer = new AzureMapsControl.Components.Layers.PolygonExtrusionLayer
 };
 ```
 
+#### Checking if property exists
+
+A necessity to check if [property `has` value](https://docs.microsoft.com/en-us/azure/azure-maps/data-driven-style-expressions-web-sdk#data-expressions) to decide which value to pick during clustering (or data display): 
+
+```
+var expression = Expression.HasProperty("score");
+```
+
+#### Property value getter
+
+Similarly `get` [property value](https://docs.microsoft.com/en-us/azure/azure-maps/data-driven-style-expressions-web-sdk#data-expressions) can be fetched: 
+
+```
+var leafProp = Expression.GetProperty("leafValue");
+```
+
+#### Double is treated as `ExpressionOrNumber`
+
+A portion of APIs require an expression to be evaluated to number, like bubble radius. Since `ExpressionOrNumber` has `implicit` cast from `double?`, you can simply specify number:
+
+```
+ExpressionOrNumber smallRadius = 10;
+```
+
+
+#### Converting `Expression` to `ExpressionOrNumber`
+
+When `expression` evaluates to number, but is represented as general-purpose `Expression` type, call `.ToNumber() to apply `[to-number` cast expression](https://docs.microsoft.com/en-us/azure/azure-maps/data-driven-style-expressions-web-sdk#data-expressions):
+
+```
+Expression alreadyNumber = new ExpressionOrNumber(5); // expression variable is a number for sure
+ExpressionOrNumber expression = alreadyNumber.ToNumber(); 
+```
+
+#### More examples
+
+More API samples can be found in [Expressions Unit Test block](https://github.com/arnaudleclerc/AzureMapsControl.Components/tree/develop/tests/AzureMapsControl.Components.Tests/Atlas/Expression.cs). 
+
 ### Using expressions
 
 The following example would fill the layer with a color based on the `DENSITY` property of the layer source :
