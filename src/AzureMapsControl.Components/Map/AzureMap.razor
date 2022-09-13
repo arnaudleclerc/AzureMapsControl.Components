@@ -13,7 +13,7 @@
 @inject IMapJsRuntime JSRuntime
 @inject Microsoft.Extensions.Logging.ILogger<AzureMap> Logger
 
-<div id="@Id"></div>
+<div id="@Id" class="@Class"></div>
 
 @code {
 
@@ -60,6 +60,12 @@
         get => _id;
         set { if (string.IsNullOrWhiteSpace(value)) { throw new ArgumentException("ID on the map is mandatory"); } _id = value; }
     }
+
+    /// <summary>
+    /// The class of the map component to allow styling
+    /// </summary>
+    [Parameter]
+    public string Class { get; set; } = string.Empty;
 
     /// <summary>
     /// Defines the events which needs to be activated
