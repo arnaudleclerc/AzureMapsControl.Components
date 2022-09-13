@@ -95,5 +95,42 @@
                 _fixture.JsRuntime.VerifyNoOtherCalls();
             }
         }
+        
+        [Fact]
+        public void Should_DisplayDivWithClass()
+        {
+            using (_fixture)
+            {
+                const string classes = "my-class-identifier other-class-identifier";
+                const string mapId = "mapID";
+
+                _fixture.Configuration.AadAppId = "aadAppId";
+
+                _fixture.Configuration.AadTenant = "aadTenant";
+                _fixture.Configuration.ClientId = "clientId";
+                _fixture.Configuration.SubscriptionKey = "subscriptionKey";
+
+                _fixture.RegisterServices();
+
+                var map = _fixture.TestContext.RenderComponent<AzureMap>(ComponentParameter.CreateParameter("Id", mapId), ComponentParameter.CreateParameter("Class", classes));
+
+                var mapElem = map.Find("div");
+
+                Assert.Equal(classes, mapElem.Attributes["class"].Value);
+
+                _fixture.JsRuntime.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddMap.ToCoreNamespace(), It.Is<object[]>(parameters =>
+                    parameters.Length == 5
+                    && parameters[0] as string == mapId
+                    && (parameters[1] as AzureMapsConfiguration).AadAppId == _fixture.Configuration.AadAppId
+                    && (parameters[1] as AzureMapsConfiguration).AadTenant == _fixture.Configuration.AadTenant
+                    && (parameters[1] as AzureMapsConfiguration).ClientId == _fixture.Configuration.ClientId
+                    && (parameters[1] as AzureMapsConfiguration).SubscriptionKey == _fixture.Configuration.SubscriptionKey
+                    && parameters[2] != null && parameters[2] is ServiceOptions
+                    && (parameters[3] as IEnumerable<string>).Single() == MapEventType.Ready.ToString()
+                    && parameters[4] != null && parameters[4] is DotNetObjectReference<MapEventInvokeHelper>
+                )), Times.Once);
+                _fixture.JsRuntime.VerifyNoOtherCalls();
+            }
+        }
     }
 }
