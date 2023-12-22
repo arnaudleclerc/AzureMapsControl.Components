@@ -1,6 +1,7 @@
 ﻿namespace AzureMapsControl.Components
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
 
     using AzureMapsControl.Components.Animations;
     using AzureMapsControl.Components.Configuration;
@@ -21,6 +22,7 @@
         /// <param name="services">Current list of services</param>
         /// <param name="configure">Configuration</param>
         /// <returns>Services</returns>
+        [ExcludeFromCodeCoverage]
         public static IServiceCollection AddAzureMapsControl(this IServiceCollection services, Action<AzureMapsConfiguration> configure)
         {
             services
