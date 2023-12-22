@@ -27,7 +27,7 @@ You will need to add the atlas script and css files as well as the script genera
 Or use the minimized version : 
 
 ```
-<script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
+<script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/3/atlas.min.js"></script>
 <script src="_content/AzureMapsControl.Components/azure-maps-control.min.js"></script>
 ```
 
@@ -94,7 +94,7 @@ It also needs to fetch the token to send to the requests of the atlas library. F
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AzureMapsControl.Sample</title>
     <base href="~/" />
-    <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css" type="text/css" />
+    <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/3/atlas.min.css" type="text/css" />
     <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/drawing/0.1/atlas-drawing.min.css" type="text/css" />
     <style>
         body {
@@ -113,7 +113,7 @@ It also needs to fetch the token to send to the requests of the atlas library. F
     <app>
         <component type="typeof(App)" render-mode="ServerPrerendered" />
     </app>
-    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
+    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/3/atlas.min.js"></script>
     <script src="https://atlas.microsoft.com/sdk/javascript/drawing/0.1/atlas-drawing.min.js"></script>
     <script src="_content/AzureMapsControl.Components/azure-maps-control.min.js"></script>
     <script src="_framework/blazor.server.js"></script>
