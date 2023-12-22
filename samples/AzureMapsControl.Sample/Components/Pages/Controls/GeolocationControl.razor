@@ -1,0 +1,41 @@
+﻿@page "/Controls/GeolocationControl"
+@rendermode InteractiveServer
+@inject AzureMapsControl.Components.Geolocation.IGeolocationService GeolocationService
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          EventActivationFlags="MapEventActivationFlags
+                                .None()
+                                .Enable(MapEventType.Ready, MapEventType.Click)"
+          OnReady="OnMapReady" />
+
+@code  {
+
+    public async Task OnMapReady(MapEventArgs eventArgs)
+    {
+        if (await GeolocationService.IsGeolocationSupportedAsync())
+        {
+            var control = new AzureMapsControl.Components.Controls.GeolocationControl(
+                new AzureMapsControl.Components.Controls.GeolocationControlOptions {
+                    Style = AzureMapsControl.Components.Controls.ControlStyle.Auto
+                },
+                AzureMapsControl.Components.Controls.ControlPosition.TopRight, 
+                AzureMapsControl.Components.Geolocation.GeolocationEventActivationFlags.All());
+
+            await eventArgs.Map.AddControlsAsync(control);
+
+            control.GeolocationSuccess += args =>
+            {
+                Console.WriteLine(args.Feature.Geometry.Coordinates.Longitude);
+                Console.WriteLine(args.Feature.Geometry.Coordinates.Latitude);
+            };
+
+            control.GeolocationError += args =>
+            {
+                Console.WriteLine(args.Code);
+                Console.WriteLine(args.Message);
+            };
+        }
+    }
+
+}

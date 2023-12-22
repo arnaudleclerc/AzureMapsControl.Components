@@ -1,0 +1,23 @@
+﻿@page "/Controls/ControlsOnReady"
+@rendermode InteractiveServer
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          EventActivationFlags="MapEventActivationFlags
+                                .None()
+                                .Enable(MapEventType.Ready)"
+          OnReady="OnMapReady" />
+
+@code  {
+
+    public async Task OnMapReady(MapEventArgs eventArgs)
+    {
+        await eventArgs.Map.AddControlsAsync
+        (
+            new AzureMapsControl.Components.Controls.ZoomControl(position: AzureMapsControl.Components.Controls.ControlPosition.TopLeft),
+            new AzureMapsControl.Components.Controls.PitchControl(position: AzureMapsControl.Components.Controls.ControlPosition.TopRight),
+            new AzureMapsControl.Components.Controls.CompassControl(position: AzureMapsControl.Components.Controls.ControlPosition.BottomLeft),
+            new AzureMapsControl.Components.Controls.StyleControl(position: AzureMapsControl.Components.Controls.ControlPosition.BottomRight)
+        );
+    }
+
+}

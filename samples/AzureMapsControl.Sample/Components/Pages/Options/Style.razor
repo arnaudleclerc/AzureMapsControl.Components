@@ -1,0 +1,25 @@
+﻿@page "/Options/StyleOptions"
+@rendermode InteractiveServer
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          CameraOptions="new CameraOptions { Center = new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534), Zoom = 10 }"
+          StyleOptions="StyleOptions"
+          EventActivationFlags="MapEventActivationFlags.None().Enable(MapEventType.Ready)"
+          OnReady="OnMapReadyAsync"/>
+
+@code {
+
+    public StyleOptions StyleOptions = new StyleOptions
+    {
+        Style = MapStyle.GrayscaleDark,
+        ShowLogo = false,
+        ShowFeedbackLink = false
+    };
+
+    public async Task OnMapReadyAsync(MapEventArgs eventArgs)
+    {
+        System.Threading.Thread.Sleep(5000);
+        await eventArgs.Map.SetStyleOptionsAsync(options => options.ShowTileBoundaries = true);
+    }
+} 

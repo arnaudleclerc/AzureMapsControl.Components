@@ -1,0 +1,13 @@
+﻿@page "/Controls/Basic"
+@rendermode InteractiveServer
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          CameraOptions="new CameraOptions { Type = AzureMapsControl.Components.Map.CameraType.Fly }"
+          Controls="new AzureMapsControl.Components.Controls.Control[]
+          {
+                        new AzureMapsControl.Components.Controls.ZoomControl(new AzureMapsControl.Components.Controls.ZoomControlOptions { Style = AzureMapsControl.Components.Controls.ControlStyle.Dark }, AzureMapsControl.Components.Controls.ControlPosition.TopLeft),
+            new AzureMapsControl.Components.Controls.PitchControl(new AzureMapsControl.Components.Controls.PitchControlOptions { Style = AzureMapsControl.Components.Controls.ControlStyle.Dark }, AzureMapsControl.Components.Controls.ControlPosition.TopRight),
+            new AzureMapsControl.Components.Controls.CompassControl(new AzureMapsControl.Components.Controls.CompassControlOptions { Style = AzureMapsControl.Components.Controls.ControlStyle.Dark }, AzureMapsControl.Components.Controls.ControlPosition.BottomLeft),
+            new AzureMapsControl.Components.Controls.StyleControl(new AzureMapsControl.Components.Controls.StyleControlOptions { Style = AzureMapsControl.Components.Controls.ControlStyle.Dark, MapStyles = MapStyle.All() }, AzureMapsControl.Components.Controls.ControlPosition.BottomRight)
+          }" />

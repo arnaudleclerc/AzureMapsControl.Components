@@ -1,0 +1,28 @@
+﻿@page "/Controls/OverviewMap"
+@rendermode InteractiveServer
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          Controls="new AzureMapsControl.Components.Controls.Control[]
+          {
+              new AzureMapsControl.Components.Controls.OverviewMapControl(new AzureMapsControl.Components.Controls.OverviewMapControlOptions
+              {
+                  ShowToggle = true,
+                  Style = new AzureMapsControl.Components.Atlas.Either<AzureMapsControl.Components.Controls.ControlStyle, string>(AzureMapsControl.Components.Controls.ControlStyle.Auto)
+              },
+              AzureMapsControl.Components.Controls.ControlPosition.TopLeft),
+              new AzureMapsControl.Components.Controls.StyleControl(position: AzureMapsControl.Components.Controls.ControlPosition.TopRight)
+          }"
+          EventActivationFlags="MapEventActivationFlags.None().Enable(MapEventType.StyleData)"
+          OnStyleData="OnStyleData"/>
+
+@code {
+    public async void OnStyleData(MapStyleDataEventArgs eventArgs)
+    {
+        var overviewControl = eventArgs.Map.Controls?.OfType<AzureMapsControl.Components.Controls.OverviewMapControl>()?.FirstOrDefault();
+        if(overviewControl is not null)
+        {
+            await overviewControl.SetOptionsAsync(options => options.MapStyle = eventArgs.Style);
+        }
+    }
+} 

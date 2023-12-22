@@ -1,0 +1,52 @@
+﻿@page "/Markers/HtmlMarkersUpdate"
+@rendermode InteractiveServer
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          EventActivationFlags="MapEventActivationFlags
+                                .None()
+                                .Enable(MapEventType.Ready)"
+          OnReady="OnMapReady" />
+
+@code  {
+    
+    public async Task OnMapReady(MapEventArgs events)
+    {
+        var markerColor = "#0000FF";
+        var overColor = "#FF0000";
+        var marker = new AzureMapsControl.Components.Markers.HtmlMarker(
+            new AzureMapsControl.Components.Markers.HtmlMarkerOptions
+            {
+                Position = new AzureMapsControl.Components.Atlas.Position(0, 0),
+                Draggable = true,
+                Color = markerColor
+            },
+            AzureMapsControl.Components.Markers.HtmlMarkerEventActivationFlags.None().Enable(
+                AzureMapsControl.Components.Markers.HtmlMarkerEventType.MouseEnter, 
+                AzureMapsControl.Components.Markers.HtmlMarkerEventType.MouseLeave)
+            );
+
+
+        marker.OnMouseEnter += async (args) =>
+        {
+            var updatedOptions = new AzureMapsControl.Components.Markers.HtmlMarkerOptions
+            {
+                Color = overColor
+            };
+
+            await args.Map.UpdateHtmlMarkersAsync(new AzureMapsControl.Components.Markers.HtmlMarkerUpdate(marker, updatedOptions));
+        };
+
+        marker.OnMouseLeave += async (args) =>
+        {
+            var updatedOptions = new AzureMapsControl.Components.Markers.HtmlMarkerOptions
+            {
+                Color = markerColor
+            };
+
+            await args.Map.UpdateHtmlMarkersAsync(new AzureMapsControl.Components.Markers.HtmlMarkerUpdate(marker, updatedOptions));
+        };
+
+        await events.Map.AddHtmlMarkersAsync(marker);
+    }
+}

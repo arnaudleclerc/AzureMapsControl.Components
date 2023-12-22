@@ -1,0 +1,9 @@
+html, body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+#map {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}

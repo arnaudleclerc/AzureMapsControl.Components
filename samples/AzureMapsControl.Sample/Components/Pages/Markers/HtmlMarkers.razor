@@ -1,0 +1,13 @@
+﻿@page "/Markers/HtmlMarkers"
+@rendermode InteractiveServer
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          HtmlMarkers="new [] {
+                           new AzureMapsControl.Components.Markers.HtmlMarker(
+                               new AzureMapsControl.Components.Markers.HtmlMarkerOptions
+                               {
+                                   Position = new AzureMapsControl.Components.Atlas.Position(0, 0),
+                                   Draggable = true
+                               })
+                       }" />

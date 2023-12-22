@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="app.css" />
+    <link rel="stylesheet" href="AzureMapsControl.Sample.styles.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+
+    <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.css" type="text/css" />
+    <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/drawing/0.1/atlas-drawing.min.css" type="text/css" />
+    <link rel="stylesheet" href="https://atlas.microsoft.com/sdk/javascript/indoor/0.1/atlas-indoor.min.css" type="text/css" />
+    <title>AzureMapsControl - Samples</title>
+</head>
+
+<body>
+    <Routes />
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://atlas.microsoft.com/sdk/javascript/mapcontrol/2/atlas.min.js"></script>
+    <script src="https://atlas.microsoft.com/sdk/javascript/drawing/0.1/atlas-drawing.min.js"></script>
+    <script src="https://atlas.microsoft.com/sdk/javascript/indoor/0.1/atlas-indoor.js"></script>
+    <script src="/azure-maps-scale-bar-control.min.js"></script>
+    <script src="/azure-maps-overview-map.min.js"></script>
+    <script src="/azure-maps-animations.min.js"></script>
+    <script src="/azure-maps-geolocation-control.min.js"></script>
+    <script src="/azure-maps-fullscreen-control.min.js"></script>
+    <script src="/azure-maps-gridded-data-source.min.js"></script>
+    <script src="_content/AzureMapsControl.Components/azure-maps-control.js"></script>
+    <script src="_framework/blazor.web.js"></script>
+    <script type="text/javascript">
+        azureMapsControl.Extensions.getTokenCallback = (resolve, reject, map) => {
+            const url = "url_of_my_token_endpoint";
+            fetch(url).then(function (response) {
+                return response.text();
+            }).then(function (token) {
+                resolve(token);
+            });
+        };
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,8 @@
+﻿@page "/Traffic/Basics"
+@rendermode InteractiveServer
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          TrafficOptions="new AzureMapsControl.Components.Traffic.TrafficOptions { Incidents = true, Flow = AzureMapsControl.Components.Traffic.TrafficFlow.Relative }"
+          CameraOptions="new CameraOptions { Center = new AzureMapsControl.Components.Atlas.Position(11.581990, 48.143534), Zoom = 10}"
+          />

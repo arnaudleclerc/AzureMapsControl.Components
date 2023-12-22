@@ -1,0 +1,44 @@
+﻿@page "/Animations/DropMarkers"
+@rendermode InteractiveServer
+@inject AzureMapsControl.Components.Animations.IAnimationService AnimationService
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          CameraOptions="new CameraOptions { Center = new AzureMapsControl.Components.Atlas.Position(-122.33825, 47.53945), Zoom = 7 }"
+          StyleOptions="StyleOptions"
+          EventActivationFlags="MapEventActivationFlags
+                                .None()
+                                .Enable(MapEventType.Click)"
+          OnClick="OnMapClick" />
+
+@code  {
+    private AzureMapsControl.Components.Animations.IDropMarkersAnimation _animation;
+
+    public StyleOptions StyleOptions = new StyleOptions
+    {
+        Style = MapStyle.GrayscaleDark
+    };
+
+    public async Task OnMapClick(MapMouseEventArgs eventArgs)
+    {
+        var random = new Random();
+        var markers = new AzureMapsControl.Components.Markers.HtmlMarker[15]
+            .Select(_ => new AzureMapsControl.Components.Markers.HtmlMarker(new AzureMapsControl.Components.Markers.HtmlMarkerOptions
+            {
+                    Position = new AzureMapsControl.Components.Atlas.Position(-122.3 + (random.NextDouble() * 2 - 1), 47.5 + (random.NextDouble() * 2 - 1))
+            }));
+
+        if(_animation == null)
+        {
+            _animation = await AnimationService.DropMarkersAsync(markers, options: new AzureMapsControl.Components.Animations.Options.DropMarkersAnimationOptions
+            {
+                Easing = AzureMapsControl.Components.Animations.Options.Easing.EaseOutBounce,
+                Duration = 1000,
+                AutoPlay = true
+            });
+        } else
+        {
+            await _animation.PlayAsync();
+        }
+    }
+}

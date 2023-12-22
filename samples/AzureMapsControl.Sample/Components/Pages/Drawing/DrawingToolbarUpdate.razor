@@ -1,0 +1,36 @@
+﻿@page "/Drawing/DrawingToolbarUpdate"
+@rendermode InteractiveServer
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          DrawingToolbarOptions="new AzureMapsControl.Components.Drawing.DrawingToolbarOptions
+                                 {
+                                     Buttons = new []
+                                     {
+                                         AzureMapsControl.Components.Drawing.DrawingButton.DrawCircle,
+                                         AzureMapsControl.Components.Drawing.DrawingButton.DrawLine
+                                     },
+                                     Position = AzureMapsControl.Components.Controls.ControlPosition.TopRight,
+                                     Style = AzureMapsControl.Components.Drawing.DrawingToolbarStyle.Dark
+                                 }"
+          EventActivationFlags="MapEventActivationFlags.None().Enable(MapEventType.Ready)"
+          OnReady="MapReady" />
+
+@code {
+    public async Task MapReady(MapEventArgs eventArgs)
+    {
+        var options = AzureMapsControl.Components.Drawing.DrawingToolbarUpdateOptions.FromOptions(eventArgs.Map.DrawingToolbarOptions);
+        options.Buttons = new[]
+        {
+            AzureMapsControl.Components.Drawing.DrawingButton.DrawCircle,
+            AzureMapsControl.Components.Drawing.DrawingButton.DrawLine,
+            AzureMapsControl.Components.Drawing.DrawingButton.DrawPolygon
+        };
+
+        options.Style = AzureMapsControl.Components.Drawing.DrawingToolbarStyle.Light;
+        options.Position = AzureMapsControl.Components.Controls.ControlPosition.TopLeft;
+        options.NumColumns = 1;
+
+        await eventArgs.Map.UpdateDrawingToolbarAsync(options);
+    }
+}

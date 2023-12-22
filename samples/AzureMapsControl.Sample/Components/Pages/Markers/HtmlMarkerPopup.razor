@@ -1,0 +1,36 @@
+﻿@page "/Markers/HtmlMarkerPopup"
+@rendermode InteractiveServer
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          EventActivationFlags="MapEventActivationFlags
+                                .None()
+                                .Enable(MapEventType.Ready)"
+          OnReady="OnMapReady" />
+
+@code  {
+    public async Task OnMapReady(MapEventArgs events)
+    {
+        var marker = new AzureMapsControl.Components.Markers.HtmlMarker(
+            new AzureMapsControl.Components.Markers.HtmlMarkerOptions
+            {
+                Position = new AzureMapsControl.Components.Atlas.Position(0, 0),
+                Draggable = true,
+                Popup = new AzureMapsControl.Components.Popups.HtmlMarkerPopup(new AzureMapsControl.Components.Popups.PopupOptions
+                {
+                    Content = "<div style='padding:10px'>Hello World</div>",
+                    PixelOffset = new AzureMapsControl.Components.Atlas.Pixel(0, -30)
+                })
+            })
+        {
+            EventActivationFlags = AzureMapsControl.Components.Markers.HtmlMarkerEventActivationFlags.None().Enable(AzureMapsControl.Components.Markers.HtmlMarkerEventType.Click)
+        };
+
+        await events.Map.AddHtmlMarkersAsync(marker);
+
+        marker.OnClick += async (eventArgs) =>
+        {
+            await marker.TogglePopupAsync();
+        };
+    }
+}

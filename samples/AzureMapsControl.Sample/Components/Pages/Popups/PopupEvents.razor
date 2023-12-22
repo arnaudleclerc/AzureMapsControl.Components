@@ -1,0 +1,32 @@
+﻿@page "/Popups/PopupEvents"
+@rendermode InteractiveServer
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          EventActivationFlags="MapEventActivationFlags
+                                .None()
+                                .Enable(MapEventType.Ready)"
+          OnReady="OnMapReady"/>
+
+@code  {
+
+    public async Task OnMapReady(MapEventArgs eventArgs)
+    {
+        var popup = new AzureMapsControl.Components.Popups.Popup(new AzureMapsControl.Components.Popups.PopupOptions {
+            Content = "<div style=\"padding:10px;\">Hello World</div>",
+            Position = new AzureMapsControl.Components.Atlas.Position(0, 0),
+            Draggable = true
+        }) {
+            EventActivationFlags = AzureMapsControl.Components.Popups.PopupEventActivationFlags.All().Disable(AzureMapsControl.Components.Popups.PopupEventType.Drag)
+        };
+
+        popup.OnClose += _ => Console.WriteLine("Close");
+        popup.OnDragStart += _ => Console.WriteLine("Drag start");
+        popup.OnDragEnd += _ => Console.WriteLine("Drag end");
+        popup.OnOpen += _ => Console.WriteLine("Open");
+
+        await eventArgs.Map.AddPopupAsync(popup);
+        await popup.OpenAsync();
+    }
+
+}

@@ -1,0 +1,61 @@
+﻿@page "/Animations/Drop"
+@rendermode InteractiveServer
+@inject AzureMapsControl.Components.Animations.IAnimationService AnimationService
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          CameraOptions="new CameraOptions { Center = new AzureMapsControl.Components.Atlas.Position(-122.33825, 47.53945), Zoom = 7 }"
+          StyleOptions="StyleOptions"
+          EventActivationFlags="MapEventActivationFlags
+                                .None()
+                                .Enable(MapEventType.Click, MapEventType.Ready)"
+          OnClick="OnMapClick"
+          OnReady="OnMapReady" />
+
+@code {
+    private AzureMapsControl.Components.Data.DataSource _dataSource;
+    private AzureMapsControl.Components.Animations.IDropAnimation _animation;
+
+    public StyleOptions StyleOptions = new StyleOptions
+        {
+            Style = MapStyle.GrayscaleDark
+        };
+
+    public async Task OnMapReady(MapEventArgs eventArgs)
+    {
+        _dataSource = new AzureMapsControl.Components.Data.DataSource();
+        await eventArgs.Map.AddSourceAsync(_dataSource);
+
+        await eventArgs.Map.AddLayerAsync(new AzureMapsControl.Components.Layers.SymbolLayer
+            {
+                Options = new AzureMapsControl.Components.Layers.SymbolLayerOptions
+                {
+                    Source = _dataSource.Id,
+                    IconOptions = new AzureMapsControl.Components.Layers.IconOptions
+                    {
+                        AllowOverlap = true,
+                        IgnorePlacement = true,
+                        Offset = new AzureMapsControl.Components.Atlas.Expression(new AzureMapsControl.Components.Atlas.Expression[]
+                        {
+                        new AzureMapsControl.Components.Atlas.ExpressionOrString("get"),
+                        new AzureMapsControl.Components.Atlas.ExpressionOrString("offset")
+                        })
+                    }
+                }
+            });
+    }
+
+    public async Task OnMapClick(MapMouseEventArgs eventArgs)
+    {
+        if (_animation != null)
+        {
+            await _animation.DisposeAsync();
+        }
+
+        _animation = await AnimationService.DropAsync(new AzureMapsControl.Components.Atlas.Point(eventArgs.Position), _dataSource, null, new AzureMapsControl.Components.Animations.Options.DropAnimationOptions
+            {
+                AutoPlay = true,
+                Easing = AzureMapsControl.Components.Animations.Options.Easing.EaseOutBounce
+            });
+    }
+}

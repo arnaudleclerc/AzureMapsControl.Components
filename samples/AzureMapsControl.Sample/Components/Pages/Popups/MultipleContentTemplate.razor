@@ -1,0 +1,66 @@
+﻿@page "/Popups/MultipleContentTemplate"
+@rendermode InteractiveServer
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          EventActivationFlags="MapEventActivationFlags
+                                .None()
+                                .Enable(MapEventType.Ready)"
+          OnReady="OnMapReady" />
+
+@code  {
+
+    public class PropertySubValues
+    {
+        public string SubValue { get; set; }
+    }
+
+    public async Task OnMapReady(MapEventArgs eventArgs)
+    {
+        var templateContent = new[] {
+        new AzureMapsControl.Components.Atlas.Either<string, IEnumerable<AzureMapsControl.Components.Atlas.PropertyInfo>>
+        ("This template has two pieces of content; a string template with placeholders and a array of property info which renders a full width image.<br/><br/> - Value 1 = {value1}<br/> - Value 2 = {value2/subValue}<br/> - Array value [2] = {arrayValue/2}"),
+        new AzureMapsControl.Components.Atlas.Either<string, IEnumerable<AzureMapsControl.Components.Atlas.PropertyInfo>>
+        (
+            new [] {
+                new AzureMapsControl.Components.Atlas.PropertyInfo {
+                    PropertyPath = "imageLink",
+                    Label = "Image",
+                    HideLabel = true,
+                    HyperlinkFormat = new AzureMapsControl.Components.Atlas.FormatOptions.HyperLinkFormatOptions {
+                        IsImage = true
+                    }
+                }
+            }
+        )};
+
+        var template = new AzureMapsControl.Components.Popups.PopupTemplate
+        {
+            Content = new AzureMapsControl.Components.Atlas.Either<string, IEnumerable<AzureMapsControl.Components.Atlas.PropertyInfo>, IEnumerable<AzureMapsControl.Components.Atlas.Either<string, IEnumerable<AzureMapsControl.Components.Atlas.PropertyInfo>>>>
+                (templateContent),
+            NumberFormat = new AzureMapsControl.Components.Atlas.FormatOptions.NumberFormatOptions
+            {
+                MaximumFractionDigits = 2
+            }
+        };
+
+        var properties = new Dictionary<string, object>
+        {
+            { "title", "Template 3 - Multiple content template" },
+            { "value1", 1.2345678},
+            { "value2", new PropertySubValues { SubValue = "Pizza" } },
+            { "arrayValue", new [] { 3,4,5,6 } },
+            { "imageLink", "https://azuremapscodesamples.azurewebsites.net/common/images/Pike_Market.jpg"}
+        };
+
+        var position = new AzureMapsControl.Components.Atlas.Position(0, 0);
+
+        var popup = new AzureMapsControl.Components.Popups.Popup(new AzureMapsControl.Components.Popups.PopupOptions {
+            Position = position,
+            OpenOnAdd = true
+        });
+
+        await eventArgs.Map.AddPopupAsync(popup, template, properties);
+    }
+
+}
