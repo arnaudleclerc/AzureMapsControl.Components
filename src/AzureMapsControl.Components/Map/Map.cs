@@ -260,26 +260,28 @@
 
             if (source is DataSource dataSource)
             {
+                dataSource.Logger = _logger;
+                dataSource.JSRuntime = _jsRuntime;
+
                 await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(),
                     source.Id,
                     source.GetSourceOptions(),
                     source.SourceType.ToString(),
                     dataSource.EventActivationFlags?.EnabledEvents,
                     DotNetObjectReference.Create(_dataSourceEventInvokeHelper));
-                dataSource.Logger = _logger;
-                dataSource.JSRuntime = _jsRuntime;
             }
             else
             {
-                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(),
-                    source.Id,
-                    source.GetSourceOptions(),
-                    source.SourceType.ToString());
                 if (source is GriddedDataSource griddedDataSource)
                 {
                     griddedDataSource.Logger = _logger;
                     griddedDataSource.JSRuntime = _jsRuntime;
                 }
+
+                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(),
+                    source.Id,
+                    source.GetSourceOptions(),
+                    source.SourceType.ToString());
             }
         }
 
