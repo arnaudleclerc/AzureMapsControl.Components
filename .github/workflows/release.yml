@@ -106,7 +106,7 @@ jobs:
     - name: Pack
       if: ${{ steps.gitversion.outputs.branchName == 'master' || steps.gitversion.outputs.branchName == 'main' }}
       run: dotnet pack ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj -p:Version='${{ steps.gitversion.outputs.majorMinorPatch }}"' -c Release --no-build
-    - name: Publish
-      env :
-        NUGETAPIKEY: ${{secrets.NUGETAPIKEY}}
-      run: dotnet nuget push "**/AzureMapsControl.Components*.nupkg" -s https://api.nuget.org/v3/index.json -k $NUGETAPIKEY --skip-duplicate
+    # - name: Publish
+    #   env :
+    #     NUGETAPIKEY: ${{secrets.NUGETAPIKEY}}
+    #   run: dotnet nuget push "**/AzureMapsControl.Components*.nupkg" -s https://api.nuget.org/v3/index.json -k $NUGETAPIKEY --skip-duplicate
