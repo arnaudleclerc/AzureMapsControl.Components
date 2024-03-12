@@ -1,0 +1,152 @@
+﻿@page "/Demos/ClusterAggregates"
+@rendermode InteractiveServer
+
+@inject NavigationManager Navigation
+
+@using AzureMapsControl.Components.Map
+<AzureMap Id="map"
+          CameraOptions="new CameraOptions { Center = new AzureMapsControl.Components.Atlas.Position(-97, 39), Zoom = 3 }"
+          EventActivationFlags="MapEventActivationFlags.None().Enable(MapEventType.Ready, MapEventType.SourceAdded)"
+          OnReady="OnMapReady"
+          OnSourceAdded="OnDatasourceAdded" />
+
+@code {
+    private readonly AzureMapsControl.Components.Popups.Popup _popup = new();
+    private readonly string[] _entityTypes = new[] { "Gas Station", "Grocery Store", "Restaurant", "School" };
+    private AzureMapsControl.Components.Data.DataSource _datasource;
+
+    public async Task OnMapReady(MapEventArgs eventArgs)
+    {
+        await eventArgs.Map.AddPopupAsync(_popup);
+
+        _datasource = new AzureMapsControl.Components.Data.DataSource
+            {
+                EventActivationFlags = AzureMapsControl.Components.Data.DataSourceEventActivationFlags.None(),
+                Options = new()
+                {
+                    Cluster = true,
+                    ClusterRadius = 50,
+                    ClusterProperties = new Dictionary<string, AzureMapsControl.Components.Atlas.Expression>(_entityTypes.Select(entityType => BuildClusterProperty(entityType)))
+                }
+            };
+
+        await eventArgs.Map.AddSourceAsync(_datasource);
+    }
+
+    public async Task OnDatasourceAdded(MapSourceEventArgs eventArgs)
+    {
+        await _datasource.ImportDataFromUrlAsync(Navigation.BaseUri + "/data/SamplePoiDataSet.json");
+
+        var clusterBubbleLayer = new AzureMapsControl.Components.Layers.BubbleLayer
+            {
+                Options = new()
+                {
+                    Source = _datasource.Id,
+                    Radius = 20,
+                    Color = new("purple"),
+                    StrokeWidth = 0,
+                    Filter = new(new[]
+                    {
+                        new AzureMapsControl.Components.Atlas.ExpressionOrString("has"),
+                        new AzureMapsControl.Components.Atlas.ExpressionOrString("point_count"),
+    })
+                },
+                EventActivationFlags = AzureMapsControl.Components.Layers.LayerEventActivationFlags.None().Enable(AzureMapsControl.Components.Layers.LayerEventType.Click)
+            };
+
+        clusterBubbleLayer.OnClick += async mouseEvent =>
+        {
+            var cluster = mouseEvent.Features?.FirstOrDefault();
+
+            if(cluster is not null && cluster.Properties.ContainsKey("cluster"))
+            {
+                var html = string.Join(string.Empty, 
+                    new[] {
+                    "<div style=\"padding:10px;\">",
+                    $"<b>Cluster size: {cluster.Properties["point_count_abbreviated"]} entities</b><br/><br/>"
+                    }.Concat(_entityTypes.Select(entityType => $"{entityType}: {cluster.Properties[entityType]}<br/>"))
+                    .Concat(new[] { "</div>" })
+                );
+
+                await _popup.SetOptionsAsync(options =>
+                {
+                    options.Position = (cluster.Geometry as AzureMapsControl.Components.Atlas.Point).Coordinates;
+                    options.Content = html;
+                });
+
+                await _popup.OpenAsync();
+            }
+        };
+
+        await eventArgs.Map.AddLayerAsync(clusterBubbleLayer);
+
+        var countLocationRenderer = new AzureMapsControl.Components.Layers.SymbolLayer
+            {
+                Options = new()
+                {
+                    Source = _datasource.Id,
+                    IconOptions = new() { Image = new("none") },
+                    TextOptions = new()
+                    {
+                        TextField = new AzureMapsControl.Components.Atlas.ExpressionOrString(new[]
+                        {
+                            new AzureMapsControl.Components.Atlas.ExpressionOrString("get"),
+                            new AzureMapsControl.Components.Atlas.ExpressionOrString("point_count_abbreviated")
+                        }),
+                        Offset = new AzureMapsControl.Components.Atlas.Expression(new []
+                        {
+                            new AzureMapsControl.Components.Atlas.ExpressionOrNumber(0),
+                            new AzureMapsControl.Components.Atlas.ExpressionOrNumber(0.4)
+                        }),
+                        Color = new("white")
+                    }
+                }
+            };
+
+        await eventArgs.Map.AddLayerAsync(countLocationRenderer);
+
+        var individualSymbolLayer = new AzureMapsControl.Components.Layers.SymbolLayer
+            {
+                Options = new()
+                {
+                    Source = _datasource.Id,
+                    Filter = new(new[]
+                {
+                    new AzureMapsControl.Components.Atlas.ExpressionOrString("!"),
+                    new AzureMapsControl.Components.Atlas.Expression(new []
+                    {
+                        new AzureMapsControl.Components.Atlas.ExpressionOrString("has"),
+                        new AzureMapsControl.Components.Atlas.ExpressionOrString("point_count"),
+                    })
+            })
+                }
+            };
+
+            await eventArgs.Map.AddLayerAsync(individualSymbolLayer);
+    }
+
+    private KeyValuePair<string, AzureMapsControl.Components.Atlas.Expression> BuildClusterProperty(string entityType)
+    {
+        return new KeyValuePair<string, AzureMapsControl.Components.Atlas.Expression>(entityType,
+            new AzureMapsControl.Components.Atlas.Expression(new[]
+            {
+                new AzureMapsControl.Components.Atlas.ExpressionOrString("+"),
+                new AzureMapsControl.Components.Atlas.Expression(new []
+                {
+                    new AzureMapsControl.Components.Atlas.ExpressionOrString("case"),
+                    new AzureMapsControl.Components.Atlas.Expression(new []
+                    {
+                        new AzureMapsControl.Components.Atlas.ExpressionOrString("=="),
+                        new AzureMapsControl.Components.Atlas.Expression(new []
+                        {
+                            new AzureMapsControl.Components.Atlas.ExpressionOrString("get"),
+                            new AzureMapsControl.Components.Atlas.ExpressionOrString("EntityType")
+                        }),
+                        new AzureMapsControl.Components.Atlas.ExpressionOrString(entityType)
+                    }),
+                    new AzureMapsControl.Components.Atlas.ExpressionOrNumber(1),
+                    new AzureMapsControl.Components.Atlas.ExpressionOrNumber(0),
+                })
+            }));
+    }
+}
