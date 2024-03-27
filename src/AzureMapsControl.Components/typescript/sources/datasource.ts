@@ -1,6 +1,6 @@
 import * as azmaps from 'azure-maps-control';
 import { Core } from '../core/core';
-import { Shape } from '../geometries/geometry';
+import { Shape, Feature } from '../geometries/geometry';
 
 export class Datasource {
 
@@ -9,7 +9,7 @@ export class Datasource {
         return shapes?.map(shape => Core.getSerializableShape(shape));
     }
 
-    public static async getClusterLeaves(datasourceId: string, clusterId: number, limit: number, offset: number) {
+    public static async getClusterLeaves(datasourceId: string, clusterId: number, limit: number, offset: number): Promise<(Shape | Feature)[]> {
         return new Promise(resolve => {
             (Core.getMap().sources.getById(datasourceId) as azmaps.source.DataSource).getClusterLeaves(clusterId, limit, offset).then(clusterLeaves => {
 
@@ -24,6 +24,14 @@ export class Datasource {
                 });
 
                 resolve(resultLeaves);
+            });
+        });
+    }
+
+    public static async getClusterExpansionZoom(datasourceId: string, clusterId: number): Promise<number> {
+        return new Promise(resolve => {
+            (Core.getMap().sources.getById(datasourceId) as azmaps.source.DataSource).getClusterExpansionZoom(clusterId).then(zoom => {
+                resolve(zoom);
             });
         });
     }

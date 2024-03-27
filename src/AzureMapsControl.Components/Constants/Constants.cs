@@ -112,6 +112,7 @@
             {
                 internal const string GetShapes = "getShapes";
                 internal const string GetClusterLeaves = "getClusterLeaves";
+                internal const string GetClusterExpansionZoom = "getClusterExpansionZoom";
             }
 
             internal static class GriddedDatasource

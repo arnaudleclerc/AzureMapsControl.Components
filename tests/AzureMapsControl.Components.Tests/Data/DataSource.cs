@@ -1103,5 +1103,48 @@
 
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task Should_GetClusterExpansionZoom()
+        {
+            var datasource = new DataSource {
+                JSRuntime = _jsRuntimeMock.Object
+            };
+
+            var expected = 2;
+            _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<int>(It.IsAny<string>(), It.IsAny<object[]>())).ReturnsAsync(expected);
+
+            var clusterId = 1;
+            var result = await datasource.GetClusterExpansionZoomAsync(clusterId);
+
+            Assert.Equal(expected, result);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<int>(Constants.JsConstants.Methods.Datasource.GetClusterExpansionZoom.ToDatasourceNamespace(), datasource.Id, clusterId), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task Should_NotGetClusterExpansionZoom_NotAddedToMapCase()
+        {
+            var datasource = new DataSource();
+
+            await Assert.ThrowsAsync<ComponentNotAddedToMapException>(async () => await datasource.GetClusterExpansionZoomAsync(1));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task Should_NotGetClusterExpansionZoom_DisposedCase()
+        {
+            var datasource = new DataSource {
+                JSRuntime = _jsRuntimeMock.Object
+            };
+
+            await datasource.DisposeAsync();
+
+            await Assert.ThrowsAsync<ComponentDisposedException>(async () => await datasource.GetClusterExpansionZoomAsync(1));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
     }
 }
