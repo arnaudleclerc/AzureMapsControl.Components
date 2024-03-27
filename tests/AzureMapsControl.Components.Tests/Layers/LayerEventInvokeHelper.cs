@@ -1,5 +1,7 @@
 ﻿namespace AzureMapsControl.Components.Tests.Layers
 {
+    using System.Threading.Tasks;
+
     using AzureMapsControl.Components.Layers;
     using AzureMapsControl.Components.Map;
 
@@ -8,7 +10,7 @@
     public class LayerEventInvokeHelperTests
     {
         [Fact]
-        public async void Should_InvokeCallback_Async()
+        public async Task Should_InvokeCallback_Async()
         {
             var layerEventArgs = new MapJsEventArgs();
             var assertEqualEventArgs = false;

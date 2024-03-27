@@ -47,7 +47,7 @@
         }
 
         [Fact]
-        public async void Should_AddControls_Async()
+        public async Task Should_AddControls_Async()
         {
             var controls = new List<Control> {
                 new CompassControl()
@@ -65,7 +65,7 @@
         }
 
         [Fact]
-        public async void Should_AddOrderedControls_Async()
+        public async Task Should_AddOrderedControls_Async()
         {
             var controls = new List<Control> {
                 new OverviewMapControl(),
@@ -84,7 +84,7 @@
         }
 
         [Fact]
-        public async void Should_NotAddControls_NullCaseAsync()
+        public async Task Should_NotAddControls_NullCaseAsync()
         {
             const string id = "id";
             var map = new Map(id, _jsRuntimeMock.Object, _loggerMock.Object);
@@ -96,7 +96,7 @@
         }
 
         [Fact]
-        public async void Should_NotAddControls_EmptyCaseAsync()
+        public async Task Should_NotAddControls_EmptyCaseAsync()
         {
             var controls = Array.Empty<Control>();
             const string id = "id";
@@ -109,7 +109,7 @@
         }
 
         [Fact]
-        public async void Should_AddControls_ParamsVersion_Async()
+        public async Task Should_AddControls_ParamsVersion_Async()
         {
             var control = new CompassControl(position: ControlPosition.BottomLeft);
             const string id = "id";
@@ -124,7 +124,7 @@
         }
 
         [Fact]
-        public async void Should_AddHtmlMarkers_Async()
+        public async Task Should_AddHtmlMarkers_Async()
         {
             var markers = new List<HtmlMarker> { new HtmlMarker(null), new HtmlMarker(null) };
             var popupInvokeHelper = new PopupInvokeHelper(null);
@@ -146,7 +146,7 @@
         }
 
         [Fact]
-        public async void Should_AddHtmlMarkers_WithPopup_WithAutoOpenAsync()
+        public async Task Should_AddHtmlMarkers_WithPopup_WithAutoOpenAsync()
         {
             var assertEvent = false;
             var popup = new HtmlMarkerPopup(new PopupOptions {
@@ -180,7 +180,7 @@
         }
 
         [Fact]
-        public async void Should_AddHtmlMarkers_ParamsVersion_Async()
+        public async Task Should_AddHtmlMarkers_ParamsVersion_Async()
         {
             var marker1 = new HtmlMarker(null);
             var marker2 = new HtmlMarker(null);
@@ -202,7 +202,7 @@
         }
 
         [Fact]
-        public async void Should_UpdateHtmlMarkers_Async()
+        public async Task Should_UpdateHtmlMarkers_Async()
         {
             var updates = new List<HtmlMarkerUpdate> { new HtmlMarkerUpdate(new HtmlMarker(null, null), null), new HtmlMarkerUpdate(new HtmlMarker(null, null), null) };
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
@@ -216,7 +216,7 @@
         }
 
         [Fact]
-        public async void Should_NotUpdateHtmlMarkers_NullCaseAsync()
+        public async Task Should_NotUpdateHtmlMarkers_NullCaseAsync()
         {
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
 
@@ -225,7 +225,7 @@
         }
 
         [Fact]
-        public async void Should_UpdateHtmlMarkers_ParamsVersion_Async()
+        public async Task Should_UpdateHtmlMarkers_ParamsVersion_Async()
         {
             var update1 = new HtmlMarkerUpdate(new HtmlMarker(null, null), null);
             var update2 = new HtmlMarkerUpdate(new HtmlMarker(null, null), null);
@@ -240,7 +240,7 @@
         }
 
         [Fact]
-        public async void Shoud_NotRemoveAnyHtmlMarkers_Async()
+        public async Task Shoud_NotRemoveAnyHtmlMarkers_Async()
         {
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
 
@@ -249,7 +249,7 @@
         }
 
         [Fact]
-        public async void Shoud_NotRemoveAnyHtmlMarkers_Null_Async()
+        public async Task Shoud_NotRemoveAnyHtmlMarkers_Null_Async()
         {
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => ValueTask.CompletedTask));
             var htmlMarker = new HtmlMarker(null);
@@ -265,7 +265,7 @@
         }
 
         [Fact]
-        public async void Shoud_RemoveAnyHtmlMarkers_Async()
+        public async Task Shoud_RemoveAnyHtmlMarkers_Async()
         {
             var htmlMarker = new HtmlMarker(null);
             var htmlMarker2 = new HtmlMarker(null);
@@ -288,7 +288,7 @@
         }
 
         [Fact]
-        public async void Shoud_RemoveAnyHtmlMarkers_ParamsVersion_Async()
+        public async Task Shoud_RemoveAnyHtmlMarkers_ParamsVersion_Async()
         {
             var htmlMarker = new HtmlMarker(null);
             var htmlMarker2 = new HtmlMarker(null);
@@ -311,7 +311,7 @@
         }
 
         [Fact]
-        public async void Should_AddDrawingToolbar_Async()
+        public async Task Should_AddDrawingToolbar_Async()
         {
             var drawingToolbarOptions = new DrawingToolbarOptions();
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, new DrawingToolbarEventInvokeHelper(eventArgs => ValueTask.CompletedTask));
@@ -327,7 +327,7 @@
         }
 
         [Fact]
-        public async void Should_UpdateDrawingToolbar_Async()
+        public async Task Should_UpdateDrawingToolbar_Async()
         {
             var drawingToolbarOptions = new DrawingToolbarOptions();
             var updateDrawingToolbarOptions = new DrawingToolbarUpdateOptions {
@@ -360,7 +360,7 @@
         }
 
         [Fact]
-        public async void Should_NotUpdateDrawingToolbar_NullCaseAsync()
+        public async Task Should_NotUpdateDrawingToolbar_NullCaseAsync()
         {
             var drawingToolbarOptions = new DrawingToolbarOptions();
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, new DrawingToolbarEventInvokeHelper(eventArgs => ValueTask.CompletedTask));
@@ -375,7 +375,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveDrawingToolbar_Async()
+        public async Task Should_RemoveDrawingToolbar_Async()
         {
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, new DrawingToolbarEventInvokeHelper(eventArgs => ValueTask.CompletedTask));
 
@@ -392,7 +392,7 @@
         }
 
         [Fact]
-        public async void Should_NotRemoveDrawingToolbar_Async()
+        public async Task Should_NotRemoveDrawingToolbar_Async()
         {
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, new DrawingToolbarEventInvokeHelper(eventArgs => ValueTask.CompletedTask));
 
@@ -403,7 +403,7 @@
         }
 
         [Fact]
-        public async void Should_AddALayer_Async()
+        public async Task Should_AddALayer_Async()
         {
             var layer = new BubbleLayer();
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => ValueTask.CompletedTask));
@@ -423,7 +423,7 @@
         }
 
         [Fact]
-        public async void Should_NotAddALayer_NullCaseAsync()
+        public async Task Should_NotAddALayer_NullCaseAsync()
         {
             BubbleLayer layer = null;
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => ValueTask.CompletedTask));
@@ -435,7 +435,7 @@
         }
 
         [Fact]
-        public async void Should_AddALayerWithBefore_Async()
+        public async Task Should_AddALayerWithBefore_Async()
         {
             var layer = new BubbleLayer();
             const string before = "before";
@@ -456,7 +456,7 @@
         }
 
         [Fact]
-        public async void Should_NotAddLayerWithSameId_Async()
+        public async Task Should_NotAddLayerWithSameId_Async()
         {
             var layer = new BubbleLayer();
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => ValueTask.CompletedTask));
@@ -476,7 +476,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveOneLayer_Async()
+        public async Task Should_RemoveOneLayer_Async()
         {
             var layer1 = new BubbleLayer();
             var layer2 = new BubbleLayer();
@@ -497,7 +497,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveMultipleLayers_Async()
+        public async Task Should_RemoveMultipleLayers_Async()
         {
             var layer1 = new BubbleLayer();
             var layer2 = new BubbleLayer();
@@ -518,7 +518,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveMultipleLayers_ParamsVersion_Async()
+        public async Task Should_RemoveMultipleLayers_ParamsVersion_Async()
         {
             var layer1 = new BubbleLayer();
             var layer2 = new BubbleLayer();
@@ -539,7 +539,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveMultipleLayers_ViaId_Async()
+        public async Task Should_RemoveMultipleLayers_ViaId_Async()
         {
             var layer1 = new BubbleLayer();
             var layer2 = new BubbleLayer();
@@ -560,7 +560,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveMultipleLayers_ViaId_ParamsVersion_Async()
+        public async Task Should_RemoveMultipleLayers_ViaId_ParamsVersion_Async()
         {
             var layer1 = new BubbleLayer();
             var layer2 = new BubbleLayer();
@@ -581,7 +581,7 @@
         }
 
         [Fact]
-        public async void Should_AddDataSource_Async()
+        public async Task Should_AddDataSource_Async()
         {
             var dataSource = new DataSource {
                 EventActivationFlags = DataSourceEventActivationFlags.None().Enable(DataSourceEventType.DataAdded)
@@ -605,7 +605,7 @@
         }
 
         [Fact]
-        public async void Should_AddVectorTileSourceAsync()
+        public async Task Should_AddVectorTileSourceAsync()
         {
             var source = new VectorTileSource();
 
@@ -623,7 +623,7 @@
         }
 
         [Fact]
-        public async void Should_NotAddDataSource_Async()
+        public async Task Should_NotAddDataSource_Async()
         {
             var dataSource = new DataSource();
 
@@ -639,7 +639,7 @@
         }
 
         [Fact]
-        public async void Should_NotAddDataSource_NullCaseAsync()
+        public async Task Should_NotAddDataSource_NullCaseAsync()
         {
             DataSource dataSource = null;
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
@@ -648,7 +648,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveDataSource_Async()
+        public async Task Should_RemoveDataSource_Async()
         {
             var dataSource = new DataSource();
             var dataSource2 = new DataSource();
@@ -676,7 +676,7 @@
         }
 
         [Fact]
-        public async void Should_NotRemoveDataSource_Async()
+        public async Task Should_NotRemoveDataSource_Async()
         {
             var dataSource = new DataSource();
             var dataSource2 = new DataSource();
@@ -697,7 +697,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveDataSource_ViaId_Async()
+        public async Task Should_RemoveDataSource_ViaId_Async()
         {
             var dataSource = new DataSource();
             var dataSource2 = new DataSource();
@@ -725,7 +725,7 @@
         }
 
         [Fact]
-        public async void Should_NotRemoveDataSource_ViaId_Async()
+        public async Task Should_NotRemoveDataSource_ViaId_Async()
         {
             var dataSource = new DataSource();
             var dataSource2 = new DataSource();
@@ -746,7 +746,7 @@
         }
 
         [Fact]
-        public async void Should_ClearMap_Async()
+        public async Task Should_ClearMap_Async()
         {
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, new DrawingToolbarEventInvokeHelper(eventArgs => ValueTask.CompletedTask),
                 new HtmlMarkerInvokeHelper(eventArgs => ValueTask.CompletedTask),
@@ -774,7 +774,7 @@
         }
 
         [Fact]
-        public async void Should_ClearLayers_Async()
+        public async Task Should_ClearLayers_Async()
         {
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, layerEventInvokeHelper: new LayerEventInvokeHelper(eventArgs => ValueTask.CompletedTask));
             await map.AddLayerAsync(new BubbleLayer());
@@ -788,7 +788,7 @@
         }
 
         [Fact]
-        public async void Should_ClearDataSources_Async()
+        public async Task Should_ClearDataSources_Async()
         {
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, dataSourceEventInvokeHelper: new DataSourceEventInvokeHelper(_ => ValueTask.CompletedTask));
 
@@ -801,7 +801,7 @@
         }
 
         [Fact]
-        public async void Should_ClearHtmlMarkers_Async()
+        public async Task Should_ClearHtmlMarkers_Async()
         {
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(eventArgs => ValueTask.CompletedTask));
 
@@ -819,7 +819,7 @@
         }
 
         [Fact]
-        public async void Should_AddPopup_Async()
+        public async Task Should_AddPopup_Async()
         {
             var popup = new Popup(new PopupOptions());
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => ValueTask.CompletedTask));
@@ -837,7 +837,7 @@
         }
 
         [Fact]
-        public async void Should_NotAddPopup_NullCaseAsync()
+        public async Task Should_NotAddPopup_NullCaseAsync()
         {
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => ValueTask.CompletedTask));
             await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await map.AddPopupAsync(null));
@@ -845,7 +845,7 @@
         }
 
         [Fact]
-        public async void Should_NotAddTwiceTheSamePopup_Async()
+        public async Task Should_NotAddTwiceTheSamePopup_Async()
         {
             var popup = new Popup(new PopupOptions());
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => ValueTask.CompletedTask));
@@ -862,7 +862,7 @@
         }
 
         [Fact]
-        public async void Should_AddPopupWithTemplate_Async()
+        public async Task Should_AddPopupWithTemplate_Async()
         {
             var popup = new Popup(new PopupOptions());
             var popupTemplate = new PopupTemplate();
@@ -884,7 +884,7 @@
         }
 
         [Fact]
-        public async void Should_NotAddPopupWithTemplate_NullCaseAsync()
+        public async Task Should_NotAddPopupWithTemplate_NullCaseAsync()
         {
             var popupTemplate = new PopupTemplate();
             var properties = new Dictionary<string, object>();
@@ -894,7 +894,7 @@
         }
 
         [Fact]
-        public async void Should_NotAddPopupWithTemplate_NullTemplateCaseAsync()
+        public async Task Should_NotAddPopupWithTemplate_NullTemplateCaseAsync()
         {
             var popup = new Popup(new PopupOptions());
             var properties = new Dictionary<string, object>();
@@ -904,7 +904,7 @@
         }
 
         [Fact]
-        public async void Should_NotAddPopupWithTemplate_NullPropertiesCaseAsync()
+        public async Task Should_NotAddPopupWithTemplate_NullPropertiesCaseAsync()
         {
             var popup = new Popup(new PopupOptions());
             var popupTemplate = new PopupTemplate();
@@ -914,7 +914,7 @@
         }
 
         [Fact]
-        public async void Should_NotAddTwiceTheSamePopupWithTemplate_Async()
+        public async Task Should_NotAddTwiceTheSamePopupWithTemplate_Async()
         {
             var popup = new Popup(new PopupOptions());
             var popupTemplate = new PopupTemplate();
@@ -935,7 +935,7 @@
         }
 
         [Fact]
-        public async void Should_RemovePopup_Async()
+        public async Task Should_RemovePopup_Async()
         {
             var popup = new Popup(new PopupOptions()) {
                 JSRuntime = _jsRuntimeMock.Object
@@ -951,7 +951,7 @@
         }
 
         [Fact]
-        public async void Should_RemovePopup_IdVersion_Async()
+        public async Task Should_RemovePopup_IdVersion_Async()
         {
             var popup = new Popup(new PopupOptions()) {
                 JSRuntime = _jsRuntimeMock.Object
@@ -967,7 +967,7 @@
         }
 
         [Fact]
-        public async void Should_NotRemovePopup_Async()
+        public async Task Should_NotRemovePopup_Async()
         {
             var popup = new Popup(new PopupOptions());
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => ValueTask.CompletedTask));
@@ -979,7 +979,7 @@
         }
 
         [Fact]
-        public async void Should_ClearPopups_Async()
+        public async Task Should_ClearPopups_Async()
         {
             var popup = new Popup(new PopupOptions());
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object, popupInvokeHelper: new PopupInvokeHelper(eventArgs => ValueTask.CompletedTask));
@@ -993,7 +993,7 @@
         }
 
         [Fact]
-        public async void Should_UpdateCameraOptions_Async()
+        public async Task Should_UpdateCameraOptions_Async()
         {
             var center = new Position(10, 10);
             var initialCameraOptions = new CameraOptions {
@@ -1011,7 +1011,7 @@
         }
 
         [Fact]
-        public async void Should_UpdateCameraOptions_WithCenter_Async()
+        public async Task Should_UpdateCameraOptions_WithCenter_Async()
         {
             var center = new Position(10, 10);
             var initialCameraOptions = new CameraOptions {
@@ -1030,7 +1030,7 @@
         }
 
         [Fact]
-        public async void Should_UpdateCameraOptions_WithBounds_Async()
+        public async Task Should_UpdateCameraOptions_WithBounds_Async()
         {
             var bounds = new BoundingBox(-10, 10, 10, -10);
             var initialCameraOptions = new CameraOptions {
@@ -1055,7 +1055,7 @@
         }
 
         [Fact]
-        public async void Should_UpdateCameraOptions_NoCameraOptionsDefined_Async()
+        public async Task Should_UpdateCameraOptions_NoCameraOptionsDefined_Async()
         {
             var center = new Position(10, 10);
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
@@ -1068,7 +1068,7 @@
         }
 
         [Fact]
-        public async void Should_UpdateStyleOptions_Async()
+        public async Task Should_UpdateStyleOptions_Async()
         {
             var language = "fr";
             var initialStyleOptions = new StyleOptions {
@@ -1086,7 +1086,7 @@
         }
 
         [Fact]
-        public async void Should_UpdateStyleOptions_NoStyleOptionsDefined_Async()
+        public async Task Should_UpdateStyleOptions_NoStyleOptionsDefined_Async()
         {
             var language = "fr";
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
@@ -1099,7 +1099,7 @@
         }
 
         [Fact]
-        public async void Should_UpdateUserInteraction_Async()
+        public async Task Should_UpdateUserInteraction_Async()
         {
             var initialUserInteractionOptions = new UserInteractionOptions {
                 BoxZoomInteraction = true
@@ -1117,7 +1117,7 @@
         }
 
         [Fact]
-        public async void Should_UpdateUserInteraction_NoUserInteractionDefined_Async()
+        public async Task Should_UpdateUserInteraction_NoUserInteractionDefined_Async()
         {
             var dblClickZoomInteraction = true;
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
@@ -1130,7 +1130,7 @@
         }
 
         [Fact]
-        public async void Should_UpdateTrafficInteraction_Async()
+        public async Task Should_UpdateTrafficInteraction_Async()
         {
             var initialTrafficOptions = new TrafficOptions {
                 Flow = TrafficFlow.Absolute
@@ -1148,7 +1148,7 @@
         }
 
         [Fact]
-        public async void Should_UpdateTrafficInteraction_NoTrafficOptionsDefined_Async()
+        public async Task Should_UpdateTrafficInteraction_NoTrafficOptionsDefined_Async()
         {
             var incidents = true;
             var map = new Map("id", _jsRuntimeMock.Object, _loggerMock.Object);
@@ -1710,7 +1710,7 @@
         }
 
         [Fact]
-        public async void Should_CreateImageFromTemplateAsync()
+        public async Task Should_CreateImageFromTemplateAsync()
         {
             var map = new Map("id", _jsRuntimeMock.Object);
             await map.CreateImageFromTemplateAsync("imageId", "templateName", "color", "secondaryColor", 1m);
@@ -1727,7 +1727,7 @@
         }
 
         [Fact]
-        public async void Should_SetCanvasStylePropertyAsync()
+        public async Task Should_SetCanvasStylePropertyAsync()
         {
             var map = new Map("id", _jsRuntimeMock.Object);
             await map.SetCanvasStylePropertyAsync("property", "value");
@@ -1740,7 +1740,7 @@
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public async void Should_NotSetCanvasStyleProperty_InvalidProperty_Async(string property)
+        public async Task Should_NotSetCanvasStyleProperty_InvalidProperty_Async(string property)
         {
             var map = new Map("id", _jsRuntimeMock.Object);
             await Assert.ThrowsAnyAsync<ArgumentException>(async () => await map.SetCanvasStylePropertyAsync(property, "value"));
@@ -1749,7 +1749,7 @@
         }
 
         [Fact]
-        public async void Should_SetCanvasStylePropertiesAsync()
+        public async Task Should_SetCanvasStylePropertiesAsync()
         {
             var map = new Map("id", _jsRuntimeMock.Object);
             var properties = new Dictionary<string, string> {
@@ -1765,7 +1765,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetCanvasStyleProperties_NullCase_Async()
+        public async Task Should_NotSetCanvasStyleProperties_NullCase_Async()
         {
             var map = new Map("id", _jsRuntimeMock.Object);
 
@@ -1775,7 +1775,7 @@
         }
 
         [Fact]
-        public async void Should_SetOnlyDefinedCanvasProperties_Async()
+        public async Task Should_SetOnlyDefinedCanvasProperties_Async()
         {
             var map = new Map("id", _jsRuntimeMock.Object);
 
@@ -1793,7 +1793,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetCanvasProperties_EmptyCase_Async()
+        public async Task Should_NotSetCanvasProperties_EmptyCase_Async()
         {
             var map = new Map("id", _jsRuntimeMock.Object);
 
@@ -1804,7 +1804,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetCanvasProperties_NoDefinedPropertiesCase_Async()
+        public async Task Should_NotSetCanvasProperties_NoDefinedPropertiesCase_Async()
         {
             var map = new Map("id", _jsRuntimeMock.Object);
 
@@ -1817,7 +1817,7 @@
         }
 
         [Fact]
-        public async void Should_SetCanvasContainerStylePropertyAsync()
+        public async Task Should_SetCanvasContainerStylePropertyAsync()
         {
             var map = new Map("id", _jsRuntimeMock.Object);
             await map.SetCanvasContainerStylePropertyAsync("property", "value");
@@ -1830,7 +1830,7 @@
         [InlineData(null)]
         [InlineData("")]
         [InlineData(" ")]
-        public async void Should_NotSetCanvasContainerStyleProperty_InvalidProperty_Async(string property)
+        public async Task Should_NotSetCanvasContainerStyleProperty_InvalidProperty_Async(string property)
         {
             var map = new Map("id", _jsRuntimeMock.Object);
             await Assert.ThrowsAnyAsync<ArgumentException>(async () => await map.SetCanvasContainerStylePropertyAsync(property, "value"));
@@ -1839,7 +1839,7 @@
         }
 
         [Fact]
-        public async void Should_SetCanvasContainerStylePropertiesAsync()
+        public async Task Should_SetCanvasContainerStylePropertiesAsync()
         {
             var map = new Map("id", _jsRuntimeMock.Object);
             var properties = new Dictionary<string, string> {
@@ -1855,7 +1855,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetCanvasContainerStyleProperties_NullCase_Async()
+        public async Task Should_NotSetCanvasContainerStyleProperties_NullCase_Async()
         {
             var map = new Map("id", _jsRuntimeMock.Object);
 
@@ -1865,7 +1865,7 @@
         }
 
         [Fact]
-        public async void Should_SetOnlyDefinedCanvasContainerProperties_Async()
+        public async Task Should_SetOnlyDefinedCanvasContainerProperties_Async()
         {
             var map = new Map("id", _jsRuntimeMock.Object);
 
@@ -1883,7 +1883,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetCanvasContainerProperties_EmptyCase_Async()
+        public async Task Should_NotSetCanvasContainerProperties_EmptyCase_Async()
         {
             var map = new Map("id", _jsRuntimeMock.Object);
 
@@ -1894,7 +1894,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetCanvasContainerProperties_NoDefinedPropertiesCase_Async()
+        public async Task Should_NotSetCanvasContainerProperties_NoDefinedPropertiesCase_Async()
         {
             var map = new Map("id", _jsRuntimeMock.Object);
 
@@ -1907,7 +1907,7 @@
         }
 
         [Fact]
-        public async void Should_GetCameraOptionsAsync()
+        public async Task Should_GetCameraOptionsAsync()
         {
             var options = new CameraOptions();
             _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<CameraOptions>(It.IsAny<string>())).ReturnsAsync(options);
@@ -1922,7 +1922,7 @@
         }
 
         [Fact]
-        public async void Should_GetStyleOptionsAsync()
+        public async Task Should_GetStyleOptionsAsync()
         {
             var options = new StyleOptions();
             _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<StyleOptions>(It.IsAny<string>())).ReturnsAsync(options);
@@ -1937,7 +1937,7 @@
         }
 
         [Fact]
-        public async void Should_GetTrafficOptionsAsync()
+        public async Task Should_GetTrafficOptionsAsync()
         {
             var options = new TrafficOptions();
             _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<TrafficOptions>(It.IsAny<string>())).ReturnsAsync(options);
@@ -1952,7 +1952,7 @@
         }
 
         [Fact]
-        public async void Should_GetUserInteractionOptionsAsync()
+        public async Task Should_GetUserInteractionOptionsAsync()
         {
             var options = new UserInteractionOptions();
             _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<UserInteractionOptions>(It.IsAny<string>())).ReturnsAsync(options);

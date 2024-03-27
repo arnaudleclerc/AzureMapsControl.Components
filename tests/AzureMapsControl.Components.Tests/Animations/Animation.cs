@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Animations;
     using AzureMapsControl.Components.Runtime;
@@ -115,7 +116,7 @@
 
         [Theory]
         [MemberData(nameof(AllAnimationsTypes))]
-        public async void Should_DisposeAsync(string animationType)
+        public async Task Should_DisposeAsync(string animationType)
         {
             var id = "id";
             var animation = AnimationFactory.GetAnimation(animationType, id, _jsRuntime.Object);
@@ -128,7 +129,7 @@
 
         [Theory]
         [MemberData(nameof(AllAnimationsTypes))]
-        public async void Should_ThrowAnimationDisposedException_DisposeAsync(string animationType)
+        public async Task Should_ThrowAnimationDisposedException_DisposeAsync(string animationType)
         {
             var id = "id";
             var animation = AnimationFactory.GetAnimation(animationType, id, _jsRuntime.Object);
@@ -141,7 +142,7 @@
 
         [Theory]
         [MemberData(nameof(AllPauseAnimationsTypes))]
-        public async void Should_PauseAsync(string animationType)
+        public async Task Should_PauseAsync(string animationType)
         {
             var id = "id";
             var animation = AnimationFactory.GetAnimation(animationType, id, _jsRuntime.Object);
@@ -153,7 +154,7 @@
 
         [Theory]
         [MemberData(nameof(AllPauseAnimationsTypes))]
-        public async void Should_ThrowAnimationDisposedException_PauseAsync(string animationType)
+        public async Task Should_ThrowAnimationDisposedException_PauseAsync(string animationType)
         {
             var id = "id";
             var animation = AnimationFactory.GetAnimation(animationType, id, _jsRuntime.Object);
@@ -166,7 +167,7 @@
 
         [Theory]
         [MemberData(nameof(AllPlayAnimationsTypes))]
-        public async void Should_PlayAsync(string animationType)
+        public async Task Should_PlayAsync(string animationType)
         {
             var id = "id";
             var animation = AnimationFactory.GetAnimation(animationType, id, _jsRuntime.Object);
@@ -178,7 +179,7 @@
 
         [Theory]
         [MemberData(nameof(AllPlayAnimationsTypes))]
-        public async void Should_ThrowAnimationDisposedException_PlayAsync(string animationType)
+        public async Task Should_ThrowAnimationDisposedException_PlayAsync(string animationType)
         {
             var id = "id";
             var animation = AnimationFactory.GetAnimation(animationType, id, _jsRuntime.Object);
@@ -191,7 +192,7 @@
 
         [Theory]
         [MemberData(nameof(AllResetAnimationsTypes))]
-        public async void Should_ResetAsync(string animationType)
+        public async Task Should_ResetAsync(string animationType)
         {
             var id = "id";
             var animation = AnimationFactory.GetAnimation(animationType, id, _jsRuntime.Object);
@@ -203,7 +204,7 @@
 
         [Theory]
         [MemberData(nameof(AllResetAnimationsTypes))]
-        public async void Should_ThrowAnimationDisposedException_ResetAsync(string animationType)
+        public async Task Should_ThrowAnimationDisposedException_ResetAsync(string animationType)
         {
             var id = "id";
             var animation = AnimationFactory.GetAnimation(animationType, id, _jsRuntime.Object);
@@ -216,7 +217,7 @@
 
         [Theory]
         [MemberData(nameof(AllSeekAnimationsTypes))]
-        public async void Should_SeekAsync(string animationType)
+        public async Task Should_SeekAsync(string animationType)
         {
             var id = "id";
             var animation = AnimationFactory.GetAnimation(animationType, id, _jsRuntime.Object);
@@ -229,7 +230,7 @@
 
         [Theory]
         [MemberData(nameof(AllSeekAnimationsTypes))]
-        public async void Should_ThrowAnimationDisposedException_SeekAsync(string animationType)
+        public async Task Should_ThrowAnimationDisposedException_SeekAsync(string animationType)
         {
             var id = "id";
             var animation = AnimationFactory.GetAnimation(animationType, id, _jsRuntime.Object);
@@ -243,7 +244,7 @@
 
         [Theory]
         [MemberData(nameof(AllStopAnimationsTypes))]
-        public async void Should_StopAsync(string animationType)
+        public async Task Should_StopAsync(string animationType)
         {
             var id = "id";
             var animation = AnimationFactory.GetAnimation(animationType, id, _jsRuntime.Object);
@@ -255,7 +256,7 @@
 
         [Theory]
         [MemberData(nameof(AllStopAnimationsTypes))]
-        public async void Should_ThrowAnimationDisposedException_StopAsync(string animationType)
+        public async Task Should_ThrowAnimationDisposedException_StopAsync(string animationType)
         {
             var id = "id";
             var animation = AnimationFactory.GetAnimation(animationType, id, _jsRuntime.Object);

@@ -1,5 +1,7 @@
 ﻿namespace AzureMapsControl.Components.Tests.Map
 {
+    using System.Threading.Tasks;
+
     using AzureMapsControl.Components.Map;
 
     using Xunit;
@@ -7,7 +9,7 @@
     public class MapServiceTests
     {
         [Fact]
-        public async void Should_AddMap_Async()
+        public async Task Should_AddMap_Async()
         {
             var map = new Map("id");
             var service = new MapService(null);
@@ -16,7 +18,7 @@
         }
 
         [Fact]
-        public async void Should_AddMapAndTriggerOnReady_Async()
+        public async Task Should_AddMapAndTriggerOnReady_Async()
         {
             var map = new Map("id");
             var service = new MapService(null);

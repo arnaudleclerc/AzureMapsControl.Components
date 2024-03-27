@@ -1,5 +1,7 @@
 ﻿namespace AzureMapsControl.Components.Tests.Drawing
 {
+    using System.Threading.Tasks;
+
     using AzureMapsControl.Components.Drawing;
 
     using Xunit;
@@ -7,7 +9,7 @@
     public class DrawingToolbarEventInvokeHelperTests
     {
         [Fact]
-        public async void Should_InvokeCallback_Async()
+        public async Task Should_InvokeCallback_Async()
         {
             var drawingToolbarEventArgs = new DrawingToolbarJsEventArgs();
             var assertEqualEventArgs = false;

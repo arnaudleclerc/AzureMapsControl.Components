@@ -1,5 +1,7 @@
 ﻿namespace AzureMapsControl.Components.Tests.FullScreen
 {
+    using System.Threading.Tasks;
+
     using AzureMapsControl.Components.FullScreen;
     using AzureMapsControl.Components.Runtime;
 
@@ -15,7 +17,7 @@
         private readonly Mock<IMapJsRuntime> _jsRuntimeMock = new();
 
         [Fact]
-        public async void Should_CheckIsSupported_Async()
+        public async Task Should_CheckIsSupported_Async()
         {
             var isSupported = true;
             _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<bool>(It.IsAny<string>(), It.IsAny<object[]>())).ReturnsAsync(isSupported);

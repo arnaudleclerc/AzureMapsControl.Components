@@ -1,5 +1,7 @@
 ﻿namespace AzureMapsControl.Components.Tests.Popups
 {
+    using System.Threading.Tasks;
+
     using AzureMapsControl.Components.Exceptions;
     using AzureMapsControl.Components.Popups;
     using AzureMapsControl.Components.Runtime;
@@ -41,7 +43,7 @@
         }
 
         [Fact]
-        public async void Should_OpenAsync()
+        public async Task Should_OpenAsync()
         {
             var popup = new HtmlMarkerPopup(new PopupOptions()) {
                 JSRuntime = _jsRuntimeMock.Object,
@@ -54,7 +56,7 @@
         }
 
         [Fact]
-        public async void Should_NotOpen_NotAddedToMapCase_Async()
+        public async Task Should_NotOpen_NotAddedToMapCase_Async()
         {
             var popup = new HtmlMarkerPopup(new PopupOptions()) {
                 HasBeenToggled = true
@@ -66,7 +68,7 @@
         }
 
         [Fact]
-        public async void Should_Not_OpenAsync()
+        public async Task Should_Not_OpenAsync()
         {
             var popup = new HtmlMarkerPopup(new PopupOptions()) {
                 JSRuntime = _jsRuntimeMock.Object
@@ -77,7 +79,7 @@
         }
 
         [Fact]
-        public async void Should_CloseAsync()
+        public async Task Should_CloseAsync()
         {
             var popup = new HtmlMarkerPopup(new PopupOptions()) {
                 JSRuntime = _jsRuntimeMock.Object,
@@ -89,7 +91,7 @@
         }
 
         [Fact]
-        public async void Should_NotClose_NotAddedToMap_Async()
+        public async Task Should_NotClose_NotAddedToMap_Async()
         {
             var popup = new HtmlMarkerPopup(new PopupOptions()) {
                 HasBeenToggled = true
@@ -101,7 +103,7 @@
         }
 
         [Fact]
-        public async void Should_Not_CloseAsync()
+        public async Task Should_Not_CloseAsync()
         {
             var popup = new HtmlMarkerPopup(new PopupOptions()) {
                 JSRuntime = _jsRuntimeMock.Object
@@ -111,7 +113,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveAsync()
+        public async Task Should_RemoveAsync()
         {
             var assertRemoveEvent = false;
             var popup = new HtmlMarkerPopup(new PopupOptions()) {
@@ -128,7 +130,7 @@
         }
 
         [Fact]
-        public async void Should_NotRemove_NotAddedToMapCase_Async()
+        public async Task Should_NotRemove_NotAddedToMapCase_Async()
         {
             var popup = new HtmlMarkerPopup(new PopupOptions()) {
                 HasBeenToggled = true
@@ -139,7 +141,7 @@
         }
 
         [Fact]
-        public async void Should_Not_RemoveAsync()
+        public async Task Should_Not_RemoveAsync()
         {
             var assertRemoveEvent = false;
             var popup = new HtmlMarkerPopup(new PopupOptions()) {
@@ -154,7 +156,7 @@
         }
 
         [Fact]
-        public async void Should_NotRemoveTwice_Async()
+        public async Task Should_NotRemoveTwice_Async()
         {
             var assertRemoveEvent = false;
             var popup = new HtmlMarkerPopup(new PopupOptions()) {
@@ -171,7 +173,7 @@
         }
 
         [Fact]
-        public async void Should_Update_Async()
+        public async Task Should_Update_Async()
         {
             var popup = new HtmlMarkerPopup(new PopupOptions()) {
                 JSRuntime = _jsRuntimeMock.Object,
@@ -189,7 +191,7 @@
         }
 
         [Fact]
-        public async void Should_NotUpdate_NotAddedToMapCase_Async()
+        public async Task Should_NotUpdate_NotAddedToMapCase_Async()
         {
             var popup = new HtmlMarkerPopup(new PopupOptions()) {
                 HasBeenToggled = true
@@ -203,7 +205,7 @@
         }
 
         [Fact]
-        public async void Should_SetOptions_Async()
+        public async Task Should_SetOptions_Async()
         {
             var popup = new HtmlMarkerPopup(new PopupOptions()) {
                 JSRuntime = _jsRuntimeMock.Object,
@@ -221,7 +223,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetOptions_NotAddedToMapCase_Async()
+        public async Task Should_NotSetOptions_NotAddedToMapCase_Async()
         {
             var popup = new HtmlMarkerPopup(new PopupOptions()) {
                 HasBeenToggled = true
@@ -235,7 +237,7 @@
         }
 
         [Fact]
-        public async void Should_Not_Update_Async()
+        public async Task Should_Not_Update_Async()
         {
             var popup = new HtmlMarkerPopup(new PopupOptions()) {
                 JSRuntime = _jsRuntimeMock.Object

@@ -1,5 +1,7 @@
 ﻿namespace AzureMapsControl.Components.Tests.Layers
 {
+    using System.Threading.Tasks;
+
     using AzureMapsControl.Components.Exceptions;
     using AzureMapsControl.Components.Layers;
     using AzureMapsControl.Components.Runtime;
@@ -22,7 +24,7 @@
         }
 
         [Fact]
-        public async void SetOptionsAsync_Should_CallInteropAsync()
+        public async Task SetOptionsAsync_Should_CallInteropAsync()
         {
             var layer = new DummyLayer {
                 _mapJsRuntime = _jsRuntimeMock.Object,
@@ -38,7 +40,7 @@
         }
 
         [Fact]
-        public async void SetOptionsAsync_Should_ThrowLayerOptionsNullExceptionAsync()
+        public async Task SetOptionsAsync_Should_ThrowLayerOptionsNullExceptionAsync()
         {
             var layer = new DummyLayer {
                 _mapJsRuntime = _jsRuntimeMock.Object
@@ -50,7 +52,7 @@
         }
 
         [Fact]
-        public async void SetOptionsAsync_Should_ThrowComponentNotAddedToMapExceptionAsync()
+        public async Task SetOptionsAsync_Should_ThrowComponentNotAddedToMapExceptionAsync()
         {
             var layer = new DummyLayer { };
             await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await layer.SetOptionsAsync(options => options.MinZoom = 2));

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Reflection.PortableExecutable;
+    using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Exceptions;
     using AzureMapsControl.Components.Popups;
@@ -46,7 +47,7 @@
         }
 
         [Fact]
-        public async void Should_OpenAsync()
+        public async Task Should_OpenAsync()
         {
             var popup = new Popup(new PopupOptions()) {
                 JSRuntime = _jsRuntimeMock.Object
@@ -58,7 +59,7 @@
         }
 
         [Fact]
-        public async void Should_NotOpen_NotAddedToMapCase_Async()
+        public async Task Should_NotOpen_NotAddedToMapCase_Async()
         {
             var popup = new Popup(new PopupOptions());
 
@@ -68,7 +69,7 @@
         }
 
         [Fact]
-        public async void Should_NotOpen_RemovedCase_Async()
+        public async Task Should_NotOpen_RemovedCase_Async()
         {
             var popup = new Popup(new PopupOptions()) {
                 JSRuntime = _jsRuntimeMock.Object,
@@ -81,7 +82,7 @@
         }
 
         [Fact]
-        public async void Should_CloseAsync()
+        public async Task Should_CloseAsync()
         {
             var popup = new Popup(new PopupOptions()) {
                 JSRuntime = _jsRuntimeMock.Object
@@ -92,7 +93,7 @@
         }
 
         [Fact]
-        public async void Should_NotClose_NotAddedToMapCase_Async()
+        public async Task Should_NotClose_NotAddedToMapCase_Async()
         {
             var popup = new Popup(new PopupOptions());
             await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await popup.CloseAsync());
@@ -100,7 +101,7 @@
         }
 
         [Fact]
-        public async void Should_NotClose_RemovedCase_Async()
+        public async Task Should_NotClose_RemovedCase_Async()
         {
             var popup = new Popup(new PopupOptions()) {
                 JSRuntime = _jsRuntimeMock.Object,
@@ -111,7 +112,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveAsync()
+        public async Task Should_RemoveAsync()
         {
             var assertRemoveEvent = false;
             var popup = new Popup(new PopupOptions()) {
@@ -127,7 +128,7 @@
         }
 
         [Fact]
-        public async void Should_NotRemove_NotAddedToMapCase_Async()
+        public async Task Should_NotRemove_NotAddedToMapCase_Async()
         {
             var popup = new Popup(new PopupOptions());
             await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await popup.RemoveAsync());
@@ -135,7 +136,7 @@
         }
 
         [Fact]
-        public async void Should_NotRemoveTwice_Async()
+        public async Task Should_NotRemoveTwice_Async()
         {
             var assertRemoveEvent = false;
             var popup = new Popup(new PopupOptions()) {
@@ -151,7 +152,7 @@
         }
 
         [Fact]
-        public async void Should_Update_Async()
+        public async Task Should_Update_Async()
         {
             var popup = new Popup(new PopupOptions()) {
                 JSRuntime = _jsRuntimeMock.Object
@@ -168,7 +169,7 @@
         }
 
         [Fact]
-        public async void Should_NotUpdate_NotAddedToMapCase_Async()
+        public async Task Should_NotUpdate_NotAddedToMapCase_Async()
         {
             var popup = new Popup(new PopupOptions());
             var updatedContent = "updatedContent";
@@ -178,7 +179,7 @@
         }
 
         [Fact]
-        public async void Should_NotUpdate_RemovedCase_Async()
+        public async Task Should_NotUpdate_RemovedCase_Async()
         {
             var popup = new Popup(new PopupOptions()) {
                 JSRuntime = _jsRuntimeMock.Object,
@@ -191,7 +192,7 @@
         }
 
         [Fact]
-        public async void Should_SetOptions_Async()
+        public async Task Should_SetOptions_Async()
         {
             var popup = new Popup(new PopupOptions()) {
                 JSRuntime = _jsRuntimeMock.Object
@@ -208,7 +209,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetOptions_NotAddedToMapCase_Async()
+        public async Task Should_NotSetOptions_NotAddedToMapCase_Async()
         {
             var popup = new Popup(new PopupOptions());
             var updatedContent = "updatedContent";
@@ -218,7 +219,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetOptions_RemovedCase_Async()
+        public async Task Should_NotSetOptions_RemovedCase_Async()
         {
             var popup = new Popup(new PopupOptions()) {
                 JSRuntime = _jsRuntimeMock.Object,
@@ -301,7 +302,7 @@
         }
 
         [Fact]
-        public async void Should_ApplyTemplateAsync()
+        public async Task Should_ApplyTemplateAsync()
         {
             var popup = new Popup() {
                 JSRuntime = _jsRuntimeMock.Object
@@ -324,7 +325,7 @@
         }
 
         [Fact]
-        public async void Should_NotApplyTemplate_NotAddedToMapCaseAsync()
+        public async Task Should_NotApplyTemplate_NotAddedToMapCaseAsync()
         {
             var popup = new Popup();
 
@@ -338,7 +339,7 @@
         }
 
         [Fact]
-        public async void Should_NotApplyTemplate_RemovedCaseAsync()
+        public async Task Should_NotApplyTemplate_RemovedCaseAsync()
         {
             var popup = new Popup() {
                 JSRuntime = _jsRuntimeMock.Object,
@@ -354,7 +355,7 @@
         }
 
         [Fact]
-        public async void Should_NotApplyTemplateWithNullPropertiesAsync()
+        public async Task Should_NotApplyTemplateWithNullPropertiesAsync()
         {
             var popup = new Popup() {
                 JSRuntime = _jsRuntimeMock.Object
@@ -369,7 +370,7 @@
         }
 
         [Fact]
-        public async void Should_ApplyTemplateWithOptionsAsync()
+        public async Task Should_ApplyTemplateWithOptionsAsync()
         {
             var popup = new Popup() {
                 JSRuntime = _jsRuntimeMock.Object
@@ -392,7 +393,7 @@
         }
 
         [Fact]
-        public async void Should_NotApplyTemplateWithOptions_NotAddedToMapCaseAsync()
+        public async Task Should_NotApplyTemplateWithOptions_NotAddedToMapCaseAsync()
         {
             var popup = new Popup();
 
@@ -406,7 +407,7 @@
         }
 
         [Fact]
-        public async void Should_NotApplyTemplateWithOptions_RemovedCaseAsync()
+        public async Task Should_NotApplyTemplateWithOptions_RemovedCaseAsync()
         {
             var popup = new Popup() {
                 JSRuntime = _jsRuntimeMock.Object,
@@ -422,7 +423,7 @@
         }
 
         [Fact]
-        public async void Should_NotApplyTemplateWithOptionsWithNullPropertiesAsync()
+        public async Task Should_NotApplyTemplateWithOptionsWithNullPropertiesAsync()
         {
             var popup = new Popup() {
                 JSRuntime = _jsRuntimeMock.Object

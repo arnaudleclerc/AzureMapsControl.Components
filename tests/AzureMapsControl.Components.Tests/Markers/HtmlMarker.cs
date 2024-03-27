@@ -1,6 +1,7 @@
 ﻿namespace AzureMapsControl.Components.Tests.Markers
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Exceptions;
     using AzureMapsControl.Components.Markers;
@@ -235,7 +236,7 @@
         }
 
         [Fact]
-        public async void Should_TogglePopupAsync()
+        public async Task Should_TogglePopupAsync()
         {
             var assertEvent = false;
             var popupInvokeHelper = new PopupInvokeHelper(null);
@@ -264,7 +265,7 @@
         }
 
         [Fact]
-        public async void Should_Not_TogglePopupAsync()
+        public async Task Should_Not_TogglePopupAsync()
         {
             var assertEvent = false;
             var popupInvokeHelper = new PopupInvokeHelper(null);
@@ -281,7 +282,7 @@
         }
 
         [Fact]
-        public async void Should_Not_TogglePopup_NotAddedToMapCase_Async()
+        public async Task Should_Not_TogglePopup_NotAddedToMapCase_Async()
         {
             var popupInvokeHelper = new PopupInvokeHelper(null);
             var marker = new HtmlMarker(new HtmlMarkerOptions {

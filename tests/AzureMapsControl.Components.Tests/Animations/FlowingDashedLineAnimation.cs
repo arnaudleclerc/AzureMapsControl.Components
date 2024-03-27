@@ -1,6 +1,7 @@
 ﻿namespace AzureMapsControl.Components.Tests.Animations
 {
     using System;
+    using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Animations;
     using AzureMapsControl.Components.Animations.Options;
@@ -15,7 +16,7 @@
         private readonly Mock<IMapJsRuntime> _jsRuntime = new Mock<IMapJsRuntime>();
 
         [Fact]
-        public async void Should_ThrowException_SeekAsync()
+        public async Task Should_ThrowException_SeekAsync()
         {
             var id = "id";
             var animation = new FlowingDashedLineAnimation(id, _jsRuntime.Object);
@@ -25,7 +26,7 @@
         }
 
         [Fact]
-        public async void Should_ThrowException_SetOptionsAsync()
+        public async Task Should_ThrowException_SetOptionsAsync()
         {
             var id = "id";
             var animation = new FlowingDashedLineAnimation(id, _jsRuntime.Object);
