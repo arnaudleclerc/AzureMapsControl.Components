@@ -4,11 +4,14 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.Json;
+    using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Atlas;
     using AzureMapsControl.Components.Data;
     using AzureMapsControl.Components.Exceptions;
     using AzureMapsControl.Components.Runtime;
+
+    using Microsoft.Extensions.Options;
 
     using Moq;
 
@@ -46,7 +49,7 @@
         }
 
         [Fact]
-        public async void Should_AddShapes_Async()
+        public async Task Should_AddShapes_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
 
@@ -105,7 +108,7 @@
 
 
         [Fact]
-        public async void Should_NotAddShapes_NotAddedToMapCase_Async()
+        public async Task Should_NotAddShapes_NotAddedToMapCase_Async()
         {
             var dataSource = new DataSource();
 
@@ -119,7 +122,7 @@
         }
 
         [Fact]
-        public async void Should_NotAddShapes_DisposedCase_Async()
+        public async Task Should_NotAddShapes_DisposedCase_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             await dataSource.DisposeAsync();
@@ -136,7 +139,7 @@
 
 
         [Fact]
-        public async void Should_AddLineStringsShapes_Async()
+        public async Task Should_AddLineStringsShapes_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
 
@@ -158,7 +161,7 @@
         }
 
         [Fact]
-        public async void Should_AddFeatures_Async()
+        public async Task Should_AddFeatures_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
 
@@ -216,7 +219,7 @@
         }
 
         [Fact]
-        public async void Should_NotAddFeatures_NotAddedToMapCase_Async()
+        public async Task Should_NotAddFeatures_NotAddedToMapCase_Async()
         {
             var dataSource = new DataSource();
 
@@ -230,7 +233,7 @@
         }
 
         [Fact]
-        public async void Should_NotAddFeatures_DisposedCase_Async()
+        public async Task Should_NotAddFeatures_DisposedCase_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             await dataSource.DisposeAsync();
@@ -246,7 +249,7 @@
         }
 
         [Fact]
-        public async void Should_AddFeatures_ParamsVersionAsync()
+        public async Task Should_AddFeatures_ParamsVersionAsync()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
 
@@ -302,7 +305,7 @@
         }
 
         [Fact]
-        public async void Should_AddShapes_Params_Async()
+        public async Task Should_AddShapes_Params_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
 
@@ -322,7 +325,7 @@
         }
 
         [Fact]
-        public async void Should_NotCallAddCallbackIfGeometriesAreEmpty_Async()
+        public async Task Should_NotCallAddCallbackIfGeometriesAreEmpty_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
 
@@ -331,7 +334,7 @@
         }
 
         [Fact]
-        public async void Should_NotCallAddCallbackIfGeometriesAreNull_Async()
+        public async Task Should_NotCallAddCallbackIfGeometriesAreNull_Async()
         {
             IEnumerable<Shape> shapes = null;
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
@@ -341,7 +344,7 @@
         }
 
         [Fact]
-        public async void Should_ImportDataFromUrl_Async()
+        public async Task Should_ImportDataFromUrl_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
 
@@ -357,7 +360,7 @@
         }
 
         [Fact]
-        public async void Should_NotImportDataFromUrl_NotAddedToMapCase_Async()
+        public async Task Should_NotImportDataFromUrl_NotAddedToMapCase_Async()
         {
             var dataSource = new DataSource();
 
@@ -369,7 +372,7 @@
         }
 
         [Fact]
-        public async void Should_NotImportDataFromUrl_DisposedCase_Async()
+        public async Task Should_NotImportDataFromUrl_DisposedCase_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             await dataSource.DisposeAsync();
@@ -383,7 +386,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveShapes_Async()
+        public async Task Should_RemoveShapes_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point1 = new Shape<Point>("point1", new Point());
@@ -405,7 +408,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveFeatures_Async()
+        public async Task Should_RemoveFeatures_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point1 = new Feature<Point>("point1", new Point());
@@ -427,7 +430,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveShapes_EnumerableVersion_Async()
+        public async Task Should_RemoveShapes_EnumerableVersion_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point1 = new Shape<Point>("point1", new Point());
@@ -449,7 +452,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveFeatures_EnumerableVersion_Async()
+        public async Task Should_RemoveFeatures_EnumerableVersion_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point1 = new Feature<Point>("point1", new Point());
@@ -471,7 +474,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveShapes_IdsVersion_Async()
+        public async Task Should_RemoveShapes_IdsVersion_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point1 = new Shape<Point>("point1", new Point());
@@ -493,7 +496,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveFeatures_IdsVersion_Async()
+        public async Task Should_RemoveFeatures_IdsVersion_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point1 = new Feature<Point>("point1", new Point());
@@ -515,7 +518,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveShapesAndFeatures_IdsVersion_Async()
+        public async Task Should_RemoveShapesAndFeatures_IdsVersion_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point1 = new Feature<Point>("point1", new Point());
@@ -546,7 +549,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveShapes_IdsEnumerableVersion_Async()
+        public async Task Should_RemoveShapes_IdsEnumerableVersion_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point1 = new Shape<Point>("point1", new Point());
@@ -568,7 +571,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveFeatures_IdsEnumerableVersion_Async()
+        public async Task Should_RemoveFeatures_IdsEnumerableVersion_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point1 = new Feature<Point>("point1", new Point());
@@ -590,7 +593,7 @@
         }
 
         [Fact]
-        public async void Should_NotRemoveShapes_Async()
+        public async Task Should_NotRemoveShapes_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point1 = new Shape<Point>("point1", new Point());
@@ -604,7 +607,7 @@
         }
 
         [Fact]
-        public async void Should_NotRemoveFeatures_Async()
+        public async Task Should_NotRemoveFeatures_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point1 = new Feature<Point>("point1", new Point());
@@ -618,7 +621,7 @@
         }
 
         [Fact]
-        public async void Should_NotRemoveShape_NullCheck_Async()
+        public async Task Should_NotRemoveShape_NullCheck_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point1 = new Shape<Point>("point1", new Point());
@@ -629,7 +632,7 @@
         }
 
         [Fact]
-        public async void Should_NotRemoveShapesNorFeatures_NullCheck_Async()
+        public async Task Should_NotRemoveShapesNorFeatures_NullCheck_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             var shape = new Shape<Point>("point1", new Point());
@@ -648,7 +651,7 @@
         }
 
         [Fact]
-        public async void Should_NotRemoveShapesButOnlyFeatures_Async()
+        public async Task Should_NotRemoveShapesButOnlyFeatures_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             var shape = new Shape<Point>("point1", new Point());
@@ -671,7 +674,7 @@
         }
 
         [Fact]
-        public async void Should_NotRemoveFeaturesButOnlyShapes_Async()
+        public async Task Should_NotRemoveFeaturesButOnlyShapes_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             var shape = new Shape<Point>("point1", new Point());
@@ -694,7 +697,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveShapesAndFeatures_Async()
+        public async Task Should_RemoveShapesAndFeatures_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             var shape = new Shape<Point>("point1", new Point());
@@ -718,7 +721,7 @@
         }
 
         [Fact]
-        public async void Should_ClearDataSource_Async()
+        public async Task Should_ClearDataSource_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point2 = new Shape<Point>("point2", new Point());
@@ -738,7 +741,7 @@
         }
 
         [Fact]
-        public async void Should_ClearDataSource_NotAddedToMapCase_Async()
+        public async Task Should_ClearDataSource_NotAddedToMapCase_Async()
         {
             var dataSource = new DataSource();
 
@@ -748,7 +751,7 @@
         }
 
         [Fact]
-        public async void Should_ClearDataSource_DisposedCase_Async()
+        public async Task Should_ClearDataSource_DisposedCase_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             await dataSource.DisposeAsync();
@@ -760,7 +763,7 @@
         }
 
         [Fact]
-        public async void Should_DisposeAsync()
+        public async Task Should_DisposeAsync()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             await dataSource.DisposeAsync();
@@ -770,7 +773,7 @@
         }
 
         [Fact]
-        public async void Should_NotDispose_NotAddedToMapCase_Async()
+        public async Task Should_NotDispose_NotAddedToMapCase_Async()
         {
             var dataSource = new DataSource();
 
@@ -780,7 +783,7 @@
         }
 
         [Fact]
-        public async void Should_NotDispose_DisposedCase_Async()
+        public async Task Should_NotDispose_DisposedCase_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             await dataSource.DisposeAsync();
@@ -790,7 +793,7 @@
         }
 
         [Fact]
-        public async void Should_GetOptionsAsync()
+        public async Task Should_GetOptionsAsync()
         {
             var options = new DataSourceOptions();
             _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<DataSourceOptions>(It.IsAny<string>(), It.IsAny<object[]>())).ReturnsAsync(options);
@@ -805,7 +808,7 @@
         }
 
         [Fact]
-        public async void Should_NotGetOptions_NotAddedToMapCase_Async()
+        public async Task Should_NotGetOptions_NotAddedToMapCase_Async()
         {
             var dataSource = new DataSource() { };
 
@@ -815,7 +818,7 @@
         }
 
         [Fact]
-        public async void Should_NotGetOptions_DisposedCase_Async()
+        public async Task Should_NotGetOptions_DisposedCase_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             await dataSource.DisposeAsync();
@@ -825,7 +828,7 @@
         }
 
         [Fact]
-        public async void Should_GetShapesAsync()
+        public async Task Should_GetShapesAsync()
         {
             var shapes = Array.Empty<Shape<Geometry>>();
             _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<IEnumerable<Shape<Geometry>>>(It.IsAny<string>(), It.IsAny<object[]>())).ReturnsAsync(shapes);
@@ -839,7 +842,7 @@
         }
 
         [Fact]
-        public async void Should_NotGetShapes_NotAddedToMapCase_Async()
+        public async Task Should_NotGetShapes_NotAddedToMapCase_Async()
         {
             var dataSource = new DataSource() { };
 
@@ -849,7 +852,7 @@
         }
 
         [Fact]
-        public async void Should_NotGetShapes_DisposedCase_Async()
+        public async Task Should_NotGetShapes_DisposedCase_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             await dataSource.DisposeAsync();
@@ -924,7 +927,7 @@
         }
 
         [Fact]
-        public async void Should_AddJson_Async()
+        public async Task Should_AddJson_Async()
         {
             var shapes = Array.Empty<Shape<Geometry>>();
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
@@ -936,18 +939,18 @@
         }
 
         [Fact]
-        public async void Should_NotAddInvalidJson_Async()
+        public async Task Should_NotAddInvalidJson_Async()
         {
             var shapes = Array.Empty<Shape<Geometry>>();
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
 
-            await Assert.ThrowsAnyAsync<JsonException>(async() => await dataSource.AddAsync("{"));
+            await Assert.ThrowsAnyAsync<JsonException>(async () => await dataSource.AddAsync("{"));
 
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
-        public async void Should_NotAddJson_NotAddedToMapCase_Async()
+        public async Task Should_NotAddJson_NotAddedToMapCase_Async()
         {
             var dataSource = new DataSource() { };
 
@@ -956,7 +959,7 @@
         }
 
         [Fact]
-        public async void Should_NotAddJson_DisposedCase_Async()
+        public async Task Should_NotAddJson_DisposedCase_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             await dataSource.DisposeAsync();
@@ -966,7 +969,7 @@
         }
 
         [Fact]
-        public async void Should_AddJson_JsonVersion_Async()
+        public async Task Should_AddJson_JsonVersion_Async()
         {
             var shapes = Array.Empty<Shape<Geometry>>();
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
@@ -980,7 +983,7 @@
         }
 
         [Fact]
-        public async void Should_NotAddJson_NotAddedToMapCase_JsonVersion_Async()
+        public async Task Should_NotAddJson_NotAddedToMapCase_JsonVersion_Async()
         {
             var dataSource = new DataSource() { };
             var jsonDocument = JsonDocument.Parse("{}");
@@ -990,7 +993,7 @@
         }
 
         [Fact]
-        public async void Should_NotAddJson_DisposedCase_JsonVersion_Async()
+        public async Task Should_NotAddJson_DisposedCase_JsonVersion_Async()
         {
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
             await dataSource.DisposeAsync();
@@ -1001,7 +1004,7 @@
         }
 
         [Fact]
-        public async void Should_SetOptionsAsync()
+        public async Task Should_SetOptionsAsync()
         {
             var datasource = new DataSource {
                 JSRuntime = _jsRuntimeMock.Object,
@@ -1019,7 +1022,7 @@
         }
 
         [Fact]
-        public async void Should_SetOptions_NoInitialValueAsync()
+        public async Task Should_SetOptions_NoInitialValueAsync()
         {
             var datasource = new DataSource {
                 JSRuntime = _jsRuntimeMock.Object
@@ -1033,7 +1036,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetOptions_NotAddedToMapCase_Async()
+        public async Task Should_NotSetOptions_NotAddedToMapCase_Async()
         {
             var datasource = new DataSource();
 
@@ -1043,7 +1046,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetOptions_DisposedCase_Async()
+        public async Task Should_NotSetOptions_DisposedCase_Async()
         {
             var datasource = new DataSource {
                 JSRuntime = _jsRuntimeMock.Object
@@ -1051,6 +1054,96 @@
             await datasource.DisposeAsync();
 
             await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await datasource.SetOptionsAsync(options => options.ClusterMaxZoom = 2));
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), datasource.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task Should_GetClusterLeaves()
+        {
+            var datasource = new DataSource {
+                JSRuntime = _jsRuntimeMock.Object
+            };
+
+            var expected = Enumerable.Empty<Feature<Geometry>>();
+            _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<IEnumerable<Feature<Geometry>>>(It.IsAny<string>(), It.IsAny<object[]>())).ReturnsAsync(expected);
+
+            var clusterId = 1;
+            var limit = 2;
+            var offset = 3;
+            var result = await datasource.GetClusterLeavesAsync(clusterId, limit, offset);
+
+            Assert.Equal(expected, result);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<IEnumerable<Feature<Geometry>>>(Constants.JsConstants.Methods.Datasource.GetClusterLeaves.ToDatasourceNamespace(), datasource.Id, clusterId, limit, offset), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task Should_NotGetClusterLeaves_NotAddedToMapCase()
+        {
+            var datasource = new DataSource();
+
+            await Assert.ThrowsAsync<ComponentNotAddedToMapException>(async () => await datasource.GetClusterLeavesAsync(1, 2, 3));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task Should_NotGetClusterLeaves_DisposedCase()
+        {
+            var datasource = new DataSource {
+                JSRuntime = _jsRuntimeMock.Object
+            };
+
+            await datasource.DisposeAsync();
+
+            await Assert.ThrowsAsync<ComponentDisposedException>(async () => await datasource.GetClusterLeavesAsync(1, 2, 3));
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), datasource.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task Should_GetClusterExpansionZoom()
+        {
+            var datasource = new DataSource {
+                JSRuntime = _jsRuntimeMock.Object
+            };
+
+            var expected = 2;
+            _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<int>(It.IsAny<string>(), It.IsAny<object[]>())).ReturnsAsync(expected);
+
+            var clusterId = 1;
+            var result = await datasource.GetClusterExpansionZoomAsync(clusterId);
+
+            Assert.Equal(expected, result);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<int>(Constants.JsConstants.Methods.Datasource.GetClusterExpansionZoom.ToDatasourceNamespace(), datasource.Id, clusterId), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task Should_NotGetClusterExpansionZoom_NotAddedToMapCase()
+        {
+            var datasource = new DataSource();
+
+            await Assert.ThrowsAsync<ComponentNotAddedToMapException>(async () => await datasource.GetClusterExpansionZoomAsync(1));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task Should_NotGetClusterExpansionZoom_DisposedCase()
+        {
+            var datasource = new DataSource {
+                JSRuntime = _jsRuntimeMock.Object
+            };
+
+            await datasource.DisposeAsync();
+
+            await Assert.ThrowsAsync<ComponentDisposedException>(async () => await datasource.GetClusterExpansionZoomAsync(1));
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), datasource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();

@@ -1,5 +1,7 @@
 ﻿namespace AzureMapsControl.Components.Tests.Map
 {
+    using System.Threading.Tasks;
+
     using AzureMapsControl.Components.Map;
 
     using Xunit;
@@ -7,7 +9,7 @@
     public class MapEventInvokeHelperTests
     {
         [Fact]
-        public async void Should_InvokeCallback_Async()
+        public async Task Should_InvokeCallback_Async()
         {
             var mapEventArgs = new MapJsEventArgs();
             var assertEqualEventArgs = false;

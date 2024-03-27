@@ -1,5 +1,7 @@
 ﻿namespace AzureMapsControl.Components.Tests.Traffic
 {
+    using System.Threading.Tasks;
+
     using AzureMapsControl.Components.Tests.Json;
     using AzureMapsControl.Components.Traffic;
 
@@ -43,7 +45,7 @@
         }
 
         [Fact]
-        public async void Should_WriteTrafficOptions()
+        public async Task Should_WriteTrafficOptions()
         {
             var trafficOptions = new TrafficOptions {
                 Flow = TrafficFlow.Relative
@@ -57,7 +59,7 @@
         }
 
         [Fact]
-        public async void Should_WriteTrafficOptions_WithIncidents()
+        public async Task Should_WriteTrafficOptions_WithIncidents()
         {
             var trafficOptions = new TrafficOptions {
                 Flow = TrafficFlow.Relative,

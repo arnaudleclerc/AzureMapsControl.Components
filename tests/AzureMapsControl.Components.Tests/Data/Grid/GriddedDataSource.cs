@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.Json;
+    using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Atlas;
     using AzureMapsControl.Components.Data.Grid;
@@ -45,7 +46,7 @@
         }
 
         [Fact]
-        public async void Should_AddShapes_Async()
+        public async Task Should_AddShapes_Async()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
 
@@ -67,7 +68,7 @@
 
 
         [Fact]
-        public async void Should_NotAddShapes_NotAddedToMapCase_Async()
+        public async Task Should_NotAddShapes_NotAddedToMapCase_Async()
         {
             var dataSource = new GriddedDataSource();
 
@@ -81,7 +82,7 @@
         }
 
         [Fact]
-        public async void Should_NotAddShapes_DisposedCase_Async()
+        public async Task Should_NotAddShapes_DisposedCase_Async()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
             await dataSource.DisposeAsync();
@@ -97,7 +98,7 @@
         }
 
         [Fact]
-        public async void Should_AddFeatures_Async()
+        public async Task Should_AddFeatures_Async()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
 
@@ -117,7 +118,7 @@
         }
 
         [Fact]
-        public async void Should_NotAddFeatures_NotAddedToMapCase_Async()
+        public async Task Should_NotAddFeatures_NotAddedToMapCase_Async()
         {
             var dataSource = new GriddedDataSource();
 
@@ -131,7 +132,7 @@
         }
 
         [Fact]
-        public async void Should_NotAddFeatures_DisposedCase_Async()
+        public async Task Should_NotAddFeatures_DisposedCase_Async()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
             await dataSource.DisposeAsync();
@@ -147,7 +148,7 @@
         }
 
         [Fact]
-        public async void Should_AddFeatures_ParamsVersionAsync()
+        public async Task Should_AddFeatures_ParamsVersionAsync()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
 
@@ -165,7 +166,7 @@
         }
 
         [Fact]
-        public async void Should_AddShapes_Params_Async()
+        public async Task Should_AddShapes_Params_Async()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
 
@@ -185,7 +186,7 @@
         }
 
         [Fact]
-        public async void Should_NotCallAddCallbackIfGeometriesAreEmpty_Async()
+        public async Task Should_NotCallAddCallbackIfGeometriesAreEmpty_Async()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
 
@@ -194,7 +195,7 @@
         }
 
         [Fact]
-        public async void Should_NotCallAddCallbackIfGeometriesAreNull_Async()
+        public async Task Should_NotCallAddCallbackIfGeometriesAreNull_Async()
         {
             IEnumerable<Shape<Point>> shapes = null;
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
@@ -206,7 +207,7 @@
 
 
         [Fact]
-        public async void Should_NotImportDataFromUrl_NotAddedToMapCase_Async()
+        public async Task Should_NotImportDataFromUrl_NotAddedToMapCase_Async()
         {
             var dataSource = new GriddedDataSource();
 
@@ -218,7 +219,7 @@
         }
 
         [Fact]
-        public async void Should_NotImportDataFromUrl_DisposedCase_Async()
+        public async Task Should_NotImportDataFromUrl_DisposedCase_Async()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
             await dataSource.DisposeAsync();
@@ -232,7 +233,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveShapes_Async()
+        public async Task Should_RemoveShapes_Async()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point1 = new Shape<Point>("point1", new Point());
@@ -254,7 +255,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveFeatures_Async()
+        public async Task Should_RemoveFeatures_Async()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point1 = new Feature<Point>("point1", new Point());
@@ -276,7 +277,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveShapes_EnumerableVersion_Async()
+        public async Task Should_RemoveShapes_EnumerableVersion_Async()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point1 = new Shape<Point>("point1", new Point());
@@ -298,7 +299,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveFeatures_EnumerableVersion_Async()
+        public async Task Should_RemoveFeatures_EnumerableVersion_Async()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point1 = new Feature<Point>("point1", new Point());
@@ -320,7 +321,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveShapes_IdsVersion_Async()
+        public async Task Should_RemoveShapes_IdsVersion_Async()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point1 = new Shape<Point>("point1", new Point());
@@ -342,7 +343,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveFeatures_IdsVersion_Async()
+        public async Task Should_RemoveFeatures_IdsVersion_Async()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point1 = new Feature<Point>("point1", new Point());
@@ -364,7 +365,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveShapesAndFeatures_IdsVersion_Async()
+        public async Task Should_RemoveShapesAndFeatures_IdsVersion_Async()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point1 = new Feature<Point>("point1", new Point());
@@ -395,7 +396,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveShapes_IdsEnumerableVersion_Async()
+        public async Task Should_RemoveShapes_IdsEnumerableVersion_Async()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point1 = new Shape<Point>("point1", new Point());
@@ -417,7 +418,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveFeatures_IdsEnumerableVersion_Async()
+        public async Task Should_RemoveFeatures_IdsEnumerableVersion_Async()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point1 = new Feature<Point>("point1", new Point());
@@ -439,7 +440,7 @@
         }
 
         [Fact]
-        public async void Should_NotRemoveShapes_Async()
+        public async Task Should_NotRemoveShapes_Async()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point1 = new Shape<Point>("point1", new Point());
@@ -453,7 +454,7 @@
         }
 
         [Fact]
-        public async void Should_NotRemoveFeatures_Async()
+        public async Task Should_NotRemoveFeatures_Async()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point1 = new Feature<Point>("point1", new Point());
@@ -467,7 +468,7 @@
         }
 
         [Fact]
-        public async void Should_NotRemoveShape_NullCheck_Async()
+        public async Task Should_NotRemoveShape_NullCheck_Async()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point1 = new Shape<Point>("point1", new Point());
@@ -478,7 +479,7 @@
         }
 
         [Fact]
-        public async void Should_NotRemoveShapesNorFeatures_NullCheck_Async()
+        public async Task Should_NotRemoveShapesNorFeatures_NullCheck_Async()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
             var shape = new Shape<Point>("point1", new Point());
@@ -497,7 +498,7 @@
         }
 
         [Fact]
-        public async void Should_NotRemoveShapesButOnlyFeatures_Async()
+        public async Task Should_NotRemoveShapesButOnlyFeatures_Async()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
             var shape = new Shape<Point>("point1", new Point());
@@ -520,7 +521,7 @@
         }
 
         [Fact]
-        public async void Should_NotRemoveFeaturesButOnlyShapes_Async()
+        public async Task Should_NotRemoveFeaturesButOnlyShapes_Async()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
             var shape = new Shape<Point>("point1", new Point());
@@ -543,7 +544,7 @@
         }
 
         [Fact]
-        public async void Should_RemoveShapesAndFeatures_Async()
+        public async Task Should_RemoveShapesAndFeatures_Async()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
             var shape = new Shape<Point>("point1", new Point());
@@ -567,7 +568,7 @@
         }
 
         [Fact]
-        public async void Should_ClearDataSource_Async()
+        public async Task Should_ClearDataSource_Async()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
             var point2 = new Shape<Point>("point2", new Point());
@@ -587,7 +588,7 @@
         }
 
         [Fact]
-        public async void Should_ClearDataSource_NotAddedToMapCase_Async()
+        public async Task Should_ClearDataSource_NotAddedToMapCase_Async()
         {
             var dataSource = new GriddedDataSource();
 
@@ -597,7 +598,7 @@
         }
 
         [Fact]
-        public async void Should_ClearDataSource_DisposedCase_Async()
+        public async Task Should_ClearDataSource_DisposedCase_Async()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
             await dataSource.DisposeAsync();
@@ -609,7 +610,7 @@
         }
 
         [Fact]
-        public async void Should_DisposeAsync()
+        public async Task Should_DisposeAsync()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
             await dataSource.DisposeAsync();
@@ -619,7 +620,7 @@
         }
 
         [Fact]
-        public async void Should_NotDispose_NotAddedToMapCase_Async()
+        public async Task Should_NotDispose_NotAddedToMapCase_Async()
         {
             var dataSource = new GriddedDataSource();
 
@@ -629,7 +630,7 @@
         }
 
         [Fact]
-        public async void Should_NotDispose_DisposedCase_Async()
+        public async Task Should_NotDispose_DisposedCase_Async()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
             await dataSource.DisposeAsync();
@@ -639,7 +640,7 @@
         }
 
         [Fact]
-        public async void Should_GetOptionsAsync()
+        public async Task Should_GetOptionsAsync()
         {
             var options = new GriddedDataSourceOptions();
             _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<GriddedDataSourceOptions>(It.IsAny<string>(), It.IsAny<object[]>())).ReturnsAsync(options);
@@ -654,7 +655,7 @@
         }
 
         [Fact]
-        public async void Should_NotGetOptions_NotAddedToMapCase_Async()
+        public async Task Should_NotGetOptions_NotAddedToMapCase_Async()
         {
             var dataSource = new GriddedDataSource() { };
 
@@ -664,7 +665,7 @@
         }
 
         [Fact]
-        public async void Should_NotGetOptions_DisposedCase_Async()
+        public async Task Should_NotGetOptions_DisposedCase_Async()
         {
             var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
             await dataSource.DisposeAsync();
@@ -674,7 +675,7 @@
         }
 
         [Fact]
-        public async void Should_SetOptionsAsync()
+        public async Task Should_SetOptionsAsync()
         {
             var datasource = new GriddedDataSource {
                 JSRuntime = _jsRuntimeMock.Object,
@@ -692,7 +693,7 @@
         }
 
         [Fact]
-        public async void Should_SetOptions_NoInitialValueAsync()
+        public async Task Should_SetOptions_NoInitialValueAsync()
         {
             var datasource = new GriddedDataSource {
                 JSRuntime = _jsRuntimeMock.Object
@@ -706,7 +707,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetOptions_NotAddedToMapCase_Async()
+        public async Task Should_NotSetOptions_NotAddedToMapCase_Async()
         {
             var datasource = new GriddedDataSource();
 
@@ -716,7 +717,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetOptions_DisposedCase_Async()
+        public async Task Should_NotSetOptions_DisposedCase_Async()
         {
             var datasource = new GriddedDataSource {
                 JSRuntime = _jsRuntimeMock.Object
@@ -730,7 +731,7 @@
         }
 
         [Fact]
-        public async void Should_GetCellChildren_Async()
+        public async Task Should_GetCellChildren_Async()
         {
             var datasource = new GriddedDataSource {
                 JSRuntime = _jsRuntimeMock.Object
@@ -750,7 +751,7 @@
         }
 
         [Fact]
-        public async void Should_NotGetCellChildren_NotAddedToMapCase_Async()
+        public async Task Should_NotGetCellChildren_NotAddedToMapCase_Async()
         {
             var datasource = new GriddedDataSource();
 
@@ -760,7 +761,7 @@
         }
 
         [Fact]
-        public async void Should_NotGetCellChildren_DisposedCase_Async()
+        public async Task Should_NotGetCellChildren_DisposedCase_Async()
         {
             var datasource = new GriddedDataSource {
                 JSRuntime = _jsRuntimeMock.Object
@@ -774,7 +775,7 @@
         }
 
         [Fact]
-        public async void Should_GetGridCells_Async()
+        public async Task Should_GetGridCells_Async()
         {
             var datasource = new GriddedDataSource {
                 JSRuntime = _jsRuntimeMock.Object
@@ -792,7 +793,7 @@
         }
 
         [Fact]
-        public async void Should_NotGetGridCells_NotAddedToMapCase_Async()
+        public async Task Should_NotGetGridCells_NotAddedToMapCase_Async()
         {
             var datasource = new GriddedDataSource();
 
@@ -802,7 +803,7 @@
         }
 
         [Fact]
-        public async void Should_NotGetGridCells_DisposedCase_Async()
+        public async Task Should_NotGetGridCells_DisposedCase_Async()
         {
             var datasource = new GriddedDataSource {
                 JSRuntime = _jsRuntimeMock.Object
@@ -816,7 +817,7 @@
         }
 
         [Fact]
-        public async void Should_GetPoints_Async()
+        public async Task Should_GetPoints_Async()
         {
             var datasource = new GriddedDataSource {
                 JSRuntime = _jsRuntimeMock.Object
@@ -834,7 +835,7 @@
         }
 
         [Fact]
-        public async void Should_NotGetPoint_NotAddedToMapCase_Async()
+        public async Task Should_NotGetPoint_NotAddedToMapCase_Async()
         {
             var datasource = new GriddedDataSource();
 
@@ -844,7 +845,7 @@
         }
 
         [Fact]
-        public async void Should_NotGetPoints_DisposedCase_Async()
+        public async Task Should_NotGetPoints_DisposedCase_Async()
         {
             var datasource = new GriddedDataSource {
                 JSRuntime = _jsRuntimeMock.Object
@@ -858,7 +859,7 @@
         }
 
         [Fact]
-        public async void Should_SetPoints_WithFeatureCollection_Async()
+        public async Task Should_SetPoints_WithFeatureCollection_Async()
         {
             var datasource = new GriddedDataSource {
                 JSRuntime = _jsRuntimeMock.Object
@@ -872,7 +873,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetPoints_WithFeatureCollection_NotAddedToMapCase_Async()
+        public async Task Should_NotSetPoints_WithFeatureCollection_NotAddedToMapCase_Async()
         {
             var datasource = new GriddedDataSource();
 
@@ -883,7 +884,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetPoints_WithFeatureCollection_DisposedCase_Async()
+        public async Task Should_NotSetPoints_WithFeatureCollection_DisposedCase_Async()
         {
             var datasource = new GriddedDataSource {
                 JSRuntime = _jsRuntimeMock.Object
@@ -898,7 +899,7 @@
         }
 
         [Fact]
-        public async void Should_SetPoints_WithFeaturePoints_Async()
+        public async Task Should_SetPoints_WithFeaturePoints_Async()
         {
             var datasource = new GriddedDataSource {
                 JSRuntime = _jsRuntimeMock.Object
@@ -912,7 +913,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetPoints_WithFeaturePoints_NotAddedToMapCase_Async()
+        public async Task Should_NotSetPoints_WithFeaturePoints_NotAddedToMapCase_Async()
         {
             var datasource = new GriddedDataSource();
 
@@ -923,7 +924,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetPoints_WithFeaturePoints_DisposedCase_Async()
+        public async Task Should_NotSetPoints_WithFeaturePoints_DisposedCase_Async()
         {
             var datasource = new GriddedDataSource {
                 JSRuntime = _jsRuntimeMock.Object
@@ -938,7 +939,7 @@
         }
 
         [Fact]
-        public async void Should_SetPoints_WithPoints_Async()
+        public async Task Should_SetPoints_WithPoints_Async()
         {
             var datasource = new GriddedDataSource {
                 JSRuntime = _jsRuntimeMock.Object
@@ -952,7 +953,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetPoints_WithPoints_NotAddedToMapCase_Async()
+        public async Task Should_NotSetPoints_WithPoints_NotAddedToMapCase_Async()
         {
             var datasource = new GriddedDataSource();
 
@@ -963,7 +964,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetPoints_WithPoints_DisposedCase_Async()
+        public async Task Should_NotSetPoints_WithPoints_DisposedCase_Async()
         {
             var datasource = new GriddedDataSource {
                 JSRuntime = _jsRuntimeMock.Object
@@ -978,7 +979,7 @@
         }
 
         [Fact]
-        public async void Should_SetPoints_WithShapes_Async()
+        public async Task Should_SetPoints_WithShapes_Async()
         {
             var datasource = new GriddedDataSource {
                 JSRuntime = _jsRuntimeMock.Object
@@ -992,7 +993,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetPoints_WithShapes_NotAddedToMapCase_Async()
+        public async Task Should_NotSetPoints_WithShapes_NotAddedToMapCase_Async()
         {
             var datasource = new GriddedDataSource();
 
@@ -1003,7 +1004,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetPoints_WithShapes_DisposedCase_Async()
+        public async Task Should_NotSetPoints_WithShapes_DisposedCase_Async()
         {
             var datasource = new GriddedDataSource {
                 JSRuntime = _jsRuntimeMock.Object

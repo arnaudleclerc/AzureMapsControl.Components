@@ -1,6 +1,7 @@
 ﻿namespace AzureMapsControl.Components.Tests.Controls
 {
     using System;
+    using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Controls;
     using AzureMapsControl.Components.Exceptions;
@@ -29,7 +30,7 @@
         }
 
         [Fact]
-        public async void Should_UpdateAsync()
+        public async Task Should_UpdateAsync()
         {
             var options = new OverviewMapControlOptions();
             var position = ControlPosition.BottomLeft;
@@ -47,7 +48,7 @@
         }
 
         [Fact]
-        public async void Should_NotUpdate_NotAddtoMapCase_Async()
+        public async Task Should_NotUpdate_NotAddtoMapCase_Async()
         {
             var control = new OverviewMapControl();
 
@@ -57,7 +58,7 @@
         }
 
         [Fact]
-        public async void Should_SetOptionsAsync()
+        public async Task Should_SetOptionsAsync()
         {
             var options = new OverviewMapControlOptions();
             var position = ControlPosition.BottomLeft;
@@ -75,7 +76,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetOptions_NotAddtoMapCase_Async()
+        public async Task Should_NotSetOptions_NotAddtoMapCase_Async()
         {
             var control = new OverviewMapControl();
 
@@ -85,7 +86,7 @@
         }
 
         [Fact]
-        public async void Should_UpdateAsyncWithDefaultOptionsAsync()
+        public async Task Should_UpdateAsyncWithDefaultOptionsAsync()
         {
             var control = new OverviewMapControl {
                 JsRuntime = _jsRuntimeMock.Object
@@ -101,7 +102,7 @@
         }
 
         [Fact]
-        public async void Should_SetOptionsAsyncWithDefaultOptionsAsync()
+        public async Task Should_SetOptionsAsyncWithDefaultOptionsAsync()
         {
             var control = new OverviewMapControl {
                 JsRuntime = _jsRuntimeMock.Object

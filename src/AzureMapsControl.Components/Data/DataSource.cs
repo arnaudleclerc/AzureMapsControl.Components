@@ -92,6 +92,44 @@
             return await JSRuntime.InvokeAsync<IEnumerable<Shape<Geometry>>>(Constants.JsConstants.Methods.Datasource.GetShapes.ToDatasourceNamespace(), Id);
         }
 
+        /// <summary>
+        /// Retrieves shapes that are within the cluster.
+        /// </summary>
+        /// <param name="clusterId">The ID of the cluster</param>
+        /// <param name="limit">The maximum number of features to return</param>
+        /// <param name="offset">The number of shapes to skip. Allows you to page through the shapes in the cluster</param>
+        /// <returns>Shapes that are within the cluster</returns>
+        public async ValueTask<IEnumerable<Feature<Geometry>>> GetClusterLeavesAsync(int clusterId, int limit, int offset)
+        {
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.DataSource_GetClusterLeavesAsync, "DataSource - GetClusterLeavesAsync");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_GetClusterLeavesAsync, $"Id: {Id}");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_GetClusterLeavesAsync, $"ClusterId: {clusterId}");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_GetClusterLeavesAsync, $"Limit: {limit}");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_GetClusterLeavesAsync, $"Offset: {offset}");
+
+            EnsureJsRuntimeExists();
+            EnsureNotDisposed();
+
+            return await JSRuntime.InvokeAsync<IEnumerable<Feature<Geometry>>>(Constants.JsConstants.Methods.Datasource.GetClusterLeaves.ToDatasourceNamespace(), Id, clusterId, limit, offset);
+        }
+
+        /// <summary>
+        /// Calculates a zoom level at which the cluster starts expanding or break apart.
+        /// </summary>
+        /// <param name="clusterId">ID of the cluster</param>
+        /// <returns>Zoom level at which the cluster starts expanding or break apart</returns>
+        public async ValueTask<int> GetClusterExpansionZoomAsync(int clusterId)
+        {
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.DataSource_GetClusterLeavesAsync, "DataSource - GetClusterExpansionZoomAsync");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_GetClusterLeavesAsync, $"Id: {Id}");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_GetClusterLeavesAsync, $"ClusterId: {clusterId}");
+
+            EnsureJsRuntimeExists();
+            EnsureNotDisposed();
+
+            return await JSRuntime.InvokeAsync<int>(Constants.JsConstants.Methods.Datasource.GetClusterExpansionZoom.ToDatasourceNamespace(), Id, clusterId);
+        }
+
         internal void DispatchEvent(DataSourceEventArgs eventArgs)
         {
             switch (eventArgs.Type)

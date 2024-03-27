@@ -1,6 +1,7 @@
 ﻿namespace AzureMapsControl.Components.Tests.Animations
 {
     using System;
+    using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Animations;
     using AzureMapsControl.Components.Animations.Options;
@@ -15,7 +16,7 @@
         private readonly Mock<IMapJsRuntime> _jsRuntime = new Mock<IMapJsRuntime>();
 
         [Fact]
-        public async void Should_ThrowException_PauseAsync()
+        public async Task Should_ThrowException_PauseAsync()
         {
             var id = "id";
             var animation = new MoveAlongRouteAnimation(id, _jsRuntime.Object);
@@ -25,7 +26,7 @@
         }
 
         [Fact]
-        public async void Should_ThrowException_PlayAsync()
+        public async Task Should_ThrowException_PlayAsync()
         {
             var id = "id";
             var animation = new MoveAlongRouteAnimation(id, _jsRuntime.Object);
@@ -35,7 +36,7 @@
         }
 
         [Fact]
-        public async void Should_ThrowException_ResetAsync()
+        public async Task Should_ThrowException_ResetAsync()
         {
             var id = "id";
             var animation = new MoveAlongRouteAnimation(id, _jsRuntime.Object);
@@ -45,7 +46,7 @@
         }
 
         [Fact]
-        public async void Should_ThrowException_SeekAsync()
+        public async Task Should_ThrowException_SeekAsync()
         {
             var id = "id";
             var animation = new MoveAlongRouteAnimation(id, _jsRuntime.Object);
@@ -55,7 +56,7 @@
         }
 
         [Fact]
-        public async void Should_ThrowException_StopAsync()
+        public async Task Should_ThrowException_StopAsync()
         {
             var id = "id";
             var animation = new MoveAlongRouteAnimation(id, _jsRuntime.Object);
@@ -65,7 +66,7 @@
         }
 
         [Fact]
-        public async void Should_ThrowException_SetOptionsAsync()
+        public async Task Should_ThrowException_SetOptionsAsync()
         {
             var id = "id";
             var animation = new MoveAlongRouteAnimation(id, _jsRuntime.Object);

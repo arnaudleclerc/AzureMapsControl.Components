@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Indoor;
     using AzureMapsControl.Components.Runtime;
@@ -19,7 +20,7 @@
         private readonly Mock<ILogger<IndoorService>> _logger = new();
 
         [Fact]
-        public async void Should_CreateIndoorManager_Async()
+        public async Task Should_CreateIndoorManager_Async()
         {
             var options = new IndoorManagerOptions();
             var service = new IndoorService(_jsRuntime.Object, _logger.Object);
@@ -30,7 +31,7 @@
         }
 
         [Fact]
-        public async void Should_CreateIndoorManagerWithEvents_Async()
+        public async Task Should_CreateIndoorManagerWithEvents_Async()
         {
             var options = new IndoorManagerOptions();
             var service = new IndoorService(_jsRuntime.Object, _logger.Object);
@@ -41,7 +42,7 @@
         }
 
         [Fact]
-        public async void Should_CreateIndoorManagerWithEvents_NullEventsCase_Async()
+        public async Task Should_CreateIndoorManagerWithEvents_NullEventsCase_Async()
         {
             var options = new IndoorManagerOptions();
             var service = new IndoorService(_jsRuntime.Object, _logger.Object);

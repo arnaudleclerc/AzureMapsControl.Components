@@ -1,5 +1,7 @@
 ﻿namespace AzureMapsControl.Components.Tests.Geolocation
 {
+    using System.Threading.Tasks;
+
     using AzureMapsControl.Components.Geolocation;
     using AzureMapsControl.Components.Runtime;
 
@@ -15,7 +17,7 @@
         private readonly Mock<IMapJsRuntime> _mapJsRuntimeMock = new Mock<IMapJsRuntime>();
 
         [Fact]
-        public async void Should_CheckIfGeolocationIsSupportedAsync()
+        public async Task Should_CheckIfGeolocationIsSupportedAsync()
         {
             var isGeolocationSupported = true;
             _mapJsRuntimeMock.Setup(runtime => runtime.InvokeAsync<bool>(It.IsAny<string>(), It.IsAny<object[]>())).ReturnsAsync(isGeolocationSupported);

@@ -1,5 +1,7 @@
 ﻿namespace AzureMapsControl.Components.Tests.Indoor
 {
+    using System.Threading.Tasks;
+
     using AzureMapsControl.Components.Exceptions;
     using AzureMapsControl.Components.Indoor;
     using AzureMapsControl.Components.Indoor.Style;
@@ -17,7 +19,7 @@
         private readonly Mock<ILogger> _logger = new Mock<ILogger>();
 
         [Fact]
-        public async void Should_InitializeAsync()
+        public async Task Should_InitializeAsync()
         {
             var indoorManager = new IndoorManager(_jsRuntime.Object, _logger.Object);
 
@@ -28,7 +30,7 @@
         }
 
         [Fact]
-        public async void Should_NotInitialize_DisposedCase_Async()
+        public async Task Should_NotInitialize_DisposedCase_Async()
         {
             var indoorManager = new IndoorManager(_jsRuntime.Object, _logger.Object);
 
@@ -40,7 +42,7 @@
         }
 
         [Fact]
-        public async void Should_DisposeAsync()
+        public async Task Should_DisposeAsync()
         {
             var indoorManager = new IndoorManager(_jsRuntime.Object, _logger.Object);
 
@@ -52,7 +54,7 @@
         }
 
         [Fact]
-        public async void Should_NotDisposeTwice_Async()
+        public async Task Should_NotDisposeTwice_Async()
         {
             var indoorManager = new IndoorManager(_jsRuntime.Object, _logger.Object);
 
@@ -64,7 +66,7 @@
         }
 
         [Fact]
-        public async void Should_GetCurrentFacilityAsync()
+        public async Task Should_GetCurrentFacilityAsync()
         {
             var currentFacility = new IndoorFacility {
                 FacilityId = "facilityId",
@@ -83,7 +85,7 @@
         }
 
         [Fact]
-        public async void Should_NotGetCurrentFacility_DisposedCase_Async()
+        public async Task Should_NotGetCurrentFacility_DisposedCase_Async()
         {
             var indoorManager = new IndoorManager(_jsRuntime.Object, _logger.Object);
 
@@ -95,7 +97,7 @@
         }
 
         [Fact]
-        public async void Should_GetOptionsAsync()
+        public async Task Should_GetOptionsAsync()
         {
             var options = new IndoorManagerOptions();
             _jsRuntime.Setup(runtime => runtime.InvokeAsync<IndoorManagerOptions>(It.IsAny<string>(), It.IsAny<object[]>())).ReturnsAsync(options);
@@ -109,7 +111,7 @@
         }
 
         [Fact]
-        public async void Should_NotGetOptions_DisposedCase_Async()
+        public async Task Should_NotGetOptions_DisposedCase_Async()
         {
             var indoorManager = new IndoorManager(_jsRuntime.Object, _logger.Object);
 
@@ -121,7 +123,7 @@
         }
 
         [Fact]
-        public async void Should_GetStyleDefinition_Async()
+        public async Task Should_GetStyleDefinition_Async()
         {
             var styleDefinition = new StyleDefinition();
             _jsRuntime.Setup(runtime => runtime.InvokeAsync<StyleDefinition>(It.IsAny<string>(), It.IsAny<object[]>())).ReturnsAsync(styleDefinition);
@@ -136,7 +138,7 @@
         }
 
         [Fact]
-        public async void Should_NotGetStyleDefinition_DisposedCase_Async()
+        public async Task Should_NotGetStyleDefinition_DisposedCase_Async()
         {
             var indoorManager = new IndoorManager(_jsRuntime.Object, _logger.Object);
 
@@ -148,7 +150,7 @@
         }
 
         [Fact]
-        public async void Should_SetDynamicStylingAsync()
+        public async Task Should_SetDynamicStylingAsync()
         {
             var indoorManager = new IndoorManager(_jsRuntime.Object, _logger.Object);
             await indoorManager.SetDynamicStylingAsync(true);
@@ -158,7 +160,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetDynamicStyling_DisposedCase_Async()
+        public async Task Should_NotSetDynamicStyling_DisposedCase_Async()
         {
             var indoorManager = new IndoorManager(_jsRuntime.Object, _logger.Object);
             await indoorManager.DisposeAsync();
@@ -169,7 +171,7 @@
         }
 
         [Fact]
-        public async void Should_SetFacilityAsync()
+        public async Task Should_SetFacilityAsync()
         {
             var indoorManager = new IndoorManager(_jsRuntime.Object, _logger.Object);
             await indoorManager.SetFacilityAsync("facilityId", 1);
@@ -179,7 +181,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetFacility_DisposedCase_Async()
+        public async Task Should_NotSetFacility_DisposedCase_Async()
         {
             var indoorManager = new IndoorManager(_jsRuntime.Object, _logger.Object);
             await indoorManager.DisposeAsync();
@@ -190,7 +192,7 @@
         }
 
         [Fact]
-        public async void Should_SetOptions_Async()
+        public async Task Should_SetOptions_Async()
         {
             var options = new IndoorManagerOptions();
             var indoorManager = new IndoorManager(_jsRuntime.Object, _logger.Object);
@@ -202,7 +204,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetOptions_DisposedCase_Async()
+        public async Task Should_NotSetOptions_DisposedCase_Async()
         {
             var options = new IndoorManagerOptions();
             var indoorManager = new IndoorManager(_jsRuntime.Object, _logger.Object);

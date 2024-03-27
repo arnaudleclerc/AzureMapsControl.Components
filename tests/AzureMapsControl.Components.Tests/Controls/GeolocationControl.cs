@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Atlas;
     using AzureMapsControl.Components.Controls;
@@ -22,7 +23,7 @@
         private readonly Mock<IMapJsRuntime> _mapJsRuntimeMock = new Mock<IMapJsRuntime>();
 
         [Fact]
-        public async void Should_GetLastKnowPositionAsync()
+        public async Task Should_GetLastKnowPositionAsync()
         {
             var feature = new Feature<Point>();
             _mapJsRuntimeMock.Setup(runtime => runtime.InvokeAsync<Feature<Point>>(It.IsAny<string>(), It.IsAny<object[]>())).ReturnsAsync(feature);
@@ -39,7 +40,7 @@
         }
 
         [Fact]
-        public async void Should_NotGetLastKnowPosition_IfAlreadyDisposed_Async()
+        public async Task Should_NotGetLastKnowPosition_IfAlreadyDisposed_Async()
         {
             var control = new GeolocationControl() {
                 JsRuntime = _mapJsRuntimeMock.Object
@@ -53,7 +54,7 @@
         }
 
         [Fact]
-        public async void Should_NotGetLastKnowPosition_NotAddedToMapCase_Async()
+        public async Task Should_NotGetLastKnowPosition_NotAddedToMapCase_Async()
         {
             var control = new GeolocationControl();
 
@@ -63,7 +64,7 @@
         }
 
         [Fact]
-        public async void Should_DisposeAsync()
+        public async Task Should_DisposeAsync()
         {
             var control = new GeolocationControl() {
                 JsRuntime = _mapJsRuntimeMock.Object
@@ -81,7 +82,7 @@
         }
 
         [Fact]
-        public async void Should_NotDispose_IfAlreadyDisposed_Async()
+        public async Task Should_NotDispose_IfAlreadyDisposed_Async()
         {
             var control = new GeolocationControl() {
                 JsRuntime = _mapJsRuntimeMock.Object
@@ -94,7 +95,7 @@
         }
 
         [Fact]
-        public async void Should_NotDispose_NotAddedToMapCase_Async()
+        public async Task Should_NotDispose_NotAddedToMapCase_Async()
         {
             var control = new GeolocationControl();
             await Assert.ThrowsAnyAsync<ComponentNotAddedToMapException>(async () => await control.DisposeAsync());
@@ -103,7 +104,7 @@
         }
 
         [Fact]
-        public async void Should_SetOptions_Async()
+        public async Task Should_SetOptions_Async()
         {
             var control = new GeolocationControl() {
                 JsRuntime = _mapJsRuntimeMock.Object
@@ -118,7 +119,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetOptions_DisposedCase_Async()
+        public async Task Should_NotSetOptions_DisposedCase_Async()
         {
             var control = new GeolocationControl() {
                 JsRuntime = _mapJsRuntimeMock.Object
@@ -132,7 +133,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetOptions_NotAddedToMapCase_Async()
+        public async Task Should_NotSetOptions_NotAddedToMapCase_Async()
         {
             var control = new GeolocationControl();
 
@@ -142,7 +143,7 @@
         }
 
         [Fact]
-        public async void Should_AddEvents_Async()
+        public async Task Should_AddEvents_Async()
         {
             var control = new GeolocationControl(eventFlags: GeolocationEventActivationFlags.None().Enable(GeolocationEventType.GeolocationError)) {
                 JsRuntime = _mapJsRuntimeMock.Object
@@ -160,7 +161,7 @@
         }
 
         [Fact]
-        public async void Should_NotAddEvents_NoEvents_Async()
+        public async Task Should_NotAddEvents_NoEvents_Async()
         {
             var control = new GeolocationControl(eventFlags: GeolocationEventActivationFlags.None()) {
                 JsRuntime = _mapJsRuntimeMock.Object
@@ -172,7 +173,7 @@
         }
 
         [Fact]
-        public async void Should_NotAddEvents_NullCase_Async()
+        public async Task Should_NotAddEvents_NullCase_Async()
         {
             var control = new GeolocationControl() {
                 JsRuntime = _mapJsRuntimeMock.Object

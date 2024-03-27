@@ -60,6 +60,9 @@
 
             if(cluster is not null && cluster.Properties.ContainsKey("cluster"))
             {
+                var clusterLeaves = await _datasource.GetClusterLeavesAsync(int.Parse(cluster.Id), 10, 0);
+                var clusterZoomExpansionLevel = await _datasource.GetClusterExpansionZoomAsync(int.Parse(cluster.Id));
+
                 var html = string.Join(string.Empty, 
                     new[] {
                     "<div style=\"padding:10px;\">",

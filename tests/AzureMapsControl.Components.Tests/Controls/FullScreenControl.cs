@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Controls;
     using AzureMapsControl.Components.Exceptions;
@@ -76,7 +77,7 @@
         private readonly Mock<ILogger> _loggerMock = new();
 
         [Fact]
-        public async void Should_DisposeAsync()
+        public async Task Should_DisposeAsync()
         {
             var control = new FullScreenControl {
                 JsRuntime = _jsRuntimeMock.Object,
@@ -95,7 +96,7 @@
         }
 
         [Fact]
-        public async void Should_NotDispose_NotAddedToMapCase_Async()
+        public async Task Should_NotDispose_NotAddedToMapCase_Async()
         {
             var control = new FullScreenControl {
                 Logger = _loggerMock.Object
@@ -107,7 +108,7 @@
         }
 
         [Fact]
-        public async void Should_NotDisposeTwice_Async()
+        public async Task Should_NotDisposeTwice_Async()
         {
             var control = new FullScreenControl {
                 JsRuntime = _jsRuntimeMock.Object,
@@ -128,7 +129,7 @@
         }
 
         [Fact]
-        public async void Should_SetOptionsAsync()
+        public async Task Should_SetOptionsAsync()
         {
             var control = new FullScreenControl(new FullScreenControlOptions()) {
                 JsRuntime = _jsRuntimeMock.Object,
@@ -144,7 +145,7 @@
         }
 
         [Fact]
-        public async void Should_SetOptions_NoOptionsCase_Async()
+        public async Task Should_SetOptions_NoOptionsCase_Async()
         {
             var control = new FullScreenControl {
                 JsRuntime = _jsRuntimeMock.Object,
@@ -160,7 +161,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetOptions_NotAddedToMapCase_Async()
+        public async Task Should_NotSetOptions_NotAddedToMapCase_Async()
         {
             var control = new FullScreenControl(new FullScreenControlOptions()) {
                 Logger = _loggerMock.Object
@@ -171,7 +172,7 @@
         }
 
         [Fact]
-        public async void Should_NotSetOptions_DisposedCase_Async()
+        public async Task Should_NotSetOptions_DisposedCase_Async()
         {
             var control = new FullScreenControl(new FullScreenControlOptions()) {
                 JsRuntime = _jsRuntimeMock.Object,
@@ -186,7 +187,7 @@
         }
 
         [Fact]
-        public async void Should_GetIsFullScreenAsync()
+        public async Task Should_GetIsFullScreenAsync()
         {
             var isFullScreen = true;
             _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<bool>(It.IsAny<string>(), It.IsAny<object[]>())).ReturnsAsync(isFullScreen);
@@ -203,7 +204,7 @@
         }
 
         [Fact]
-        public async void Should_NotGetIsFullScreen_NotAddedToMapCase_Async()
+        public async Task Should_NotGetIsFullScreen_NotAddedToMapCase_Async()
         {
             var control = new FullScreenControl() {
                 Logger = _loggerMock.Object
@@ -214,7 +215,7 @@
         }
 
         [Fact]
-        public async void Should_NotGetIsFullScreen_DisposedCase_Async()
+        public async Task Should_NotGetIsFullScreen_DisposedCase_Async()
         {
             var control = new FullScreenControl() {
                 JsRuntime = _jsRuntimeMock.Object,
@@ -229,7 +230,7 @@
         }
 
         [Fact]
-        public async void Should_AddEvents_Async()
+        public async Task Should_AddEvents_Async()
         {
             var control = new FullScreenControl(eventFlags: FullScreenEventActivationFlags.All()) {
                 JsRuntime = _jsRuntimeMock.Object,
@@ -248,7 +249,7 @@
         }
 
         [Fact]
-        public async void Should_NotAddEvents_NullCase_Async()
+        public async Task Should_NotAddEvents_NullCase_Async()
         {
             var control = new FullScreenControl() {
                 JsRuntime = _jsRuntimeMock.Object,
@@ -260,7 +261,7 @@
         }
 
         [Fact]
-        public async void Should_NotAddEvents_EmptyCase_Async()
+        public async Task Should_NotAddEvents_EmptyCase_Async()
         {
             var control = new FullScreenControl(eventFlags: FullScreenEventActivationFlags.None()) {
                 JsRuntime = _jsRuntimeMock.Object,

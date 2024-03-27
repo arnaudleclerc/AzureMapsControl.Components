@@ -1,5 +1,7 @@
 ﻿namespace AzureMapsControl.Components.Tests.Markers
 {
+    using System.Threading.Tasks;
+
     using AzureMapsControl.Components.Map;
     using AzureMapsControl.Components.Markers;
 
@@ -7,7 +9,7 @@
     public class HtmlMarkerInvokeHelperTests
     {
         [Fact]
-        public async void Should_InvokeCallback_Async()
+        public async Task Should_InvokeCallback_Async()
         {
             var htmlMarkerEventArgs = new HtmlMarkerJsEventArgs();
             var assertEqualEventArgs = false;

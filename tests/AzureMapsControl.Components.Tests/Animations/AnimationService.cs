@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Animations;
     using AzureMapsControl.Components.Animations.Options;
@@ -33,7 +34,7 @@
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async void Should_Snakeline_Async(bool disposeOnComplete)
+        public async Task Should_Snakeline_Async(bool disposeOnComplete)
         {
             var line = new LineString();
             var source = new DataSource();
@@ -51,7 +52,7 @@
         }
 
         [Fact]
-        public async void Should_ThrowArgumentNullException_Snakeline_LineCaseAsync()
+        public async Task Should_ThrowArgumentNullException_Snakeline_LineCaseAsync()
         {
             var source = new DataSource();
             var options = new SnakeLineAnimationOptions();
@@ -62,7 +63,7 @@
         }
 
         [Fact]
-        public async void Should_ThrowArgumentNullException_Snakeline_SourceCaseAsync()
+        public async Task Should_ThrowArgumentNullException_Snakeline_SourceCaseAsync()
         {
             var line = new LineString();
             var source = new DataSource();
@@ -76,7 +77,7 @@
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async void Should_MoveAlongPath_LineStringAndPoint_DisposeOnComplete_Async(bool disposeOnComplete)
+        public async Task Should_MoveAlongPath_LineStringAndPoint_DisposeOnComplete_Async(bool disposeOnComplete)
         {
             var line = new LineString();
             var lineSource = new DataSource();
@@ -96,7 +97,7 @@
         }
 
         [Fact]
-        public async void Should_ThrowArgumentNullException_MoveAlongPath_PathCaseAsync()
+        public async Task Should_ThrowArgumentNullException_MoveAlongPath_PathCaseAsync()
         {
             var lineSource = new DataSource();
             var pin = new Point();
@@ -109,7 +110,7 @@
         }
 
         [Fact]
-        public async void Should_ThrowArgumentNullException_MoveAlongPath_PathSourceCaseAsync()
+        public async Task Should_ThrowArgumentNullException_MoveAlongPath_PathSourceCaseAsync()
         {
             var line = new LineString();
             var pin = new Point();
@@ -122,7 +123,7 @@
         }
 
         [Fact]
-        public async void Should_ThrowArgumentNullException_MoveAlongPath_PinCaseAsync()
+        public async Task Should_ThrowArgumentNullException_MoveAlongPath_PinCaseAsync()
         {
             var line = new LineString();
             var lineSource = new DataSource();
@@ -135,7 +136,7 @@
         }
 
         [Fact]
-        public async void Should_ThrowArgumentNullException_MoveAlongPath_PinSourceCaseAsync()
+        public async Task Should_ThrowArgumentNullException_MoveAlongPath_PinSourceCaseAsync()
         {
             var line = new LineString();
             var lineSource = new DataSource();
@@ -150,7 +151,7 @@
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async void Should_MoveAlongPath_LineStringAndHtmlMarker_Async(bool disposeOnComplete)
+        public async Task Should_MoveAlongPath_LineStringAndHtmlMarker_Async(bool disposeOnComplete)
         {
             var line = new LineString();
             var lineSource = new DataSource();
@@ -169,7 +170,7 @@
         }
 
         [Fact]
-        public async void Should_ThrowArgumentNullException_MoveAlongPath_LineStringAndHtmlMarker_PathCaseAsync()
+        public async Task Should_ThrowArgumentNullException_MoveAlongPath_LineStringAndHtmlMarker_PathCaseAsync()
         {
             var lineSource = new DataSource();
             var pin = new HtmlMarker(new HtmlMarkerOptions());
@@ -181,7 +182,7 @@
         }
 
         [Fact]
-        public async void Should_ThrowArgumentNullException_MoveAlongPath_LineStringAndHtmlMarker_PathSourceCaseAsync()
+        public async Task Should_ThrowArgumentNullException_MoveAlongPath_LineStringAndHtmlMarker_PathSourceCaseAsync()
         {
             var line = new LineString();
             var pin = new HtmlMarker(new HtmlMarkerOptions());
@@ -193,7 +194,7 @@
         }
 
         [Fact]
-        public async void Should_ThrowArgumentNullException_MoveAlongPath_LineStringAndHtmlMarker_PinCaseAsync()
+        public async Task Should_ThrowArgumentNullException_MoveAlongPath_LineStringAndHtmlMarker_PinCaseAsync()
         {
             var line = new LineString();
             var lineSource = new DataSource();
@@ -207,7 +208,7 @@
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async void Should_MoveAlongPath_PositionsAndPoint_Async(bool disposeOnComplete)
+        public async Task Should_MoveAlongPath_PositionsAndPoint_Async(bool disposeOnComplete)
         {
             var line = new Position[] { new Position() };
             var pin = new Point();
@@ -226,7 +227,7 @@
         }
 
         [Fact]
-        public async void Should_ThrowArgumentNullException_MoveAlongPath_PositionsAndPoint_NullLineCaseAsync()
+        public async Task Should_ThrowArgumentNullException_MoveAlongPath_PositionsAndPoint_NullLineCaseAsync()
         {
             var pin = new Point();
             var pinSource = new DataSource();
@@ -238,7 +239,7 @@
         }
 
         [Fact]
-        public async void Should_ThrowArgumentNullException_MoveAlongPath_PositionsAndPoint_PinCaseAsync()
+        public async Task Should_ThrowArgumentNullException_MoveAlongPath_PositionsAndPoint_PinCaseAsync()
         {
             var line = new Position[] { new Position() };
             var pinSource = new DataSource();
@@ -250,7 +251,7 @@
         }
 
         [Fact]
-        public async void Should_ThrowArgumentNullException_MoveAlongPath_PositionsAndPoint_PinSourceAsync()
+        public async Task Should_ThrowArgumentNullException_MoveAlongPath_PositionsAndPoint_PinSourceAsync()
         {
             var line = new Position[] { new Position() };
             var pin = new Point();
@@ -264,7 +265,7 @@
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async void Should_MoveAlongPath_PositionsAndHtmlMarkers_Async(bool disposeOnComplete)
+        public async Task Should_MoveAlongPath_PositionsAndHtmlMarkers_Async(bool disposeOnComplete)
         {
             var line = new Position[] { new Position() };
             var pin = new HtmlMarker(new HtmlMarkerOptions());
@@ -282,7 +283,7 @@
         }
 
         [Fact]
-        public async void Should_ThrowArgumentNullException_MoveAlongPath_PositionsAndHtmlMarkers_NullLineCaseAsync()
+        public async Task Should_ThrowArgumentNullException_MoveAlongPath_PositionsAndHtmlMarkers_NullLineCaseAsync()
         {
             var pin = new HtmlMarker(new HtmlMarkerOptions());
             var options = new MoveAlongPathAnimationOptions();
@@ -293,7 +294,7 @@
         }
 
         [Fact]
-        public async void Should_ThrowArgumentNullException_MoveAlongPath_PositionsAndHtmlMarkers_PinCaseAsync()
+        public async Task Should_ThrowArgumentNullException_MoveAlongPath_PositionsAndHtmlMarkers_PinCaseAsync()
         {
             var line = new Position[] { new Position() };
             var options = new MoveAlongPathAnimationOptions();
@@ -304,7 +305,7 @@
         }
 
         [Fact]
-        public async void Should_FlowingDashedLine_Async()
+        public async Task Should_FlowingDashedLine_Async()
         {
             var layer = new LineLayer();
             var options = new MovingDashLineOptions();
@@ -318,7 +319,7 @@
         }
 
         [Fact]
-        public async void Should_FlowingDashedLine_ThrowArgumentNullExceptionAsync()
+        public async Task Should_FlowingDashedLine_ThrowArgumentNullExceptionAsync()
         {
             var options = new MovingDashLineOptions();
 
@@ -330,7 +331,7 @@
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async void Should_DropMarkers_Async(bool disposeOnComplete)
+        public async Task Should_DropMarkers_Async(bool disposeOnComplete)
         {
             var map = new Map("id", htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(null));
             _mapServiceMock.Setup(mapService => mapService.Map).Returns(map);
@@ -361,7 +362,7 @@
         }
 
         [Fact]
-        public async void Should_DropMarkers_ThrowArgumentNullExceptionAsync()
+        public async Task Should_DropMarkers_ThrowArgumentNullExceptionAsync()
         {
             var height = 1m;
             var options = new DropMarkersAnimationOptions();
@@ -373,7 +374,7 @@
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async void Should_DropMarker_Async(bool disposeOnComplete)
+        public async Task Should_DropMarker_Async(bool disposeOnComplete)
         {
             var map = new Map("id", htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(null));
             _mapServiceMock.Setup(mapService => mapService.Map).Returns(map);
@@ -402,7 +403,7 @@
         }
 
         [Fact]
-        public async void Should_DropMarker_ThrowArgumentNullExceptionAsync()
+        public async Task Should_DropMarker_ThrowArgumentNullExceptionAsync()
         {
             var height = 1m;
             var options = new DropMarkersAnimationOptions();
@@ -412,7 +413,7 @@
         }
 
         [Fact]
-        public async void Should_GroupAnimations_Async()
+        public async Task Should_GroupAnimations_Async()
         {
             var animation1 = new SnakeLineAnimation("id", _jsRuntimeMock.Object);
             var animation2 = new DropMarkersAnimation("markerAnimation", _jsRuntimeMock.Object);
@@ -433,7 +434,7 @@
         }
 
         [Fact]
-        public async void Should_GroupAnimations_ThrowArgumentNullExceptionAsync()
+        public async Task Should_GroupAnimations_ThrowArgumentNullExceptionAsync()
         {
             var options = new GroupAnimationOptions();
 
@@ -445,7 +446,7 @@
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async void Should_DropMultiple_Async(bool disposeOnComplete)
+        public async Task Should_DropMultiple_Async(bool disposeOnComplete)
         {
             var point = new Point();
             var point2 = new Point();
@@ -466,7 +467,7 @@
         }
 
         [Fact]
-        public async void Should_DropMultiple_ThrowArgumentNullException_PointsCaseAsync()
+        public async Task Should_DropMultiple_ThrowArgumentNullException_PointsCaseAsync()
         {
             IEnumerable<Point> points = null;
             var datasource = new DataSource();
@@ -479,7 +480,7 @@
         }
 
         [Fact]
-        public async void Should_DropMultiple_ThrowArgumentNullException_SourceCaseAsync()
+        public async Task Should_DropMultiple_ThrowArgumentNullException_SourceCaseAsync()
         {
             var point = new Point();
             var point2 = new Point();
@@ -495,7 +496,7 @@
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async void Should_Drop_Async(bool disposeOnComplete)
+        public async Task Should_Drop_Async(bool disposeOnComplete)
         {
             var point = new Point();
             var datasource = new DataSource();
@@ -521,7 +522,7 @@
         }
 
         [Fact]
-        public async void Should_Drop_ThrowArgumentNullException_PointsCaseAsync()
+        public async Task Should_Drop_ThrowArgumentNullException_PointsCaseAsync()
         {
             Point points = null;
             var datasource = new DataSource();
@@ -534,7 +535,7 @@
         }
 
         [Fact]
-        public async void Should_Drop_ThrowArgumentNullException_SourceCaseAsync()
+        public async Task Should_Drop_ThrowArgumentNullException_SourceCaseAsync()
         {
             var point = new Point();
             var options = new DropAnimationOptions();
@@ -548,7 +549,7 @@
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async void Should_SetCoordinatesAsync(bool disposeOnComplete)
+        public async Task Should_SetCoordinatesAsync(bool disposeOnComplete)
         {
             var point = new Point();
             var datasource = new DataSource();
@@ -567,7 +568,7 @@
         }
 
         [Fact]
-        public async void Should_SetCoordinates_ThrowArgumentNullException_PointCaseAsync()
+        public async Task Should_SetCoordinates_ThrowArgumentNullException_PointCaseAsync()
         {
             var datasource = new DataSource();
             var options = new SetCoordinatesAnimationOptions();
@@ -579,7 +580,7 @@
         }
 
         [Fact]
-        public async void Should_SetCoordinates_ThrowArgumentNullException_SourceCaseAsync()
+        public async Task Should_SetCoordinates_ThrowArgumentNullException_SourceCaseAsync()
         {
             var point = new Point();
             var options = new SetCoordinatesAnimationOptions();
@@ -591,7 +592,7 @@
         }
 
         [Fact]
-        public async void Should_SetCoordinates_ThrowArgumentNullException_NewCoordinatesCaseAsync()
+        public async Task Should_SetCoordinates_ThrowArgumentNullException_NewCoordinatesCaseAsync()
         {
             var point = new Point();
             var datasource = new DataSource();
@@ -605,7 +606,7 @@
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async void Should_SetCoordinates_HtmlMarker_Async(bool disposeOnComplete)
+        public async Task Should_SetCoordinates_HtmlMarker_Async(bool disposeOnComplete)
         {
             var marker = new HtmlMarker(new HtmlMarkerOptions());
             var options = new SetCoordinatesAnimationOptions {
@@ -623,7 +624,7 @@
         }
 
         [Fact]
-        public async void Should_SetCoordinates_HtmlMarker_ThrowArgumentNullException_PointCaseAsync()
+        public async Task Should_SetCoordinates_HtmlMarker_ThrowArgumentNullException_PointCaseAsync()
         {
             var options = new SetCoordinatesAnimationOptions();
             var newCoordinates = new Position();
@@ -634,7 +635,7 @@
         }
 
         [Fact]
-        public async void Should_SetCoordinates_HtmlMarker_ThrowArgumentNullException_NewCoordinatesCaseAsync()
+        public async Task Should_SetCoordinates_HtmlMarker_ThrowArgumentNullException_NewCoordinatesCaseAsync()
         {
             var marker = new HtmlMarker(new HtmlMarkerOptions());
             var options = new SetCoordinatesAnimationOptions();
@@ -647,7 +648,7 @@
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async void Should_Morph_Async(bool disposeOnComplete)
+        public async Task Should_Morph_Async(bool disposeOnComplete)
         {
             var geometry = new Point();
             var dataSource = new DataSource();
@@ -667,7 +668,7 @@
         }
 
         [Fact]
-        public async void Should_Morph_ThrowArgumentNullException_GeometryCaseAsync()
+        public async Task Should_Morph_ThrowArgumentNullException_GeometryCaseAsync()
         {
             var dataSource = new DataSource();
             var newGeometry = new Polygon();
@@ -679,7 +680,7 @@
         }
 
         [Fact]
-        public async void Should_Morph_ThrowArgumentNullException_SourceCaseAsync()
+        public async Task Should_Morph_ThrowArgumentNullException_SourceCaseAsync()
         {
             var geometry = new Point();
             var newGeometry = new Polygon();
@@ -691,7 +692,7 @@
         }
 
         [Fact]
-        public async void Should_Morph_ThrowArgumentNullException_NewGeometryCaseAsync()
+        public async Task Should_Morph_ThrowArgumentNullException_NewGeometryCaseAsync()
         {
             var geometry = new Point();
             var dataSource = new DataSource();
@@ -704,7 +705,7 @@
         }
 
         [Fact]
-        public async void Should_MoveAlongRoute_Async()
+        public async Task Should_MoveAlongRoute_Async()
         {
             var routePoints = new List<RoutePoint>();
             var dataSource = new DataSource();
@@ -720,7 +721,7 @@
         }
 
         [Fact]
-        public async void Should_MoveAlongRoute_ThrowArgumentNullException_RoutePointsCaseAsync()
+        public async Task Should_MoveAlongRoute_ThrowArgumentNullException_RoutePointsCaseAsync()
         {
             var dataSource = new DataSource();
             var pin = new Point();
@@ -732,7 +733,7 @@
         }
 
         [Fact]
-        public async void Should_MoveAlongRoute_ThrowArgumentNullException_PinCaseAsync()
+        public async Task Should_MoveAlongRoute_ThrowArgumentNullException_PinCaseAsync()
         {
             var routePoints = new List<RoutePoint>();
             var dataSource = new DataSource();
@@ -744,7 +745,7 @@
         }
 
         [Fact]
-        public async void Should_MoveAlongRoute_ThrowArgumentNullException_SourceCaseAsync()
+        public async Task Should_MoveAlongRoute_ThrowArgumentNullException_SourceCaseAsync()
         {
             var routePoints = new List<RoutePoint>();
             var pin = new Point();
@@ -756,7 +757,7 @@
         }
 
         [Fact]
-        public async void Should_MoveAlongRoute_HtmlMarker_Async()
+        public async Task Should_MoveAlongRoute_HtmlMarker_Async()
         {
             var routePoints = new List<RoutePoint>();
             var pin = new HtmlMarker(new HtmlMarkerOptions());
@@ -771,7 +772,7 @@
         }
 
         [Fact]
-        public async void Should_MoveAlongRoute_HtmlMarker_ThrowArgumentNullException_RoutePointsCaseAsync()
+        public async Task Should_MoveAlongRoute_HtmlMarker_ThrowArgumentNullException_RoutePointsCaseAsync()
         {
             var pin = new HtmlMarker(new HtmlMarkerOptions());
             var options = new RoutePathAnimationOptions();
@@ -782,7 +783,7 @@
         }
 
         [Fact]
-        public async void Should_MoveAlongRoute_HtmlMarker_ThrowArgumentNullException_PinCaseAsync()
+        public async Task Should_MoveAlongRoute_HtmlMarker_ThrowArgumentNullException_PinCaseAsync()
         {
             var routePoints = new List<RoutePoint>();
             var pin = new HtmlMarker(new HtmlMarkerOptions());
