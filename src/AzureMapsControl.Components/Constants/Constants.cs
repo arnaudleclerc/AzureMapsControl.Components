@@ -111,6 +111,7 @@
             internal static class Datasource
             {
                 internal const string GetShapes = "getShapes";
+                internal const string GetClusterLeaves = "getClusterLeaves";
             }
 
             internal static class GriddedDatasource

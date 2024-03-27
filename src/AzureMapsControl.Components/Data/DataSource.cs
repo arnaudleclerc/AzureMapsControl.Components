@@ -92,6 +92,27 @@
             return await JSRuntime.InvokeAsync<IEnumerable<Shape<Geometry>>>(Constants.JsConstants.Methods.Datasource.GetShapes.ToDatasourceNamespace(), Id);
         }
 
+        /// <summary>
+        /// Retrieves shapes that are within the cluster.
+        /// </summary>
+        /// <param name="clusterId">The ID of the cluster</param>
+        /// <param name="limit">The maximum number of features to return</param>
+        /// <param name="offset">The number of shapes to skip. Allows you to page through the shapes in the cluster</param>
+        /// <returns></returns>
+        public async ValueTask<IEnumerable<Feature<Geometry>>> GetClusterLeavesAsync(int clusterId, int limit, int offset)
+        {
+            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.DataSource_GetClusterLeavesAsync, "DataSource - GetClusterLeavesAsync");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_GetClusterLeavesAsync, $"Id: {Id}");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_GetClusterLeavesAsync, $"ClusterId: {clusterId}");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_GetClusterLeavesAsync, $"Limit: {limit}");
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.DataSource_GetClusterLeavesAsync, $"Offset: {offset}");
+
+            EnsureJsRuntimeExists();
+            EnsureNotDisposed();
+
+            return await JSRuntime.InvokeAsync<IEnumerable<Feature<Geometry>>>(Constants.JsConstants.Methods.Datasource.GetClusterLeaves.ToDatasourceNamespace(), Id, clusterId, limit, offset);
+        }
+
         internal void DispatchEvent(DataSourceEventArgs eventArgs)
         {
             switch (eventArgs.Type)

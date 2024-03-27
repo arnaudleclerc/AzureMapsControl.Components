@@ -4,11 +4,14 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.Json;
+    using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Atlas;
     using AzureMapsControl.Components.Data;
     using AzureMapsControl.Components.Exceptions;
     using AzureMapsControl.Components.Runtime;
+
+    using Microsoft.Extensions.Options;
 
     using Moq;
 
@@ -941,7 +944,7 @@
             var shapes = Array.Empty<Shape<Geometry>>();
             var dataSource = new DataSource() { JSRuntime = _jsRuntimeMock.Object };
 
-            await Assert.ThrowsAnyAsync<JsonException>(async() => await dataSource.AddAsync("{"));
+            await Assert.ThrowsAnyAsync<JsonException>(async () => await dataSource.AddAsync("{"));
 
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -1053,6 +1056,51 @@
             await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await datasource.SetOptionsAsync(options => options.ClusterMaxZoom = 2));
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), datasource.Id), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task Should_GetClusterLeaves()
+        {
+            var datasource = new DataSource {
+                JSRuntime = _jsRuntimeMock.Object
+            };
+
+            var expected = Enumerable.Empty<Feature<Geometry>>();
+            _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<IEnumerable<Feature<Geometry>>>(It.IsAny<string>(), It.IsAny<object[]>())).ReturnsAsync(expected);
+
+            var clusterId = 1;
+            var limit = 2;
+            var offset = 3;
+            var result = await datasource.GetClusterLeavesAsync(clusterId, limit, offset);
+
+            Assert.Equal(expected, result);
+
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<IEnumerable<Feature<Geometry>>>(Constants.JsConstants.Methods.Datasource.GetClusterLeaves.ToDatasourceNamespace(), datasource.Id, clusterId, limit, offset), Times.Once);
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task Should_NotGetClusterLeaves_NotAddedToMapCase()
+        {
+            var datasource = new DataSource();
+
+            await Assert.ThrowsAsync<ComponentNotAddedToMapException>(async () => await datasource.GetClusterLeavesAsync(1, 2, 3));
+
+            _jsRuntimeMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task Should_NotGetClusterLeaves_DisposedCase()
+        {
+            var datasource = new DataSource {
+                JSRuntime = _jsRuntimeMock.Object
+            };
+
+            await datasource.DisposeAsync();
+
+            await Assert.ThrowsAsync<ComponentDisposedException>(async () => await datasource.GetClusterLeavesAsync(1, 2, 3));
+
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
     }

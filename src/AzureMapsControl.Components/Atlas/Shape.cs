@@ -34,7 +34,10 @@
             }
             set {
                 _geometry = value;
-                _geometry.Id = Id;
+                if (_geometry != null)
+                {
+                    _geometry.Id = Id;
+                }
             }
         }
 
