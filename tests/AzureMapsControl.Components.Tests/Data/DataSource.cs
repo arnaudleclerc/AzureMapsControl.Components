@@ -1101,6 +1101,7 @@
 
             await Assert.ThrowsAsync<ComponentDisposedException>(async () => await datasource.GetClusterLeavesAsync(1, 2, 3));
 
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), datasource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -1144,6 +1145,7 @@
 
             await Assert.ThrowsAsync<ComponentDisposedException>(async () => await datasource.GetClusterExpansionZoomAsync(1));
 
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), datasource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
     }
