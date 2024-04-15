@@ -35,6 +35,8 @@ Or use the minimized version :
 
 You will need to pass the authentication information of your `AzureMaps` instance to the library. `SubscriptionKey`, `Aad` and `Anonymous` authentication are supported. You will need to call the `AddAzureMapsControl` method on your services.
 
+#### Using a Subscription Key
+
 You can authenticate using a `subscription key` :
 
 ```
@@ -48,6 +50,8 @@ You can authenticate using a `subscription key` :
         services.AddAzureMapsControl(configuration => configuration.SubscriptionKey = "Your Subscription Key");
     }
 ```
+
+#### Using Azure Active Directory
 
 Or using `Azure Active Directory`:
 
@@ -129,7 +133,16 @@ It also needs to fetch the token to send to the requests of the atlas library. F
     </script>
 </body>
 </html>
+
+* End using Azure Active Directory part 
 ```
+
+## Running the Samples
+
+1. Read the second half of [CONTRIBUTING](CONTRIBUTING) for details on getting the whole thing to build.
+2. In appsettings.Development.json, enter your Azure Maps Subscription Key in AzureMaps:SubscriptionKey. The default is to use this, not the Entra keys.
+3. It generally works well to create . .sln file in the root that has both the erc and samples as projects.
+3. Set AzureMapsControl.Sample to have a Project Reference to AzureMapsControl.Component.
 
 ## How to use
 
