@@ -26,9 +26,9 @@
         public static IServiceCollection AddAzureMapsControl(this IServiceCollection services, Action<AzureMapsConfiguration> configure)
         {
             services
-                .AddSingleton<MapService>()
-                .AddSingleton<IMapAdderService>(sp => sp.GetRequiredService<MapService>())
-                .AddSingleton<IMapService>(sp => sp.GetRequiredService<MapService>())
+                .AddScoped<MapService>()
+                .AddScoped<IMapAdderService>(sp => sp.GetRequiredService<MapService>())
+                .AddScoped<IMapService>(sp => sp.GetRequiredService<MapService>())
                 .AddScoped<IAnimationService, AnimationService>()
                 .AddScoped<IMapJsRuntime, MapJsRuntime>()
                 .AddScoped<IGeolocationService, GeolocationService>()
