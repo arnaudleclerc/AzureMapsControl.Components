@@ -16,7 +16,7 @@
         /// <summary>
         /// A number between -1 and 1 that increases or decreases the contrast of the overlay.
         /// </summary>
-        public int? Contrast { get; set; }
+        public double? Contrast { get; set; }
 
         /// <summary>
         /// The duration in milliseconds of a fade transition when a new tile is added.
@@ -33,22 +33,22 @@
         /// <summary>
         /// A number between 0 and 1 that increases or decreases the maximum brightness of the overlay.
         /// </summary>
-        public int? MaxBrightness { get; set; }
+        public double? MaxBrightness { get; set; }
 
         /// <summary>
         /// A number between 0 and 1 that increases or decreases the minimum brightness of the overlay.
         /// </summary>
-        public int? MinBrightness { get; set; }
+        public double? MinBrightness { get; set; }
 
         /// <summary>
         /// A number between 0 and 1 that indicates the opacity at which the overlay will be drawn.
         /// </summary>
-        public int? Opacity { get; set; }
+        public double? Opacity { get; set; }
 
         /// <summary>
         /// A number between -1 and 1 that increases or decreases the saturation of the overlay.
         /// </summary>
-        public int? Saturation { get; set; }
+        public double? Saturation { get; set; }
     }
 
     internal abstract class MediaLayerOptionsJsonConverter<TOptions> : LayerOptionsJsonConverter<TOptions>
@@ -70,7 +70,7 @@
                 switch (propertyName)
                 {
                     case "contrast":
-                        value.Contrast = reader.TokenType == JsonTokenType.Null ? null : reader.GetInt32();
+                        value.Contrast = reader.TokenType == JsonTokenType.Null ? null : reader.GetDouble();
                         break;
 
                     case "fadeDuration":
@@ -82,19 +82,19 @@
                         break;
 
                     case "maxBrightness":
-                        value.MaxBrightness = reader.TokenType == JsonTokenType.Null ? null : reader.GetInt32();
+                        value.MaxBrightness = reader.TokenType == JsonTokenType.Null ? null : reader.GetDouble();
                         break;
 
                     case "minBrightness":
-                        value.MinBrightness = reader.TokenType == JsonTokenType.Null ? null : reader.GetInt32();
+                        value.MinBrightness = reader.TokenType == JsonTokenType.Null ? null : reader.GetDouble();
                         break;
 
                     case "opacity":
-                        value.Opacity = reader.TokenType == JsonTokenType.Null ? null : reader.GetInt32();
+                        value.Opacity = reader.TokenType == JsonTokenType.Null ? null : reader.GetDouble();
                         break;
 
                     case "saturation":
-                        value.Saturation = reader.TokenType == JsonTokenType.Null ? null : reader.GetInt32();
+                        value.Saturation = reader.TokenType == JsonTokenType.Null ? null : reader.GetDouble();
                         break;
                 }
             }
