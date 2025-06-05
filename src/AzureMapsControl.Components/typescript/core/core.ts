@@ -458,7 +458,7 @@ export class Core {
             if (htmlMarkerOption.options.color) {
                 options.color = htmlMarkerOption.options.color;
             }
-            if (htmlMarkerOption.options.draggable) {
+            if (htmlMarkerOption.options.draggable != null) {
                 options.draggable = htmlMarkerOption.options.draggable;
             }
             if (htmlMarkerOption.options.htmlContent) {
@@ -476,7 +476,7 @@ export class Core {
             if (htmlMarkerOption.options.text) {
                 options.text = htmlMarkerOption.options.text;
             }
-            if (htmlMarkerOption.options.visible) {
+            if (htmlMarkerOption.options.visible != null) {
                 options.visible = htmlMarkerOption.options.visible;
             }
             if (htmlMarkerOption.popupOptions) {
