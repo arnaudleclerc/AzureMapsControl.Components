@@ -530,6 +530,48 @@
                     } : null
                 }));
 
+                foreach (var updateWithOptions in updates.Where(u => u.Options != null))
+                {
+                    var targetMarker = HtmlMarkers.First(marker => marker.Id == updateWithOptions.Marker.Id);
+
+                    if (updateWithOptions.Options.Anchor.ToString() != null)
+                    {
+                        targetMarker.Options.Anchor = updateWithOptions.Options.Anchor;
+                    }
+                    if (updateWithOptions.Options.Color != null)
+                    {
+                        targetMarker.Options.Color = updateWithOptions.Options.Color;
+                    }
+                    if (updateWithOptions.Options.Draggable != null)
+                    {
+                        targetMarker.Options.Draggable = updateWithOptions.Options.Draggable;
+                    }
+                    if (updateWithOptions.Options.HtmlContent != null)
+                    {
+                        targetMarker.Options.HtmlContent = updateWithOptions.Options.HtmlContent;
+                    }
+                    if (updateWithOptions.Options.Position != null)
+                    {
+                        targetMarker.Options.Position = updateWithOptions.Options.Position;
+                    }
+                    if (updateWithOptions.Options.PixelOffset != null)
+                    {
+                        targetMarker.Options.PixelOffset = updateWithOptions.Options.PixelOffset;
+                    }
+                    if (updateWithOptions.Options.SecondaryColor != null)
+                    {
+                        targetMarker.Options.SecondaryColor = updateWithOptions.Options.SecondaryColor;
+                    }
+                    if (updateWithOptions.Options.Text != null)
+                    {
+                        targetMarker.Options.Text = updateWithOptions.Options.Text;
+                    }
+                    if (updateWithOptions.Options.Visible != null)
+                    {
+                        targetMarker.Options.Visible = updateWithOptions.Options.Visible;
+                    }
+                }
+
                 foreach (var updateWithPopup in updates.Where(update => update.Options?.Popup != null))
                 {
                     var marker = HtmlMarkers.First(marker => marker.Id == updateWithPopup.Marker.Id);
