@@ -565,7 +565,7 @@
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_RemoveHtmlMarkersAsync, "Removing html markers");
             if (HtmlMarkers != null && markers != null)
             {
-                HtmlMarkers = HtmlMarkers.Where(marker => markers.Any(m => m != null && m.Id != marker.Id));
+                HtmlMarkers = HtmlMarkers.Where(marker => !markers.Any(m => m != null && m.Id == marker.Id));
                 _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_RemoveHtmlMarkersAsync, $"{markers.Count()} html markers will be removed");
                 var ids = markers.Select(marker => marker.Id);
                 _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_RemoveHtmlMarkersAsync, $"Ids: {string.Join('|', ids)}");

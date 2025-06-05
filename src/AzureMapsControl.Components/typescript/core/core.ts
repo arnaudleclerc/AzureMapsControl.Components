@@ -384,7 +384,7 @@ export class Core {
     }
 
     public static removeHtmlMarkers(markerIds: string[]): void {
-        this._map.markers.remove(this._map.markers.getMarkers().find(marker => markerIds.indexOf((marker as any).amc.id) > -1));
+        this._map.markers.remove(this._map.markers.getMarkers().filter(marker => markerIds.includes((marker as any).amc.id)));
     }
 
     public static removeLayers(ids: string[]): void {
