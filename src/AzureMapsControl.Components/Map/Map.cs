@@ -444,7 +444,7 @@
             if (markers != null)
             {
                 _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddHtmlMarkersAsync, "Adding html markers");
-                HtmlMarkers = (HtmlMarkers ?? Array.Empty<HtmlMarker>()).Concat(markers);
+                HtmlMarkers = (HtmlMarkers ?? Array.Empty<HtmlMarker>()).Concat(markers).ToArray();
                 _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddHtmlMarkersAsync, $"{markers.Count()} new html markers will be added");
                 var parameters = GetHtmlMarkersCreationParameters(markers);
                 await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(),
@@ -565,7 +565,7 @@
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_RemoveHtmlMarkersAsync, "Removing html markers");
             if (HtmlMarkers != null && markers != null)
             {
-                HtmlMarkers = HtmlMarkers.Where(marker => !markers.Any(m => m != null && m.Id == marker.Id));
+                HtmlMarkers = HtmlMarkers.Where(marker => !markers.Any(m => m != null && m.Id == marker.Id)).ToArray();
                 _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_RemoveHtmlMarkersAsync, $"{markers.Count()} html markers will be removed");
                 var ids = markers.Select(marker => marker.Id);
                 _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_RemoveHtmlMarkersAsync, $"Ids: {string.Join('|', ids)}");
