@@ -3,6 +3,8 @@ import * as azmaps from 'azure-maps-control';
 import { EventHelper } from '../events/event-helper';
 import { Core } from '../core/core';
 import { DrawingEventArgs } from './drawing-event-args';
+import { Shape } from '../geometries/geometry';
+import { GeometryBuilder } from '../geometries/geometry-builder';
 
 export class Drawing {
 
@@ -94,6 +96,15 @@ export class Drawing {
             style: drawingToolbarOptions.style,
             visible: drawingToolbarOptions.visible
         });
+    }
+
+    public static addShapes(shapes: Shape[]): void {
+        const mapsShapes = shapes.map(shape => GeometryBuilder.buildShape(shape));
+        this._drawingManager.getSource().add(mapsShapes);
+    }
+
+    public static clear(): void {
+        this._drawingManager.getSource().clear();
     }
 
 }

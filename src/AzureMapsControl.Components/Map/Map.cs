@@ -67,6 +67,8 @@
 
         public DrawingToolbarOptions DrawingToolbarOptions { get; internal set; }
 
+        public DrawingManager DrawingManager { get; internal set; }
+
         public IEnumerable<Control> Controls => _controls;
 
         public IEnumerable<Layer> Layers => _layers;
@@ -352,6 +354,10 @@
                     Events = drawingToolbarOptions.Events?.EnabledEvents
                 },
                 DotNetObjectReference.Create(_drawingToolbarEventInvokeHelper));
+                DrawingManager = new DrawingManager() {
+                    JSRuntime = _jsRuntime,
+                    Logger = _logger
+                };
             }
         }
 
@@ -394,6 +400,8 @@
             {
                 await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.RemoveDrawingToolbar.ToDrawingNamespace());
                 DrawingToolbarOptions = null;
+                DrawingManager?.Dispose();
+                DrawingManager = null;
             }
         }
 

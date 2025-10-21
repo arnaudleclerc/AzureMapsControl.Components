@@ -1,0 +1,103 @@
+﻿@page "/Drawing/DrawingManagerLoadData"
+@rendermode InteractiveServer
+
+@using AzureMapsControl.Components.Atlas
+@using AzureMapsControl.Components.Drawing
+@using AzureMapsControl.Components.Map
+
+
+<AzureMap Id="map"
+OnReady="MapReady"
+EventActivationFlags="MapEventActivationFlags.None().Enable(MapEventType.Ready)" />
+<div style="position: absolute; bottom: 10px; left: 10px; z-index: 1;">
+    <button @onclick="AddRandomShape">Add Random Shape</button>
+    <button @onclick="ClearShapes">Clear Shapes</button>
+</div>
+
+
+@code {
+    private DrawingManager? _drawingManager;
+    private Position _center = new Position(-122.33, 47.6);
+
+    public async Task MapReady(MapEventArgs eventArgs)
+    {
+        await eventArgs.Map.SetCameraOptionsAsync(options =>
+        {
+            options.Zoom = 10;
+            options.Center = _center;
+        });
+        await eventArgs.Map.AddDrawingToolbarAsync(new AzureMapsControl.Components.Drawing.DrawingToolbarOptions
+        {
+            Buttons = new[]
+            {
+                AzureMapsControl.Components.Drawing.DrawingButton.DrawCircle,
+                AzureMapsControl.Components.Drawing.DrawingButton.DrawLine,
+                AzureMapsControl.Components.Drawing.DrawingButton.EditGeometry
+            },
+            Position = AzureMapsControl.Components.Controls.ControlPosition.TopRight,
+            Style = AzureMapsControl.Components.Drawing.DrawingToolbarStyle.Dark
+        });
+
+        var lineString = new AzureMapsControl.Components.Atlas.LineString(new[]
+        {
+            new AzureMapsControl.Components.Atlas.Position(-122.27577, 47.55938),
+            new AzureMapsControl.Components.Atlas.Position(-122.29705, 47.60662),
+            new AzureMapsControl.Components.Atlas.Position(-122.22358, 47.6367)
+        });
+        var shape = new AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.LineString>(lineString);
+        _drawingManager = eventArgs.Map.DrawingManager;
+        await _drawingManager.AddShapesAsync(new[] { shape });
+    }
+
+    private async Task AddRandomShape()
+    {
+        if (_drawingManager == null) return;
+
+        var random = new Random();
+        var shapeType = random.Next(3);
+        Shape shape;
+        var numberOfPoints = random.Next(3, 5);
+        var center = new Position(_center.Longitude + (random.NextDouble()-0.5) * 0.6, _center.Latitude + (random.NextDouble()-0.5) * 0.4);
+
+        switch (shapeType)
+        {
+            case 0: // Circle
+                var radius = random.NextDouble() * 2000;
+                shape = new Shape<Point>(new Point(center), new Dictionary<string, object>
+            {
+                { "subType", "Circle" },
+                { "radius", radius }
+            });
+                break;
+            case 1: // Polygon
+                var polygonPositions = new List<Position>();
+                for (var i = 0; i < numberOfPoints; i++)
+                {
+                    polygonPositions.Add(new Position(center.Longitude + (random.NextDouble()-0.5) * 0.1, center.Latitude + (random.NextDouble()-0.5) * 0.1));
+                }
+                polygonPositions.Add(polygonPositions[0]);
+                shape = new Shape<Polygon>(new Polygon(new[] { polygonPositions }));
+                break;
+            case 2: // Polyline
+                var polylinePositions = new List<Position>();
+                for (var i = 0; i < numberOfPoints; i++)
+                {
+                    polylinePositions.Add(new Position(center.Longitude + (random.NextDouble()-0.5) * 0.1, center.Latitude + (random.NextDouble()-0.5) * 0.1));
+                }
+                shape = new Shape<LineString>(new LineString(polylinePositions));
+                break;
+            default:
+                return;
+        }
+
+        await _drawingManager.AddShapesAsync(new[] { shape });
+    }
+
+    private async Task ClearShapes()
+    {
+        if (_drawingManager != null)
+        {
+            await _drawingManager.ClearAsync();
+        }
+    }
+}
