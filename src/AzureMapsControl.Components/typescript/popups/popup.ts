@@ -3,30 +3,30 @@ import { Core } from '../core/core';
 
 export class Popup {
 
-    public static close(id: string): void {
-        const popup = Core.getPopup(id);
+    public static close(mapId: string, popupId: string): void {
+        const popup = Core.getPopup(mapId, popupId);
         if (popup) {
             popup.close();
         }
     }
 
-    public static open(id: string): void {
-        const popup = Core.getPopup(id);
+    public static open(mapId: string, popupId: string): void {
+        const popup = Core.getPopup(mapId, popupId);
         if (popup) {
             popup.open();
         }
     }
 
-    public static remove(id: string): void {
-        const popup = Core.getPopup(id);
+    public static remove(mapId: string, popupId: string): void {
+        const popup = Core.getPopup(mapId, popupId);
         if (popup) {
             popup.remove();
-            Core.removePopup(id);
+            Core.removePopup(mapId, popupId);
         }
     }
 
-    public static setOptions(id: string, options: azmaps.PopupOptions): void {
-        const popup = Core.getPopup(id);
+    public static setOptions(mapId: string, popupId: string, options: azmaps.PopupOptions): void {
+        const popup = Core.getPopup(mapId, popupId);
         if (popup) {
             const popupOptions = {
                 draggable: options.draggable,
@@ -42,8 +42,8 @@ export class Popup {
         }
     }
 
-    public static applyTemplate(id: string, options: azmaps.PopupOptions, properties: { [key: string]: any }, template: azmaps.PopupTemplate): void {
+    public static applyTemplate(mapId: string, popupId: string, options: azmaps.PopupOptions, properties: { [key: string]: any }, template: azmaps.PopupTemplate): void {
         options.content = azmaps.PopupTemplate.applyTemplate(properties, template);
-        this.setOptions(id, options);
+        this.setOptions(mapId, popupId, options);
     }
 }

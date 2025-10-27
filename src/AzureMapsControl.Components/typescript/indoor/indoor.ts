@@ -8,7 +8,7 @@ export class Indoor {
 
     private static readonly _indoorManagers = new Map<string, indoor.indoor.IndoorManager>();
 
-    public static createIndoorManager(id: string, options: IndoorManagerOptions, events: string[], eventHelper: EventHelper<IndoorEventArgs>): void {
+    public static createIndoorManager(mapId: string, id: string, options: IndoorManagerOptions, events: string[], eventHelper: EventHelper<IndoorEventArgs>): void {
         let levelControl: indoor.control.LevelControl;
         if (options.levelControl) {
             levelControl = new indoor.control.LevelControl(options.levelControl.options);
@@ -21,7 +21,7 @@ export class Indoor {
             options.geography = 'us';
         }
 
-        const map = Core.getMap();
+        const map = Core.getMap(mapId);
         const indoorManager = new indoor.indoor.IndoorManager(map, {
             levelControl,
             statesetId: options.statesetId,

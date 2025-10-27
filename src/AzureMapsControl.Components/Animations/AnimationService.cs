@@ -39,6 +39,12 @@
             Require.NotNull(pin, nameof(pin));
             Require.NotNull(pinSource, nameof(pinSource));
 
+            // Ensure both sources belong to the same map
+            if (pathSource.MapId != pinSource.MapId)
+            {
+                throw new ArgumentException("Path source and pin source must belong to the same map");
+            }
+
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "PathId", path.Id);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "pathSource", pathSource.Id);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "PinId", pin.Id);
@@ -46,7 +52,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "Options", options);
 
             var animation = new MoveAlongPathAnimation(Guid.NewGuid().ToString(), _jsRuntime);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), animation.Id, path.Id, pathSource.Id, pin.Id, pinSource.Id, options);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), pathSource.MapId, animation.Id, path.Id, pathSource.Id, pin.Id, pinSource.Id, options);
             animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
@@ -59,13 +65,19 @@
             Require.NotNull(pathSource, nameof(pathSource));
             Require.NotNull(pin, nameof(pin));
 
+            // Ensure path source and marker belong to the same map
+            if (pathSource.MapId != pin.MapId)
+            {
+                throw new ArgumentException("Path source and HTML marker must belong to the same map");
+            }
+
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "PathId", path.Id);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "PathSource", pathSource.Id);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "PinId", pin.Id);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "Options", options);
 
             var animation = new MoveAlongPathAnimation(Guid.NewGuid().ToString(), _jsRuntime);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), animation.Id, path.Id, pathSource.Id, pin.Id, null, options);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), pathSource.MapId, animation.Id, path.Id, pathSource.Id, pin.Id, null, options);
             animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
@@ -84,7 +96,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "Options", options);
 
             var animation = new MoveAlongPathAnimation(Guid.NewGuid().ToString(), _jsRuntime);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), animation.Id, path, null, pin.Id, pinSource.Id, options);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), pinSource.MapId, animation.Id, path, null, pin.Id, pinSource.Id, options);
             animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
@@ -101,7 +113,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "Options", options);
 
             var animation = new MoveAlongPathAnimation(Guid.NewGuid().ToString(), _jsRuntime);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), animation.Id, path, null, pin.Id, null, options);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), pin.MapId, animation.Id, path, null, pin.Id, null, options);
             animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
@@ -118,7 +130,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Snakeline, "Options", options);
 
             var animation = new SnakeLineAnimation(Guid.NewGuid().ToString(), _jsRuntime);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Snakeline.ToAnimationNamespace(), animation.Id, line.Id, source.Id, options);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Snakeline.ToAnimationNamespace(), source.MapId, animation.Id, line.Id, source.Id, options);
             animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
@@ -133,7 +145,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_FlowingDashedLine, "Options", options);
 
             var animation = new FlowingDashedLineAnimation(Guid.NewGuid().ToString(), _jsRuntime);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.FlowingDashedLine.ToAnimationNamespace(), animation.Id, layer.Id, options);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.FlowingDashedLine.ToAnimationNamespace(), layer.MapId, animation.Id, layer.Id, options);
             return animation;
         }
 
@@ -143,14 +155,29 @@
 
             Require.NotNull(markers, nameof(markers));
 
+            var markersList = markers.ToList();
+            if (!markersList.Any())
+            {
+                throw new ArgumentException("At least one marker is required", nameof(markers));
+            }
+
+            // Ensure all markers belong to the same map
+            var mapId = markersList.First().MapId;
+            if (markersList.Any(m => m.MapId != mapId))
+            {
+                throw new ArgumentException("All HTML markers must belong to the same map");
+            }
+
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_DropMarkers, "Markers", markers);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_DropMarkers, "Height", height);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_DropMarkers, "Options", options);
-            _mapService.Map.HtmlMarkers = (_mapService.Map.HtmlMarkers ?? Array.Empty<HtmlMarker>()).Concat(markers);
 
-            var parameters = _mapService.Map.GetHtmlMarkersCreationParameters(markers);
+            var targetMap = _mapService.GetMap(mapId);
+            targetMap.HtmlMarkers = (targetMap.HtmlMarkers ?? Array.Empty<HtmlMarker>()).Concat(markers);
+
+            var parameters = targetMap.GetHtmlMarkersCreationParameters(markers);
             var animation = new DropMarkersAnimation(Guid.NewGuid().ToString(), _jsRuntime);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.DropMarkers.ToAnimationNamespace(), animation.Id, parameters.MarkerOptions, height, options, parameters.InvokeHelper);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.DropMarkers.ToAnimationNamespace(), mapId, animation.Id, parameters.MarkerOptions, height, options, parameters.InvokeHelper);
             animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
@@ -190,7 +217,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Drop, "Options", options);
 
             var animation = new DropAnimation(Guid.NewGuid().ToString(), _jsRuntime);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Drop.ToAnimationNamespace(), animation.Id, points, source.Id, height, options);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Drop.ToAnimationNamespace(), source.MapId, animation.Id, points, source.Id, height, options);
             animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
@@ -217,7 +244,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_SetCoordinates, "Options", options);
 
             var animation = new SetCoordinatesAnimation(Guid.NewGuid().ToString(), _jsRuntime);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetCoordinates.ToAnimationNamespace(), animation.Id, geometry.Id, source.Id, newCoordinates, options);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetCoordinates.ToAnimationNamespace(), source.MapId, animation.Id, geometry.Id, source.Id, newCoordinates, options);
             animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
@@ -234,7 +261,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_SetCoordinates, "Options", options);
 
             var animation = new SetCoordinatesAnimation(Guid.NewGuid().ToString(), _jsRuntime);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetCoordinates.ToAnimationNamespace(), animation.Id, marker.Id, null, newCoordinates, options);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetCoordinates.ToAnimationNamespace(), marker.MapId, animation.Id, marker.Id, null, newCoordinates, options);
             animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
@@ -254,7 +281,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_SetCoordinates, "Options", options);
 
             var animation = new MorphAnimation(Guid.NewGuid().ToString(), _jsRuntime);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Morph.ToAnimationNamespace(), animation.Id, geometry.Id, source.Id, newGeometry, options);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Morph.ToAnimationNamespace(), source.MapId, animation.Id, geometry.Id, source.Id, newGeometry, options);
             animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
@@ -273,7 +300,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_SetCoordinates, "Options", options);
 
             var animation = new MoveAlongRouteAnimation(Guid.NewGuid().ToString(), _jsRuntime);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongRoute.ToAnimationNamespace(), animation.Id, points, pinSource.Id, pin.Id, options);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongRoute.ToAnimationNamespace(), pinSource.MapId, animation.Id, points, pinSource.Id, pin.Id, options);
             return animation;
         }
 
@@ -289,7 +316,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_SetCoordinates, "Options", options);
 
             var animation = new MoveAlongRouteAnimation(Guid.NewGuid().ToString(), _jsRuntime);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongRoute.ToAnimationNamespace(), animation.Id, points, null, pin.Id, options);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongRoute.ToAnimationNamespace(), pin.MapId, animation.Id, points, null, pin.Id, options);
             return animation;
         }
     }

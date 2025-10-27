@@ -20,6 +20,7 @@
         private readonly IndoorManagerEventHelper _eventHelper;
 
         public bool Disposed { get; private set; }
+        internal string MapId { get; set; }
 
         internal IndoorManagerEventHelper EventHelper => _eventHelper;
 

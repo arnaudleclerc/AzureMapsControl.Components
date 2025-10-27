@@ -61,7 +61,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.Dispose.ToFullScreenControlNamespace(), Id);
+            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.Dispose.ToFullScreenControlNamespace(), MapId, Id.ToString());
             Disposed = true;
             OnDisposed?.Invoke();
         }
@@ -88,7 +88,7 @@
 
             update(Options);
 
-            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.SetOptions.ToFullScreenControlNamespace(), Id, Options);
+            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.SetOptions.ToFullScreenControlNamespace(), MapId, Id.ToString(), Options);
         }
 
         /// <summary>
@@ -105,7 +105,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            return await JsRuntime.InvokeAsync<bool>(Constants.JsConstants.Methods.FullScreenControl.IsFullScreen.ToFullScreenControlNamespace(), Id);
+            return await JsRuntime.InvokeAsync<bool>(Constants.JsConstants.Methods.FullScreenControl.IsFullScreen.ToFullScreenControlNamespace(), MapId, Id.ToString());
         }
 
         internal async ValueTask AddEventsAsync()
@@ -117,7 +117,8 @@
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.FullScreenControl_AddEventsAsync, $"Events: {_eventFlags.EnabledEvents}");
 
                 await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.AddEvents.ToFullScreenControlNamespace(),
-                    Id,
+                    MapId,
+                    Id.ToString(),
                     _eventFlags.EnabledEvents,
                     DotNetObjectReference.Create(_eventInvokeHelper));
             }

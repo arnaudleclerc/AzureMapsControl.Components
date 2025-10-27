@@ -79,7 +79,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            return await JSRuntime.InvokeAsync<IEnumerable<Feature<Point>>>(Constants.JsConstants.Methods.GriddedDatasource.GetCellChildren.ToGriddedDatasourceNamespace(), Id, cellId);
+            return await JSRuntime.InvokeAsync<IEnumerable<Feature<Point>>>(Constants.JsConstants.Methods.GriddedDatasource.GetCellChildren.ToGriddedDatasourceNamespace(), MapId, Id, cellId);
         }
 
         /// <summary>
@@ -96,7 +96,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            return await JSRuntime.InvokeAsync<IEnumerable<Feature<Polygon>>>(Constants.JsConstants.Methods.GriddedDatasource.GetGridCells.ToGriddedDatasourceNamespace(), Id);
+            return await JSRuntime.InvokeAsync<IEnumerable<Feature<Polygon>>>(Constants.JsConstants.Methods.GriddedDatasource.GetGridCells.ToGriddedDatasourceNamespace(), MapId, Id);
         }
 
         /// <summary>
@@ -113,7 +113,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            return await JSRuntime.InvokeAsync<IEnumerable<Feature<Point>>>(Constants.JsConstants.Methods.GriddedDatasource.GetPoints.ToGriddedDatasourceNamespace(), Id);
+            return await JSRuntime.InvokeAsync<IEnumerable<Feature<Point>>>(Constants.JsConstants.Methods.GriddedDatasource.GetPoints.ToGriddedDatasourceNamespace(), MapId, Id);
         }
 
         /// <summary>
@@ -131,7 +131,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.GriddedDatasource.SetFeatureCollectionPoints.ToGriddedDatasourceNamespace(), Id, featureCollection);
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.GriddedDatasource.SetFeatureCollectionPoints.ToGriddedDatasourceNamespace(), MapId, Id, featureCollection);
         }
 
         /// <summary>
@@ -149,7 +149,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.GriddedDatasource.SetFeaturePoints.ToGriddedDatasourceNamespace(), Id, features);
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.GriddedDatasource.SetFeaturePoints.ToGriddedDatasourceNamespace(), MapId, Id, features);
         }
 
         /// <summary>
@@ -167,7 +167,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.GriddedDatasource.SetPoints.ToGriddedDatasourceNamespace(), Id, points);
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.GriddedDatasource.SetPoints.ToGriddedDatasourceNamespace(), MapId, Id, points);
         }
 
         /// <summary>
@@ -185,7 +185,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.GriddedDatasource.SetShapePoints.ToGriddedDatasourceNamespace(), Id, shapes);
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.GriddedDatasource.SetShapePoints.ToGriddedDatasourceNamespace(), MapId, Id, shapes);
         }
     }
 }

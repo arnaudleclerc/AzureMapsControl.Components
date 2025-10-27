@@ -8,21 +8,21 @@ export class FullscreenControl {
         return await Promise.resolve(fullscreencontrol.control.FullscreenControl.isSupported());
     }
 
-    public static dispose(id: string): void {
-        this._getFullscreenControl(id).dispose();
+    public static dispose(mapId: string, controlId: string): void {
+        this._getFullscreenControl(mapId, controlId).dispose();
     }
 
-    public static setOptions(id: string, options: fullscreencontrol.FullscreenControlOptions): void {
-        this._getFullscreenControl(id).setOptions(options);
+    public static setOptions(mapId: string, controlId: string, options: fullscreencontrol.FullscreenControlOptions): void {
+        this._getFullscreenControl(mapId, controlId).setOptions(options);
     }
 
-    public static async isFullscreen(id: string): Promise<boolean> {
-        return await Promise.resolve(this._getFullscreenControl(id).isFullscreen());
+    public static async isFullscreen(mapId: string, controlId: string): Promise<boolean> {
+        return await Promise.resolve(this._getFullscreenControl(mapId, controlId).isFullscreen());
     }
 
-    public static addEvents(controlId: string, events: string[], eventHelper: EventHelper<boolean>): void {
-        const control = this._getFullscreenControl(controlId);
-        const map = Core.getMap();
+    public static addEvents(mapId: string, controlId: string, events: string[], eventHelper: EventHelper<boolean>): void {
+        const control = this._getFullscreenControl(mapId, controlId);
+        const map = Core.getMap(mapId);
 
         events.forEach(event => {
             map.events.add(event as any, control, (_: any) => {
@@ -31,8 +31,8 @@ export class FullscreenControl {
         })
     }
 
-    private static _getFullscreenControl(controlId: string): fullscreencontrol.control.FullscreenControl {
-        return Core.getMap().controls.getControls().find(ctrl => (ctrl as any).amc && (ctrl as any).amc.id === controlId) as fullscreencontrol.control.FullscreenControl;
+    private static _getFullscreenControl(mapId: string, controlId: string): fullscreencontrol.control.FullscreenControl {
+        return Core.getMap(mapId).controls.getControls().find(ctrl => (ctrl as any).amc && (ctrl as any).amc.id === controlId) as fullscreencontrol.control.FullscreenControl;
     }
 
 }

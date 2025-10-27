@@ -185,13 +185,19 @@
                 _controls = new List<Control>();
             }
 
+            // Inject MapId into all controls for multi-map support
+            foreach (var control in controls)
+            {
+                control.MapId = Id;
+            }
+
             _controls.AddRange(controls);
 
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddControlsAsync, $"Adding controls", Controls);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_AddControlsAsync, $"{Controls.Count()} controls will be added: {string.Join('|', Controls.Select(co => co.Type))}");
             //Ordering the controls is necessary if the controls contain an OverviewMapControl. This one needs to be added last, otherwise the controls added after it will be added to the overlay.
             //Following : https://github.com/Azure-Samples/azure-maps-overview-map/issues/1
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddControls.ToCoreNamespace(), Controls?.OrderBy(control => control.Order));
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddControls.ToCoreNamespace(), Id, Controls?.OrderBy(control => control.Order));
 
             var overviewMapControls = controls.OfType<OverviewMapControl>();
             if (overviewMapControls.Any())
@@ -264,8 +270,10 @@
             {
                 dataSource.Logger = _logger;
                 dataSource.JSRuntime = _jsRuntime;
+                dataSource.MapId = Id;
 
                 await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(),
+                    Id,
                     source.Id,
                     source.GetSourceOptions(),
                     source.SourceType.ToString(),
@@ -278,9 +286,11 @@
                 {
                     griddedDataSource.Logger = _logger;
                     griddedDataSource.JSRuntime = _jsRuntime;
+                    griddedDataSource.MapId = Id;
                 }
 
                 await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(),
+                    Id,
                     source.Id,
                     source.GetSourceOptions(),
                     source.SourceType.ToString());
@@ -306,7 +316,7 @@
             var dataSource = _sources?.SingleOrDefault(ds => ds.Id == id);
             if (dataSource != null)
             {
-                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveSource.ToCoreNamespace(), id);
+                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveSource.ToCoreNamespace(), Id, id);
                 _sources.Remove(dataSource);
             }
         }
@@ -319,7 +329,7 @@
         {
             _sources = null;
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_ClearSourcesAsync, $"Clearing sources");
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearSources.ToCoreNamespace());
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearSources.ToCoreNamespace(), Id);
         }
 
         #endregion
@@ -338,6 +348,7 @@
                 _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddDrawingToolbarAsync, "Adding drawing toolbar");
                 DrawingToolbarOptions = drawingToolbarOptions;
                 await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.AddDrawingToolbar.ToDrawingNamespace(),
+                Id,
                 new DrawingToolbarCreationOptions {
                     Buttons = drawingToolbarOptions.Buttons?.Select(button => button.ToString()).ToArray(),
                     ContainerId = drawingToolbarOptions.ContainerId,
@@ -356,7 +367,8 @@
                 DotNetObjectReference.Create(_drawingToolbarEventInvokeHelper));
                 DrawingManager = new DrawingManager() {
                     JSRuntime = _jsRuntime,
-                    Logger = _logger
+                    Logger = _logger,
+                    MapId = Id
                 };
             }
         }
@@ -378,6 +390,7 @@
                 DrawingToolbarOptions.Style = drawingToolbarUpdateOptions.Style;
                 DrawingToolbarOptions.Visible = drawingToolbarUpdateOptions.Visible;
                 await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.UpdateDrawingToolbar.ToDrawingNamespace(),
+                    Id,
                     new DrawingToolbarCreationOptions {
                         Buttons = DrawingToolbarOptions.Buttons?.Select(button => button.ToString()).ToArray(),
                         ContainerId = DrawingToolbarOptions.ContainerId,
@@ -398,7 +411,7 @@
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_RemoveDrawingToolbarAsync, "Removing drawing toolbar");
             if (DrawingToolbarOptions != null)
             {
-                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.RemoveDrawingToolbar.ToDrawingNamespace());
+                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.RemoveDrawingToolbar.ToDrawingNamespace(), Id);
                 DrawingToolbarOptions = null;
                 DrawingManager?.Dispose();
                 DrawingManager = null;
@@ -456,6 +469,7 @@
                 _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddHtmlMarkersAsync, $"{markers.Count()} new html markers will be added");
                 var parameters = GetHtmlMarkersCreationParameters(markers);
                 await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(),
+                Id,
                 parameters.MarkerOptions,
                 parameters.InvokeHelper);
 
@@ -464,6 +478,7 @@
                     marker.JSRuntime = _jsRuntime;
                     marker.PopupInvokeHelper = _popupInvokeHelper;
                     marker.Logger = _logger;
+                    marker.MapId = Id;
 
                     marker.OnPopupToggled += () => {
                         if (_popups == null)
@@ -481,6 +496,7 @@
                     {
                         marker.Options.Popup.JSRuntime = _jsRuntime;
                         marker.Options.Popup.Logger = _logger;
+                        marker.Options.Popup.MapId = Id;
                         marker.Options.Popup.OnRemoved += () => RemovePopup(marker.Options.Popup.Id);
 
                         if (marker.Options.Popup.Options.OpenOnAdd.GetValueOrDefault())
@@ -528,6 +544,7 @@
                 _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_UpdateHtmlMarkersAsync, $"Ids: {string.Join('|', updates.Select(h => h.Marker.Id))}");
 
                 await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.UpdateHtmlMarkers.ToCoreNamespace(),
+                Id,
                 updates.Select(update => new HtmlMarkerCreationOptions {
                     Id = update.Marker.Id,
                     Options = update.Options,
@@ -594,6 +611,10 @@
                     {
                         marker.Options.Popup.Logger = _logger;
                     }
+                    if (marker.Options.Popup.MapId == null)
+                    {
+                        marker.Options.Popup.MapId = Id;
+                    }
                 }
             }
         }
@@ -619,7 +640,7 @@
                 _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_RemoveHtmlMarkersAsync, $"{markers.Count()} html markers will be removed");
                 var ids = markers.Select(marker => marker.Id);
                 _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_RemoveHtmlMarkersAsync, $"Ids: {string.Join('|', ids)}");
-                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveHtmlMarkers.ToCoreNamespace(), ids);
+                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveHtmlMarkers.ToCoreNamespace(), Id, ids);
             }
         }
 
@@ -631,7 +652,7 @@
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_ClearHtmlMarkersAsync, "Clearing html markers");
             HtmlMarkers = null;
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearHtmlMarkers.ToCoreNamespace());
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearHtmlMarkers.ToCoreNamespace(), Id);
         }
 
         #endregion
@@ -671,11 +692,13 @@
             }
 
             _layers.Add(layer);
+            layer.MapId = Id;
             layer.AddInterop(_jsRuntime, _logger);
 
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddLayerAsync, "Adding layer");
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_AddLayerAsync, $"Id: {layer.Id} | Type: {layer.Type} | Events: {string.Join('|', layer.EventActivationFlags.EnabledEvents)} | Before: {before}");
             await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddLayer.ToCoreNamespace(),
+                Id,
                 layer.Id,
                 before,
                 layer.Type.ToString(),
@@ -718,7 +741,7 @@
             {
                 var layerIdsToRemove = layers.Select(l => l.Id);
                 _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_RemoveLayersAsync, $"Ids: {string.Join('|', layerIds)}");
-                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveLayers.ToCoreNamespace(), layerIdsToRemove);
+                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveLayers.ToCoreNamespace(), Id, layerIdsToRemove);
                 _layers.RemoveAll(l => layerIds.Contains(l.Id));
             }
         }
@@ -731,7 +754,7 @@
         {
             _layers = null;
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_ClearLayersAsync, "Clearing layers");
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearLayers.ToCoreNamespace());
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearLayers.ToCoreNamespace(), Id);
         }
 
         #endregion
@@ -749,7 +772,7 @@
             HtmlMarkers = null;
             _popups = null;
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AzureMap_ClearMapAsync, "Clearing map");
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearMap.ToCoreNamespace());
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearMap.ToCoreNamespace(), Id);
         }
 
         /// <summary>
@@ -785,7 +808,7 @@
             }
 
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_SetCameraOptionsAsync, "Setting camera options");
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCameraOptions.ToCoreNamespace(), CameraOptions);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCameraOptions.ToCoreNamespace(), Id, CameraOptions);
         }
 
         /// <summary>
@@ -795,7 +818,7 @@
         public async ValueTask<CameraOptions> GetCameraOptionsAsync()
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_GetCameraOptionsAsync, "Map - GetCameraOptionsAsync");
-            CameraOptions = await _jsRuntime.InvokeAsync<CameraOptions>(Constants.JsConstants.Methods.Core.GetCamera.ToCoreNamespace());
+            CameraOptions = await _jsRuntime.InvokeAsync<CameraOptions>(Constants.JsConstants.Methods.Core.GetCamera.ToCoreNamespace(), Id);
             return CameraOptions;
         }
 
@@ -806,7 +829,7 @@
         public async ValueTask<StyleOptions> GetStyleOptionsAsync()
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_GetStyleOptionsAsync, "Map - GetStyleOptionsAsync");
-            StyleOptions = await _jsRuntime.InvokeAsync<StyleOptions>(Constants.JsConstants.Methods.Core.GetStyle.ToCoreNamespace());
+            StyleOptions = await _jsRuntime.InvokeAsync<StyleOptions>(Constants.JsConstants.Methods.Core.GetStyle.ToCoreNamespace(), Id);
             return StyleOptions;
         }
 
@@ -817,7 +840,7 @@
         public async ValueTask<TrafficOptions> GetTrafficOptionsAsync()
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_GetTrafficOptionsAsync, "Map - GetTrafficOptionsAsync");
-            TrafficOptions = await _jsRuntime.InvokeAsync<TrafficOptions>(Constants.JsConstants.Methods.Core.GetTraffic.ToCoreNamespace());
+            TrafficOptions = await _jsRuntime.InvokeAsync<TrafficOptions>(Constants.JsConstants.Methods.Core.GetTraffic.ToCoreNamespace(), Id);
             return TrafficOptions;
         }
 
@@ -828,7 +851,7 @@
         public async ValueTask<UserInteractionOptions> GetUserInteractionOptionsAsync()
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_GetUserInteractionOptionsAsync, "Map - GetUserInteractionOptionsAsync");
-            UserInteractionOptions = await _jsRuntime.InvokeAsync<UserInteractionOptions>(Constants.JsConstants.Methods.Core.GetUserInteraction.ToCoreNamespace());
+            UserInteractionOptions = await _jsRuntime.InvokeAsync<UserInteractionOptions>(Constants.JsConstants.Methods.Core.GetUserInteraction.ToCoreNamespace(), Id);
             return UserInteractionOptions;
         }
 
@@ -845,7 +868,7 @@
             }
             configure.Invoke(StyleOptions);
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_SetStyleOptionsAsync, "Setting style options");
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetStyleOptions.ToCoreNamespace(), StyleOptions);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetStyleOptions.ToCoreNamespace(), Id, StyleOptions);
         }
 
         /// <summary>
@@ -861,7 +884,7 @@
             }
             configure.Invoke(UserInteractionOptions);
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_SetUserInteractionAsync, "Setting user interaction options");
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetUserInteraction.ToCoreNamespace(), UserInteractionOptions);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetUserInteraction.ToCoreNamespace(), Id, UserInteractionOptions);
         }
 
         /// <summary>
@@ -877,7 +900,7 @@
             }
             configure.Invoke(TrafficOptions);
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_SetTrafficAsync, "Setting traffic options");
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetTraffic.ToCoreNamespace(), TrafficOptions);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetTraffic.ToCoreNamespace(), Id, TrafficOptions);
         }
 
         internal void DispatchEvent(MapJsEventArgs eventArgs)
@@ -1050,10 +1073,11 @@
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddPopupAsync, "Map - AddPopupAsync");
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_AddPopupAsync, $"Id: {popup.Id}");
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_AddPopupAsync, $"Events: {string.Join('|', popup.EventActivationFlags.EnabledEvents)}");
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddPopup.ToCoreNamespace(), popup.Id, popup.Options, popup.EventActivationFlags.EnabledEvents, DotNetObjectReference.Create(_popupInvokeHelper));
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddPopup.ToCoreNamespace(), Id, popup.Id, popup.Options, popup.EventActivationFlags.EnabledEvents, DotNetObjectReference.Create(_popupInvokeHelper));
 
             popup.JSRuntime = _jsRuntime;
             popup.Logger = _logger;
+            popup.MapId = Id;
 
             popup.OnRemoved += () => RemovePopup(popup.Id);
 
@@ -1092,6 +1116,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_AddPopupAsync, $"Properties: {string.Join('|', properties.Select(kvp => kvp.Key + " : " + kvp.Value))}");
 
             await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddPopupWithTemplate.ToCoreNamespace(),
+                Id,
                 popup.Id,
                 popup.Options,
                 properties,
@@ -1102,6 +1127,7 @@
 
             popup.JSRuntime = _jsRuntime;
             popup.Logger = _logger;
+            popup.MapId = Id;
 
             popup.OnRemoved += () => RemovePopup(popup.Id);
 
@@ -1137,7 +1163,7 @@
         {
             _popups = null;
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_ClearPopupsAsync, "Clearing popups");
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearPopups.ToCoreNamespace());
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearPopups.ToCoreNamespace(), Id);
         }
 
         private void RemovePopup(string id)
@@ -1171,7 +1197,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_CreateImageFromTemplate, "Secondary color", secondaryColor);
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_CreateImageFromTemplate, "Scale", scale);
 
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.CreateImageFromTemplate.ToCoreNamespace(), new MapImageTemplate {
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.CreateImageFromTemplate.ToCoreNamespace(), Id, new MapImageTemplate {
                 Id = id,
                 TemplateName = templateName,
                 Color = color,
@@ -1195,7 +1221,7 @@
 
             Require.NotNullOrWhiteSpace(property, nameof(property));
 
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasStyleProperty.ToCoreNamespace(), property, value);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasStyleProperty.ToCoreNamespace(), Id, property, value);
         }
 
         /// <summary>
@@ -1214,7 +1240,7 @@
             var definedProperties = properties.Where(property => !string.IsNullOrWhiteSpace(property.Key));
             if (definedProperties.Any())
             {
-                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasStyleProperties.ToCoreNamespace(), definedProperties);
+                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasStyleProperties.ToCoreNamespace(), Id, definedProperties);
             }
         }
 
@@ -1233,7 +1259,7 @@
 
             Require.NotNullOrWhiteSpace(property, nameof(property));
 
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasContainerStyleProperty.ToCoreNamespace(), property, value);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasContainerStyleProperty.ToCoreNamespace(), Id, property, value);
         }
 
         /// <summary>
@@ -1252,9 +1278,8 @@
             var definedProperties = properties.Where(property => !string.IsNullOrWhiteSpace(property.Key));
             if (definedProperties.Any())
             {
-                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasContainerStyleProperties.ToCoreNamespace(), definedProperties);
+                await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasContainerStyleProperties.ToCoreNamespace(), Id, definedProperties);
             }
         }
-
     }
 }

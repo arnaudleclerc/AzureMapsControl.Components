@@ -6,8 +6,8 @@ import { GeolocationEventArgs } from './geolocation-event-args';
 
 export class GeolocationControl {
 
-    public static getLastKnownPosition(controlId: string): Feature {
-        const position = this._getGeolocationControl(controlId).getLastKnownPosition();
+    public static getLastKnownPosition(mapId: string, controlId: string): Feature {
+        const position = this._getGeolocationControl(mapId, controlId).getLastKnownPosition();
         return {
             geometry: position.geometry,
             properties: Core.formatProperties(position.properties)
@@ -18,17 +18,17 @@ export class GeolocationControl {
         return await geolocationcontrol.control.GeolocationControl.isSupported();
     }
 
-    public static dispose(controlId: string): void {
-        this._getGeolocationControl(controlId).dispose();
+    public static dispose(mapId: string, controlId: string): void {
+        this._getGeolocationControl(mapId, controlId).dispose();
     }
 
-    public static setOptions(controlId: string, options: geolocationcontrol.GeolocationControlOptions): void {
-        this._getGeolocationControl(controlId).setOptions(options);
+    public static setOptions(mapId: string, controlId: string, options: geolocationcontrol.GeolocationControlOptions): void {
+        this._getGeolocationControl(mapId, controlId).setOptions(options);
     }
 
-    public static addEvents(controlId: string, events: string[], eventHelper: EventHelper<GeolocationEventArgs>): void {
-        const control = this._getGeolocationControl(controlId);
-        const map = Core.getMap();
+    public static addEvents(mapId: string, controlId: string, events: string[], eventHelper: EventHelper<GeolocationEventArgs>): void {
+        const control = this._getGeolocationControl(mapId, controlId);
+        const map = Core.getMap(mapId);
 
         events.forEach(event => {
             map.events.add(event as any, control, (args: any) => {
@@ -46,8 +46,8 @@ export class GeolocationControl {
         })
     }
 
-    private static _getGeolocationControl(controlId: string): geolocationcontrol.control.GeolocationControl {
-        return Core.getMap().controls.getControls().find(ctrl => (ctrl as any).amc && (ctrl as any).amc.id === controlId) as geolocationcontrol.control.GeolocationControl;
+    private static _getGeolocationControl(mapId: string, controlId: string): geolocationcontrol.control.GeolocationControl {
+        return Core.getMap(mapId).controls.getControls().find(ctrl => (ctrl as any).amc && (ctrl as any).amc.id === controlId) as geolocationcontrol.control.GeolocationControl;
     }
 
 }

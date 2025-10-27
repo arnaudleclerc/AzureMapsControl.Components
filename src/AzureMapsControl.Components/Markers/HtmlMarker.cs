@@ -24,6 +24,7 @@
         internal IMapJsRuntime JSRuntime { get; set; }
         internal PopupInvokeHelper PopupInvokeHelper { get; set; }
         internal ILogger Logger { get; set; }
+        internal string MapId { get; set; }
 
         /// <summary>
         /// Options of the marker
@@ -151,7 +152,7 @@
                     throw new Exceptions.ComponentNotAddedToMapException();
                 }
 
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.HtmlMarker.TogglePopup.ToHtmlMarkerNamespace(), Id, Options.Popup.Id, Options.Popup.EventActivationFlags.EnabledEvents, DotNetObjectReference.Create(PopupInvokeHelper));
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.HtmlMarker.TogglePopup.ToHtmlMarkerNamespace(), MapId, Id, Options.Popup.Id, Options.Popup.EventActivationFlags.EnabledEvents, DotNetObjectReference.Create(PopupInvokeHelper));
                 Options.Popup.HasBeenToggled = true;
                 Options.Popup.IsRemoved = false;
                 OnPopupToggled?.Invoke();

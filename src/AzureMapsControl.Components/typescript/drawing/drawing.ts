@@ -8,11 +8,11 @@ import { GeometryBuilder } from '../geometries/geometry-builder';
 
 export class Drawing {
 
-    private static _toolbar: azdrawings.control.DrawingToolbar;
-    private static _drawingManager: azdrawings.drawing.DrawingManager;
+    private static _toolbars: Map<string, azdrawings.control.DrawingToolbar> = new Map();
+    private static _drawingManagers: Map<string, azdrawings.drawing.DrawingManager> = new Map();
 
-    public static addDrawingToolbar(drawingToolbarOptions: azdrawings.DrawingToolbarOptions & azdrawings.DrawingManagerOptions & { events: string[] }, eventHelper: EventHelper<DrawingEventArgs>): void {
-        this._toolbar = new azdrawings.control.DrawingToolbar({
+    public static addDrawingToolbar(mapId: string, drawingToolbarOptions: azdrawings.DrawingToolbarOptions & azdrawings.DrawingManagerOptions & { events: string[] }, eventHelper: EventHelper<DrawingEventArgs>): void {
+        const toolbar = new azdrawings.control.DrawingToolbar({
             buttons: drawingToolbarOptions.buttons,
             containerId: drawingToolbarOptions.containerId,
             numColumns: drawingToolbarOptions.numColumns,
@@ -26,7 +26,7 @@ export class Drawing {
             interactionType: drawingToolbarOptions.interactionType,
             mode: drawingToolbarOptions.mode,
             shapeDraggingEnabled: drawingToolbarOptions.shapeDraggingEnabled,
-            toolbar: this._toolbar
+            toolbar: toolbar
         };
 
         if (drawingToolbarOptions.dragHandleStyle) {
@@ -57,11 +57,15 @@ export class Drawing {
             });
         }
 
-        const map = Core.getMap();
-        this._drawingManager = new azdrawings.drawing.DrawingManager(map, drawingManagerOptions);
+        const map = Core.getMap(mapId);
+        const drawingManager = new azdrawings.drawing.DrawingManager(map, drawingManagerOptions);
+        
+        this._toolbars.set(mapId, toolbar);
+        this._drawingManagers.set(mapId, drawingManager);
+
         if (drawingToolbarOptions.events) {
             drawingToolbarOptions.events.forEach(drawingToolbarEvent => {
-                map.events.add(drawingToolbarEvent as any, this._drawingManager, (e: any) => {
+                map.events.add(drawingToolbarEvent as any, drawingManager, (e: any) => {
                     if (drawingToolbarEvent === 'drawingmodechanged') {
                         eventHelper.invokeMethodAsync('NotifyEventAsync', {
                             type: drawingToolbarEvent,
@@ -80,31 +84,47 @@ export class Drawing {
         }
     }
 
-    public static removeDrawingToolbar(): void {
-        this._drawingManager.dispose();
-        Core.getMap().controls.remove(this._toolbar);
-        this._drawingManager = null;
-        this._toolbar = null;
+    public static removeDrawingToolbar(mapId: string): void {
+        const drawingManager = this._drawingManagers.get(mapId);
+        const toolbar = this._toolbars.get(mapId);
+        
+        if (drawingManager) {
+            drawingManager.dispose();
+            this._drawingManagers.delete(mapId);
+        }
+        
+        if (toolbar) {
+            Core.getMap(mapId).controls.remove(toolbar);
+            this._toolbars.delete(mapId);
+        }
     }
 
-    public static updateDrawingToolbar(drawingToolbarOptions: azdrawings.DrawingToolbarOptions): void {
-        this._toolbar.setOptions({
-            buttons: drawingToolbarOptions.buttons,
-            containerId: drawingToolbarOptions.containerId,
-            numColumns: drawingToolbarOptions.numColumns,
-            position: drawingToolbarOptions.position,
-            style: drawingToolbarOptions.style,
-            visible: drawingToolbarOptions.visible
-        });
+    public static updateDrawingToolbar(mapId: string, drawingToolbarOptions: azdrawings.DrawingToolbarOptions): void {
+        const toolbar = this._toolbars.get(mapId);
+        if (toolbar) {
+            toolbar.setOptions({
+                buttons: drawingToolbarOptions.buttons,
+                containerId: drawingToolbarOptions.containerId,
+                numColumns: drawingToolbarOptions.numColumns,
+                position: drawingToolbarOptions.position,
+                style: drawingToolbarOptions.style,
+                visible: drawingToolbarOptions.visible
+            });
+        }
     }
 
-    public static addShapes(shapes: Shape[]): void {
-        const mapsShapes = shapes.map(shape => GeometryBuilder.buildShape(shape));
-        this._drawingManager.getSource().add(mapsShapes);
+    public static addShapes(mapId: string, shapes: Shape[]): void {
+        const drawingManager = this._drawingManagers.get(mapId);
+        if (drawingManager) {
+            const mapsShapes = shapes.map(shape => GeometryBuilder.buildShape(shape));
+            drawingManager.getSource().add(mapsShapes);
+        }
     }
 
-    public static clear(): void {
-        this._drawingManager.getSource().clear();
+    public static clear(mapId: string): void {
+        const drawingManager = this._drawingManagers.get(mapId);
+        if (drawingManager) {
+            drawingManager.getSource().clear();
+        }
     }
-
 }

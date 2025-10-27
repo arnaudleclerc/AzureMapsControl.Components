@@ -20,6 +20,7 @@
         public LayerEventActivationFlags EventActivationFlags { get; set; }
 
         internal LayerType Type { get; private set; }
+        internal string MapId { get; set; }
 
         public event LayerMouseEvent OnClick;
         public event LayerMouseEvent OnContextMenu;
@@ -156,7 +157,7 @@
 
             update(Options);
 
-            await _mapJsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Layer.SetOptions.ToLayerNamespace(), Id, Options);
+            await _mapJsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Layer.SetOptions.ToLayerNamespace(), MapId, Id, Options);
         }
 
         internal override LayerOptions GetLayerOptions() => Options;
