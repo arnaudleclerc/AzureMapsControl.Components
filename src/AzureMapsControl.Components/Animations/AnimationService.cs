@@ -149,6 +149,26 @@
             return animation;
         }
 
+        public ValueTask<IDropMarkersAnimation> DropMarkersAsync(string mapId, IEnumerable<HtmlMarker> markers, decimal? height = null, DropMarkersAnimationOptions options = default)
+        {
+            foreach (var marker in markers)
+            {
+                if (marker.JSRuntime == null)
+                {
+                    marker.JSRuntime = _jsRuntime;
+                }
+                if (marker.Logger == null)
+                {
+                    marker.Logger = _logger;
+                }
+                if (marker.MapId == null)
+                {
+                    marker.MapId = mapId;
+                }
+            }
+            return DropMarkersAsync(markers, height, options);
+        }
+
         public async ValueTask<IDropMarkersAnimation> DropMarkersAsync(IEnumerable<HtmlMarker> markers, decimal? height = null, DropMarkersAnimationOptions options = default)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_DropMarkers, "Calling DropMarkersAsync");
@@ -161,8 +181,30 @@
                 throw new ArgumentException("At least one marker is required", nameof(markers));
             }
 
-            // Ensure all markers belong to the same map
             var mapId = markersList.First().MapId;
+            // set map as latest map if not set, for backward compatibility
+            if (mapId == null)
+            {
+                mapId = _mapService.Map?.Id;
+                foreach (var marker in markersList)
+                {
+                    if (marker.MapId == null)
+                    {
+                        if (marker.JSRuntime == null)
+                        {
+                            marker.JSRuntime = _jsRuntime;
+                        }
+                        if (marker.Logger == null)
+                        {
+                            marker.Logger = _logger;
+                        }
+                        if (marker.MapId == null)
+                        {
+                            marker.MapId = mapId;
+                        }
+                    }
+                }
+            }
             if (markersList.Any(m => m.MapId != mapId))
             {
                 throw new ArgumentException("All HTML markers must belong to the same map");
