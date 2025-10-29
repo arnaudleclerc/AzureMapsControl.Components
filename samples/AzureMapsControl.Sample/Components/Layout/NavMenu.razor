@@ -1,4 +1,6 @@
-﻿<nav class="navbar navbar-expand-lg bg-body-tertiary">
+﻿@using AzureMapsControl.Sample.Components.Shared
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Samples</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -239,6 +241,10 @@
                             <NavLink class="dropdown-item" href="/Demos/ClusterAggregates"> Cluster aggregation </NavLink>
                         </li>
                     </ul>
+                </li>
+                <NavLink class="nav-link" href="/MultipleMaps"> Multiple Maps </NavLink>
+                <li class="nav-item">
+                    <MapPopupButton></MapPopupButton>
                 </li>
             </ul>
         </div>

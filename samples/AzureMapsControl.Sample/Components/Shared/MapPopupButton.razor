@@ -1,0 +1,70 @@
+@rendermode InteractiveServer
+@using AzureMapsControl.Components.Map
+@using AzureMapsControl.Components.Atlas
+@using AzureMapsControl.Sample.Components.Shared
+@inject IJSRuntime JSRuntime
+
+<button class="btn btn-info me-2" @onclick="ShowFloatingMap">
+    Spawn Floating Map
+</button>
+
+<!-- Floating Map Popups -->
+<FloatingMapPopup @bind-IsVisible="popup1Visible" 
+                  Title="Floating Map - Tokyo" 
+                  MapId="popup-map-1"
+                  CameraOptions="tokyoCameraOptions"
+                  StyleOptions="roadStyleOptions"
+                  Left="60" Top="120" Width="400" Height="300" />
+
+<FloatingMapPopup @bind-IsVisible="popup2Visible" 
+                  Title="Floating Map - Paris" 
+                  MapId="popup-map-2"
+                  CameraOptions="parisCameraOptions"
+                  StyleOptions="satelliteStyleOptions"
+                  Left="500" Top="120" Width="400" Height="300" />
+
+@code {
+    private bool popup1Visible = false;
+    private bool popup2Visible = false;
+
+    private StyleOptions roadStyleOptions = new StyleOptions
+    {
+        Style = MapStyle.Road,
+        ShowLogo = false,
+        ShowFeedbackLink = false
+    };
+
+    private StyleOptions satelliteStyleOptions = new StyleOptions
+    {
+        Style = MapStyle.SatelliteRoadLabels,
+        ShowLogo = false,
+        ShowFeedbackLink = false
+    };
+
+    private CameraOptions tokyoCameraOptions = new CameraOptions 
+    { 
+        Type = CameraType.Fly, 
+        Center = new Position(139.6917, 35.6895), 
+        Zoom = 10 
+    };
+
+    private CameraOptions parisCameraOptions = new CameraOptions 
+    { 
+        Type = CameraType.Fly, 
+        Center = new Position(2.3522, 48.8566), 
+        Zoom = 10 
+    };
+
+    private async Task ShowFloatingMap()
+    {
+        if (popup2Visible)
+        {
+            popup1Visible = true;
+        }
+        else
+        {
+            popup2Visible = true;
+        }
+        StateHasChanged();
+    }
+}
