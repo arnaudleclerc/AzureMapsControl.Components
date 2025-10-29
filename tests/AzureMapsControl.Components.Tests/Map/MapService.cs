@@ -25,7 +25,7 @@
 
             var eventReceived = false;
 
-            service.OnMapReadyAsync += async () => eventReceived = true;
+            service.OnMapReadyAsync += async (Map map) => eventReceived = true;
 
             await service.AddMapAsync(map);
 

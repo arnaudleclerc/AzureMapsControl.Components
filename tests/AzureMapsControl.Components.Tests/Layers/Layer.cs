@@ -28,12 +28,13 @@
         {
             var layer = new DummyLayer {
                 _mapJsRuntime = _jsRuntimeMock.Object,
+                MapId = "test-map-id",
                     Options = new DummyLayerOptions {
                 }
             };
 
             await layer.SetOptionsAsync(options => options.MinZoom = 2);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Layer.SetOptions.ToLayerNamespace(), layer.Id, layer.Options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Layer.SetOptions.ToLayerNamespace(), layer.MapId, layer.Id, layer.Options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
 
             Assert.Equal(2, layer.Options.MinZoom);
@@ -43,10 +44,11 @@
         public async Task SetOptionsAsync_Should_ThrowLayerOptionsNullExceptionAsync()
         {
             var layer = new DummyLayer {
-                _mapJsRuntime = _jsRuntimeMock.Object
+                _mapJsRuntime = _jsRuntimeMock.Object,
+                MapId = "test-map-id"
             };
             await layer.SetOptionsAsync(options => options.MinZoom = 2);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Layer.SetOptions.ToLayerNamespace(), layer.Id, layer.Options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Layer.SetOptions.ToLayerNamespace(), layer.MapId, layer.Id, layer.Options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
             Assert.Equal(2, layer.Options.MinZoom);
         }

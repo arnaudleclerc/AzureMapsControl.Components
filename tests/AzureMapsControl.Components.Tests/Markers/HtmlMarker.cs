@@ -17,6 +17,7 @@
     public class HtmlMarkerTests
     {
         private readonly Mock<IMapJsRuntime> _jsRuntime = new Mock<IMapJsRuntime>();
+        private const string TestMapId = "test-map-id";
 
         [Fact]
         public void Should_HaveDefaultIdAndDeactivatedEvents()
@@ -246,7 +247,8 @@
                 }
             }) {
                 JSRuntime = _jsRuntime.Object,
-                PopupInvokeHelper = popupInvokeHelper
+                PopupInvokeHelper = popupInvokeHelper,
+                MapId = TestMapId
             };
 
             marker.OnPopupToggled += () => assertEvent = true;
@@ -256,10 +258,11 @@
             Assert.False(marker.Options.Popup.IsRemoved);
 
             _jsRuntime.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.HtmlMarker.TogglePopup.ToHtmlMarkerNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == marker.Id
-                && parameters[1] as string == marker.Options.Popup.Id
-                && parameters[2] is IEnumerable<string>
-                && parameters[3] is DotNetObjectReference<PopupInvokeHelper>
+                parameters[0] as string == TestMapId
+                && parameters[1] as string == marker.Id
+                && parameters[2] as string == marker.Options.Popup.Id
+                && parameters[3] is IEnumerable<string>
+                && parameters[4] is DotNetObjectReference<PopupInvokeHelper>
             )));
             _jsRuntime.VerifyNoOtherCalls();
         }
@@ -271,7 +274,8 @@
             var popupInvokeHelper = new PopupInvokeHelper(null);
             var marker = new HtmlMarker(new HtmlMarkerOptions()) {
                 JSRuntime = _jsRuntime.Object,
-                PopupInvokeHelper = popupInvokeHelper
+                PopupInvokeHelper = popupInvokeHelper,
+                MapId = TestMapId
             };
 
             marker.OnPopupToggled += () => assertEvent = true;

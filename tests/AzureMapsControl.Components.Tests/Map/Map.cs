@@ -50,7 +50,7 @@
         public async Task Should_AddControls_Async()
         {
             var controls = new List<Control> {
-                new CompassControl()
+     new CompassControl()
             };
 
             const string id = "id";
@@ -59,8 +59,8 @@
             await map.AddControlsAsync(controls);
             Assert.Equal(controls, map.Controls);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddControls.ToCoreNamespace(), It.Is<IOrderedEnumerable<Control>>(
-                ctrls => ctrls.Single() == controls.Single())), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddControls.ToCoreNamespace(), id, It.Is<IOrderedEnumerable<Control>>(
+            ctrls => ctrls.Single() == controls.Single())), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -69,7 +69,7 @@
         {
             var controls = new List<Control> {
                 new OverviewMapControl(),
-                new CompassControl()
+    new CompassControl()
             };
 
             const string id = "id";
@@ -78,8 +78,8 @@
             await map.AddControlsAsync(controls);
             Assert.Equal(controls, map.Controls);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddControls.ToCoreNamespace(), It.Is<IOrderedEnumerable<Control>>(
-                ctrls => ctrls.First() == controls.ElementAt(1) && ctrls.ElementAt(1) == controls.First())), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddControls.ToCoreNamespace(), id, It.Is<IOrderedEnumerable<Control>>(
+          ctrls => ctrls.First() == controls.ElementAt(1) && ctrls.ElementAt(1) == controls.First())), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -118,7 +118,7 @@
             await map.AddControlsAsync(control);
             Assert.Single(map.Controls);
             Assert.Contains(control, map.Controls);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddControls.ToCoreNamespace(), It.Is<IOrderedEnumerable<Control>>(
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddControls.ToCoreNamespace(), id, It.Is<IOrderedEnumerable<Control>>(
                 ctrls => ctrls.Single() == control)), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -139,8 +139,9 @@
             Assert.Equal(markers[1].PopupInvokeHelper, popupInvokeHelper);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] is IEnumerable<HtmlMarkerCreationOptions> && (parameters[0] as IEnumerable<HtmlMarkerCreationOptions>).Count() == 2
-                && parameters[1] is DotNetObjectReference<HtmlMarkerInvokeHelper>
+                parameters[0] as string == "id"
+                && parameters[1] is IEnumerable<HtmlMarkerCreationOptions> && (parameters[1] as IEnumerable<HtmlMarkerCreationOptions>).Count() == 2
+                && parameters[2] is DotNetObjectReference<HtmlMarkerInvokeHelper>
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -167,14 +168,16 @@
             Assert.Equal(marker.JSRuntime, _jsRuntimeMock.Object);
             Assert.Equal(marker.PopupInvokeHelper, popupInvokeHelper);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] is IEnumerable<HtmlMarkerCreationOptions> && (parameters[0] as IEnumerable<HtmlMarkerCreationOptions>).Count() == 1
-                && parameters[1] is DotNetObjectReference<HtmlMarkerInvokeHelper>
+                parameters[0] as string == "id"
+                && parameters[1] is IEnumerable<HtmlMarkerCreationOptions> && (parameters[1] as IEnumerable<HtmlMarkerCreationOptions>).Count() == 1
+                && parameters[2] is DotNetObjectReference<HtmlMarkerInvokeHelper>
             )), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.HtmlMarker.TogglePopup.ToHtmlMarkerNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == marker.Id
-                && parameters[1] as string == marker.Options.Popup.Id
-                && parameters[2] is IEnumerable<string>
-                && parameters[3] is DotNetObjectReference<PopupInvokeHelper>
+                parameters[0] as string == "id"
+                && parameters[1] as string == marker.Id
+                && parameters[2] as string == marker.Options.Popup.Id
+                && parameters[3] is IEnumerable<string>
+                && parameters[4] is DotNetObjectReference<PopupInvokeHelper>
             )));
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -195,8 +198,9 @@
             Assert.Equal(marker1.PopupInvokeHelper, popupInvokeHelper);
             Assert.Equal(marker2.PopupInvokeHelper, popupInvokeHelper);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] is IEnumerable<HtmlMarkerCreationOptions> && (parameters[0] as IEnumerable<HtmlMarkerCreationOptions>).Count() == 2
-                && parameters[1] is DotNetObjectReference<HtmlMarkerInvokeHelper>
+                parameters[0] as string == "id"
+                && parameters[1] is IEnumerable<HtmlMarkerCreationOptions> && (parameters[1] as IEnumerable<HtmlMarkerCreationOptions>).Count() == 2
+                && parameters[2] is DotNetObjectReference<HtmlMarkerInvokeHelper>
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -209,8 +213,9 @@
 
             await map.UpdateHtmlMarkersAsync(updates);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.UpdateHtmlMarkers.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters.Single() is IEnumerable<HtmlMarkerCreationOptions>
-                && (parameters.Single() as IEnumerable<HtmlMarkerCreationOptions>).Count() == updates.Count)
+                parameters[0] as string == "id"
+                && parameters[1] is IEnumerable<HtmlMarkerCreationOptions>
+                && (parameters[1] as IEnumerable<HtmlMarkerCreationOptions>).Count() == updates.Count)
             ), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -233,9 +238,10 @@
 
             await map.UpdateHtmlMarkersAsync(update1, update2);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.UpdateHtmlMarkers.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                            parameters.Single() is IEnumerable<HtmlMarkerCreationOptions>
-                            && (parameters.Single() as IEnumerable<HtmlMarkerCreationOptions>).Count() == 2)
-                        ), Times.Once);
+                parameters[0] as string == "id"
+                && parameters[1] is IEnumerable<HtmlMarkerCreationOptions>
+                && (parameters[1] as IEnumerable<HtmlMarkerCreationOptions>).Count() == 2)
+            ), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -258,8 +264,9 @@
             await map.RemoveHtmlMarkersAsync(null);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] is IEnumerable<HtmlMarkerCreationOptions> && (parameters[0] as IEnumerable<HtmlMarkerCreationOptions>).Count() == 1
-                && parameters[1] is DotNetObjectReference<HtmlMarkerInvokeHelper>
+                parameters[0] as string == "id"
+                && parameters[1] is IEnumerable<HtmlMarkerCreationOptions> && (parameters[1] as IEnumerable<HtmlMarkerCreationOptions>).Count() == 1
+                && parameters[2] is DotNetObjectReference<HtmlMarkerInvokeHelper>
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -278,12 +285,14 @@
             Assert.Contains(htmlMarker2, map.HtmlMarkers);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] is IEnumerable<HtmlMarkerCreationOptions> && (parameters[0] as IEnumerable<HtmlMarkerCreationOptions>).Count() == 2
-                && parameters[1] is DotNetObjectReference<HtmlMarkerInvokeHelper>
+                parameters[0] as string == "id"
+                && parameters[1] is IEnumerable<HtmlMarkerCreationOptions> && (parameters[1] as IEnumerable<HtmlMarkerCreationOptions>).Count() == 2
+                && parameters[2] is DotNetObjectReference<HtmlMarkerInvokeHelper>
             )), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveHtmlMarkers.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters.Single() is IEnumerable<string> && (parameters[0] as IEnumerable<string>).Single() == htmlMarker.Id)
-            ), Times.Once);
+      parameters[0] as string == "id"
+      && parameters[1] is IEnumerable<string> && (parameters[1] as IEnumerable<string>).Single() == htmlMarker.Id)
+       ), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -301,11 +310,13 @@
             Assert.Contains(htmlMarker2, map.HtmlMarkers);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] is IEnumerable<HtmlMarkerCreationOptions> && (parameters[0] as IEnumerable<HtmlMarkerCreationOptions>).Count() == 2
-                && parameters[1] is DotNetObjectReference<HtmlMarkerInvokeHelper>
+                parameters[0] as string == "id"
+                && parameters[1] is IEnumerable<HtmlMarkerCreationOptions> && (parameters[1] as IEnumerable<HtmlMarkerCreationOptions>).Count() == 2
+                && parameters[2] is DotNetObjectReference<HtmlMarkerInvokeHelper>
             )), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveHtmlMarkers.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters.Single() is IEnumerable<string> && (parameters[0] as IEnumerable<string>).Single() == htmlMarker.Id)
+                parameters[0] as string == "id"
+                && parameters[1] is IEnumerable<string> && (parameters[1] as IEnumerable<string>).Single() == htmlMarker.Id)
             ), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -320,9 +331,10 @@
             Assert.Equal(drawingToolbarOptions, map.DrawingToolbarOptions);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.AddDrawingToolbar.ToDrawingNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] is DrawingToolbarCreationOptions
-                && parameters[1] is DotNetObjectReference<DrawingToolbarEventInvokeHelper>
-             )), Times.Once);
+                parameters[0] as string == "id"
+                && parameters[1] is DrawingToolbarCreationOptions
+                && parameters[2] is DotNetObjectReference<DrawingToolbarEventInvokeHelper>
+            )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -350,12 +362,14 @@
             Assert.Equal(updateDrawingToolbarOptions.Visible, map.DrawingToolbarOptions.Visible);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.AddDrawingToolbar.ToDrawingNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] is DrawingToolbarCreationOptions
-                && parameters[1] is DotNetObjectReference<DrawingToolbarEventInvokeHelper>
-             )), Times.Once);
+                parameters[0] as string == "id"
+                && parameters[1] is DrawingToolbarCreationOptions
+                && parameters[2] is DotNetObjectReference<DrawingToolbarEventInvokeHelper>
+            )), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.UpdateDrawingToolbar.ToDrawingNamespace(), It.Is<object[]>(parameters =>
-                parameters.Single() is DrawingToolbarCreationOptions
-             )), Times.Once);
+                parameters[0] as string == "id"
+                && parameters[1] is DrawingToolbarCreationOptions
+            )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -368,9 +382,10 @@
             await map.UpdateDrawingToolbarAsync(null);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.AddDrawingToolbar.ToDrawingNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] is DrawingToolbarCreationOptions
-                && parameters[1] is DotNetObjectReference<DrawingToolbarEventInvokeHelper>
-             )), Times.Once);
+                parameters[0] as string == "id"
+                && parameters[1] is DrawingToolbarCreationOptions
+                && parameters[2] is DotNetObjectReference<DrawingToolbarEventInvokeHelper>
+            )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -384,10 +399,11 @@
 
             Assert.Null(map.DrawingToolbarOptions);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.AddDrawingToolbar.ToDrawingNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] is DrawingToolbarCreationOptions
-                && parameters[1] is DotNetObjectReference<DrawingToolbarEventInvokeHelper>
-             )), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.RemoveDrawingToolbar.ToDrawingNamespace()), Times.Once);
+               parameters[0] as string == "id"
+                && parameters[1] is DrawingToolbarCreationOptions
+                && parameters[2] is DotNetObjectReference<DrawingToolbarEventInvokeHelper>
+            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.RemoveDrawingToolbar.ToDrawingNamespace(), "id"), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -412,12 +428,13 @@
             Assert.Contains(layer, map.Layers);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddLayer.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == layer.Id
-                && parameters[1] == null
-                && parameters[2] as string == layer.Type.ToString()
-                && parameters[3] == null
-                && parameters[4] is IEnumerable<string> && (parameters[4] as IEnumerable<string>).Count() == 0
-                && parameters[5] is DotNetObjectReference<LayerEventInvokeHelper>
+                parameters[0] as string == "id"
+                && parameters[1] as string == layer.Id
+                && parameters[2] == null
+                && parameters[3] as string == layer.Type.ToString()
+                && parameters[4] == null
+                && parameters[5] is IEnumerable<string> && (parameters[5] as IEnumerable<string>).Count() == 0
+                && parameters[6] is DotNetObjectReference<LayerEventInvokeHelper>
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -445,12 +462,13 @@
             Assert.Contains(layer, map.Layers);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddLayer.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == layer.Id
-                && parameters[1] as string == before
-                && parameters[2] as string == layer.Type.ToString()
-                && parameters[3] == null
-                && parameters[4] is IEnumerable<string> && (parameters[4] as IEnumerable<string>).Count() == 0
-                && parameters[5] is DotNetObjectReference<LayerEventInvokeHelper>
+                parameters[0] as string == "id"
+                && parameters[1] as string == layer.Id
+                && parameters[2] as string == before
+                && parameters[3] as string == layer.Type.ToString()
+                && parameters[4] == null
+                && parameters[5] is IEnumerable<string> && (parameters[5] as IEnumerable<string>).Count() == 0
+                && parameters[6] is DotNetObjectReference<LayerEventInvokeHelper>
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -465,12 +483,13 @@
             await Assert.ThrowsAnyAsync<LayerAlreadyAddedException>(async () => await map.AddLayerAsync(layer));
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddLayer.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == layer.Id
-                && parameters[1] == null
-                && parameters[2] as string == layer.Type.ToString()
-                && parameters[3] == null
-                && parameters[4] is IEnumerable<string> && (parameters[4] as IEnumerable<string>).Count() == 0
-                && parameters[5] is DotNetObjectReference<LayerEventInvokeHelper>
+                parameters[0] as string == "id"
+                && parameters[1] as string == layer.Id
+                && parameters[2] == null
+                && parameters[3] as string == layer.Type.ToString()
+                && parameters[4] == null
+                && parameters[5] is IEnumerable<string> && (parameters[5] as IEnumerable<string>).Count() == 0
+                && parameters[6] is DotNetObjectReference<LayerEventInvokeHelper>
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -491,7 +510,8 @@
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddLayer.ToCoreNamespace(), It.IsAny<object[]>()), Times.Exactly(2));
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveLayers.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] is IEnumerable<string>
+                parameters[0] as string == "id"
+                && parameters[1] is IEnumerable<string>
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -512,7 +532,8 @@
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddLayer.ToCoreNamespace(), It.IsAny<object[]>()), Times.Exactly(2));
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveLayers.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] is IEnumerable<string>
+                parameters[0] as string == "id"
+                && parameters[1] is IEnumerable<string>
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -533,7 +554,8 @@
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddLayer.ToCoreNamespace(), It.IsAny<object[]>()), Times.Exactly(2));
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveLayers.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] is IEnumerable<string>
+                parameters[0] as string == "id"
+                && parameters[1] is IEnumerable<string>
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -554,7 +576,8 @@
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddLayer.ToCoreNamespace(), It.IsAny<object[]>()), Times.Exactly(2));
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveLayers.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] is IEnumerable<string>
+                parameters[0] as string == "id"
+                && parameters[1] is IEnumerable<string>
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -575,7 +598,8 @@
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddLayer.ToCoreNamespace(), It.IsAny<object[]>()), Times.Exactly(2));
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveLayers.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] is IEnumerable<string>
+                parameters[0] as string == "id"
+                && parameters[1] is IEnumerable<string>
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -595,11 +619,12 @@
             Assert.Equal(_loggerMock.Object, dataSource.Logger);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == dataSource.Id
-                && parameters[1] == null
-                && parameters[2] as string == dataSource.SourceType.ToString()
-                && (parameters[3] as IEnumerable<string>).Single() == DataSourceEventType.DataAdded.ToString()
-                && parameters[4] is DotNetObjectReference<DataSourceEventInvokeHelper>
+                parameters[0] as string == "id"
+                && parameters[1] as string == dataSource.Id
+                && parameters[2] == null
+                && parameters[3] as string == dataSource.SourceType.ToString()
+                && (parameters[4] as IEnumerable<string>).Single() == DataSourceEventType.DataAdded.ToString()
+                && parameters[5] is DotNetObjectReference<DataSourceEventInvokeHelper>
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -615,9 +640,10 @@
             Assert.Single(map.Sources, source);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == source.Id
-                && parameters[1] == null
-                && parameters[2] as string == source.SourceType.ToString()
+                parameters[0] as string == "id"
+                && parameters[1] as string == source.Id
+                && parameters[2] == null
+                && parameters[3] as string == source.SourceType.ToString()
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -631,9 +657,10 @@
             await map.AddSourceAsync(dataSource);
             await Assert.ThrowsAnyAsync<SourceAlreadyExistingException>(async () => await map.AddSourceAsync(dataSource));
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == dataSource.Id
-                && parameters[1] == null
-                && parameters[2] as string == dataSource.SourceType.ToString()
+                parameters[0] as string == "id"
+                && parameters[1] as string == dataSource.Id
+                && parameters[2] == null
+                && parameters[3] as string == dataSource.SourceType.ToString()
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -662,16 +689,18 @@
             Assert.Contains(dataSource2, map.Sources);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == dataSource.Id
-                && parameters[1] == null
-                && parameters[2] as string == dataSource.SourceType.ToString()
+                parameters[0] as string == "id"
+                && parameters[1] as string == dataSource.Id
+                && parameters[2] == null
+                && parameters[3] as string == dataSource.SourceType.ToString()
             )), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == dataSource2.Id
-                && parameters[1] == null
-                && parameters[2] as string == dataSource2.SourceType.ToString()
+                parameters[0] as string == "id"
+                && parameters[1] as string == dataSource2.Id
+                && parameters[2] == null
+                && parameters[3] as string == dataSource2.SourceType.ToString()
             )), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveSource.ToCoreNamespace(), dataSource.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveSource.ToCoreNamespace(), "id", dataSource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -689,9 +718,10 @@
             Assert.Contains(dataSource, map.Sources);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == dataSource.Id
-                && parameters[1] == null
-                && parameters[2] as string == dataSource.SourceType.ToString()
+                parameters[0] as string == "id"
+                && parameters[1] as string == dataSource.Id
+                && parameters[2] == null
+                && parameters[3] as string == dataSource.SourceType.ToString()
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -711,16 +741,18 @@
             Assert.Contains(dataSource2, map.Sources);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == dataSource.Id
-                && parameters[1] == null
-                && parameters[2] as string == dataSource.SourceType.ToString()
+                parameters[0] as string == "id"
+                && parameters[1] as string == dataSource.Id
+                && parameters[2] == null
+                && parameters[3] as string == dataSource.SourceType.ToString()
             )), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == dataSource2.Id
-                && parameters[1] == null
-                && parameters[2] as string == dataSource2.SourceType.ToString()
+                parameters[0] as string == "id"
+                && parameters[1] as string == dataSource2.Id
+                && parameters[2] == null
+                && parameters[3] as string == dataSource2.SourceType.ToString()
             )), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveSource.ToCoreNamespace(), dataSource.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveSource.ToCoreNamespace(), "id", dataSource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -738,9 +770,10 @@
             Assert.Contains(dataSource, map.Sources);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == dataSource.Id
-                && parameters[1] == null
-                && parameters[2] as string == dataSource.SourceType.ToString()
+                parameters[0] as string == "id"
+                && parameters[1] as string == dataSource.Id
+                && parameters[2] == null
+                && parameters[3] as string == dataSource.SourceType.ToString()
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -769,7 +802,7 @@
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddLayer.ToCoreNamespace(), It.IsAny<object[]>()), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(), It.IsAny<object[]>()), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddPopup.ToCoreNamespace(), It.IsAny<object[]>()), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearMap.ToCoreNamespace(), It.IsAny<object[]>()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearMap.ToCoreNamespace(), "id"), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -783,7 +816,7 @@
             Assert.Null(map.Layers);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddLayer.ToCoreNamespace(), It.IsAny<object[]>()), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearLayers.ToCoreNamespace()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearLayers.ToCoreNamespace(), "id"), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -796,7 +829,7 @@
             await map.ClearDataSourcesAsync();
             Assert.Null(map.Sources);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddSource.ToCoreNamespace(), It.IsAny<object[]>()), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearSources.ToCoreNamespace()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearSources.ToCoreNamespace(), "id"), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -811,10 +844,11 @@
             Assert.Null(map.HtmlMarkers);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddHtmlMarkers.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] is IEnumerable<HtmlMarkerCreationOptions> && (parameters[0] as IEnumerable<HtmlMarkerCreationOptions>).Count() == 1
-                && parameters[1] is DotNetObjectReference<HtmlMarkerInvokeHelper>
-            )), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearHtmlMarkers.ToCoreNamespace()), Times.Once);
+                parameters[0] as string == "id"
+      && parameters[1] is IEnumerable<HtmlMarkerCreationOptions> && (parameters[1] as IEnumerable<HtmlMarkerCreationOptions>).Count() == 1
+        && parameters[2] is DotNetObjectReference<HtmlMarkerInvokeHelper>
+      )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearHtmlMarkers.ToCoreNamespace(), "id"), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -828,10 +862,11 @@
             Assert.Contains(popup, map.Popups);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddPopup.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == popup.Id
-                && parameters[1] as PopupOptions == popup.Options
-                && parameters[2] is IEnumerable<string>
-                && parameters[3] is DotNetObjectReference<PopupInvokeHelper>
+                parameters[0] as string == "id"
+                && parameters[1] as string == popup.Id
+                && parameters[2] as PopupOptions == popup.Options
+                && parameters[3] is IEnumerable<string>
+                && parameters[4] is DotNetObjectReference<PopupInvokeHelper>
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -853,10 +888,11 @@
             await Assert.ThrowsAnyAsync<PopupAlreadyExistingException>(async () => await map.AddPopupAsync(popup));
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddPopup.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == popup.Id
-                && parameters[1] as PopupOptions == popup.Options
-                && parameters[2] is IEnumerable<string>
-                && parameters[3] is DotNetObjectReference<PopupInvokeHelper>
+                parameters[0] as string == "id"
+                && parameters[1] as string == popup.Id
+                && parameters[2] as PopupOptions == popup.Options
+                && parameters[3] is IEnumerable<string>
+                && parameters[4] is DotNetObjectReference<PopupInvokeHelper>
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -873,12 +909,13 @@
             Assert.Contains(popup, map.Popups);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddPopupWithTemplate.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == popup.Id
-                && parameters[1] as PopupOptions == popup.Options
-                && parameters[2] is IDictionary<string, object>
-                && parameters[3] is PopupTemplate
-                && parameters[4] is IEnumerable<string>
-                && parameters[5] is DotNetObjectReference<PopupInvokeHelper>
+                parameters[0] as string == "id"
+                && parameters[1] as string == popup.Id
+                && parameters[2] as PopupOptions == popup.Options
+                && parameters[3] is IDictionary<string, object>
+                && parameters[4] is PopupTemplate
+                && parameters[5] is IEnumerable<string>
+                && parameters[6] is DotNetObjectReference<PopupInvokeHelper>
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -924,12 +961,13 @@
             await Assert.ThrowsAnyAsync<PopupAlreadyExistingException>(async () => await map.AddPopupAsync(popup, popupTemplate, properties));
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddPopupWithTemplate.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == popup.Id
-                && parameters[1] as PopupOptions == popup.Options
-                && parameters[2] is IDictionary<string, object>
-                && parameters[3] is PopupTemplate
-                && parameters[4] is IEnumerable<string>
-                && parameters[5] is DotNetObjectReference<PopupInvokeHelper>
+                parameters[0] as string == "id"
+                && parameters[1] as string == popup.Id
+                && parameters[2] as PopupOptions == popup.Options
+                && parameters[3] is IDictionary<string, object>
+                && parameters[4] is PopupTemplate
+                && parameters[5] is IEnumerable<string>
+                && parameters[6] is DotNetObjectReference<PopupInvokeHelper>
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -946,7 +984,7 @@
 
             Assert.DoesNotContain(popup, map.Popups);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddPopup.ToCoreNamespace(), It.IsAny<object[]>()), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Remove.ToPopupNamespace(), popup.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Remove.ToPopupNamespace(), "id", popup.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -962,7 +1000,7 @@
 
             Assert.DoesNotContain(popup, map.Popups);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddPopup.ToCoreNamespace(), It.IsAny<object[]>()), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Remove.ToPopupNamespace(), popup.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Remove.ToPopupNamespace(), "id", popup.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -988,7 +1026,7 @@
 
             Assert.Null(map.Popups);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearPopups.ToCoreNamespace()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.ClearPopups.ToCoreNamespace(), "id"), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.AddPopup.ToCoreNamespace(), It.IsAny<object[]>()), Times.Once);
         }
 
@@ -1005,7 +1043,8 @@
 
             await map.SetCameraOptionsAsync(options => options.Center = center);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCameraOptions.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                (parameters[0] as CameraOptions).Duration == 10 && (parameters[0] as CameraOptions).Center.Longitude == 10 && (parameters[0] as CameraOptions).Center.Latitude == 10
+                parameters[0] as string == "id"
+                && (parameters[1] as CameraOptions).Duration == 10 && (parameters[1] as CameraOptions).Center.Longitude == 10 && (parameters[1] as CameraOptions).Center.Latitude == 10
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -1024,7 +1063,8 @@
             await map.SetCameraOptionsAsync(options => options.Center = center);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCameraOptions.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                (parameters[0] as CameraOptions).Duration == 10 && (parameters[0] as CameraOptions).Center.Longitude == 10 && (parameters[0] as CameraOptions).Center.Latitude == 10
+                parameters[0] as string == "id"
+                && (parameters[1] as CameraOptions).Duration == 10 && (parameters[1] as CameraOptions).Center.Longitude == 10 && (parameters[1] as CameraOptions).Center.Latitude == 10
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -1046,10 +1086,11 @@
             });
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCameraOptions.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                (parameters[0] as CameraOptions).Duration == 10 && (parameters[0] as CameraOptions).Center == null && (parameters[0] as CameraOptions).Bounds.West == -10
-                && (parameters[0] as CameraOptions).Bounds.South == 10
-                && (parameters[0] as CameraOptions).Bounds.East == 10
-                && (parameters[0] as CameraOptions).Bounds.North == -10
+                parameters[0] as string == "id"
+                && (parameters[1] as CameraOptions).Duration == 10 && (parameters[1] as CameraOptions).Center == null && (parameters[1] as CameraOptions).Bounds.West == -10
+                && (parameters[1] as CameraOptions).Bounds.South == 10
+                && (parameters[1] as CameraOptions).Bounds.East == 10
+                && (parameters[1] as CameraOptions).Bounds.North == -10
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -1062,7 +1103,8 @@
 
             await map.SetCameraOptionsAsync(options => options.Center = center);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCameraOptions.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                (parameters[0] as CameraOptions).Center.Longitude == 10 && (parameters[0] as CameraOptions).Center.Latitude == 10
+                parameters[0] as string == "id"
+                && (parameters[1] as CameraOptions).Center.Longitude == 10 && (parameters[1] as CameraOptions).Center.Latitude == 10
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -1080,7 +1122,8 @@
 
             await map.SetStyleOptionsAsync(options => options.Language = language);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetStyleOptions.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                (parameters[0] as StyleOptions).AutoResize && (parameters[0] as StyleOptions).Language == "fr"
+                parameters[0] as string == "id"
+                && (parameters[1] as StyleOptions).AutoResize && (parameters[1] as StyleOptions).Language == "fr"
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -1093,7 +1136,8 @@
 
             await map.SetStyleOptionsAsync(options => options.Language = language);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetStyleOptions.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                (parameters[0] as StyleOptions).Language == "fr"
+                parameters[0] as string == "id"
+                && (parameters[1] as StyleOptions).Language == "fr"
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -1111,7 +1155,8 @@
 
             await map.SetUserInteractionAsync(options => options.DblclickZoomInteraction = dblClickZoomInteraction);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetUserInteraction.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                (parameters[0] as UserInteractionOptions).BoxZoomInteraction.GetValueOrDefault() && (parameters[0] as UserInteractionOptions).DblclickZoomInteraction.GetValueOrDefault()
+                parameters[0] as string == "id"
+                && (parameters[1] as UserInteractionOptions).BoxZoomInteraction.GetValueOrDefault() && (parameters[1] as UserInteractionOptions).DblclickZoomInteraction.GetValueOrDefault()
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -1124,7 +1169,8 @@
 
             await map.SetUserInteractionAsync(options => options.DblclickZoomInteraction = dblClickZoomInteraction);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetUserInteraction.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                (parameters[0] as UserInteractionOptions).DblclickZoomInteraction.GetValueOrDefault()
+                parameters[0] as string == "id"
+                && (parameters[1] as UserInteractionOptions).DblclickZoomInteraction.GetValueOrDefault()
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -1142,7 +1188,8 @@
 
             await map.SetTrafficOptionsAsync(options => options.Incidents = incidents);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetTraffic.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                (parameters[0] as TrafficOptions).Flow.ToString() == TrafficFlow.Absolute.ToString() && (parameters[0] as TrafficOptions).Incidents.GetValueOrDefault()
+                parameters[0] as string == "id"
+                && (parameters[1] as TrafficOptions).Flow.ToString() == TrafficFlow.Absolute.ToString() && (parameters[1] as TrafficOptions).Incidents.GetValueOrDefault()
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -1155,7 +1202,8 @@
 
             await map.SetTrafficOptionsAsync(options => options.Incidents = incidents);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetTraffic.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                (parameters[0] as TrafficOptions).Incidents.GetValueOrDefault()
+                parameters[0] as string == "id"
+                && (parameters[1] as TrafficOptions).Incidents.GetValueOrDefault()
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -1716,12 +1764,13 @@
             await map.CreateImageFromTemplateAsync("imageId", "templateName", "color", "secondaryColor", 1m);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.CreateImageFromTemplate.ToCoreNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] is MapImageTemplate
-                && ((MapImageTemplate)parameters[0]).Id == "imageId"
-                && ((MapImageTemplate)parameters[0]).TemplateName == "templateName"
-                && ((MapImageTemplate)parameters[0]).Color == "color"
-                && ((MapImageTemplate)parameters[0]).SecondaryColor == "secondaryColor"
-                && ((MapImageTemplate)parameters[0]).Scale == 1m
+                parameters[0] as string == "id"
+                && parameters[1] is MapImageTemplate
+                && ((MapImageTemplate)parameters[1]).Id == "imageId"
+                && ((MapImageTemplate)parameters[1]).TemplateName == "templateName"
+                && ((MapImageTemplate)parameters[1]).Color == "color"
+                && ((MapImageTemplate)parameters[1]).SecondaryColor == "secondaryColor"
+                && ((MapImageTemplate)parameters[1]).Scale == 1m
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -1732,7 +1781,7 @@
             var map = new Map("id", _jsRuntimeMock.Object);
             await map.SetCanvasStylePropertyAsync("property", "value");
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasStyleProperty.ToCoreNamespace(), "property", "value"), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasStyleProperty.ToCoreNamespace(), "id", "property", "value"), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -1758,9 +1807,9 @@
 
             await map.SetCanvasStylePropertiesAsync(properties);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasStyleProperties.ToCoreNamespace(), It.Is<IEnumerable<KeyValuePair<string, string>>>(dictionary =>
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasStyleProperties.ToCoreNamespace(), "id", It.Is<IEnumerable<KeyValuePair<string, string>>>(dictionary =>
                 dictionary.Single().Key == "cursor" && dictionary.Single().Value == "hand"))
-            , Times.Once);
+                , Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -1780,15 +1829,15 @@
             var map = new Map("id", _jsRuntimeMock.Object);
 
             var properties = new Dictionary<string, string> {
-                { "cursor", "hand" },
-                { "", "value" },
-                { " ", "value" },
-            };
+        { "cursor", "hand" },
+        { "", "value" },
+        { " ", "value" },
+        };
 
             await map.SetCanvasStylePropertiesAsync(properties);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasStyleProperties.ToCoreNamespace(), It.Is<IEnumerable<KeyValuePair<string, string>>>(dictionary =>
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasStyleProperties.ToCoreNamespace(), "id", It.Is<IEnumerable<KeyValuePair<string, string>>>(dictionary =>
                 dictionary.Single().Key == "cursor" && dictionary.Single().Value == "hand"))
-            , Times.Once);
+                , Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -1810,7 +1859,7 @@
 
             var properties = new Dictionary<string, string> {
                 { "", "value" },
-                { " ", "value" },
+      { " ", "value" },
             };
             await map.SetCanvasStylePropertiesAsync(properties);
             _jsRuntimeMock.VerifyNoOtherCalls();
@@ -1822,7 +1871,7 @@
             var map = new Map("id", _jsRuntimeMock.Object);
             await map.SetCanvasContainerStylePropertyAsync("property", "value");
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasContainerStyleProperty.ToCoreNamespace(), "property", "value"), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasContainerStyleProperty.ToCoreNamespace(), "id", "property", "value"), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -1848,9 +1897,9 @@
 
             await map.SetCanvasContainerStylePropertiesAsync(properties);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasContainerStyleProperties.ToCoreNamespace(), It.Is<IEnumerable<KeyValuePair<string, string>>>(dictionary =>
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasContainerStyleProperties.ToCoreNamespace(), "id", It.Is<IEnumerable<KeyValuePair<string, string>>>(dictionary =>
                 dictionary.Single().Key == "cursor" && dictionary.Single().Value == "hand"))
-            , Times.Once);
+                , Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -1870,15 +1919,15 @@
             var map = new Map("id", _jsRuntimeMock.Object);
 
             var properties = new Dictionary<string, string> {
-                { "cursor", "hand" },
-                { "", "value" },
-                { " ", "value" },
-            };
+        { "cursor", "hand" },
+        { "", "value" },
+        { " ", "value" },
+        };
 
             await map.SetCanvasContainerStylePropertiesAsync(properties);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasContainerStyleProperties.ToCoreNamespace(), It.Is<IEnumerable<KeyValuePair<string, string>>>(dictionary =>
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasContainerStyleProperties.ToCoreNamespace(), "id", It.Is<IEnumerable<KeyValuePair<string, string>>>(dictionary =>
                 dictionary.Single().Key == "cursor" && dictionary.Single().Value == "hand"))
-            , Times.Once);
+                , Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -1900,7 +1949,7 @@
 
             var properties = new Dictionary<string, string> {
                 { "", "value" },
-                { " ", "value" },
+      { " ", "value" },
             };
             await map.SetCanvasContainerStylePropertiesAsync(properties);
             _jsRuntimeMock.VerifyNoOtherCalls();
@@ -1910,14 +1959,14 @@
         public async Task Should_GetCameraOptionsAsync()
         {
             var options = new CameraOptions();
-            _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<CameraOptions>(It.IsAny<string>())).ReturnsAsync(options);
+            _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<CameraOptions>(It.IsAny<string>(), It.IsAny<object[]>())).ReturnsAsync(options);
 
             var map = new Map("id", _jsRuntimeMock.Object);
             var result = await map.GetCameraOptionsAsync();
             Assert.Equal(options, map.CameraOptions);
             Assert.Equal(options, result);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<CameraOptions>(Constants.JsConstants.Methods.Core.GetCamera.ToCoreNamespace()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<CameraOptions>(Constants.JsConstants.Methods.Core.GetCamera.ToCoreNamespace(), "id"), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -1925,14 +1974,14 @@
         public async Task Should_GetStyleOptionsAsync()
         {
             var options = new StyleOptions();
-            _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<StyleOptions>(It.IsAny<string>())).ReturnsAsync(options);
+            _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<StyleOptions>(It.IsAny<string>(), It.IsAny<object[]>())).ReturnsAsync(options);
 
             var map = new Map("id", _jsRuntimeMock.Object);
             var result = await map.GetStyleOptionsAsync();
             Assert.Equal(options, map.StyleOptions);
             Assert.Equal(options, result);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<StyleOptions>(Constants.JsConstants.Methods.Core.GetStyle.ToCoreNamespace()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<StyleOptions>(Constants.JsConstants.Methods.Core.GetStyle.ToCoreNamespace(), "id"), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -1940,14 +1989,14 @@
         public async Task Should_GetTrafficOptionsAsync()
         {
             var options = new TrafficOptions();
-            _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<TrafficOptions>(It.IsAny<string>())).ReturnsAsync(options);
+            _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<TrafficOptions>(It.IsAny<string>(), It.IsAny<object[]>())).ReturnsAsync(options);
 
             var map = new Map("id", _jsRuntimeMock.Object);
             var result = await map.GetTrafficOptionsAsync();
             Assert.Equal(options, map.TrafficOptions);
             Assert.Equal(options, result);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<TrafficOptions>(Constants.JsConstants.Methods.Core.GetTraffic.ToCoreNamespace()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<TrafficOptions>(Constants.JsConstants.Methods.Core.GetTraffic.ToCoreNamespace(), "id"), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -1955,14 +2004,14 @@
         public async Task Should_GetUserInteractionOptionsAsync()
         {
             var options = new UserInteractionOptions();
-            _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<UserInteractionOptions>(It.IsAny<string>())).ReturnsAsync(options);
+            _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<UserInteractionOptions>(It.IsAny<string>(), It.IsAny<object[]>())).ReturnsAsync(options);
 
             var map = new Map("id", _jsRuntimeMock.Object);
             var result = await map.GetUserInteractionOptionsAsync();
             Assert.Equal(options, map.UserInteractionOptions);
             Assert.Equal(options, result);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<UserInteractionOptions>(Constants.JsConstants.Methods.Core.GetUserInteraction.ToCoreNamespace()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<UserInteractionOptions>(Constants.JsConstants.Methods.Core.GetUserInteraction.ToCoreNamespace(), "id"), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
     }

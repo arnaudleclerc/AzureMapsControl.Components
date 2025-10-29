@@ -21,6 +21,7 @@
     public class GeolocationControlTests
     {
         private readonly Mock<IMapJsRuntime> _mapJsRuntimeMock = new Mock<IMapJsRuntime>();
+        private readonly string _testMapId = "test-map-id";
 
         [Fact]
         public async Task Should_GetLastKnowPositionAsync()
@@ -31,11 +32,13 @@
             var control = new GeolocationControl() {
                 JsRuntime = _mapJsRuntimeMock.Object
             };
+            // Set the MapId on the control as would happen when added to map
+            control.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(control, _testMapId);
 
             var result = await control.GetLastKnownPositionAsync();
             Assert.Equal(feature, result);
 
-            _mapJsRuntimeMock.Verify(runtime => runtime.InvokeAsync<Feature<Point>>(Constants.JsConstants.Methods.GeolocationControl.GetLastKnownPosition.ToGeolocationControlNamespace(), control.Id), Times.Once);
+            _mapJsRuntimeMock.Verify(runtime => runtime.InvokeAsync<Feature<Point>>(Constants.JsConstants.Methods.GeolocationControl.GetLastKnownPosition.ToGeolocationControlNamespace(), _testMapId, control.Id.ToString()), Times.Once);
             _mapJsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -45,11 +48,13 @@
             var control = new GeolocationControl() {
                 JsRuntime = _mapJsRuntimeMock.Object
             };
+            // Set the MapId on the control as would happen when added to map
+            control.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(control, _testMapId);
 
             await control.DisposeAsync();
             await Assert.ThrowsAnyAsync<ControlDisposedException>(async () => await control.GetLastKnownPositionAsync());
 
-            _mapJsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.GeolocationControl.Dispose.ToGeolocationControlNamespace(), control.Id), Times.Once);
+            _mapJsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.GeolocationControl.Dispose.ToGeolocationControlNamespace(), _testMapId, control.Id.ToString()), Times.Once);
             _mapJsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -69,6 +74,8 @@
             var control = new GeolocationControl() {
                 JsRuntime = _mapJsRuntimeMock.Object
             };
+            // Set the MapId on the control as would happen when added to map
+            control.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(control, _testMapId);
 
             var disposedCalled = false;
             control.OnDisposed += () => disposedCalled = true;
@@ -77,7 +84,7 @@
 
             Assert.True(control.Disposed);
             Assert.True(disposedCalled);
-            _mapJsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.GeolocationControl.Dispose.ToGeolocationControlNamespace(), control.Id), Times.Once);
+            _mapJsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.GeolocationControl.Dispose.ToGeolocationControlNamespace(), _testMapId, control.Id.ToString()), Times.Once);
             _mapJsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -87,10 +94,13 @@
             var control = new GeolocationControl() {
                 JsRuntime = _mapJsRuntimeMock.Object
             };
+            // Set the MapId on the control as would happen when added to map
+            control.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(control, _testMapId);
+
             await control.DisposeAsync();
             await Assert.ThrowsAnyAsync<ControlDisposedException>(async () => await control.DisposeAsync());
 
-            _mapJsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.GeolocationControl.Dispose.ToGeolocationControlNamespace(), control.Id), Times.Once);
+            _mapJsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.GeolocationControl.Dispose.ToGeolocationControlNamespace(), _testMapId, control.Id.ToString()), Times.Once);
             _mapJsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -109,12 +119,14 @@
             var control = new GeolocationControl() {
                 JsRuntime = _mapJsRuntimeMock.Object
             };
+            // Set the MapId on the control as would happen when added to map
+            control.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(control, _testMapId);
 
             await control.SetOptionsAsync(options => options.CalculateMissingValues = true);
 
             Assert.True(control.Options.CalculateMissingValues);
 
-            _mapJsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.GeolocationControl.SetOptions.ToGeolocationControlNamespace(), control.Id, control.Options), Times.Once);
+            _mapJsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.GeolocationControl.SetOptions.ToGeolocationControlNamespace(), _testMapId, control.Id.ToString(), control.Options), Times.Once);
             _mapJsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -124,11 +136,13 @@
             var control = new GeolocationControl() {
                 JsRuntime = _mapJsRuntimeMock.Object
             };
+            // Set the MapId on the control as would happen when added to map
+            control.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(control, _testMapId);
 
             await control.DisposeAsync();
             await Assert.ThrowsAnyAsync<ControlDisposedException>(async () => await control.SetOptionsAsync(options => options.CalculateMissingValues = true));
 
-            _mapJsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.GeolocationControl.Dispose.ToGeolocationControlNamespace(), control.Id), Times.Once);
+            _mapJsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.GeolocationControl.Dispose.ToGeolocationControlNamespace(), _testMapId, control.Id.ToString()), Times.Once);
             _mapJsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -148,15 +162,18 @@
             var control = new GeolocationControl(eventFlags: GeolocationEventActivationFlags.None().Enable(GeolocationEventType.GeolocationError)) {
                 JsRuntime = _mapJsRuntimeMock.Object
             };
+            // Set the MapId on the control as would happen when added to map
+            control.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(control, _testMapId);
 
             await control.AddEventsAsync();
 
             _mapJsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.GeolocationControl.AddEvents.ToGeolocationControlNamespace(), It.Is<object[]>(parameters =>
-               (parameters[0] as Guid?).GetValueOrDefault() == control.Id
-               && parameters[1] is IEnumerable<string>
-               && (parameters[1] as IEnumerable<string>).Single() == GeolocationEventType.GeolocationError.ToString()
-               && parameters[2] is DotNetObjectReference<GeolocationEventInvokeHelper>
-            )), Times.Once);
+               parameters[0] as string == _testMapId
+       && parameters[1] as string == control.Id.ToString()
+         && parameters[2] is IEnumerable<string>
+       && (parameters[2] as IEnumerable<string>).Single() == GeolocationEventType.GeolocationError.ToString()
+         && parameters[3] is DotNetObjectReference<GeolocationEventInvokeHelper>
+)), Times.Once);
             _mapJsRuntimeMock.VerifyNoOtherCalls();
         }
 

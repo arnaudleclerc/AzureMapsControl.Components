@@ -26,6 +26,7 @@
         private readonly Mock<IMapJsRuntime> _jsRuntimeMock = new();
         private readonly Mock<ILogger<AnimationService>> _loggerServiceMock = new();
         private readonly Mock<IMapService> _mapServiceMock = new();
+        private readonly string _testMapId = "test-map-id";
 
         private readonly AnimationService _animationService;
 
@@ -38,6 +39,8 @@
         {
             var line = new LineString();
             var source = new DataSource();
+            // Set the MapId on the source as would happen when added to map
+            source.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(source, _testMapId);
             var options = new SnakeLineAnimationOptions {
                 DisposeOnComplete = disposeOnComplete
             };
@@ -47,7 +50,7 @@
             Assert.NotNull(result.Id);
             Assert.Equal(disposeOnComplete, result.Disposed);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Snakeline.ToAnimationNamespace(), result.Id, line.Id, source.Id, options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Snakeline.ToAnimationNamespace(), _testMapId, result.Id, line.Id, source.Id, options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -81,8 +84,10 @@
         {
             var line = new LineString();
             var lineSource = new DataSource();
+            lineSource.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(lineSource, _testMapId);
             var pin = new Point();
             var pinSource = new DataSource();
+            pinSource.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(pinSource, _testMapId);
             var options = new MoveAlongPathAnimationOptions {
                 DisposeOnComplete = disposeOnComplete
             };
@@ -92,7 +97,7 @@
             Assert.NotNull(result.Id);
             Assert.Equal(disposeOnComplete, result.Disposed);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), result.Id, line.Id, lineSource.Id, pin.Id, pinSource.Id, options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), _testMapId, result.Id, line.Id, lineSource.Id, pin.Id, pinSource.Id, options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -155,7 +160,9 @@
         {
             var line = new LineString();
             var lineSource = new DataSource();
+            lineSource.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(lineSource, _testMapId);
             var pin = new HtmlMarker(new HtmlMarkerOptions());
+            pin.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(pin, _testMapId);
             var options = new MoveAlongPathAnimationOptions {
                 DisposeOnComplete = disposeOnComplete
             };
@@ -165,7 +172,7 @@
             Assert.NotNull(result.Id);
             Assert.Equal(disposeOnComplete, result.Disposed);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), result.Id, line.Id, lineSource.Id, pin.Id, null, options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), _testMapId, result.Id, line.Id, lineSource.Id, pin.Id, null, options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -213,6 +220,7 @@
             var line = new Position[] { new Position() };
             var pin = new Point();
             var pinSource = new DataSource();
+            pinSource.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(pinSource, _testMapId);
             var options = new MoveAlongPathAnimationOptions {
                 DisposeOnComplete = disposeOnComplete
             };
@@ -222,7 +230,7 @@
             Assert.NotNull(result.Id);
             Assert.Equal(disposeOnComplete, result.Disposed);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), result.Id, line, null, pin.Id, pinSource.Id, options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), _testMapId, result.Id, line, null, pin.Id, pinSource.Id, options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -269,6 +277,7 @@
         {
             var line = new Position[] { new Position() };
             var pin = new HtmlMarker(new HtmlMarkerOptions());
+            pin.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(pin, _testMapId);
             var options = new MoveAlongPathAnimationOptions {
                 DisposeOnComplete = disposeOnComplete
             };
@@ -278,7 +287,7 @@
             Assert.NotNull(result.Id);
             Assert.Equal(disposeOnComplete, result.Disposed);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), result.Id, line, null, pin.Id, null, options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), _testMapId, result.Id, line, null, pin.Id, null, options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -308,13 +317,14 @@
         public async Task Should_FlowingDashedLine_Async()
         {
             var layer = new LineLayer();
+            layer.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(layer, _testMapId);
             var options = new MovingDashLineOptions();
 
             var result = await _animationService.FlowingDashedLineAsync(layer, options);
             Assert.IsType<FlowingDashedLineAnimation>(result);
             Assert.NotNull(result.Id);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.FlowingDashedLine.ToAnimationNamespace(), result.Id, layer.Id, options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.FlowingDashedLine.ToAnimationNamespace(), _testMapId, result.Id, layer.Id, options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -334,9 +344,12 @@
         public async Task Should_DropMarkers_Async(bool disposeOnComplete)
         {
             var map = new Map("id", htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(null));
+            _mapServiceMock.Setup(mapService => mapService.GetMap("id")).Returns(map);
             _mapServiceMock.Setup(mapService => mapService.Map).Returns(map);
             var marker1 = new HtmlMarker(new HtmlMarkerOptions());
+            marker1.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(marker1, "id");
             var marker2 = new HtmlMarker(new HtmlMarkerOptions());
+            marker2.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(marker2, "id");
             var height = 1m;
             var options = new DropMarkersAnimationOptions {
                 DisposeOnComplete = disposeOnComplete
@@ -346,17 +359,18 @@
             Assert.IsType<DropMarkersAnimation>(result);
             Assert.NotNull(result.Id);
             Assert.Equal(disposeOnComplete, result.Disposed);
-            Assert.Contains(_mapServiceMock.Object.Map.HtmlMarkers, marker => marker.Id == marker1.Id && marker.Options == marker1.Options);
-            Assert.Contains(_mapServiceMock.Object.Map.HtmlMarkers, marker => marker.Id == marker2.Id && marker.Options == marker2.Options);
+            Assert.Contains(map.HtmlMarkers, marker => marker.Id == marker1.Id && marker.Options == marker1.Options);
+            Assert.Contains(map.HtmlMarkers, marker => marker.Id == marker2.Id && marker.Options == marker2.Options);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.DropMarkers.ToAnimationNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == result.Id
-                && parameters[1] is IEnumerable<HtmlMarkerCreationOptions>
-                && (parameters[1] as IEnumerable<HtmlMarkerCreationOptions>).Any(marker => marker.Id == marker1.Id && marker.Options == marker1.Options)
-                && (parameters[1] as IEnumerable<HtmlMarkerCreationOptions>).Any(marker => marker.Id == marker2.Id && marker.Options == marker2.Options)
-                && parameters[2] as decimal? == height
-                && parameters[3] is DropMarkersAnimationOptions
-                && parameters[4] is DotNetObjectReference<HtmlMarkerInvokeHelper>
+                parameters[0] as string == map.Id
+                && parameters[1] as string == result.Id
+                && parameters[2] is IEnumerable<HtmlMarkerCreationOptions>
+                && (parameters[2] as IEnumerable<HtmlMarkerCreationOptions>).Any(marker => marker.Id == marker1.Id && marker.Options == marker1.Options)
+                && (parameters[2] as IEnumerable<HtmlMarkerCreationOptions>).Any(marker => marker.Id == marker2.Id && marker.Options == marker2.Options)
+                && parameters[3] as decimal? == height
+                && parameters[4] is DropMarkersAnimationOptions
+                && parameters[5] is DotNetObjectReference<HtmlMarkerInvokeHelper>
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -377,8 +391,10 @@
         public async Task Should_DropMarker_Async(bool disposeOnComplete)
         {
             var map = new Map("id", htmlMarkerInvokeHelper: new HtmlMarkerInvokeHelper(null));
+            _mapServiceMock.Setup(mapService => mapService.GetMap("id")).Returns(map);
             _mapServiceMock.Setup(mapService => mapService.Map).Returns(map);
             var marker1 = new HtmlMarker(new HtmlMarkerOptions());
+            marker1.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(marker1, "id");
             var height = 1m;
             var options = new DropMarkersAnimationOptions {
                 DisposeOnComplete = disposeOnComplete
@@ -389,15 +405,16 @@
             Assert.NotNull(result.Id);
             Assert.Equal(disposeOnComplete, result.Disposed);
 
-            Assert.Contains(_mapServiceMock.Object.Map.HtmlMarkers, marker => marker.Id == marker1.Id && marker.Options == marker1.Options);
+            Assert.Contains(map.HtmlMarkers, marker => marker.Id == marker1.Id && marker.Options == marker1.Options);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.DropMarkers.ToAnimationNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == result.Id
-                && parameters[1] is IEnumerable<HtmlMarkerCreationOptions>
-                && (parameters[1] as IEnumerable<HtmlMarkerCreationOptions>).Any(marker => marker.Id == marker1.Id && marker.Options == marker1.Options)
-                && parameters[2] as decimal? == height
-                && parameters[3] is DropMarkersAnimationOptions
-                && parameters[4] is DotNetObjectReference<HtmlMarkerInvokeHelper>
+                parameters[0] as string == map.Id
+                && parameters[1] as string == result.Id
+                && parameters[2] is IEnumerable<HtmlMarkerCreationOptions>
+                && (parameters[2] as IEnumerable<HtmlMarkerCreationOptions>).Any(marker => marker.Id == marker1.Id && marker.Options == marker1.Options)
+                && parameters[3] as decimal? == height
+                && parameters[4] is DropMarkersAnimationOptions
+                && parameters[5] is DotNetObjectReference<HtmlMarkerInvokeHelper>
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -423,13 +440,8 @@
             Assert.IsType<GroupAnimation>(result);
             Assert.NotNull((result as GroupAnimation).Id);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.GroupAnimations.ToAnimationNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == result.Id
-                && parameters[1] is IEnumerable<string>
-                && (parameters[1] as IEnumerable<string>).Contains(animation1.Id)
-                && (parameters[1] as IEnumerable<string>).Contains(animation2.Id)
-                && parameters[2] is GroupAnimationOptions
-            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.GroupAnimations.ToAnimationNamespace(), result.Id, It.Is<IEnumerable<string>>(animationIds =>
+                animationIds.Contains(animation1.Id) && animationIds.Contains(animation2.Id)), options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -452,6 +464,7 @@
             var point2 = new Point();
             var points = new[] { point, point2 };
             var datasource = new DataSource();
+            datasource.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(datasource, _testMapId);
             var options = new DropAnimationOptions {
                 DisposeOnComplete = disposeOnComplete
             };
@@ -462,7 +475,7 @@
             Assert.NotNull(result.Id);
             Assert.Equal(disposeOnComplete, result.Disposed);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Drop.ToAnimationNamespace(), result.Id, points, datasource.Id, height, options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Drop.ToAnimationNamespace(), _testMapId, result.Id, points, datasource.Id, height, options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -500,6 +513,7 @@
         {
             var point = new Point();
             var datasource = new DataSource();
+            datasource.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(datasource, _testMapId);
             var options = new DropAnimationOptions {
                 DisposeOnComplete = disposeOnComplete
             };
@@ -511,12 +525,13 @@
             Assert.Equal(disposeOnComplete, result.Disposed);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Drop.ToAnimationNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == result.Id
-                && parameters[1] is IEnumerable<Point>
-                && (parameters[1] as IEnumerable<Point>).Contains(point)
-                && parameters[2] as string == datasource.Id
-                && parameters[3] as decimal? == height
-                && parameters[4] is DropAnimationOptions
+                parameters[0] as string == _testMapId
+                && parameters[1] as string == result.Id
+                && parameters[2] is IEnumerable<Point>
+                && (parameters[2] as IEnumerable<Point>).Contains(point)
+                && parameters[3] as string == datasource.Id
+                && parameters[4] as decimal? == height
+                && parameters[5] is DropAnimationOptions
              )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -553,6 +568,7 @@
         {
             var point = new Point();
             var datasource = new DataSource();
+            datasource.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(datasource, _testMapId);
             var options = new SetCoordinatesAnimationOptions {
                 DisposeOnComplete = disposeOnComplete
             };
@@ -563,7 +579,7 @@
             Assert.NotNull(result.Id);
             Assert.Equal(disposeOnComplete, result.Disposed);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetCoordinates.ToAnimationNamespace(), result.Id, point.Id, datasource.Id, newCoordinates, options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetCoordinates.ToAnimationNamespace(), _testMapId, result.Id, point.Id, datasource.Id, newCoordinates, options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -574,7 +590,7 @@
             var options = new SetCoordinatesAnimationOptions();
             var newCoordinates = new Position();
 
-            await Assert.ThrowsAnyAsync<ArgumentNullException>(async() => await _animationService.SetCoordinatesAsync(null, datasource, newCoordinates, options));
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.SetCoordinatesAsync(null, datasource, newCoordinates, options));
 
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -609,6 +625,7 @@
         public async Task Should_SetCoordinates_HtmlMarker_Async(bool disposeOnComplete)
         {
             var marker = new HtmlMarker(new HtmlMarkerOptions());
+            marker.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(marker, _testMapId);
             var options = new SetCoordinatesAnimationOptions {
                 DisposeOnComplete = disposeOnComplete
             };
@@ -619,7 +636,7 @@
             Assert.NotNull(result.Id);
             Assert.Equal(disposeOnComplete, result.Disposed);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetCoordinates.ToAnimationNamespace(), result.Id, marker.Id, null, newCoordinates, options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetCoordinates.ToAnimationNamespace(), _testMapId, result.Id, marker.Id, null, newCoordinates, options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -652,6 +669,7 @@
         {
             var geometry = new Point();
             var dataSource = new DataSource();
+            dataSource.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(dataSource, _testMapId);
             var newGeometry = new Polygon();
             var options = new MorphAnimationOptions {
                 DisposeOnComplete = disposeOnComplete
@@ -663,7 +681,7 @@
             Assert.NotNull(result.Id);
             Assert.Equal(disposeOnComplete, result.Disposed);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Morph.ToAnimationNamespace(), result.Id, geometry.Id, dataSource.Id, newGeometry, options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Morph.ToAnimationNamespace(), _testMapId, result.Id, geometry.Id, dataSource.Id, newGeometry, options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -674,7 +692,7 @@
             var newGeometry = new Polygon();
             var options = new MorphAnimationOptions();
 
-            await Assert.ThrowsAnyAsync<ArgumentNullException>(async() => await _animationService.MorphAsync(null, dataSource, newGeometry, options));
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.MorphAsync(null, dataSource, newGeometry, options));
 
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -709,6 +727,7 @@
         {
             var routePoints = new List<RoutePoint>();
             var dataSource = new DataSource();
+            dataSource.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(dataSource, _testMapId);
             var pin = new Point();
             var options = new RoutePathAnimationOptions();
 
@@ -716,7 +735,7 @@
             Assert.IsType<MoveAlongRouteAnimation>(result);
             Assert.NotNull(result.Id);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongRoute.ToAnimationNamespace(), result.Id, routePoints, dataSource.Id, pin.Id, options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongRoute.ToAnimationNamespace(), _testMapId, result.Id, routePoints, dataSource.Id, pin.Id, options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -727,7 +746,7 @@
             var pin = new Point();
             var options = new RoutePathAnimationOptions();
 
-            await Assert.ThrowsAnyAsync<ArgumentNullException>(async() => await _animationService.MoveAlongRouteAsync(null, pin, dataSource, options));
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.MoveAlongRouteAsync(null, pin, dataSource, options));
 
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -761,13 +780,14 @@
         {
             var routePoints = new List<RoutePoint>();
             var pin = new HtmlMarker(new HtmlMarkerOptions());
+            pin.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(pin, _testMapId);
             var options = new RoutePathAnimationOptions();
 
             var result = await _animationService.MoveAlongRouteAsync(routePoints, pin, options);
             Assert.IsType<MoveAlongRouteAnimation>(result);
             Assert.NotNull(result.Id);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongRoute.ToAnimationNamespace(), result.Id, routePoints, null, pin.Id, options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongRoute.ToAnimationNamespace(), _testMapId, result.Id, routePoints, null, pin.Id, options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -777,7 +797,7 @@
             var pin = new HtmlMarker(new HtmlMarkerOptions());
             var options = new RoutePathAnimationOptions();
 
-            await Assert.ThrowsAnyAsync<ArgumentNullException>(async() => await _animationService.MoveAlongRouteAsync(null, pin, options));
+            await Assert.ThrowsAnyAsync<ArgumentNullException>(async () => await _animationService.MoveAlongRouteAsync(null, pin, options));
 
             _jsRuntimeMock.VerifyNoOtherCalls();
         }

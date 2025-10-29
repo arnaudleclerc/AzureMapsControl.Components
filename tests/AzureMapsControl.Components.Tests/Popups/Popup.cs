@@ -16,6 +16,7 @@
     public class PopupTests
     {
         private readonly Mock<IMapJsRuntime> _jsRuntimeMock = new();
+        private const string TestMapId = "test-map-id";
 
         [Theory]
         [InlineData(null)]
@@ -50,11 +51,12 @@
         public async Task Should_OpenAsync()
         {
             var popup = new Popup(new PopupOptions()) {
-                JSRuntime = _jsRuntimeMock.Object
+                JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId
             };
             await popup.OpenAsync();
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Open.ToPopupNamespace(), popup.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Open.ToPopupNamespace(), TestMapId, popup.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -73,6 +75,7 @@
         {
             var popup = new Popup(new PopupOptions()) {
                 JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId,
                 IsRemoved = true
             };
 
@@ -85,10 +88,11 @@
         public async Task Should_CloseAsync()
         {
             var popup = new Popup(new PopupOptions()) {
-                JSRuntime = _jsRuntimeMock.Object
+                JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId
             };
             await popup.CloseAsync();
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Close.ToPopupNamespace(), popup.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Close.ToPopupNamespace(), TestMapId, popup.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -105,6 +109,7 @@
         {
             var popup = new Popup(new PopupOptions()) {
                 JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId,
                 IsRemoved = true
             };
             await Assert.ThrowsAnyAsync<PopupAlreadyRemovedException>(async () => await popup.CloseAsync());
@@ -116,14 +121,15 @@
         {
             var assertRemoveEvent = false;
             var popup = new Popup(new PopupOptions()) {
-                JSRuntime = _jsRuntimeMock.Object
+                JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId
             };
             popup.OnRemoved += () => assertRemoveEvent = true;
             await popup.RemoveAsync();
 
             Assert.True(assertRemoveEvent);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Remove.ToPopupNamespace(), popup.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Remove.ToPopupNamespace(), TestMapId, popup.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -140,14 +146,15 @@
         {
             var assertRemoveEvent = false;
             var popup = new Popup(new PopupOptions()) {
-                JSRuntime = _jsRuntimeMock.Object
+                JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId
             };
             popup.OnRemoved += () => assertRemoveEvent = true;
             await popup.RemoveAsync();
             await Assert.ThrowsAnyAsync<PopupAlreadyRemovedException>(async () => await popup.RemoveAsync());
             Assert.True(assertRemoveEvent);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Remove.ToPopupNamespace(), popup.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Remove.ToPopupNamespace(), TestMapId, popup.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -155,15 +162,17 @@
         public async Task Should_Update_Async()
         {
             var popup = new Popup(new PopupOptions()) {
-                JSRuntime = _jsRuntimeMock.Object
+                JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId
             };
             var updatedContent = "updatedContent";
             await popup.UpdateAsync(options => options.Content = updatedContent);
             Assert.Equal(updatedContent, popup.Options.Content);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.SetOptions.ToPopupNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == popup.Id
-                && (parameters[1] as PopupOptions).Content == "updatedContent"
+                parameters[0] as string == TestMapId
+                && parameters[1] as string == popup.Id
+                && (parameters[2] as PopupOptions).Content == "updatedContent"
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -183,6 +192,7 @@
         {
             var popup = new Popup(new PopupOptions()) {
                 JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId,
                 IsRemoved = true
             };
             var updatedContent = "updatedContent";
@@ -195,15 +205,17 @@
         public async Task Should_SetOptions_Async()
         {
             var popup = new Popup(new PopupOptions()) {
-                JSRuntime = _jsRuntimeMock.Object
+                JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId
             };
             var updatedContent = "updatedContent";
             await popup.SetOptionsAsync(options => options.Content = updatedContent);
             Assert.Equal(updatedContent, popup.Options.Content);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.SetOptions.ToPopupNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == popup.Id
-                && (parameters[1] as PopupOptions).Content == "updatedContent"
+                parameters[0] as string == TestMapId
+                && parameters[1] as string == popup.Id
+                && (parameters[2] as PopupOptions).Content == "updatedContent"
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -223,6 +235,7 @@
         {
             var popup = new Popup(new PopupOptions()) {
                 JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId,
                 IsRemoved = true
             };
             var updatedContent = "updatedContent";
@@ -305,7 +318,8 @@
         public async Task Should_ApplyTemplateAsync()
         {
             var popup = new Popup() {
-                JSRuntime = _jsRuntimeMock.Object
+                JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId
             };
 
             var template = new PopupTemplate();
@@ -316,10 +330,11 @@
             Assert.NotNull(popup.Options);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.ApplyTemplate.ToPopupNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == popup.Id
-                && parameters[1] as PopupOptions == popup.Options
-                && parameters[2] as Dictionary<string, object> == properties
-                && parameters[3] as PopupTemplate == template
+                parameters[0] as string == TestMapId
+                && parameters[1] as string == popup.Id
+                && parameters[2] as PopupOptions == popup.Options
+                && parameters[3] as Dictionary<string, object> == properties
+                && parameters[4] as PopupTemplate == template
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -343,6 +358,7 @@
         {
             var popup = new Popup() {
                 JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId,
                 IsRemoved = true
             };
             var template = new PopupTemplate();
@@ -358,7 +374,8 @@
         public async Task Should_NotApplyTemplateWithNullPropertiesAsync()
         {
             var popup = new Popup() {
-                JSRuntime = _jsRuntimeMock.Object
+                JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId
             };
 
             var template = new PopupTemplate();
@@ -373,7 +390,8 @@
         public async Task Should_ApplyTemplateWithOptionsAsync()
         {
             var popup = new Popup() {
-                JSRuntime = _jsRuntimeMock.Object
+                JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId
             };
 
             var template = new PopupTemplate();
@@ -384,10 +402,11 @@
             Assert.Equal("fillColor", popup.Options.FillColor);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.ApplyTemplate.ToPopupNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == popup.Id
-                && parameters[1] as PopupOptions == popup.Options
-                && parameters[2] as Dictionary<string, object> == properties
-                && parameters[3] as PopupTemplate == template
+                parameters[0] as string == TestMapId
+                && parameters[1] as string == popup.Id
+                && parameters[2] as PopupOptions == popup.Options
+                && parameters[3] as Dictionary<string, object> == properties
+                && parameters[4] as PopupTemplate == template
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -411,6 +430,7 @@
         {
             var popup = new Popup() {
                 JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId,
                 IsRemoved = true
             };
             var template = new PopupTemplate();
@@ -426,7 +446,8 @@
         public async Task Should_NotApplyTemplateWithOptionsWithNullPropertiesAsync()
         {
             var popup = new Popup() {
-                JSRuntime = _jsRuntimeMock.Object
+                JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId
             };
 
             var template = new PopupTemplate();

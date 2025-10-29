@@ -17,6 +17,7 @@
     public class GriddedDataSourceTests
     {
         private readonly Mock<IMapJsRuntime> _jsRuntimeMock = new();
+        private const string TestMapId = "test-map-id";
 
         [Theory]
         [InlineData(null)]
@@ -48,7 +49,7 @@
         [Fact]
         public async Task Should_AddShapes_Async()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
 
             var shapes = new List<Shape<Point>> {
                 new Shape<Point>(new Point())
@@ -59,8 +60,9 @@
             Assert.Contains(shapes[0], dataSource.Shapes);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == dataSource.Id
-                && parameters[1] is IEnumerable<Shape<Point>>
+                parameters[0] as string == TestMapId
+                && parameters[1] as string == dataSource.Id
+                && parameters[2] is IEnumerable<Shape<Point>>
             )), Times.Once);
 
             _jsRuntimeMock.VerifyNoOtherCalls();
@@ -84,7 +86,7 @@
         [Fact]
         public async Task Should_NotAddShapes_DisposedCase_Async()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
             await dataSource.DisposeAsync();
 
             var shapes = new List<Shape<Point>> {
@@ -93,14 +95,14 @@
 
             await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await dataSource.AddAsync(shapes));
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), dataSource.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), TestMapId, dataSource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async Task Should_AddFeatures_Async()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
 
             var features = new List<Feature<Point>> {
                 new Feature<Point>()
@@ -111,8 +113,9 @@
             Assert.Contains(features[0], dataSource.Features);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == dataSource.Id
-                && parameters[1] is IEnumerable<Feature<Point>>
+                parameters[0] as string == TestMapId
+                && parameters[1] as string == dataSource.Id
+                && parameters[2] is IEnumerable<Feature<Point>>
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -134,7 +137,7 @@
         [Fact]
         public async Task Should_NotAddFeatures_DisposedCase_Async()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
             await dataSource.DisposeAsync();
 
             var features = new List<Feature<Point>> {
@@ -143,14 +146,14 @@
 
             await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await dataSource.AddAsync(features));
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), dataSource.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), TestMapId, dataSource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async Task Should_AddFeatures_ParamsVersionAsync()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
 
             var point = new Feature<Point>();
 
@@ -159,8 +162,9 @@
             Assert.Contains(point, dataSource.Features);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == dataSource.Id
-                && parameters[1] is IEnumerable<Feature<Point>>
+                parameters[0] as string == TestMapId
+                && parameters[1] as string == dataSource.Id
+                && parameters[2] is IEnumerable<Feature<Point>>
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -168,7 +172,7 @@
         [Fact]
         public async Task Should_AddShapes_Params_Async()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
 
             var point0 = new Shape<Point>(new Point());
             var point1 = new Shape<Point>(new Point());
@@ -179,8 +183,9 @@
             Assert.Contains(point1, dataSource.Shapes);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), It.Is<object[]>(parameters =>
-                parameters[0] as string == dataSource.Id
-                && parameters[1] is IEnumerable<Shape<Point>>
+                parameters[0] as string == TestMapId
+                && parameters[1] as string == dataSource.Id
+                && parameters[2] is IEnumerable<Shape<Point>>
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -188,7 +193,7 @@
         [Fact]
         public async Task Should_NotCallAddCallbackIfGeometriesAreEmpty_Async()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
 
             await dataSource.AddAsync(new List<Shape<Point>>());
             _jsRuntimeMock.VerifyNoOtherCalls();
@@ -198,7 +203,7 @@
         public async Task Should_NotCallAddCallbackIfGeometriesAreNull_Async()
         {
             IEnumerable<Shape<Point>> shapes = null;
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
 
             await dataSource.AddAsync(shapes);
             _jsRuntimeMock.VerifyNoOtherCalls();
@@ -221,21 +226,21 @@
         [Fact]
         public async Task Should_NotImportDataFromUrl_DisposedCase_Async()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
             await dataSource.DisposeAsync();
 
             const string url = "someurl";
 
             await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await dataSource.ImportDataFromUrlAsync(url));
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), dataSource.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), TestMapId, dataSource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async Task Should_RemoveShapes_Async()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
             var point1 = new Shape<Point>("point1", new Point());
             var point2 = new Shape<Point>("point2", new Point());
             var shapes = new List<Shape<Point>> { point1, point2 };
@@ -248,8 +253,9 @@
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(
-                parameters => parameters[0] as string == dataSource.Id
-                && (parameters[1] as IEnumerable<string>).Single() == point1.Id
+                parameters => parameters[0] as string == TestMapId
+                && parameters[1] as string == dataSource.Id
+                && (parameters[2] as IEnumerable<string>).Single() == point1.Id
                 )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -257,7 +263,7 @@
         [Fact]
         public async Task Should_RemoveFeatures_Async()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
             var point1 = new Feature<Point>("point1", new Point());
             var point2 = new Feature<Point>("point2", new Point());
             var features = new List<Feature<Point>> { point1, point2 };
@@ -270,8 +276,9 @@
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(
-                parameters => parameters[0] as string == dataSource.Id
-                && (parameters[1] as IEnumerable<string>).Single() == point1.Id
+                parameters => parameters[0] as string == TestMapId
+                && parameters[1] as string == dataSource.Id
+                && (parameters[2] as IEnumerable<string>).Single() == point1.Id
                 )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -279,7 +286,7 @@
         [Fact]
         public async Task Should_RemoveShapes_EnumerableVersion_Async()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
             var point1 = new Shape<Point>("point1", new Point());
             var point2 = new Shape<Point>("point2", new Point());
             var shapes = new List<Shape<Point>> { point1, point2 };
@@ -292,8 +299,9 @@
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(
-                parameters => parameters[0] as string == dataSource.Id
-                && (parameters[1] as IEnumerable<string>).Single() == point1.Id
+                parameters => parameters[0] as string == TestMapId
+                && parameters[1] as string == dataSource.Id
+                && (parameters[2] as IEnumerable<string>).Single() == point1.Id
                 )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -301,7 +309,7 @@
         [Fact]
         public async Task Should_RemoveFeatures_EnumerableVersion_Async()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
             var point1 = new Feature<Point>("point1", new Point());
             var point2 = new Feature<Point>("point2", new Point());
             var features = new List<Feature<Point>> { point1, point2 };
@@ -314,8 +322,9 @@
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(
-                parameters => parameters[0] as string == dataSource.Id
-                && (parameters[1] as IEnumerable<string>).Single() == point1.Id
+                parameters => parameters[0] as string == TestMapId
+                && parameters[1] as string == dataSource.Id
+                && (parameters[2] as IEnumerable<string>).Single() == point1.Id
                 )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -323,7 +332,7 @@
         [Fact]
         public async Task Should_RemoveShapes_IdsVersion_Async()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
             var point1 = new Shape<Point>("point1", new Point());
             var point2 = new Shape<Point>("point2", new Point());
             var shapes = new List<Shape<Point>> { point1, point2 };
@@ -336,8 +345,9 @@
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(
-                parameters => parameters[0] as string == dataSource.Id
-                && (parameters[1] as IEnumerable<string>).Single() == point1.Id
+                parameters => parameters[0] as string == TestMapId
+                && parameters[1] as string == dataSource.Id
+                && (parameters[2] as IEnumerable<string>).Single() == point1.Id
                 )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -345,7 +355,7 @@
         [Fact]
         public async Task Should_RemoveFeatures_IdsVersion_Async()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
             var point1 = new Feature<Point>("point1", new Point());
             var point2 = new Feature<Point>("point2", new Point());
             var features = new List<Feature<Point>> { point1, point2 };
@@ -357,17 +367,18 @@
             Assert.Contains(point2, dataSource.Features);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(
-                parameters => parameters[0] as string == dataSource.Id
-                && (parameters[1] as IEnumerable<string>).Single() == point1.Id
-                )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == TestMapId
+                && parameters[1] as string == dataSource.Id
+                && (parameters[2] as IEnumerable<string>).Single() == point1.Id
+            )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async Task Should_RemoveShapesAndFeatures_IdsVersion_Async()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
             var point1 = new Feature<Point>("point1", new Point());
             var point2 = new Feature<Point>("point2", new Point());
             var point3 = new Shape<Point>("point3", new Point());
@@ -387,18 +398,19 @@
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(
-                parameters => parameters[0] as string == dataSource.Id
-                && (parameters[1] as IEnumerable<string>).Contains(point1.Id)
-                && (parameters[1] as IEnumerable<string>).Contains(point3.Id)
-                )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == TestMapId
+                && parameters[1] as string == dataSource.Id
+                && (parameters[2] as IEnumerable<string>).Contains(point1.Id)
+                && (parameters[2] as IEnumerable<string>).Contains(point3.Id)
+            )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async Task Should_RemoveShapes_IdsEnumerableVersion_Async()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
             var point1 = new Shape<Point>("point1", new Point());
             var point2 = new Shape<Point>("point2", new Point());
             var shapes = new List<Shape<Point>> { point1, point2 };
@@ -410,17 +422,18 @@
             Assert.Contains(point2, dataSource.Shapes);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(
-                parameters => parameters[0] as string == dataSource.Id
-                && (parameters[1] as IEnumerable<string>).Single() == point1.Id
-                )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == TestMapId
+                && parameters[1] as string == dataSource.Id
+                && (parameters[2] as IEnumerable<string>).Single() == point1.Id
+            )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async Task Should_RemoveFeatures_IdsEnumerableVersion_Async()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
             var point1 = new Feature<Point>("point1", new Point());
             var point2 = new Feature<Point>("point2", new Point());
             var features = new List<Feature<Point>> { point1, point2 };
@@ -432,17 +445,18 @@
             Assert.Contains(point2, dataSource.Features);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(
-                parameters => parameters[0] as string == dataSource.Id
-                && (parameters[1] as IEnumerable<string>).Single() == point1.Id
-                )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == TestMapId
+                && parameters[1] as string == dataSource.Id
+                && (parameters[2] as IEnumerable<string>).Single() == point1.Id
+            )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async Task Should_NotRemoveShapes_Async()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
             var point1 = new Shape<Point>("point1", new Point());
             var point2 = new Shape<Point>("point2", new Point());
 
@@ -456,7 +470,7 @@
         [Fact]
         public async Task Should_NotRemoveFeatures_Async()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
             var point1 = new Feature<Point>("point1", new Point());
             var point2 = new Feature<Point>("point2", new Point());
 
@@ -470,7 +484,7 @@
         [Fact]
         public async Task Should_NotRemoveShape_NullCheck_Async()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
             var point1 = new Shape<Point>("point1", new Point());
 
             await dataSource.RemoveAsync(point1);
@@ -481,7 +495,7 @@
         [Fact]
         public async Task Should_NotRemoveShapesNorFeatures_NullCheck_Async()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
             var shape = new Shape<Point>("point1", new Point());
             var feature = new Feature<Point>("point2", new Point());
 
@@ -500,7 +514,7 @@
         [Fact]
         public async Task Should_NotRemoveShapesButOnlyFeatures_Async()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
             var shape = new Shape<Point>("point1", new Point());
             var feature = new Feature<Point>("point2", new Point());
 
@@ -513,17 +527,18 @@
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(
-                parameters => parameters[0] as string == dataSource.Id
-                && (parameters[1] as IEnumerable<string>).Single() == feature.Id
-                )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == TestMapId
+                && parameters[1] as string == dataSource.Id
+                && (parameters[2] as IEnumerable<string>).Single() == feature.Id
+            )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async Task Should_NotRemoveFeaturesButOnlyShapes_Async()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
             var shape = new Shape<Point>("point1", new Point());
             var feature = new Feature<Point>("point2", new Point());
 
@@ -536,17 +551,18 @@
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(
-                parameters => parameters[0] as string == dataSource.Id
-                && (parameters[1] as IEnumerable<string>).Single() == shape.Id
-                )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == TestMapId
+                && parameters[1] as string == dataSource.Id
+                && (parameters[2] as IEnumerable<string>).Single() == shape.Id
+            )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async Task Should_RemoveShapesAndFeatures_Async()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
             var shape = new Shape<Point>("point1", new Point());
             var feature = new Feature<Point>("point2", new Point());
 
@@ -559,18 +575,19 @@
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(
-                parameters => parameters[0] as string == dataSource.Id
-                && (parameters[1] as IEnumerable<string>).Contains(shape.Id)
-                && (parameters[1] as IEnumerable<string>).Contains(feature.Id)
-                )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == TestMapId
+                && parameters[1] as string == dataSource.Id
+                && (parameters[2] as IEnumerable<string>).Contains(shape.Id)
+                && (parameters[2] as IEnumerable<string>).Contains(feature.Id)
+            )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async Task Should_ClearDataSource_Async()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
             var point2 = new Shape<Point>("point2", new Point());
             var feature = new Feature<Point>("point1", new Point());
 
@@ -583,7 +600,7 @@
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), It.IsAny<object[]>()), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Clear.ToSourceNamespace(), dataSource.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Clear.ToSourceNamespace(), TestMapId, dataSource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -600,22 +617,22 @@
         [Fact]
         public async Task Should_ClearDataSource_DisposedCase_Async()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
             await dataSource.DisposeAsync();
 
             await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await dataSource.ClearAsync());
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), dataSource.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), TestMapId, dataSource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
         [Fact]
         public async Task Should_DisposeAsync()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
             await dataSource.DisposeAsync();
             Assert.True(dataSource.Disposed);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), dataSource.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), TestMapId, dataSource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -632,10 +649,10 @@
         [Fact]
         public async Task Should_NotDispose_DisposedCase_Async()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
             await dataSource.DisposeAsync();
             await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await dataSource.DisposeAsync());
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), dataSource.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), TestMapId, dataSource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -644,13 +661,13 @@
         {
             var options = new GriddedDataSourceOptions();
             _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<GriddedDataSourceOptions>(It.IsAny<string>(), It.IsAny<object[]>())).ReturnsAsync(options);
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
 
             var result = await dataSource.GetOptionsAsync();
             Assert.Equal(options, result);
             Assert.Equal(options, dataSource.Options);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<GriddedDataSourceOptions>(Constants.JsConstants.Methods.Source.GetOptions.ToSourceNamespace(), dataSource.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<GriddedDataSourceOptions>(Constants.JsConstants.Methods.Source.GetOptions.ToSourceNamespace(), TestMapId, dataSource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -667,10 +684,10 @@
         [Fact]
         public async Task Should_NotGetOptions_DisposedCase_Async()
         {
-            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object };
+            var dataSource = new GriddedDataSource() { JSRuntime = _jsRuntimeMock.Object, MapId = TestMapId };
             await dataSource.DisposeAsync();
             await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await dataSource.GetOptionsAsync());
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), dataSource.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), TestMapId, dataSource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -679,6 +696,7 @@
         {
             var datasource = new GriddedDataSource {
                 JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId,
                 Options = new GriddedDataSourceOptions {
                     CellWidth = 1
                 }
@@ -688,7 +706,7 @@
             Assert.Equal(1, datasource.Options.CellWidth);
             Assert.Equal(2, datasource.Options.CenterLatitude);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.SetOptions.ToSourceNamespace(), datasource.Id, datasource.Options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.SetOptions.ToSourceNamespace(), TestMapId, datasource.Id, datasource.Options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -696,13 +714,14 @@
         public async Task Should_SetOptions_NoInitialValueAsync()
         {
             var datasource = new GriddedDataSource {
-                JSRuntime = _jsRuntimeMock.Object
+                JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId
             };
 
             await datasource.SetOptionsAsync(options => options.CenterLatitude = 2);
             Assert.Equal(2, datasource.Options.CenterLatitude);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.SetOptions.ToSourceNamespace(), datasource.Id, datasource.Options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.SetOptions.ToSourceNamespace(), TestMapId, datasource.Id, datasource.Options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -720,13 +739,14 @@
         public async Task Should_NotSetOptions_DisposedCase_Async()
         {
             var datasource = new GriddedDataSource {
-                JSRuntime = _jsRuntimeMock.Object
+                JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId
             };
             await datasource.DisposeAsync();
 
             await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await datasource.SetOptionsAsync(options => options.CenterLatitude = 2));
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), datasource.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), TestMapId, datasource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -734,19 +754,20 @@
         public async Task Should_GetCellChildren_Async()
         {
             var datasource = new GriddedDataSource {
-                JSRuntime = _jsRuntimeMock.Object
+                JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId
             };
 
             var cellChildren = System.ArraySegment<Feature<Point>>.Empty;
             _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<IEnumerable<Feature<Point>>>(It.IsAny<string>(), It.IsAny<object[]>()))
-                .ReturnsAsync(cellChildren);
+                 .ReturnsAsync(cellChildren);
 
             var cellId = "cellId";
             var result = await datasource.GetCellChildrenAsync(cellId);
 
             Assert.Equal(cellChildren, result);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<IEnumerable<Feature<Point>>>(Constants.JsConstants.Methods.GriddedDatasource.GetCellChildren.ToGriddedDatasourceNamespace(), datasource.Id, cellId), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<IEnumerable<Feature<Point>>>(Constants.JsConstants.Methods.GriddedDatasource.GetCellChildren.ToGriddedDatasourceNamespace(), TestMapId, datasource.Id, cellId), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -764,13 +785,14 @@
         public async Task Should_NotGetCellChildren_DisposedCase_Async()
         {
             var datasource = new GriddedDataSource {
-                JSRuntime = _jsRuntimeMock.Object
+                JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId
             };
 
             await datasource.DisposeAsync();
             await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await datasource.GetCellChildrenAsync("cellId"));
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), datasource.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), TestMapId, datasource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -778,17 +800,18 @@
         public async Task Should_GetGridCells_Async()
         {
             var datasource = new GriddedDataSource {
-                JSRuntime = _jsRuntimeMock.Object
+                JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId
             };
 
             var gridCells = System.ArraySegment<Feature<Polygon>>.Empty;
             _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<IEnumerable<Feature<Polygon>>>(It.IsAny<string>(), It.IsAny<object[]>()))
-                .ReturnsAsync(gridCells);
+   .ReturnsAsync(gridCells);
 
             var result = await datasource.GetGridCellsAsync();
             Assert.Equal(gridCells, result);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<IEnumerable<Feature<Polygon>>>(Constants.JsConstants.Methods.GriddedDatasource.GetGridCells.ToGriddedDatasourceNamespace(), datasource.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<IEnumerable<Feature<Polygon>>>(Constants.JsConstants.Methods.GriddedDatasource.GetGridCells.ToGriddedDatasourceNamespace(), TestMapId, datasource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -806,13 +829,14 @@
         public async Task Should_NotGetGridCells_DisposedCase_Async()
         {
             var datasource = new GriddedDataSource {
-                JSRuntime = _jsRuntimeMock.Object
+                JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId
             };
 
             await datasource.DisposeAsync();
             await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await datasource.GetGridCellsAsync());
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), datasource.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), TestMapId, datasource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -820,17 +844,18 @@
         public async Task Should_GetPoints_Async()
         {
             var datasource = new GriddedDataSource {
-                JSRuntime = _jsRuntimeMock.Object
+                JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId
             };
 
             var points = System.ArraySegment<Feature<Point>>.Empty;
             _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<IEnumerable<Feature<Point>>>(It.IsAny<string>(), It.IsAny<object[]>()))
-                .ReturnsAsync(points);
+            .ReturnsAsync(points);
 
             var result = await datasource.GetPointsAsync();
             Assert.Equal(points, result);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<IEnumerable<Feature<Point>>>(Constants.JsConstants.Methods.GriddedDatasource.GetPoints.ToGriddedDatasourceNamespace(), datasource.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<IEnumerable<Feature<Point>>>(Constants.JsConstants.Methods.GriddedDatasource.GetPoints.ToGriddedDatasourceNamespace(), TestMapId, datasource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -848,13 +873,14 @@
         public async Task Should_NotGetPoints_DisposedCase_Async()
         {
             var datasource = new GriddedDataSource {
-                JSRuntime = _jsRuntimeMock.Object
+                JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId
             };
 
             await datasource.DisposeAsync();
             await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await datasource.GetPointsAsync());
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), datasource.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), TestMapId, datasource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -862,13 +888,14 @@
         public async Task Should_SetPoints_WithFeatureCollection_Async()
         {
             var datasource = new GriddedDataSource {
-                JSRuntime = _jsRuntimeMock.Object
+                JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId
             };
 
             var featureCollection = JsonDocument.Parse("{}");
             await datasource.SetPointsAsync(featureCollection);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.GriddedDatasource.SetFeatureCollectionPoints.ToGriddedDatasourceNamespace(), datasource.Id, featureCollection), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.GriddedDatasource.SetFeatureCollectionPoints.ToGriddedDatasourceNamespace(), TestMapId, datasource.Id, featureCollection), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -887,14 +914,15 @@
         public async Task Should_NotSetPoints_WithFeatureCollection_DisposedCase_Async()
         {
             var datasource = new GriddedDataSource {
-                JSRuntime = _jsRuntimeMock.Object
+                JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId
             };
 
             await datasource.DisposeAsync();
             var featureCollection = JsonDocument.Parse("{}");
             await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await datasource.SetPointsAsync(featureCollection));
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), datasource.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), TestMapId, datasource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -902,13 +930,14 @@
         public async Task Should_SetPoints_WithFeaturePoints_Async()
         {
             var datasource = new GriddedDataSource {
-                JSRuntime = _jsRuntimeMock.Object
+                JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId
             };
 
             var features = new Feature<Point>[] { new Feature<Point>() };
             await datasource.SetPointsAsync(features);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.GriddedDatasource.SetFeaturePoints.ToGriddedDatasourceNamespace(), datasource.Id, features), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.GriddedDatasource.SetFeaturePoints.ToGriddedDatasourceNamespace(), TestMapId, datasource.Id, features), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -927,14 +956,15 @@
         public async Task Should_NotSetPoints_WithFeaturePoints_DisposedCase_Async()
         {
             var datasource = new GriddedDataSource {
-                JSRuntime = _jsRuntimeMock.Object
+                JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId
             };
 
             await datasource.DisposeAsync();
             var features = new Feature<Point>[] { new Feature<Point>() };
             await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await datasource.SetPointsAsync(features));
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), datasource.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), TestMapId, datasource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -942,13 +972,14 @@
         public async Task Should_SetPoints_WithPoints_Async()
         {
             var datasource = new GriddedDataSource {
-                JSRuntime = _jsRuntimeMock.Object
+                JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId
             };
 
             var points = new Point[] { new Point() };
             await datasource.SetPointsAsync(points);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.GriddedDatasource.SetPoints.ToGriddedDatasourceNamespace(), datasource.Id, points), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.GriddedDatasource.SetPoints.ToGriddedDatasourceNamespace(), TestMapId, datasource.Id, points), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -967,14 +998,15 @@
         public async Task Should_NotSetPoints_WithPoints_DisposedCase_Async()
         {
             var datasource = new GriddedDataSource {
-                JSRuntime = _jsRuntimeMock.Object
+                JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId
             };
 
             await datasource.DisposeAsync();
             var points = new Point[] { new Point() };
             await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await datasource.SetPointsAsync(points));
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), datasource.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), TestMapId, datasource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -982,13 +1014,14 @@
         public async Task Should_SetPoints_WithShapes_Async()
         {
             var datasource = new GriddedDataSource {
-                JSRuntime = _jsRuntimeMock.Object
+                JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId
             };
 
             var shapes = new Shape<Point>[] { new Shape<Point>() };
             await datasource.SetPointsAsync(shapes);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.GriddedDatasource.SetShapePoints.ToGriddedDatasourceNamespace(), datasource.Id, shapes), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.GriddedDatasource.SetShapePoints.ToGriddedDatasourceNamespace(), TestMapId, datasource.Id, shapes), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -1007,14 +1040,15 @@
         public async Task Should_NotSetPoints_WithShapes_DisposedCase_Async()
         {
             var datasource = new GriddedDataSource {
-                JSRuntime = _jsRuntimeMock.Object
+                JSRuntime = _jsRuntimeMock.Object,
+                MapId = TestMapId
             };
 
             await datasource.DisposeAsync();
             var shapes = new Shape<Point>[] { new Shape<Point>() };
             await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await datasource.SetPointsAsync(shapes));
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), datasource.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), TestMapId, datasource.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
     }

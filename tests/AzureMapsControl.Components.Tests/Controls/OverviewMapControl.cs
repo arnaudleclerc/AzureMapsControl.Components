@@ -16,6 +16,7 @@
     public class OverviewMapControlTests
     {
         private readonly Mock<IMapJsRuntime> _jsRuntimeMock = new();
+        private readonly string _testMapId = "test-map-id";
 
         [Fact]
         public void Should_Create()
@@ -37,13 +38,16 @@
             var control = new OverviewMapControl(options, position) {
                 JsRuntime = _jsRuntimeMock.Object
             };
+            // Set the MapId on the control as would happen when added to map
+            control.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(control, _testMapId);
 
             await control.UpdateAsync(options => options.Interactive = true);
             Assert.True(options.Interactive);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.OverviewMapControl.SetOptions.ToOverviewMapControlNamespace(), It.Is<object[]>(parameters =>
-                (parameters[0] as Guid?).GetValueOrDefault().ToString() == control.Id.ToString()
-                && (parameters[1] as OverviewMapControlOptions) == control.Options
-            )), Times.Once);
+              parameters[0] as string == _testMapId
+            && parameters[1] as string == control.Id.ToString()
+                 && parameters[2] as OverviewMapControlOptions == control.Options
+              )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -65,13 +69,16 @@
             var control = new OverviewMapControl(options, position) {
                 JsRuntime = _jsRuntimeMock.Object
             };
+            // Set the MapId on the control as would happen when added to map
+            control.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(control, _testMapId);
 
             await control.SetOptionsAsync(options => options.Interactive = true);
             Assert.True(options.Interactive);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.OverviewMapControl.SetOptions.ToOverviewMapControlNamespace(), It.Is<object[]>(parameters =>
-                            (parameters[0] as Guid?).GetValueOrDefault().ToString() == control.Id.ToString()
-                            && (parameters[1] as OverviewMapControlOptions) == control.Options
-                        )), Times.Once);
+           parameters[0] as string == _testMapId
+       && parameters[1] as string == control.Id.ToString()
+              && parameters[2] as OverviewMapControlOptions == control.Options
+              )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -91,13 +98,16 @@
             var control = new OverviewMapControl {
                 JsRuntime = _jsRuntimeMock.Object
             };
+            // Set the MapId on the control as would happen when added to map
+            control.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(control, _testMapId);
 
             await control.UpdateAsync(options => options.Interactive = true);
             Assert.True(control.Options.Interactive);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.OverviewMapControl.SetOptions.ToOverviewMapControlNamespace(), It.Is<object[]>(parameters =>
-                            (parameters[0] as Guid?).GetValueOrDefault().ToString() == control.Id.ToString()
-                            && (parameters[1] as OverviewMapControlOptions) == control.Options
-                        )), Times.Once);
+              parameters[0] as string == _testMapId
+        && parameters[1] as string == control.Id.ToString()
+          && parameters[2] as OverviewMapControlOptions == control.Options
+     )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -107,13 +117,16 @@
             var control = new OverviewMapControl {
                 JsRuntime = _jsRuntimeMock.Object
             };
+            // Set the MapId on the control as would happen when added to map
+            control.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(control, _testMapId);
 
             await control.SetOptionsAsync(options => options.Interactive = true);
             Assert.True(control.Options.Interactive);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.OverviewMapControl.SetOptions.ToOverviewMapControlNamespace(), It.Is<object[]>(parameters =>
-                            (parameters[0] as Guid?).GetValueOrDefault().ToString() == control.Id.ToString()
-                            && (parameters[1] as OverviewMapControlOptions) == control.Options
-                        )), Times.Once);
+               parameters[0] as string == _testMapId
+    && parameters[1] as string == control.Id.ToString()
+             && parameters[2] as OverviewMapControlOptions == control.Options
+          )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
     }
@@ -153,36 +166,36 @@
             }, ControlPosition.BottomLeft);
 
             var expectedJson = "{"
-                + "\"id\":\"" + control.Id + "\""
-                + ",\"type\":\"" + control.Type + "\""
-                + ",\"position\":\"" + control.Position.ToString() + "\""
-                + ",\"options\":{"
-                + "\"height\":" + control.Options.Height.Value
-                + ",\"interactive\":" + control.Options.Interactive.Value
-                + ",\"mapStyle\":\"" + control.Options.MapStyle.ToString() + "\""
-                + ",\"markerOptions\":{"
-                + "\"anchor\":\"" + control.Options.MarkerOptions.Anchor.ToString() + "\""
-                + ",\"color\":\"" + control.Options.MarkerOptions.Color.ToString() + "\""
-                + ",\"draggable\":" + control.Options.MarkerOptions.Draggable.Value
-                + ",\"htmlContent\":\"" + control.Options.MarkerOptions.HtmlContent.ToString() + "\""
-                + ",\"pixelOffset\":[" + control.Options.MarkerOptions.PixelOffset.X + "," + control.Options.MarkerOptions.PixelOffset.Y + "]"
-                + ",\"position\":[" + control.Options.MarkerOptions.Position.Longitude + "," + control.Options.MarkerOptions.Position.Latitude + "," + control.Options.MarkerOptions.Position.Elevation.Value + "]"
+             + "\"id\":\"" + control.Id + "\""
+            + ",\"type\":\"" + control.Type + "\""
+               + ",\"position\":\"" + control.Position.ToString() + "\""
+                 + ",\"options\":{"
+                     + "\"height\":" + control.Options.Height.Value
+               + ",\"interactive\":" + control.Options.Interactive.Value
+                    + ",\"mapStyle\":\"" + control.Options.MapStyle.ToString() + "\""
+             + ",\"markerOptions\":{"
+               + "\"anchor\":\"" + control.Options.MarkerOptions.Anchor.ToString() + "\""
+            + ",\"color\":\"" + control.Options.MarkerOptions.Color.ToString() + "\""
+               + ",\"draggable\":" + control.Options.MarkerOptions.Draggable.Value
+                 + ",\"htmlContent\":\"" + control.Options.MarkerOptions.HtmlContent.ToString() + "\""
+                     + ",\"pixelOffset\":[" + control.Options.MarkerOptions.PixelOffset.X + "," + control.Options.MarkerOptions.PixelOffset.Y + "]"
+                        + ",\"position\":[" + control.Options.MarkerOptions.Position.Longitude + "," + control.Options.MarkerOptions.Position.Latitude + "," + control.Options.MarkerOptions.Position.Elevation.Value + "]"
                 + ",\"secondaryColor\":\"" + control.Options.MarkerOptions.SecondaryColor.ToString() + "\""
-                + ",\"text\":\"" + control.Options.MarkerOptions.Text.ToString() + "\""
-                + ",\"visible\":" + control.Options.MarkerOptions.Visible.Value
-                + "}"
-                + ",\"minimized\":" + control.Options.Minimized.Value
+                    + ",\"text\":\"" + control.Options.MarkerOptions.Text.ToString() + "\""
+                      + ",\"visible\":" + control.Options.MarkerOptions.Visible.Value
+                     + "}"
+                  + ",\"minimized\":" + control.Options.Minimized.Value
                 + ",\"overlay\":\"" + control.Options.Overlay.ToString() + "\""
-                + ",\"showToggle\":" + control.Options.ShowToggle.Value
-                + ",\"style\":\"" + control.Options.Style.FirstChoice.ToString() + "\""
+                 + ",\"showToggle\":" + control.Options.ShowToggle.Value
+            + ",\"style\":\"" + control.Options.Style.FirstChoice.ToString() + "\""
                 + ",\"syncBearingPitch\":" + control.Options.SyncBearingPitch.Value
-                + ",\"syncZoom\":" + control.Options.SyncZoom.Value
-                + ",\"visible\":" + control.Options.Visible.Value
-                + ",\"width\":" + control.Options.Width.Value
-                + ",\"zoom\":" + control.Options.Zoom.Value
-                + ",\"zoomOffset\":" + control.Options.ZoomOffset.Value
-                + "}"
-                + "}";
+                  + ",\"syncZoom\":" + control.Options.SyncZoom.Value
+                 + ",\"visible\":" + control.Options.Visible.Value
+            + ",\"width\":" + control.Options.Width.Value
+                    + ",\"zoom\":" + control.Options.Zoom.Value
+                   + ",\"zoomOffset\":" + control.Options.ZoomOffset.Value
+              + "}"
+                 + "}";
 
             TestAndAssertWrite(control, expectedJson);
         }
@@ -218,36 +231,36 @@
             }, ControlPosition.BottomLeft);
 
             var expectedJson = "{"
-                + "\"id\":\"" + control.Id + "\""
-                + ",\"type\":\"" + control.Type + "\""
-                + ",\"position\":\"" + control.Position.ToString() + "\""
-                + ",\"options\":{"
-                + "\"height\":" + control.Options.Height.Value
-                + ",\"interactive\":" + control.Options.Interactive.Value
-                + ",\"mapStyle\":\"" + control.Options.MapStyle.ToString() + "\""
-                + ",\"markerOptions\":{"
-                + "\"anchor\":\"" + control.Options.MarkerOptions.Anchor.ToString() + "\""
-                + ",\"color\":\"" + control.Options.MarkerOptions.Color.ToString() + "\""
-                + ",\"draggable\":" + control.Options.MarkerOptions.Draggable.Value
-                + ",\"htmlContent\":\"" + control.Options.MarkerOptions.HtmlContent.ToString() + "\""
-                + ",\"pixelOffset\":[" + control.Options.MarkerOptions.PixelOffset.X + "," + control.Options.MarkerOptions.PixelOffset.Y + "]"
-                + ",\"position\":[" + control.Options.MarkerOptions.Position.Longitude + "," + control.Options.MarkerOptions.Position.Latitude + "," + control.Options.MarkerOptions.Position.Elevation.Value + "]"
-                + ",\"secondaryColor\":\"" + control.Options.MarkerOptions.SecondaryColor.ToString() + "\""
-                + ",\"text\":\"" + control.Options.MarkerOptions.Text.ToString() + "\""
-                + ",\"visible\":" + control.Options.MarkerOptions.Visible.Value
-                + "}"
-                + ",\"minimized\":" + control.Options.Minimized.Value
-                + ",\"overlay\":\"" + control.Options.Overlay.ToString() + "\""
-                + ",\"showToggle\":" + control.Options.ShowToggle.Value
-                + ",\"style\":\"" + control.Options.Style.SecondChoice + "\""
-                + ",\"syncBearingPitch\":" + control.Options.SyncBearingPitch.Value
-                + ",\"syncZoom\":" + control.Options.SyncZoom.Value
-                + ",\"visible\":" + control.Options.Visible.Value
-                + ",\"width\":" + control.Options.Width.Value
-                + ",\"zoom\":" + control.Options.Zoom.Value
-                + ",\"zoomOffset\":" + control.Options.ZoomOffset.Value
-                + "}"
-                + "}";
+        + "\"id\":\"" + control.Id + "\""
+          + ",\"type\":\"" + control.Type + "\""
+          + ",\"position\":\"" + control.Position.ToString() + "\""
+        + ",\"options\":{"
+          + "\"height\":" + control.Options.Height.Value
+           + ",\"interactive\":" + control.Options.Interactive.Value
+           + ",\"mapStyle\":\"" + control.Options.MapStyle.ToString() + "\""
+          + ",\"markerOptions\":{"
+      + "\"anchor\":\"" + control.Options.MarkerOptions.Anchor.ToString() + "\""
+             + ",\"color\":\"" + control.Options.MarkerOptions.Color.ToString() + "\""
+      + ",\"draggable\":" + control.Options.MarkerOptions.Draggable.Value
+            + ",\"htmlContent\":\"" + control.Options.MarkerOptions.HtmlContent.ToString() + "\""
+         + ",\"pixelOffset\":[" + control.Options.MarkerOptions.PixelOffset.X + "," + control.Options.MarkerOptions.PixelOffset.Y + "]"
+             + ",\"position\":[" + control.Options.MarkerOptions.Position.Longitude + "," + control.Options.MarkerOptions.Position.Latitude + "," + control.Options.MarkerOptions.Position.Elevation.Value + "]"
+           + ",\"secondaryColor\":\"" + control.Options.MarkerOptions.SecondaryColor.ToString() + "\""
+          + ",\"text\":\"" + control.Options.MarkerOptions.Text.ToString() + "\""
+           + ",\"visible\":" + control.Options.MarkerOptions.Visible.Value
+         + "}"
+            + ",\"minimized\":" + control.Options.Minimized.Value
+           + ",\"overlay\":\"" + control.Options.Overlay.ToString() + "\""
+         + ",\"showToggle\":" + control.Options.ShowToggle.Value
+           + ",\"style\":\"" + control.Options.Style.SecondChoice + "\""
+           + ",\"syncBearingPitch\":" + control.Options.SyncBearingPitch.Value
+               + ",\"syncZoom\":" + control.Options.SyncZoom.Value
+       + ",\"visible\":" + control.Options.Visible.Value
+        + ",\"width\":" + control.Options.Width.Value
+             + ",\"zoom\":" + control.Options.Zoom.Value
+              + ",\"zoomOffset\":" + control.Options.ZoomOffset.Value
+        + "}"
+             + "}";
 
             TestAndAssertWrite(control, expectedJson);
         }
