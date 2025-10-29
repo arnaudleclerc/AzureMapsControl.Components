@@ -16,6 +16,10 @@
 
     public async Task OnMapReady(MapEventArgs eventArgs)
     {
+        var dummyDataSourceId = "_empty";
+        var dummyDataSource = new AzureMapsControl.Components.Data.DataSource(dummyDataSourceId);
+        await eventArgs.Map.AddSourceAsync(dummyDataSource);
+
         var dataSource = new AzureMapsControl.Components.Data.DataSource(_datasourceId)
         {
             EventActivationFlags = AzureMapsControl.Components.Data.DataSourceEventActivationFlags.None()

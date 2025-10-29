@@ -1,6 +1,7 @@
 ﻿@page "/Controls/OverviewMap"
 @rendermode InteractiveServer
 
+@using AzureMapsControl.Components.Controls
 @using AzureMapsControl.Components.Map
 <AzureMap Id="map"
           Controls="new AzureMapsControl.Components.Controls.Control[]
@@ -13,16 +14,33 @@
               AzureMapsControl.Components.Controls.ControlPosition.TopLeft),
               new AzureMapsControl.Components.Controls.StyleControl(position: AzureMapsControl.Components.Controls.ControlPosition.TopRight)
           }"
-          EventActivationFlags="MapEventActivationFlags.None().Enable(MapEventType.StyleData)"
-          OnStyleData="OnStyleData"/>
+          EventActivationFlags="MapEventActivationFlags.None().Enable(MapEventType.StyleData).Enable(MapEventType.Ready)"
+          OnStyleData="OnStyleData"
+          OnReady="OnMapReady"/>
 
 @code {
+    private bool _mapReady = false;
+    private MapStyle? _style;
+    private OverviewMapControl? _overviewControl;
+
+    public async void OnMapReady(MapEventArgs eventArgs)
+    {
+        _mapReady = true;
+        SetStyle();
+    }
+    
     public async void OnStyleData(MapStyleDataEventArgs eventArgs)
     {
-        var overviewControl = eventArgs.Map.Controls?.OfType<AzureMapsControl.Components.Controls.OverviewMapControl>()?.FirstOrDefault();
-        if(overviewControl is not null)
+        _overviewControl = eventArgs.Map.Controls?.OfType<AzureMapsControl.Components.Controls.OverviewMapControl>()?.FirstOrDefault();
+        _style = eventArgs.Style;
+        SetStyle();
+    }
+
+    private async void SetStyle()
+    {
+        if (_mapReady && _overviewControl != null && _style.HasValue)
         {
-            await overviewControl.SetOptionsAsync(options => options.MapStyle = eventArgs.Style);
+            await _overviewControl.SetOptionsAsync(options => options.MapStyle = _style.Value);
         }
     }
 } 

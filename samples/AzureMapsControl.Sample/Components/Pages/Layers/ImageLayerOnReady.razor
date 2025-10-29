@@ -12,6 +12,10 @@
 @code  {
     public async Task OnMapReady(MapEventArgs events)
     {
+        var dummyDataSourceId = "_empty";
+        var dummyDataSource = new AzureMapsControl.Components.Data.DataSource(dummyDataSourceId);
+        await events.Map.AddSourceAsync(dummyDataSource);
+        
         var layer = new AzureMapsControl.Components.Layers.ImageLayer
         {
             Options = new AzureMapsControl.Components.Layers.ImageLayerOptions("https://ngazuremaps.blob.core.windows.net/images/munich_1858.jpg", new AzureMapsControl.Components.Atlas.Position[] {

@@ -16,6 +16,10 @@
 
     public async Task OnMapReady(MapEventArgs eventArgs)
     {
+        var dummyDataSourceId = "_empty";
+        var dummyDataSource = new AzureMapsControl.Components.Data.DataSource(dummyDataSourceId);
+        await eventArgs.Map.AddSourceAsync(dummyDataSource);
+
         var dataSource = new AzureMapsControl.Components.Data.DataSource(_datasourceId);
         await eventArgs.Map.AddSourceAsync(dataSource);
 
@@ -24,6 +28,11 @@
 
     public async Task OnDatasourceAdded(MapSourceEventArgs eventArgs)
     {
+        if (eventArgs.Source.Id != _datasourceId)
+        {
+            return;
+        }
+
         var fillColorExpressionJsonString = "[\"step\", [\"get\", \"DENSITY\"], \"#00ff80\", 10, \"#09e076\", 20, \"#0bbf67\", 50, \"#f7e305\", 100, \"#f7c707\", 200, \"#f78205\", 500, \"#f75e05\", 1000, \"#f72505\", 10000, \"#6b0a05\"]";
         var heightExpressionJsonString = "[\"interpolate\", [\"linear\"], [\"get\", \"DENSITY\"], 0, 100, 1200, 960000]";
 

@@ -15,25 +15,20 @@
     private readonly string _blueDatasourceId = "blueDatasource";
     private readonly string _redDatasourceId = "redDatasource";
 
+    private AzureMapsControl.Components.Data.DataSource? blueDataSource;
+    private AzureMapsControl.Components.Data.DataSource? redDataSource;
+
     public async Task OnMapReady(MapEventArgs events)
     {
-        var blueDataSource = new AzureMapsControl.Components.Data.DataSource(_blueDatasourceId);
-        await events.Map.AddSourceAsync(blueDataSource);
+        var dummyDataSourceId = "_empty";
+        var dummyDataSource = new AzureMapsControl.Components.Data.DataSource(dummyDataSourceId);
+        await events.Map.AddSourceAsync(dummyDataSource);
 
-        var redDataSource = new AzureMapsControl.Components.Data.DataSource(_redDatasourceId);
+        redDataSource = new AzureMapsControl.Components.Data.DataSource(_redDatasourceId);
         await events.Map.AddSourceAsync(redDataSource);
 
-        var bluePoints = new List<AzureMapsControl.Components.Atlas.Shape>();
-        var redPoints = new List<AzureMapsControl.Components.Atlas.Shape>();
-
-        for (var i = 0; i < 10; i++)
-        {
-            bluePoints.Add(new AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.Point>(new AzureMapsControl.Components.Atlas.Point(new AzureMapsControl.Components.Atlas.Position(i * 5, i * 5))));
-            redPoints.Add(new AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.Point>(new AzureMapsControl.Components.Atlas.Point(new AzureMapsControl.Components.Atlas.Position(i * -5, i * 5))));
-        }
-
-        await blueDataSource.AddAsync(bluePoints);
-        await redDataSource.AddAsync(redPoints);
+        blueDataSource = new AzureMapsControl.Components.Data.DataSource(_blueDatasourceId);
+        await events.Map.AddSourceAsync(blueDataSource);
     }
 
     public async Task OnDatasourceAdded(MapSourceEventArgs eventArgs)
@@ -46,8 +41,25 @@
             }
         };
 
-        if (eventArgs.Source.Id == _redDatasourceId)
+        if (eventArgs.Source.Id == _blueDatasourceId && blueDataSource != null)
         {
+            var bluePoints = new List<AzureMapsControl.Components.Atlas.Shape>();
+            for (var i = 0; i < 10; i++)
+            {
+                bluePoints.Add(new AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.Point>(new AzureMapsControl.Components.Atlas.Point(new AzureMapsControl.Components.Atlas.Position(i * 5, i * 5))));
+            }
+            await blueDataSource.AddAsync(bluePoints);
+        }
+
+        if (eventArgs.Source.Id == _redDatasourceId && redDataSource != null)
+        {
+            var redPoints = new List<AzureMapsControl.Components.Atlas.Shape>();
+            for (var i = 0; i < 10; i++)
+            {
+                redPoints.Add(new AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.Point>(new AzureMapsControl.Components.Atlas.Point(new AzureMapsControl.Components.Atlas.Position(i * -5, i * 5))));
+            }
+            await redDataSource.AddAsync(redPoints);
+
             layer.Options.IconOptions = new AzureMapsControl.Components.Layers.IconOptions
             {
                 Image = new AzureMapsControl.Components.Atlas.ExpressionOrString("pin-red")

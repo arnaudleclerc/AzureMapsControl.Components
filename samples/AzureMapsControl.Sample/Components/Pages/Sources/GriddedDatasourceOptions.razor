@@ -191,6 +191,10 @@
 
     public async Task OnMapReady(MapEventArgs eventArgs)
     {
+        var dummyDataSourceId = "_empty";
+        var dummyDataSource = new AzureMapsControl.Components.Data.DataSource(dummyDataSourceId);
+        await eventArgs.Map.AddSourceAsync(dummyDataSource);
+
         _map = eventArgs.Map;
         _datasource = new AzureMapsControl.Components.Data.Grid.GriddedDataSource(_datasourceId)
             {
@@ -208,6 +212,11 @@
 
     public async Task OnSourceAdded(MapSourceEventArgs eventArgs)
     {
+        if (eventArgs.Source.Id != _datasourceId)
+        {
+            return;
+        }
+
         _layer = new AzureMapsControl.Components.Layers.PolygonLayer
             {
                 Options = new AzureMapsControl.Components.Layers.PolygonLayerOptions
