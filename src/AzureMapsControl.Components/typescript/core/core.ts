@@ -191,6 +191,9 @@ export class Core {
     public static addMap(mapId: string,
         configuration: Configuration,
         serviceOptions: azmaps.ServiceOptions,
+        cameraOptions: azmaps.CameraOptions | azmaps.CameraBoundsOptions,
+        styleOptions: azmaps.StyleOptions,
+        userInteractionOptions: azmaps.UserInteractionOptions,
         enabledEvents: string[],
         eventHelper: EventHelper<MapEventArgs>): void {
 
@@ -217,6 +220,9 @@ export class Core {
 
         const mapOptions: azmaps.ServiceOptions & azmaps.StyleOptions & azmaps.UserInteractionOptions & (azmaps.CameraOptions | azmaps.CameraBoundsOptions) = {
             ...serviceOptions,
+            ...cameraOptions,
+            ...styleOptions,
+            ...userInteractionOptions
         };
 
         const map = new azmaps.Map(mapId, mapOptions);

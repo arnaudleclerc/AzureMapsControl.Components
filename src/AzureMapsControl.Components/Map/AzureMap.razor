@@ -14,7 +14,7 @@
 @inject IMapJsRuntime JSRuntime
 @inject Microsoft.Extensions.Logging.ILogger<AzureMap> Logger
 
-<div id="@Id" class="@Class"></div>
+<div id="@Id" class="@Class" style="height: 100%; width: 100%;"></div>
 
 @code {
 
@@ -444,6 +444,9 @@
                 Id,
                 mapConfiguration,
                 ServiceOptions,
+                CameraOptions,
+                StyleOptions,
+                UserInteractionOptions,
                 enabledEvents,
                 DotNetObjectReference.Create(_mapEventInvokeHelper));
         }
