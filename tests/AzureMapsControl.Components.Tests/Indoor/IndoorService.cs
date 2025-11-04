@@ -34,9 +34,9 @@
 
             _jsRuntime.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Indoor.CreateIndoorManager.ToIndoorNamespace(), It.Is<object[]>(parameters =>
                 (parameters[0] as string) == TestMapId
-                    && (parameters[1] as string) == indoorManager.Id
+                && (parameters[1] as string) == indoorManager.Id
                 && object.Equals(parameters[2], options)
-                        && parameters[3] == null
+                && parameters[3] == null
                 && parameters[4] is DotNetObjectReference<IndoorManagerEventHelper>
             )), Times.Once);
             _jsRuntime.VerifyNoOtherCalls();

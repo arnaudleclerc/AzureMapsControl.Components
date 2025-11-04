@@ -94,7 +94,7 @@
             Assert.True(control.Disposed);
             Assert.True(eventTriggered);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.Dispose.ToFullScreenControlNamespace(), _testMapId, control.Id.ToString()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.Dispose.ToFullScreenControlNamespace(), _testMapId, control.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -129,7 +129,7 @@
             Assert.True(control.Disposed);
             Assert.True(eventTriggered);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.Dispose.ToFullScreenControlNamespace(), _testMapId, control.Id.ToString()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.Dispose.ToFullScreenControlNamespace(), _testMapId, control.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -147,7 +147,7 @@
 
             Assert.Equal("container", control.Options.Container);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.SetOptions.ToFullScreenControlNamespace(), _testMapId, control.Id.ToString(), control.Options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.SetOptions.ToFullScreenControlNamespace(), _testMapId, control.Id, control.Options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -165,7 +165,7 @@
 
             Assert.Equal("container", control.Options.Container);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.SetOptions.ToFullScreenControlNamespace(), _testMapId, control.Id.ToString(), control.Options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.SetOptions.ToFullScreenControlNamespace(), _testMapId, control.Id, control.Options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -193,7 +193,7 @@
             await control.DisposeAsync();
             await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await control.SetOptionsAsync(options => options.Container = "container"));
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.Dispose.ToFullScreenControlNamespace(), _testMapId, control.Id.ToString()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.Dispose.ToFullScreenControlNamespace(), _testMapId, control.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -212,7 +212,7 @@
             var result = await control.IsFullScreenAsync();
             Assert.Equal(isFullScreen, result);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<bool>(Constants.JsConstants.Methods.FullScreenControl.IsFullScreen.ToFullScreenControlNamespace(), _testMapId, control.Id.ToString()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<bool>(Constants.JsConstants.Methods.FullScreenControl.IsFullScreen.ToFullScreenControlNamespace(), _testMapId, control.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -240,7 +240,7 @@
             await control.DisposeAsync();
             await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await control.IsFullScreenAsync());
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.Dispose.ToFullScreenControlNamespace(), _testMapId, control.Id.ToString()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.Dispose.ToFullScreenControlNamespace(), _testMapId, control.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -257,10 +257,10 @@
             await control.AddEventsAsync();
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.AddEvents.ToFullScreenControlNamespace(), It.Is<object[]>(parameters =>
-               parameters[0] as string == _testMapId
-    && parameters[1] as string == control.Id.ToString()
-               && parameters[2] is IEnumerable<string>
-               && (parameters[2] as IEnumerable<string>).Single() == FullScreenEventType.FullScreenChanged.ToString()
+                parameters[0] as string == _testMapId
+                && (parameters[1] as Guid?).GetValueOrDefault().ToString() == control.Id.ToString()
+                && parameters[2] is IEnumerable<string>
+                && (parameters[2] as IEnumerable<string>).Single() == FullScreenEventType.FullScreenChanged.ToString()
        && parameters[3] is DotNetObjectReference<FullScreenEventInvokeHelper>
     )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
