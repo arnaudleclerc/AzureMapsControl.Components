@@ -1859,7 +1859,7 @@
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasStyleProperties.ToCoreNamespace(), id, It.Is<IEnumerable<KeyValuePair<string, string>>>(dictionary =>
                 dictionary.Single().Key == "cursor" && dictionary.Single().Value == "hand"))
-                , Times.Once);
+            , Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -1888,7 +1888,7 @@
             await map.SetCanvasStylePropertiesAsync(properties);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasStyleProperties.ToCoreNamespace(), id, It.Is<IEnumerable<KeyValuePair<string, string>>>(dictionary =>
                 dictionary.Single().Key == "cursor" && dictionary.Single().Value == "hand"))
-                , Times.Once);
+            , Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -1910,7 +1910,7 @@
 
             var properties = new Dictionary<string, string> {
                 { "", "value" },
-      { " ", "value" },
+                { " ", "value" },
             };
             await map.SetCanvasStylePropertiesAsync(properties);
             _jsRuntimeMock.VerifyNoOtherCalls();
@@ -1951,7 +1951,7 @@
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasContainerStyleProperties.ToCoreNamespace(), "id", It.Is<IEnumerable<KeyValuePair<string, string>>>(dictionary =>
                 dictionary.Single().Key == "cursor" && dictionary.Single().Value == "hand"))
-                , Times.Once);
+            , Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -1980,7 +1980,7 @@
             await map.SetCanvasContainerStylePropertiesAsync(properties);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.SetCanvasContainerStyleProperties.ToCoreNamespace(), id, It.Is<IEnumerable<KeyValuePair<string, string>>>(dictionary =>
                 dictionary.Single().Key == "cursor" && dictionary.Single().Value == "hand"))
-                , Times.Once);
+            , Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
