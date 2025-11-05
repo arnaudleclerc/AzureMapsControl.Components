@@ -175,7 +175,7 @@
         }
 
         [Fact]
-        public async Task Should_ReturnNull_ForNonExistentMapId()
+        public async Task Should_ReturnNull_ForNonExistentMapId_Async()
         {
             var service = new MapService(null);
             await service.AddMapAsync(new Map("map1"));
@@ -190,7 +190,7 @@
         {
             var service = new MapService(null);
 
-            for (int i = 0; i < 5; i++)
+            for (var i = 0; i < 5; i++)
             {
                 var map = new Map($"map{i}");
                 await service.AddMapAsync(map);

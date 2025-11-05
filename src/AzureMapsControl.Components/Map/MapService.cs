@@ -23,12 +23,12 @@
         { 
             get
             {
-                if (!string.IsNullOrEmpty(_latestMapId) && _maps.ContainsKey(_latestMapId))
+                if (!string.IsNullOrEmpty(_latestMapId) && _maps.TryGetValue(_latestMapId, out var map))
                 {
-                    return _maps[_latestMapId];
+                    return map;
                 }
                 
-                if (_maps.Count > 0)
+                if (!_maps.IsEmpty)
                 {
                     return _maps.Values.First();
                 }
@@ -41,10 +41,7 @@
 
         public event MapReadyEvent OnMapReadyAsync;
 
-        public Map GetMap(string mapId)
-        {
-            return _maps.TryGetValue(mapId, out var map) ? map : null;
-        }
+        public Map GetMap(string mapId) => _maps.TryGetValue(mapId, out var map) ? map : null;
 
         public async ValueTask AddMapAsync(Map map)
         {
@@ -66,7 +63,7 @@
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.MapService_AddMapAsync, "Removing map instance");
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.MapService_AddMapAsync, $"Map ID: {mapId}");
             
-            if (_maps.TryRemove(mapId, out var removedMap))
+            if (_maps.TryRemove(mapId, out _))
             {
                 // If we're removing the latest map, update the latest map ID
                 if (_latestMapId == mapId)
