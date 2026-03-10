@@ -21,11 +21,6 @@
         public bool Disposed { get; private set; }
 
         /// <summary>
-        /// List of shapes added to the data source
-        /// </summary>
-        private List<Shape> _sourceShapes;
-
-        /// <summary>
         /// Add shapes to the drawing manager data source
         /// </summary>
         /// <param name="shapes">Shapes to add</param>
@@ -41,11 +36,6 @@
 
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
-
-            if (_sourceShapes == null)
-            {
-                _sourceShapes = new List<Shape>();
-            }
 
             var lineStrings = shapes.OfType<Shape<LineString>>();
             if (lineStrings.Any())
@@ -95,8 +85,6 @@
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{routePoints.Count()} route points will be added");
                 await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), routePoints);
             }
-
-            _sourceShapes.AddRange(shapes);
         }
 
         /// <summary>
@@ -112,7 +100,6 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            _sourceShapes = null;
             await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Clear.ToDrawingNamespace());
         }
 
