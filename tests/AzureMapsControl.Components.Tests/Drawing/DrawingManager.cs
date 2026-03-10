@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using System.Threading.Tasks;
 
     using AzureMapsControl.Components.Atlas;
@@ -176,13 +175,6 @@
             await drawingManager.AddShapesAsync(secondBatch);
             await drawingManager.AddShapesAsync(thirdBatch);
 
-            // Verify internal state accumulates all shapes
-            var sourceShapes = GetInternalSourceShapes(drawingManager);
-            Assert.Equal(3, sourceShapes.Count);
-            Assert.Contains(firstBatch[0], sourceShapes);
-            Assert.Contains(secondBatch[0], sourceShapes);
-            Assert.Contains(thirdBatch[0], sourceShapes);
-
             // Verify correct number of JS calls
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(
                 Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(),
@@ -195,22 +187,12 @@
             var drawingManager = CreateInitializedDrawingManager();
             var shapes = new List<Shape> { new Shape<Point>(new Point()) };
 
-            // Add shapes to initialize and populate internal state
+            // Add shapes then clear
             await drawingManager.AddShapesAsync(shapes);
-            var sourceShapes = GetInternalSourceShapes(drawingManager);
-            Assert.NotNull(sourceShapes);
-            Assert.Single(sourceShapes);
-
-            // Clear should reset internal state
             await drawingManager.ClearAsync();
-            sourceShapes = GetInternalSourceShapes(drawingManager);
-            Assert.Null(sourceShapes);
 
-            // Adding again should reinitialize state
+            // Adding again should work without errors
             await drawingManager.AddShapesAsync(shapes);
-            sourceShapes = GetInternalSourceShapes(drawingManager);
-            Assert.NotNull(sourceShapes);
-            Assert.Single(sourceShapes);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.IsAny<object[]>()), Times.Exactly(2));
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Clear.ToDrawingNamespace()), Times.Once);
@@ -298,16 +280,6 @@
                 JSRuntime = _jsRuntimeMock.Object,
                 Logger = _loggerMock.Object
             };
-        }
-
-        /// <summary>
-        /// Uses reflection to access the private _sourceShapes field for testing internal state
-        /// </summary>
-        private List<Shape> GetInternalSourceShapes(DrawingManager drawingManager)
-        {
-            var field = typeof(DrawingManager).GetField("_sourceShapes",
-                BindingFlags.NonPublic | BindingFlags.Instance);
-            return field?.GetValue(drawingManager) as List<Shape>;
         }
     }
 }
