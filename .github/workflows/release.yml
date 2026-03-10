@@ -9,6 +9,7 @@ on:
       - main
     paths:
       - src/**
+      - .github/workflows/release.yml
 
 jobs:
   build:
@@ -20,38 +21,34 @@ jobs:
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
-    - name: Setup .NET 6.0
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 6.0.x
-    - name: Setup .NET 7.0
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 7.0.x
     - name: Setup .NET 8.0
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 8.0.x
-    - name: Setup .NET Core 3.1
+    - name: Setup .NET 9.0
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.x
+        dotnet-version: 9.0.x
+    - name: Setup .NET 10.0
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 10.0.x
     - name: Install GitVersion
       uses: gittools/actions/gitversion/setup@v0.9.11
       with:
         versionSpec: '5.x'
-    - name: Install dependencies
-      run: dotnet restore ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj
-    - name: Build
-      run: dotnet build --configuration Release --no-restore ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj
-    - name: Test
-      run: dotnet test ./tests/AzureMapsControl.Components.Tests/AzureMapsControl.Components.Tests.csproj
     - name: NPM Install
       run: cd ./src/AzureMapsControl.Components && npm i
     - name: Lint
       run: cd ./src/AzureMapsControl.Components && npm run lint
     - name: Build Typescript
       run: cd ./src/AzureMapsControl.Components && npm run build
+    - name: Install dependencies
+      run: dotnet restore ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj
+    - name: Build
+      run: dotnet build --configuration Release --no-restore ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj
+    - name: Test
+      run: dotnet test ./tests/AzureMapsControl.Components.Tests/AzureMapsControl.Components.Tests.csproj
     - name: Use GitVersion
       id: gitversion # step id used as reference for output values
       uses: gittools/actions/gitversion/execute@v0.9.11
@@ -106,7 +103,7 @@ jobs:
     - name: Pack
       if: ${{ steps.gitversion.outputs.branchName == 'master' || steps.gitversion.outputs.branchName == 'main' }}
       run: dotnet pack ./src/AzureMapsControl.Components/AzureMapsControl.Components.csproj -p:Version='${{ steps.gitversion.outputs.majorMinorPatch }}"' -c Release --no-build
-    # - name: Publish
-    #   env :
-    #     NUGETAPIKEY: ${{secrets.NUGETAPIKEY}}
-    #   run: dotnet nuget push "**/AzureMapsControl.Components*.nupkg" -s https://api.nuget.org/v3/index.json -k $NUGETAPIKEY --skip-duplicate
+    - name: Publish
+      env:
+        NUGETAPIKEY: ${{secrets.NUGETAPIKEY}}
+      run: dotnet nuget push "**/AzureMapsControl.Components*.nupkg" -s https://api.nuget.org/v3/index.json -k $NUGETAPIKEY --skip-duplicate
