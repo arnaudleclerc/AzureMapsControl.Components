@@ -1,6 +1,7 @@
 ﻿namespace AzureMapsControl.Components.Map
 {
     using System.Diagnostics.CodeAnalysis;
+    using System.Text.Json.Serialization;
 
     [ExcludeFromCodeCoverage]
     public sealed class UserInteractionOptions
@@ -13,6 +14,7 @@
         /// <summary>
         /// Whether double left click will zoom the map inwards.
         /// </summary>
+        [JsonPropertyName("dblClickZoomInteraction")]
         public bool? DblclickZoomInteraction { get; set; }
 
         /// <summary>
