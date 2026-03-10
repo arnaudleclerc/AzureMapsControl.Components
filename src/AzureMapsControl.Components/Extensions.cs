@@ -23,7 +23,7 @@
         /// <param name="configure">Configuration</param>
         /// <returns>Services</returns>
         [ExcludeFromCodeCoverage]
-        public static IServiceCollection AddAzureMapsControl(this IServiceCollection services, Action<AzureMapsConfiguration> configure)
+        public static IServiceCollection AddAzureMapsControl(this IServiceCollection services, Action<AzureMapsConfiguration> configure = null)
         {
             services
                 .AddScoped<MapService>()
@@ -33,10 +33,15 @@
                 .AddScoped<IMapJsRuntime, MapJsRuntime>()
                 .AddScoped<IGeolocationService, GeolocationService>()
                 .AddScoped<IFullScreenService, FullScreenService>()
-                .AddScoped<IIndoorService, IndoorService>()
-                .AddOptions<AzureMapsConfiguration>()
-                .Configure(configure)
-                .Validate(configuration => configuration.Validate(), "The given AzureMapsConfiguration is invalid");
+                .AddScoped<IIndoorService, IndoorService>();
+
+            if (configure != null)
+            {
+                services
+                    .AddOptions<AzureMapsConfiguration>()
+                    .Configure(configure)
+                    .Validate(configuration => configuration.Validate(), "The given AzureMapsConfiguration is invalid");
+            }
 
             return services;
         }

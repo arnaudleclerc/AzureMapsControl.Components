@@ -22,6 +22,10 @@
 
     public async Task OnMapReady(MapEventArgs events)
     {
+        var dummyDataSourceId = "_empty";
+        var dummyDataSource = new AzureMapsControl.Components.Data.DataSource(dummyDataSourceId);
+        await events.Map.AddSourceAsync(dummyDataSource);
+        
         var source = new AzureMapsControl.Components.Data.VectorTileSource(_sourceId)
         {
             Options = new AzureMapsControl.Components.Data.VectorTileSourceOptions
@@ -38,6 +42,11 @@
 
     public async Task OnDatasourceAdded(MapSourceEventArgs eventArgs)
     {
+        if (eventArgs.Source.Id != _sourceId)
+        {
+            return;
+        }
+
         var layer = new AzureMapsControl.Components.Layers.LineLayer
         {
             Options = new AzureMapsControl.Components.Layers.LineLayerOptions

@@ -4,14 +4,14 @@ import { Shape, Feature } from '../geometries/geometry';
 
 export class Datasource {
 
-    public static getShapes(id: string): Shape[] {
-        const shapes = (Core.getMap().sources.getById(id) as azmaps.source.DataSource).getShapes();
+    public static getShapes(mapId: string, datasourceId: string): Shape[] {
+        const shapes = (Core.getMap(mapId).sources.getById(datasourceId) as azmaps.source.DataSource).getShapes();
         return shapes?.map(shape => Core.getSerializableShape(shape));
     }
 
-    public static async getClusterLeaves(datasourceId: string, clusterId: number, limit: number, offset: number): Promise<(Shape | Feature)[]> {
+    public static async getClusterLeaves(mapId: string, datasourceId: string, clusterId: number, limit: number, offset: number): Promise<(Shape | Feature)[]> {
         return new Promise(resolve => {
-            (Core.getMap().sources.getById(datasourceId) as azmaps.source.DataSource).getClusterLeaves(clusterId, limit, offset).then(clusterLeaves => {
+            (Core.getMap(mapId).sources.getById(datasourceId) as azmaps.source.DataSource).getClusterLeaves(clusterId, limit, offset).then(clusterLeaves => {
 
                 const resultLeaves = clusterLeaves.map(leaf => {
                     if (leaf instanceof azmaps.Shape) {
@@ -28,9 +28,9 @@ export class Datasource {
         });
     }
 
-    public static async getClusterExpansionZoom(datasourceId: string, clusterId: number): Promise<number> {
+    public static async getClusterExpansionZoom(mapId: string, datasourceId: string, clusterId: number): Promise<number> {
         return new Promise(resolve => {
-            (Core.getMap().sources.getById(datasourceId) as azmaps.source.DataSource).getClusterExpansionZoom(clusterId).then(zoom => {
+            (Core.getMap(mapId).sources.getById(datasourceId) as azmaps.source.DataSource).getClusterExpansionZoom(clusterId).then(zoom => {
                 resolve(zoom);
             });
         });

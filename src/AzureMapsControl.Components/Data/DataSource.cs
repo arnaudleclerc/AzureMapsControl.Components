@@ -89,7 +89,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            return await JSRuntime.InvokeAsync<IEnumerable<Shape<Geometry>>>(Constants.JsConstants.Methods.Datasource.GetShapes.ToDatasourceNamespace(), Id);
+            return await JSRuntime.InvokeAsync<IEnumerable<Shape<Geometry>>>(Constants.JsConstants.Methods.Datasource.GetShapes.ToDatasourceNamespace(), MapId, Id);
         }
 
         /// <summary>
@@ -110,7 +110,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            return await JSRuntime.InvokeAsync<IEnumerable<Feature<Geometry>>>(Constants.JsConstants.Methods.Datasource.GetClusterLeaves.ToDatasourceNamespace(), Id, clusterId, limit, offset);
+            return await JSRuntime.InvokeAsync<IEnumerable<Feature<Geometry>>>(Constants.JsConstants.Methods.Datasource.GetClusterLeaves.ToDatasourceNamespace(), MapId, Id, clusterId, limit, offset);
         }
 
         /// <summary>
@@ -127,7 +127,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            return await JSRuntime.InvokeAsync<int>(Constants.JsConstants.Methods.Datasource.GetClusterExpansionZoom.ToDatasourceNamespace(), Id, clusterId);
+            return await JSRuntime.InvokeAsync<int>(Constants.JsConstants.Methods.Datasource.GetClusterExpansionZoom.ToDatasourceNamespace(), MapId, Id, clusterId);
         }
 
         internal void DispatchEvent(DataSourceEventArgs eventArgs)

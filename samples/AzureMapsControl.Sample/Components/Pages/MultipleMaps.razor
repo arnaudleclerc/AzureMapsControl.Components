@@ -1,0 +1,134 @@
+@page "/MultipleMaps"
+@page "/MultipleMaps/Inline"
+@rendermode InteractiveServer
+
+@using AzureMapsControl.Components.Map
+@using AzureMapsControl.Components.Atlas
+@using AzureMapsControl.Sample.Components.Shared
+@inject IJSRuntime JSRuntime
+
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-12">
+            <h2>Multiple Maps Demo</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Map 1 - Road View (Munich)</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="map-container">
+                        <AzureMap Id="map1" 
+                                  CameraOptions="munichCameraOptions"
+                                  StyleOptions="roadStyleOptions" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Map 2 - Satellite View (Munich)</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="map-container">
+                        <AzureMap Id="map2" 
+                                  CameraOptions="munichCameraOptions"
+                                  StyleOptions="satelliteStyleOptions" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Map 3 - Dark View (New York)</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="map-container">
+                        <AzureMap Id="map3" 
+                                  CameraOptions="newYorkCameraOptions"
+                                  StyleOptions="darkStyleOptions" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Map 4 - Grayscale View (London)</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="map-container">
+                        <AzureMap Id="map4" 
+                                  CameraOptions="londonCameraOptions"
+                                  StyleOptions="grayscaleStyleOptions" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .map-container {
+        height: 400px;
+    }
+</style>
+
+@code {
+    private CameraOptions munichCameraOptions = new CameraOptions 
+    { 
+        Type = CameraType.Fly, 
+        Center = new Position(11.581990, 48.143534), 
+        Zoom = 10 
+    };
+
+    private CameraOptions newYorkCameraOptions = new CameraOptions 
+    { 
+        Type = CameraType.Fly, 
+        Center = new Position(-74.0060, 40.7128), 
+        Zoom = 10 
+    };
+
+    private CameraOptions londonCameraOptions = new CameraOptions 
+    { 
+        Type = CameraType.Fly, 
+        Center = new Position(-0.1276, 51.5074), 
+        Zoom = 10 
+    };
+
+    private StyleOptions roadStyleOptions = new StyleOptions
+    {
+        Style = MapStyle.Road,
+        ShowLogo = false,
+        ShowFeedbackLink = false
+    };
+
+    private StyleOptions satelliteStyleOptions = new StyleOptions
+    {
+        Style = MapStyle.SatelliteRoadLabels,
+        ShowLogo = false,
+        ShowFeedbackLink = false
+    };
+
+    private StyleOptions darkStyleOptions = new StyleOptions
+    {
+        Style = MapStyle.Night,
+        ShowLogo = false,
+        ShowFeedbackLink = false
+    };
+
+    private StyleOptions grayscaleStyleOptions = new StyleOptions
+    {
+        Style = MapStyle.GrayscaleDark,
+        ShowLogo = false,
+        ShowFeedbackLink = false
+    };
+}

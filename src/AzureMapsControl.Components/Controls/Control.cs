@@ -14,6 +14,7 @@
         internal abstract string Type { get; }
         internal abstract int Order { get; }
         internal Guid Id { get; }
+        internal string MapId { get; set; }
 
         /// <summary>
         /// Position of the control

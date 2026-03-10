@@ -20,12 +20,13 @@
     {
         private readonly Mock<IMapJsRuntime> _jsRuntimeMock = new();
         private readonly Mock<ILogger> _loggerMock = new();
+        private const string TestMapId = "test-map-id";
 
         [Fact]
         public void Should_HaveDefaultProperties()
         {
             var drawingManager = new DrawingManager();
-            
+
             Assert.False(drawingManager.Disposed);
             Assert.Null(drawingManager.JSRuntime);
             Assert.Null(drawingManager.Logger);
@@ -45,7 +46,7 @@
         {
             var drawingManager = CreateInitializedDrawingManager();
 
-            var shapes = new List<Shape> 
+            var shapes = new List<Shape>
             {
                 new Shape<Point>(new Point()),
                 new Shape<LineString>(new LineString()),
@@ -58,13 +59,41 @@
 
             await drawingManager.AddShapesAsync(shapes);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.Is<IEnumerable<Shape<Point>>>(s => s.Count() == 1)), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.Is<IEnumerable<Shape<LineString>>>(s => s.Count() == 1)), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.Is<IEnumerable<Shape<MultiLineString>>>(s => s.Count() == 1)), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.Is<IEnumerable<Shape<MultiPoint>>>(s => s.Count() == 1)), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.Is<IEnumerable<Shape<MultiPolygon>>>(s => s.Count() == 1)), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.Is<IEnumerable<Shape<Polygon>>>(s => s.Count() == 1)), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.Is<IEnumerable<Shape<RoutePoint>>>(s => s.Count() == 1)), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == TestMapId
+                && parameters[1] is IEnumerable<Shape<Point>>
+                && (parameters[1] as IEnumerable<Shape<Point>>).Count() == 1
+            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == TestMapId
+                && parameters[1] is IEnumerable<Shape<LineString>>
+                && (parameters[1] as IEnumerable<Shape<LineString>>).Count() == 1
+            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == TestMapId
+                && parameters[1] is IEnumerable<Shape<MultiLineString>>
+                && (parameters[1] as IEnumerable<Shape<MultiLineString>>).Count() == 1
+            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == TestMapId
+                && parameters[1] is IEnumerable<Shape<MultiPoint>>
+                && (parameters[1] as IEnumerable<Shape<MultiPoint>>).Count() == 1
+            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == TestMapId
+                && parameters[1] is IEnumerable<Shape<MultiPolygon>>
+                && (parameters[1] as IEnumerable<Shape<MultiPolygon>>).Count() == 1
+            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == TestMapId
+                && parameters[1] is IEnumerable<Shape<Polygon>>
+                && (parameters[1] as IEnumerable<Shape<Polygon>>).Count() == 1
+            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == TestMapId
+                && parameters[1] is IEnumerable<Shape<RoutePoint>>
+                && (parameters[1] as IEnumerable<Shape<RoutePoint>>).Count() == 1
+            )), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.IsAny<object[]>()), Times.Exactly(7));
 
             _jsRuntimeMock.VerifyNoOtherCalls();
@@ -75,7 +104,7 @@
         {
             var drawingManager = CreateInitializedDrawingManager();
 
-            var shapes = new List<Shape> 
+            var shapes = new List<Shape>
             {
                 new Shape<Point>(new Point()),
                 new Shape<Point>(new Point()),
@@ -84,7 +113,11 @@
 
             await drawingManager.AddShapesAsync(shapes);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.Is<IEnumerable<Shape<Point>>>(s => s.Count() == 3)), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == TestMapId
+                && parameters[1] is IEnumerable<Shape<Point>>
+                && (parameters[1] as IEnumerable<Shape<Point>>).Count() == 3
+            )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -105,9 +138,21 @@
 
             await drawingManager.AddShapesAsync(shapes);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.Is<IEnumerable<Shape<Point>>>(s => s.Count() == 2)), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.Is<IEnumerable<Shape<LineString>>>(s => s.Count() == 1)), Times.Once);
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.Is<IEnumerable<Shape<Polygon>>>(s => s.Count() == 3)), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == TestMapId
+                && parameters[1] is IEnumerable<Shape<Point>>
+                && (parameters[1] as IEnumerable<Shape<Point>>).Count() == 2
+            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == TestMapId
+                && parameters[1] is IEnumerable<Shape<LineString>>
+                && (parameters[1] as IEnumerable<Shape<LineString>>).Count() == 1
+            )), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == TestMapId
+                && parameters[1] is IEnumerable<Shape<Polygon>>
+                && (parameters[1] as IEnumerable<Shape<Polygon>>).Count() == 3
+            )), Times.Once);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.IsAny<object[]>()), Times.Exactly(3));
 
             _jsRuntimeMock.VerifyNoOtherCalls();
@@ -128,7 +173,11 @@
             await drawingManager.AddShapesAsync(shapes);
 
             // Should still only make one call per geometry type
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.Is<IEnumerable<Shape<Point>>>(s => s.Count() == 1000)), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.Is<object[]>(parameters =>
+                parameters[0] as string == TestMapId
+                && parameters[1] is IEnumerable<Shape<Point>>
+                && (parameters[1] as IEnumerable<Shape<Point>>).Count() == 1000
+            )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -159,7 +208,7 @@
 
             await drawingManager.ClearAsync();
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Clear.ToDrawingNamespace()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Clear.ToDrawingNamespace(), TestMapId), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -213,7 +262,7 @@
             Assert.Single(sourceShapes);
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), It.IsAny<object[]>()), Times.Exactly(2));
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Clear.ToDrawingNamespace()), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Clear.ToDrawingNamespace(), TestMapId), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -296,7 +345,8 @@
         {
             return new DrawingManager() {
                 JSRuntime = _jsRuntimeMock.Object,
-                Logger = _loggerMock.Object
+                Logger = _loggerMock.Object,
+                MapId = TestMapId
             };
         }
 

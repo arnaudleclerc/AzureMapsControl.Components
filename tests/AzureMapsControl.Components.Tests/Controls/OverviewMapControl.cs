@@ -16,6 +16,7 @@
     public class OverviewMapControlTests
     {
         private readonly Mock<IMapJsRuntime> _jsRuntimeMock = new();
+        private readonly string _testMapId = "test-map-id";
 
         [Fact]
         public void Should_Create()
@@ -37,12 +38,15 @@
             var control = new OverviewMapControl(options, position) {
                 JsRuntime = _jsRuntimeMock.Object
             };
+            // Set the MapId on the control as would happen when added to map
+            control.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(control, _testMapId);
 
             await control.UpdateAsync(options => options.Interactive = true);
             Assert.True(options.Interactive);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.OverviewMapControl.SetOptions.ToOverviewMapControlNamespace(), It.Is<object[]>(parameters =>
-                (parameters[0] as Guid?).GetValueOrDefault().ToString() == control.Id.ToString()
-                && (parameters[1] as OverviewMapControlOptions) == control.Options
+                parameters[0] as string == _testMapId
+                && (parameters[1] as Guid?).GetValueOrDefault().ToString() == control.Id.ToString()
+                && parameters[2] as OverviewMapControlOptions == control.Options
             )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
@@ -65,13 +69,16 @@
             var control = new OverviewMapControl(options, position) {
                 JsRuntime = _jsRuntimeMock.Object
             };
+            // Set the MapId on the control as would happen when added to map
+            control.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(control, _testMapId);
 
             await control.SetOptionsAsync(options => options.Interactive = true);
             Assert.True(options.Interactive);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.OverviewMapControl.SetOptions.ToOverviewMapControlNamespace(), It.Is<object[]>(parameters =>
-                            (parameters[0] as Guid?).GetValueOrDefault().ToString() == control.Id.ToString()
-                            && (parameters[1] as OverviewMapControlOptions) == control.Options
-                        )), Times.Once);
+                parameters[0] as string == _testMapId
+                && (parameters[1] as Guid?).GetValueOrDefault().ToString() == control.Id.ToString()
+                && parameters[2] as OverviewMapControlOptions == control.Options
+            )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -91,13 +98,16 @@
             var control = new OverviewMapControl {
                 JsRuntime = _jsRuntimeMock.Object
             };
+            // Set the MapId on the control as would happen when added to map
+            control.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(control, _testMapId);
 
             await control.UpdateAsync(options => options.Interactive = true);
             Assert.True(control.Options.Interactive);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.OverviewMapControl.SetOptions.ToOverviewMapControlNamespace(), It.Is<object[]>(parameters =>
-                            (parameters[0] as Guid?).GetValueOrDefault().ToString() == control.Id.ToString()
-                            && (parameters[1] as OverviewMapControlOptions) == control.Options
-                        )), Times.Once);
+                parameters[0] as string == _testMapId
+                && (parameters[1] as Guid?).GetValueOrDefault().ToString() == control.Id.ToString()
+                && parameters[2] as OverviewMapControlOptions == control.Options
+            )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -107,13 +117,16 @@
             var control = new OverviewMapControl {
                 JsRuntime = _jsRuntimeMock.Object
             };
+            // Set the MapId on the control as would happen when added to map
+            control.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(control, _testMapId);
 
             await control.SetOptionsAsync(options => options.Interactive = true);
             Assert.True(control.Options.Interactive);
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.OverviewMapControl.SetOptions.ToOverviewMapControlNamespace(), It.Is<object[]>(parameters =>
-                            (parameters[0] as Guid?).GetValueOrDefault().ToString() == control.Id.ToString()
-                            && (parameters[1] as OverviewMapControlOptions) == control.Options
-                        )), Times.Once);
+                parameters[0] as string == _testMapId
+                && (parameters[1] as Guid?).GetValueOrDefault().ToString() == control.Id.ToString()
+                && parameters[2] as OverviewMapControlOptions == control.Options
+            )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
     }

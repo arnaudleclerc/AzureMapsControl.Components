@@ -19,6 +19,7 @@
 
         internal ILogger Logger { get; set; }
         internal IMapJsRuntime JSRuntime { get; set; }
+        internal string MapId { get; set; }
 
         public bool Disposed { get; private set; }
 
@@ -53,7 +54,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatureCollection.ToSourceNamespace(), Id, json);
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatureCollection.ToSourceNamespace(), MapId, Id, json);
         }
 
         /// <summary>
@@ -87,7 +88,7 @@
 
                 Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Source_RemoveAsync, "Removing geometries from data source");
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_RemoveAsync, $"Id: {Id} | Ids: {string.Join('|', ids)}");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), Id, ids);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), MapId, Id, ids);
             }
         }
 
@@ -177,7 +178,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.ImportDataFromUrl.ToSourceNamespace(), Id, url);
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.ImportDataFromUrl.ToSourceNamespace(), MapId, Id, url);
         }
 
         /// <summary>
@@ -196,7 +197,7 @@
 
             _shapes = null;
             _features = null;
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Clear.ToSourceNamespace(), Id);
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Clear.ToSourceNamespace(), MapId, Id);
         }
 
         /// <summary>
@@ -213,7 +214,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), Id);
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), MapId, Id);
             Disposed = true;
         }
 
@@ -231,7 +232,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            Options = await JSRuntime.InvokeAsync<TOptions>(Constants.JsConstants.Methods.Source.GetOptions.ToSourceNamespace(), Id);
+            Options = await JSRuntime.InvokeAsync<TOptions>(Constants.JsConstants.Methods.Source.GetOptions.ToSourceNamespace(), MapId, Id);
             return Options;
         }
 
@@ -255,7 +256,7 @@
 
             update(Options);
 
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.SetOptions.ToSourceNamespace(), Id, Options);
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.SetOptions.ToSourceNamespace(), MapId, Id, Options);
         }
 
         /// <summary>
@@ -285,49 +286,49 @@
             if (lineStrings.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{lineStrings.Count()} linestrings will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, lineStrings);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), MapId, Id, lineStrings);
             }
 
             var multiLineStrings = shapes.OfType<Shape<MultiLineString>>();
             if (multiLineStrings.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{multiLineStrings.Count()} multilinestrings will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, multiLineStrings);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), MapId, Id, multiLineStrings);
             }
 
             var multiPoints = shapes.OfType<Shape<MultiPoint>>();
             if (multiPoints.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{multiPoints.Count()} multipoints will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, multiPoints);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), MapId, Id, multiPoints);
             }
 
             var multiPolygons = shapes.OfType<Shape<MultiPolygon>>();
             if (multiPolygons.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{multiPolygons.Count()} multipolygons will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, multiPolygons);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), MapId, Id, multiPolygons);
             }
 
             var points = shapes.OfType<Shape<Point>>();
             if (points.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{points.Count()} points will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, points);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), MapId, Id, points);
             }
 
             var polygons = shapes.OfType<Shape<Polygon>>();
             if (polygons.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{polygons.Count()} polygons will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, polygons);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), MapId, Id, polygons);
             }
 
             var routePoints = shapes.OfType<Shape<RoutePoint>>();
             if (routePoints.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{routePoints.Count()} route points will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, routePoints);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), MapId, Id, routePoints);
             }
 
             _shapes.AddRange(shapes);
@@ -360,49 +361,49 @@
             if (lineStrings.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{lineStrings.Count()} linestrings will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, lineStrings);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), MapId, Id, lineStrings);
             }
 
             var multiLineStrings = features.OfType<Feature<MultiLineString>>();
             if (multiLineStrings.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{multiLineStrings.Count()} multilinestrings will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, multiLineStrings);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), MapId, Id, multiLineStrings);
             }
 
             var multiPoints = features.OfType<Feature<MultiPoint>>();
             if (multiPoints.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{multiPoints.Count()} multipoints will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, multiPoints);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), MapId, Id, multiPoints);
             }
 
             var multiPolygons = features.OfType<Feature<MultiPolygon>>();
             if (multiPolygons.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{multiPolygons.Count()} multipolygons will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, multiPolygons);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), MapId, Id, multiPolygons);
             }
 
             var points = features.OfType<Feature<Point>>();
             if (points.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{points.Count()} points will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, points);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), MapId, Id, points);
             }
 
             var polygons = features.OfType<Feature<Polygon>>();
             if (polygons.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{polygons.Count()} polygons will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, polygons);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), MapId, Id, polygons);
             }
 
             var routePoints = features.OfType<Feature<RoutePoint>>();
             if (routePoints.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{routePoints.Count()} route points will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, routePoints);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), MapId, Id, routePoints);
             }
 
             _features.AddRange(features);

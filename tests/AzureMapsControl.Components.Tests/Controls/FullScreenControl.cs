@@ -75,6 +75,7 @@
     {
         private readonly Mock<IMapJsRuntime> _jsRuntimeMock = new();
         private readonly Mock<ILogger> _loggerMock = new();
+        private readonly string _testMapId = "test-map-id";
 
         [Fact]
         public async Task Should_DisposeAsync()
@@ -83,6 +84,8 @@
                 JsRuntime = _jsRuntimeMock.Object,
                 Logger = _loggerMock.Object
             };
+            // Set the MapId on the control as would happen when added to map
+            control.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(control, _testMapId);
 
             var eventTriggered = false;
             control.OnDisposed += () => eventTriggered = true;
@@ -91,7 +94,7 @@
             Assert.True(control.Disposed);
             Assert.True(eventTriggered);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.Dispose.ToFullScreenControlNamespace(), control.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.Dispose.ToFullScreenControlNamespace(), _testMapId, control.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -114,6 +117,8 @@
                 JsRuntime = _jsRuntimeMock.Object,
                 Logger = _loggerMock.Object
             };
+            // Set the MapId on the control as would happen when added to map
+            control.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(control, _testMapId);
 
             var eventTriggered = false;
             control.OnDisposed += () => eventTriggered = true;
@@ -124,7 +129,7 @@
             Assert.True(control.Disposed);
             Assert.True(eventTriggered);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.Dispose.ToFullScreenControlNamespace(), control.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.Dispose.ToFullScreenControlNamespace(), _testMapId, control.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -135,12 +140,14 @@
                 JsRuntime = _jsRuntimeMock.Object,
                 Logger = _loggerMock.Object
             };
+            // Set the MapId on the control as would happen when added to map
+            control.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(control, _testMapId);
 
             await control.SetOptionsAsync(options => options.Container = "container");
 
             Assert.Equal("container", control.Options.Container);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.SetOptions.ToFullScreenControlNamespace(), control.Id, control.Options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.SetOptions.ToFullScreenControlNamespace(), _testMapId, control.Id, control.Options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -151,12 +158,14 @@
                 JsRuntime = _jsRuntimeMock.Object,
                 Logger = _loggerMock.Object
             };
+            // Set the MapId on the control as would happen when added to map
+            control.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(control, _testMapId);
 
             await control.SetOptionsAsync(options => options.Container = "container");
 
             Assert.Equal("container", control.Options.Container);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.SetOptions.ToFullScreenControlNamespace(), control.Id, control.Options), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.SetOptions.ToFullScreenControlNamespace(), _testMapId, control.Id, control.Options), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -178,11 +187,13 @@
                 JsRuntime = _jsRuntimeMock.Object,
                 Logger = _loggerMock.Object
             };
+            // Set the MapId on the control as would happen when added to map
+            control.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(control, _testMapId);
 
             await control.DisposeAsync();
             await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await control.SetOptionsAsync(options => options.Container = "container"));
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.Dispose.ToFullScreenControlNamespace(), control.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.Dispose.ToFullScreenControlNamespace(), _testMapId, control.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -195,11 +206,13 @@
                 JsRuntime = _jsRuntimeMock.Object,
                 Logger = _loggerMock.Object
             };
+            // Set the MapId on the control as would happen when added to map
+            control.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(control, _testMapId);
 
             var result = await control.IsFullScreenAsync();
             Assert.Equal(isFullScreen, result);
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<bool>(Constants.JsConstants.Methods.FullScreenControl.IsFullScreen.ToFullScreenControlNamespace(), control.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<bool>(Constants.JsConstants.Methods.FullScreenControl.IsFullScreen.ToFullScreenControlNamespace(), _testMapId, control.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -221,11 +234,13 @@
                 JsRuntime = _jsRuntimeMock.Object,
                 Logger = _loggerMock.Object
             };
+            // Set the MapId on the control as would happen when added to map
+            control.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(control, _testMapId);
 
             await control.DisposeAsync();
             await Assert.ThrowsAnyAsync<ComponentDisposedException>(async () => await control.IsFullScreenAsync());
 
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.Dispose.ToFullScreenControlNamespace(), control.Id), Times.Once);
+            _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.Dispose.ToFullScreenControlNamespace(), _testMapId, control.Id), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 
@@ -236,15 +251,18 @@
                 JsRuntime = _jsRuntimeMock.Object,
                 Logger = _loggerMock.Object
             };
+            // Set the MapId on the control as would happen when added to map
+            control.GetType().GetProperty("MapId", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?.SetValue(control, _testMapId);
 
             await control.AddEventsAsync();
 
             _jsRuntimeMock.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.AddEvents.ToFullScreenControlNamespace(), It.Is<object[]>(parameters =>
-               (parameters[0] as Guid?).GetValueOrDefault() == control.Id
-               && parameters[1] is IEnumerable<string>
-               && (parameters[1] as IEnumerable<string>).Single() == FullScreenEventType.FullScreenChanged.ToString()
-               && parameters[2] is DotNetObjectReference<FullScreenEventInvokeHelper>
-            )), Times.Once);
+                parameters[0] as string == _testMapId
+                && (parameters[1] as Guid?).GetValueOrDefault().ToString() == control.Id.ToString()
+                && parameters[2] is IEnumerable<string>
+                && (parameters[2] as IEnumerable<string>).Single() == FullScreenEventType.FullScreenChanged.ToString()
+       && parameters[3] is DotNetObjectReference<FullScreenEventInvokeHelper>
+    )), Times.Once);
             _jsRuntimeMock.VerifyNoOtherCalls();
         }
 

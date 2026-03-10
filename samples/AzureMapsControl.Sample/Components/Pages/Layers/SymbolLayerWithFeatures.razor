@@ -15,6 +15,10 @@
 
     public async Task OnMapReady(MapEventArgs eventArgs)
     {
+        var dummyDataSourceId = "_empty";
+        var dummyDataSource = new AzureMapsControl.Components.Data.DataSource(dummyDataSourceId);
+        await eventArgs.Map.AddSourceAsync(dummyDataSource);
+
         var datasource = new AzureMapsControl.Components.Data.DataSource(_datasourceId);
         await eventArgs.Map.AddSourceAsync(datasource);
 
@@ -30,6 +34,11 @@
 
     public async Task OnDatasourceAdded(MapSourceEventArgs sourceEventArgs)
     {
+        if (sourceEventArgs.Source.Id != _datasourceId)
+        {
+            return;
+        }
+
         var textFieldExpressionJsonString = "[\"format\", [\"get\", \"title\"], {\"text-font\": [\"literal\", [\"StandardFont-Bold\"]], \"font-scale\": 1.25}, \"\\n\", {}, [\"get\", \"subtitle\"], {\"font-scale\": 0.75}]";
 
         var layer = new AzureMapsControl.Components.Layers.SymbolLayer

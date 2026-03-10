@@ -32,7 +32,7 @@
             TilesetId = Configuration["Indoor:TilesetId"]
         };
 
-        var indoorManager = await IndoorService.CreateIndoorManagerAsync(options, AzureMapsControl.Components.Indoor.IndoorManagerEventActivationFlags.All());
+        var indoorManager = await IndoorService.CreateIndoorManagerAsync(eventArgs.Map.Id, options, AzureMapsControl.Components.Indoor.IndoorManagerEventActivationFlags.All());
 
         indoorManager.OnFacilityChanged += eventArgs =>
         {

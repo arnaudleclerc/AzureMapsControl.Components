@@ -19,11 +19,25 @@ import { DataSourceEventArgs } from '../sources/datasource-event-args';
 import * as griddeddatasource from 'azure-maps-gridded-data-source';
 
 export class Core {
-    private static readonly _popups: Map<string, azmaps.Popup> = new Map<string, azmaps.Popup>();
+    private static readonly _maps: Map<string, azmaps.Map> = new Map<string, azmaps.Map>();
+    private static readonly _popups: Map<string, Map<string, azmaps.Popup>> = new Map<string, Map<string, azmaps.Popup>>();
 
-    private static _map: azmaps.Map;
+    public static getMap(mapId: string): azmaps.Map {
+        if (!this._maps.has(mapId)) {
+            throw new Error(`Map with ID '${mapId}' not found`);
+        }
+        return this._maps.get(mapId);
+    }
 
-    public static addControls(controls: Control[]): void {
+    private static getOrCreatePopupCollection(mapId: string): Map<string, azmaps.Popup> {
+        if (!this._popups.has(mapId)) {
+            this._popups.set(mapId, new Map<string, azmaps.Popup>());
+        }
+        return this._popups.get(mapId);
+    }
+
+    public static addControls(mapId: string, controls: Control[]): void {
+        const map = this.getMap(mapId);
         controls.forEach(control => {
             let mapControl: azmaps.Control;
             switch (control.type) {
@@ -56,24 +70,25 @@ export class Core {
             (mapControl as any).amc = {
                 id: control.id
             };
-            this._map.controls.add(mapControl, {
+            map.controls.add(mapControl, {
                 position: control.position
             });
         });
     }
 
-    public static addHtmlMarkers(htmlMarkerDefinitions: HtmlMarkerDefinition[],
+    public static addHtmlMarkers(mapId: string, htmlMarkerDefinitions: HtmlMarkerDefinition[],
         eventHelper: EventHelper<HtmlMarkerEventArgs>): void {
+        const map = this.getMap(mapId);
         htmlMarkerDefinitions.forEach(htmlMarkerDefinition => {
             const marker = this.getHtmlMarkerFromDefinition(htmlMarkerDefinition);
             if (htmlMarkerDefinition.events) {
                 htmlMarkerDefinition.events.forEach(htmlMarkerEvent => {
-                    this._map.events.add(htmlMarkerEvent as any, marker, event => {
+                    map.events.add(htmlMarkerEvent as any, marker, event => {
                         eventHelper.invokeMethodAsync('NotifyEventAsync', toMarkerEvent(event, (marker as any).amc.id));
                     });
                 });
             }
-            this._map.markers.add(marker);
+            map.markers.add(marker);
         });
     }
 
@@ -102,20 +117,23 @@ export class Core {
         return marker;
     }
 
-    public static attachEventsToHtmlMarker(marker: azmaps.HtmlMarker, events: string[], eventHelper: EventHelper<HtmlMarkerEventArgs>): void {
+    public static attachEventsToHtmlMarker(mapId: string, marker: azmaps.HtmlMarker, events: string[], eventHelper: EventHelper<HtmlMarkerEventArgs>): void {
+        const map = this.getMap(mapId);
         events.forEach(htmlMarkerEvent => {
-            this._map.events.add(htmlMarkerEvent as any, marker, event => {
+            map.events.add(htmlMarkerEvent as any, marker, event => {
                 eventHelper.invokeMethodAsync('NotifyEventAsync', toMarkerEvent(event, (marker as any).amc.id));
             });
         });
     }
 
-    public static addLayer(id: string,
+    public static addLayer(mapId: string,
+        id: string,
         before: string,
         layerType: LayerType,
         layerOptions: azmaps.LayerOptions,
         enabledEvents: string[],
         eventHelper: EventHelper<MapEventArgs>): void {
+        const map = this.getMap(mapId);
         let layer: azmaps.layer.Layer;
         switch (layerType) {
             case 'tileLayer':
@@ -127,32 +145,32 @@ export class Core {
                 break;
 
             case 'bubbleLayer':
-                layer = new azmaps.layer.BubbleLayer(this._map.sources.getById(layerOptions.source), id, layerOptions);
+                layer = new azmaps.layer.BubbleLayer(map.sources.getById(layerOptions.source), id, layerOptions);
                 break;
 
             case 'heatmapLayer':
-                layer = new azmaps.layer.HeatMapLayer(this._map.sources.getById(layerOptions.source), id, layerOptions);
+                layer = new azmaps.layer.HeatMapLayer(map.sources.getById(layerOptions.source), id, layerOptions);
                 break;
 
             case 'lineLayer':
-                layer = new azmaps.layer.LineLayer(this._map.sources.getById(layerOptions.source), id, layerOptions);
+                layer = new azmaps.layer.LineLayer(map.sources.getById(layerOptions.source), id, layerOptions);
                 break;
 
             case 'polygonExtrusionLayer':
-                layer = new azmaps.layer.PolygonExtrusionLayer(this._map.sources.getById(layerOptions.source), id, layerOptions);
+                layer = new azmaps.layer.PolygonExtrusionLayer(map.sources.getById(layerOptions.source), id, layerOptions);
                 break;
 
             case 'polygonLayer':
-                layer = new azmaps.layer.PolygonLayer(this._map.sources.getById(layerOptions.source), id, layerOptions);
+                layer = new azmaps.layer.PolygonLayer(map.sources.getById(layerOptions.source), id, layerOptions);
                 break;
 
             case 'symbolLayer':
-                layer = new azmaps.layer.SymbolLayer(this._map.sources.getById(layerOptions.source), id, layerOptions);
+                layer = new azmaps.layer.SymbolLayer(map.sources.getById(layerOptions.source), id, layerOptions);
                 break;
         }
         if (layer) {
             enabledEvents.forEach(layerEvent => {
-                this._map.events.add(layerEvent as any, layer, (e: any) => {
+                map.events.add(layerEvent as any, layer, (e: any) => {
                     eventHelper.invokeMethodAsync('NotifyEventAsync', {
                         type: layerEvent,
                         layerId: layer.getId(),
@@ -166,7 +184,7 @@ export class Core {
                 });
             });
 
-            this._map.layers.add(layer, before);
+            map.layers.add(layer, before);
         }
     }
 
@@ -209,7 +227,7 @@ export class Core {
         }
 
         map.events.addOnce('ready', event => {
-            this._map = map;
+            this._maps.set(mapId, map);
             eventHelper.invokeMethodAsync('NotifyEventAsync', { type: event.type });
 
             mapEvents.filter(value => enabledEvents.includes(value)).forEach(value => {
@@ -295,13 +313,16 @@ export class Core {
         });
     }
 
-    public static addPopup(id: string, options: azmaps.PopupOptions, events: string[], eventHelper: EventHelper<MapEventArgs>): void {
+    public static addPopup(mapId: string, id: string, options: azmaps.PopupOptions, events: string[], eventHelper: EventHelper<MapEventArgs>): void {
+        const map = this.getMap(mapId);
+        const popupCollection = this.getOrCreatePopupCollection(mapId);
+        
         const popup = new azmaps.Popup(options);
-        this._popups.set(id, popup);
-        this._map.popups.add(popup);
+        popupCollection.set(id, popup);
+        map.popups.add(popup);
 
         events.forEach(key => {
-            this._map.events.add(key as any, popup, () => {
+            map.events.add(key as any, popup, () => {
                 eventHelper.invokeMethodAsync('NotifyEventAsync', {
                     type: key,
                     id: id
@@ -314,22 +335,26 @@ export class Core {
         }
     }
 
-    public static addPopupWithTemplate(id: string,
+    public static addPopupWithTemplate(mapId: string,
+        id: string,
         options: azmaps.PopupOptions,
         properties: { [key: string]: any },
         template: azmaps.PopupTemplate,
         events: string[],
         eventHelper: EventHelper<MapEventArgs>): void {
         options.content = azmaps.PopupTemplate.applyTemplate(Core.formatProperties(properties), template);
-        this.addPopup(id, options, events, eventHelper);
+        this.addPopup(mapId, id, options, events, eventHelper);
     }
 
-    public static addSource(id: string, options: azmaps.DataSourceOptions | azmaps.VectorTileSourceOptions | griddeddatasource.GriddedDataSourceOptions, type: SourceType, events: string[], eventHelper: EventHelper<DataSourceEventArgs>): void {
+    public static addSource(mapId: string, id: string, options: azmaps.DataSourceOptions | azmaps.VectorTileSourceOptions | griddeddatasource.GriddedDataSourceOptions, type: SourceType, events: string[], eventHelper: EventHelper<DataSourceEventArgs>): void {
+        const map = this.getMap(mapId);
+        
         if (type === 'datasource') {
             const dataSource = new azmaps.source.DataSource(id, options);
-            this._map.sources.add(dataSource);
+            map.sources.add(dataSource);
+                
             events?.forEach(event => {
-                this._map.events.add(<any>event, dataSource, (e: azmaps.source.DataSource | azmaps.Shape[]) => {
+                map.events.add(<any>event, dataSource, (e: azmaps.source.DataSource | azmaps.Shape[]) => {
                     const args: DataSourceEventArgs = {
                         type: event,
                         id
@@ -342,66 +367,66 @@ export class Core {
                 });
             });
         } else if (type === 'vectortilesource') {
-            this._map.sources.add(new azmaps.source.VectorTileSource(id, options));
+            map.sources.add(new azmaps.source.VectorTileSource(id, options));
         } else if (type === 'griddeddatasource') {
             const griddedDatasource = new griddeddatasource.source.GriddedDataSource(id, options);
-            this._map.sources.add(griddedDatasource);
+            map.sources.add(griddedDatasource);
         }
     }
 
-    public static clearHtmlMarkers(): void {
-        this._map.markers.clear();
+    public static clearHtmlMarkers(mapId: string): void {
+        this.getMap(mapId).markers.clear();
     }
 
-    public static clearLayers(): void {
-        this._map.layers.clear();
+    public static clearLayers(mapId: string): void {
+        this.getMap(mapId).layers.clear();
     }
 
-    public static clearPopups(): void {
-        this._map.popups.clear();
-        this._popups.clear();
+    public static clearPopups(mapId: string): void {
+        this.getMap(mapId).popups.clear();
+        this._popups.delete(mapId);
     }
 
-    public static clearSources(): void {
-        this._map.sources.clear();
+    public static clearSources(mapId: string): void {
+        this.getMap(mapId).sources.clear();
     }
 
-    public static clearMap(): void {
-        this._map.clear();
-        this._popups.clear();
+    public static clearMap(mapId: string): void {
+        this.getMap(mapId).clear();
+        this._popups.delete(mapId);
     }
 
-    public static getMap(): azmaps.Map {
-        return this._map;
+    public static getPopup(mapId: string, id: string): azmaps.Popup {
+        const popupCollection = this._popups.get(mapId);
+        return popupCollection?.get(id) || null;
     }
 
-    public static getPopup(id: string): azmaps.Popup {
-        return this._popups.has(id) ? this._popups.get(id) : null;
+    public static getPopups(mapId: string): Map<string, azmaps.Popup> {
+        return this._popups.get(mapId) || new Map<string, azmaps.Popup>();
     }
 
-    public static getPopups(): Map<string, azmaps.Popup> {
-        return this._popups;
+    public static removeHtmlMarkers(mapId: string, markerIds: string[]): void {
+        this.getMap(mapId).markers.remove(this.getMap(mapId).markers.getMarkers().filter(marker => markerIds.includes((marker as any).amc.id)));
     }
 
-    public static removeHtmlMarkers(markerIds: string[]): void {
-        this._map.markers.remove(this._map.markers.getMarkers().filter(marker => markerIds.includes((marker as any).amc.id)));
+    public static removeLayers(mapId: string, ids: string[]): void {
+        this.getMap(mapId).layers.remove(ids);
     }
 
-    public static removeLayers(ids: string[]): void {
-        this._map.layers.remove(ids);
+    public static removeSource(mapId: string, id: string): void {
+        this.getMap(mapId).sources.remove(id);
     }
 
-    public static removeSource(id: string): void {
-        this._map.sources.remove(id);
-    }
-
-    public static removePopup(id: string): void {
-        if (this._popups.has(id)) {
-            this._popups.delete(id);
+    public static removePopup(mapId: string, id: string): void {
+        const popupCollection = this._popups.get(mapId);
+        if (popupCollection?.has(id)) {
+            const popup = popupCollection.get(id);
+            this.getMap(mapId).popups.remove(popup);
+            popupCollection.delete(id);
         }
     }
 
-    public static setCameraOptions(cameraOptions: (azmaps.CameraOptions | azmaps.CameraBoundsOptions) & azmaps.AnimationOptions): void {
+    public static setCameraOptions(mapId: string, cameraOptions: (azmaps.CameraOptions | azmaps.CameraBoundsOptions) & azmaps.AnimationOptions): void {
         const options: (azmaps.CameraOptions | azmaps.CameraBoundsOptions) & azmaps.AnimationOptions = {
             bearing: cameraOptions.bearing,
             centerOffset: cameraOptions.centerOffset,
@@ -424,32 +449,32 @@ export class Core {
             options.zoom = cameraOptions.zoom;
         }
 
-        this._map.setCamera(options);
+        this.getMap(mapId).setCamera(options);
     }
 
-    public static setOptions(cameraOptions: azmaps.CameraOptions,
+    public static setOptions(mapId: string, cameraOptions: azmaps.CameraOptions,
         styleOptions: azmaps.StyleOptions,
         userInteractionOptions: azmaps.UserInteractionOptions,
         trafficOptions: azmaps.TrafficOptions): void {
-        this.setCameraOptions(cameraOptions);
-        this.setStyleOptions(styleOptions);
-        this.setUserInteraction(userInteractionOptions);
-        this.setTraffic(trafficOptions);
+        this.setCameraOptions(mapId, cameraOptions);
+        this.setStyleOptions(mapId, styleOptions);
+        this.setUserInteraction(mapId, userInteractionOptions);
+        this.setTraffic(mapId, trafficOptions);
     }
 
-    public static setStyleOptions(styleOptions: azmaps.StyleOptions): void {
-        this._map.setStyle(styleOptions);
+    public static setStyleOptions(mapId: string, styleOptions: azmaps.StyleOptions): void {
+        this.getMap(mapId).setStyle(styleOptions);
     }
 
-    public static setTraffic(trafficOptions: azmaps.TrafficOptions): void {
-        this._map.setTraffic(trafficOptions);
+    public static setTraffic(mapId: string, trafficOptions: azmaps.TrafficOptions): void {
+        this.getMap(mapId).setTraffic(trafficOptions);
     }
 
-    public static setUserInteraction(userInteractionOptions: azmaps.UserInteractionOptions): void {
-        this._map.setUserInteraction(userInteractionOptions);
+    public static setUserInteraction(mapId: string, userInteractionOptions: azmaps.UserInteractionOptions): void {
+        this.getMap(mapId).setUserInteraction(userInteractionOptions);
     }
 
-    public static updateHtmlMarkers(htmlMarkerOptions: HtmlMarkerDefinition[]): void {
+    public static updateHtmlMarkers(mapId: string, htmlMarkerOptions: HtmlMarkerDefinition[]): void {
         htmlMarkerOptions.forEach(htmlMarkerOption => {
             const options: azmaps.HtmlMarkerOptions = {};
             if (htmlMarkerOption.options.anchor) {
@@ -483,12 +508,12 @@ export class Core {
                 options.popup = new azmaps.Popup(htmlMarkerOption.popupOptions.options);
             }
 
-            this._map.markers.getMarkers().find(marker => (marker as any).amc.id === htmlMarkerOption.id).setOptions(options);
+            this.getMap(mapId).markers.getMarkers().find(marker => (marker as any).amc.id === htmlMarkerOption.id).setOptions(options);
         });
     }
 
-    public static createImageFromTemplate(imageTemplate: MapImageTemplate): void {
-        this._map.imageSprite.createFromTemplate(
+    public static createImageFromTemplate(mapId: string, imageTemplate: MapImageTemplate): void {
+        this.getMap(mapId).imageSprite.createFromTemplate(
             imageTemplate.id,
             imageTemplate.templateName,
             imageTemplate.color,
@@ -497,34 +522,34 @@ export class Core {
         );
     }
 
-    public static setCanvasStyleProperty(property: string, value: string): void {
-        this._map.getCanvas().style.setProperty(property, value);
+    public static setCanvasStyleProperty(mapId: string, property: string, value: string): void {
+        this.getMap(mapId).getCanvas().style.setProperty(property, value);
     }
 
-    public static setCanvasStyleProperties(properties: { key: string, value: string }[]): void {
-        const canvas = this._map.getCanvas();
+    public static setCanvasStyleProperties(mapId: string, properties: { key: string, value: string }[]): void {
+        const canvas = this.getMap(mapId).getCanvas();
         properties.forEach(property => {
             canvas.style.setProperty(property.key, property.value);
         });
     }
 
-    public static setCanvasContainerStyleProperty(property: string, value: string): void {
-        this._map.getCanvasContainer().style.setProperty(property, value);
+    public static setCanvasContainerStyleProperty(mapId: string, property: string, value: string): void {
+        this.getMap(mapId).getCanvasContainer().style.setProperty(property, value);
     }
 
-    public static setCanvasContainerStyleProperties(properties: { key: string, value: string }[]): void {
-        const canvasContainer = this._map.getCanvasContainer();
+    public static setCanvasContainerStyleProperties(mapId: string, properties: { key: string, value: string }[]): void {
+        const canvasContainer = this.getMap(mapId).getCanvasContainer();
         properties.forEach(property => {
             canvasContainer.style.setProperty(property.key, property.value);
         });
     }
 
-    public static getCamera(): azmaps.CameraOptions & azmaps.CameraBoundsOptions {
-        return this._map.getCamera();
+    public static getCamera(mapId: string): azmaps.CameraOptions & azmaps.CameraBoundsOptions {
+        return this.getMap(mapId).getCamera();
     }
 
-    public static getStyle(): azmaps.StyleOptions {
-        const style = this._map.getStyle();
+    public static getStyle(mapId: string): azmaps.StyleOptions {
+        const style = this.getMap(mapId).getStyle();
         return <azmaps.StyleOptions>{
             autoResize: style.autoResize,
             language: style.language,
@@ -540,16 +565,16 @@ export class Core {
         };
     }
 
-    public static getTraffic(): azmaps.TrafficOptions {
-        const traffic = this._map.getTraffic();
+    public static getTraffic(mapId: string): azmaps.TrafficOptions {
+        const traffic = this.getMap(mapId).getTraffic();
         return <azmaps.TrafficOptions>{
             flow: traffic.flow,
             incidents: traffic.incidents
         };
     }
 
-    public static getUserInteraction(): azmaps.UserInteractionOptions {
-        const userInteraction = this._map.getUserInteraction();
+    public static getUserInteraction(mapId: string): azmaps.UserInteractionOptions {
+        const userInteraction = this.getMap(mapId).getUserInteraction();
         return <azmaps.UserInteractionOptions>{
             boxZoomInteraction: userInteraction.boxZoomInteraction,
             dblClickZoomInteraction: userInteraction.dblClickZoomInteraction,

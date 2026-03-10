@@ -12,6 +12,10 @@
 @code  {
     public async Task OnMapReady(MapEventArgs events)
     {
+        var dummyDataSourceId = "_empty";
+        var dummyDataSource = new AzureMapsControl.Components.Data.DataSource(dummyDataSourceId);
+        await events.Map.AddSourceAsync(dummyDataSource);
+        
         var layer = new AzureMapsControl.Components.Layers.TileLayer
         {
             Options = new AzureMapsControl.Components.Layers.TileLayerOptions("https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-900913/{z}/{x}/{y}.png"),

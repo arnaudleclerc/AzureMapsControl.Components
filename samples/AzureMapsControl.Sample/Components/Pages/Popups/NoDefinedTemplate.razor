@@ -17,6 +17,10 @@
 
     public async Task OnMapReady(MapEventArgs eventArgs)
     {
+        var dummyDataSourceId = "_empty";
+        var dummyDataSource = new AzureMapsControl.Components.Data.DataSource(dummyDataSourceId);
+        await eventArgs.Map.AddSourceAsync(dummyDataSource);
+
         var datasource = new AzureMapsControl.Components.Data.DataSource();
         await eventArgs.Map.AddSourceAsync(datasource);
 

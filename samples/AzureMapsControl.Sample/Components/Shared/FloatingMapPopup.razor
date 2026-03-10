@@ -1,0 +1,116 @@
+@rendermode InteractiveServer
+@using AzureMapsControl.Components.Map
+@using AzureMapsControl.Components.Atlas
+
+@if (IsVisible)
+{
+    <div class="floating-map-popup" style="@GetPopupStyle()">
+        <div class="popup-header">
+            <h6 class="popup-title mb-0">@Title</h6>
+            <div class="popup-controls">
+                <button class="btn btn-sm btn-outline-secondary" @onclick="ToggleMaximize" title="@(IsMaximized ? "Restore" : "Maximize")">
+                    @if (IsMaximized)
+                    {
+                        <span>🗗</span>
+                    }
+                    else
+                    {
+                        <span>🗖</span>
+                    }
+                </button>
+                <button class="btn btn-sm btn-outline-danger" @onclick="Close" title="Close">
+                    <span>×</span>
+                </button>
+            </div>
+        </div>
+        <div class="popup-content">
+            @if (!string.IsNullOrEmpty(MapId))
+            {
+                <AzureMap Id="@MapId"
+                          CameraOptions="CameraOptions"
+                          StyleOptions="StyleOptions"
+                          Controls="new AzureMapsControl.Components.Controls.Control[]
+                          {
+                              new AzureMapsControl.Components.Controls.ZoomControl(new AzureMapsControl.Components.Controls.ZoomControlOptions { Style = AzureMapsControl.Components.Controls.ControlStyle.Dark }, AzureMapsControl.Components.Controls.ControlPosition.TopLeft),
+                              new AzureMapsControl.Components.Controls.PitchControl(new AzureMapsControl.Components.Controls.PitchControlOptions { Style = AzureMapsControl.Components.Controls.ControlStyle.Dark }, AzureMapsControl.Components.Controls.ControlPosition.TopRight),
+                              new AzureMapsControl.Components.Controls.CompassControl(new AzureMapsControl.Components.Controls.CompassControlOptions { Style = AzureMapsControl.Components.Controls.ControlStyle.Dark }, AzureMapsControl.Components.Controls.ControlPosition.BottomLeft),
+                              new AzureMapsControl.Components.Controls.StyleControl(new AzureMapsControl.Components.Controls.StyleControlOptions { Style = AzureMapsControl.Components.Controls.ControlStyle.Dark, MapStyles = MapStyle.All() }, AzureMapsControl.Components.Controls.ControlPosition.BottomRight)
+                          }" />
+            }
+        </div>
+    </div>
+}
+
+<style>
+    .popup-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+        background: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+        user-select: none;
+    }
+
+    .popup-title {
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .popup-controls {
+        display: flex;
+        gap: 4px;
+    }
+
+    .popup-controls .btn {
+        padding: 2px 6px;
+        font-size: 12px;
+        line-height: 1;
+    }
+
+    .popup-content {
+        flex: 1;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .popup-content > div {
+        height: 100%;
+    }
+</style>
+
+@code {
+    [Parameter] public bool IsVisible { get; set; } = false;
+    [Parameter] public EventCallback<bool> IsVisibleChanged { get; set; }
+    [Parameter] public string Title { get; set; } = "Map Popup";
+    [Parameter] public string MapId { get; set; } = "popup-map";
+    [Parameter] public CameraOptions? CameraOptions { get; set; }
+    [Parameter] public StyleOptions? StyleOptions { get; set; }
+    [Parameter] public int Left { get; set; } = 100;
+    [Parameter] public int Top { get; set; } = 100;
+    [Parameter] public int Width { get; set; } = 500;
+    [Parameter] public int Height { get; set; } = 400;
+
+    private bool IsMaximized = false;
+
+    private string GetPopupStyle()
+    {
+        if (IsMaximized)
+        {
+            return "position: fixed; left: 0; top: 0; width: 100vw; height: 100vh; z-index: 1050; background: white; border: 2px solid #dee2e6; border-radius: 8px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15); display: flex; flex-direction: column;";
+        }
+        return $"position: fixed; left: {Left}px; top: {Top}px; width: {Width}px; height: {Height}px; z-index: 1050; background: white; border: 2px solid #dee2e6; border-radius: 8px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15); display: flex; flex-direction: column;";
+    }
+
+    private async Task Close()
+    {
+        IsVisible = false;
+        await IsVisibleChanged.InvokeAsync(IsVisible);
+    }
+
+    private void ToggleMaximize()
+    {
+        IsMaximized = !IsMaximized;
+        StateHasChanged();
+    }
+}

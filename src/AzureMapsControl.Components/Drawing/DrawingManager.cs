@@ -18,6 +18,7 @@
     {
         internal IMapJsRuntime JSRuntime { get; set; }
         internal ILogger Logger { get; set; }
+        internal string MapId { get; set; }
         public bool Disposed { get; private set; }
 
         /// <summary>
@@ -51,49 +52,49 @@
             if (lineStrings.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{lineStrings.Count()} linestrings will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), lineStrings);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), MapId, lineStrings);
             }
 
             var multiLineStrings = shapes.OfType<Shape<MultiLineString>>();
             if (multiLineStrings.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{multiLineStrings.Count()} multilinestrings will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), multiLineStrings);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), MapId, multiLineStrings);
             }
 
             var multiPoints = shapes.OfType<Shape<MultiPoint>>();
             if (multiPoints.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{multiPoints.Count()} multipoints will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), multiPoints);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), MapId, multiPoints);
             }
 
             var multiPolygons = shapes.OfType<Shape<MultiPolygon>>();
             if (multiPolygons.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{multiPolygons.Count()} multipolygons will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), multiPolygons);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), MapId, multiPolygons);
             }
 
             var points = shapes.OfType<Shape<Point>>();
             if (points.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{points.Count()} points will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), points);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), MapId, points);
             }
 
             var polygons = shapes.OfType<Shape<Polygon>>();
             if (polygons.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{polygons.Count()} polygons will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), polygons);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), MapId, polygons);
             }
 
             var routePoints = shapes.OfType<Shape<RoutePoint>>();
             if (routePoints.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{routePoints.Count()} route points will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), routePoints);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), MapId, routePoints);
             }
 
             _sourceShapes.AddRange(shapes);
@@ -113,7 +114,7 @@
             EnsureNotDisposed();
 
             _sourceShapes = null;
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Clear.ToDrawingNamespace());
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Clear.ToDrawingNamespace(), MapId);
         }
 
         /// <summary>

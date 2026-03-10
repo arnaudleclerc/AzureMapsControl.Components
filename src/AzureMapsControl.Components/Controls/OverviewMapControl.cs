@@ -58,7 +58,7 @@
 
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.OverviewMapControl_UpdateAsync, $"Id: {Id}");
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.OverviewMapControl_UpdateAsync, $"Type: {Type}");
-            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.OverviewMapControl.SetOptions.ToOverviewMapControlNamespace(), Id, Options);
+            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.OverviewMapControl.SetOptions.ToOverviewMapControlNamespace(), MapId, Id, Options);
         }
     }
 
@@ -158,7 +158,7 @@
                 }
                 if (value.Options.Style is not null)
                 {
-                    writer.WriteString("style", value.Options.Style.HasFirstChoice ? value.Options.Style.FirstChoice.ToString() : value.Options.Style.SecondChoice);
+                    writer.WriteString("style", value.Options.Style.HasFirstChoice ? value.Options.Style.FirstChoice.ToString() : value.Options.Style.SecondChoice?.ToString() ?? "auto");
                 }
                 if (value.Options.SyncBearingPitch.HasValue)
                 {

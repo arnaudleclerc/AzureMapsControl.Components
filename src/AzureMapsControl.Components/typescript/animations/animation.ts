@@ -12,13 +12,14 @@ export class Animation {
 
     private static readonly _animations = new Map<string, azanimations.IPlayableAnimation | azanimations.animations.GroupAnimation | azanimations.RoutePathAnimation>();
 
-    public static drop(animationId: string,
+    public static drop(mapId: string,
+        animationId: string,
         shapes: Geometry[],
         datasourceId: string,
         height: number,
         options: azanimations.PlayableAnimationOptions): void {
 
-        const map = Core.getMap();
+        const map = Core.getMap(mapId);
         const source = map.sources.getById(datasourceId) as azmaps.source.DataSource;
 
         const animation = azanimations.animations.drop(shapes, source, height, options);
@@ -28,18 +29,19 @@ export class Animation {
         }
     }
 
-    public static dropMarkers(animationId: string,
+    public static dropMarkers(mapId: string,
+        animationId: string,
         markerOptions: HtmlMarkerDefinition[],
         height: number,
         options: azanimations.PlayableAnimationOptions,
         eventInvokeHelper: EventHelper<HtmlMarkerEventArgs>): void {
-        const map = Core.getMap();
+        const map = Core.getMap(mapId);
         const markers: azmaps.HtmlMarker[] = [];
         markerOptions.forEach(markerOption => {
             const marker = Core.getHtmlMarkerFromDefinition(markerOption);
             markers.push(marker);
             if (markerOption.events) {
-                Core.attachEventsToHtmlMarker(marker, markerOption.events, eventInvokeHelper);
+                Core.attachEventsToHtmlMarker(mapId, marker, markerOption.events, eventInvokeHelper);
             }
         });
 
@@ -50,13 +52,14 @@ export class Animation {
         }
     }
 
-    public static setCoordinates(animationId: string,
+    public static setCoordinates(mapId: string,
+        animationId: string,
         shapeId: string,
         datasourceId: string,
         newCoordinates: azmaps.data.Position | azmaps.data.Position[] | azmaps.data.Position[][] | azmaps.data.Position[][][],
         options: azanimations.PathAnimationOptions | azanimations.MapPathAnimationOptions): void {
 
-        const map = Core.getMap();
+        const map = Core.getMap(mapId);
 
         const shape = datasourceId ?
             (map.sources.getById(datasourceId) as azmaps.source.DataSource).getShapeById(shapeId)
@@ -68,11 +71,12 @@ export class Animation {
         }
     }
 
-    public static snakeline(animationId: string,
+    public static snakeline(mapId: string,
+        animationId: string,
         lineId: string,
         dataSourceId: string,
         options: azanimations.PathAnimationOptions | azanimations.MapPathAnimationOptions): void {
-        const source = Core.getMap().sources.getById(dataSourceId) as azmaps.source.DataSource;
+        const source = Core.getMap(mapId).sources.getById(dataSourceId) as azmaps.source.DataSource;
         const shape = source.getShapeById(lineId);
         const animation = azanimations.animations.snakeline(shape, options);
 
@@ -81,13 +85,14 @@ export class Animation {
         }
     }
 
-    public static moveAlongPath(animationId: string,
+    public static moveAlongPath(mapId: string,
+        animationId: string,
         line: string | azmaps.data.Position[],
         lineSourceId: string,
         pinId: string,
         pinSourceId: string,
         options: azanimations.PathAnimationOptions | azanimations.MapPathAnimationOptions): void {
-        const map = Core.getMap();
+        const map = Core.getMap(mapId);
 
         let path: azmaps.data.Position[] | azmaps.data.LineString | azmaps.Shape = null;
         if (typeof line === 'string') {
@@ -112,12 +117,13 @@ export class Animation {
         }
     }
 
-    public static moveAlongRoute(animationId: string,
+    public static moveAlongRoute(mapId: string,
+        animationId: string,
         routePoints: RoutePoint[],
         pinSourceId: string,
         pinId: string,
         options: azanimations.RoutePathAnimationOptions): void {
-        const map = Core.getMap();
+        const map = Core.getMap(mapId);
 
         let shape: azmaps.Shape | azmaps.HtmlMarker = null;
         if (pinSourceId) {
@@ -135,11 +141,12 @@ export class Animation {
         this._animations.set(animationId, azanimations.animations.moveAlongRoute(route, shape, options));
     }
 
-    public static flowingDashedLine(animationId: string,
+    public static flowingDashedLine(mapId: string,
+        animationId: string,
         lineLayerId: string,
         options: azanimations.MovingDashLineOptions): void {
 
-        const layer = Core.getMap().layers.getLayerById(lineLayerId) as azmaps.layer.LineLayer;
+        const layer = Core.getMap(mapId).layers.getLayerById(lineLayerId) as azmaps.layer.LineLayer;
 
         this._animations.set(
             animationId,
@@ -147,13 +154,14 @@ export class Animation {
         );
     }
 
-    public static morph(animationId: string,
+    public static morph(mapId: string,
+        animationId: string,
         shapeId: string,
         datasourceId: string,
         newGeometry: Geometry,
         options: azanimations.PlayableAnimationOptions): void {
 
-        const map = Core.getMap();
+        const map = Core.getMap(mapId);
         const shape = (map.sources.getById(datasourceId) as azmaps.source.DataSource).getShapeById(shapeId);
 
         const animation = azanimations.animations.morph(
@@ -163,7 +171,7 @@ export class Animation {
         );
 
         if (!options.disposeOnComplete) {
-            this, this._animations.set(animationId, animation);
+            this._animations.set(animationId, animation);
         }
     }
 

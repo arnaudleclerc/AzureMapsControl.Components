@@ -16,6 +16,10 @@
 
     public async Task OnMapReady(MapEventArgs eventArgs)
     {
+        var dummyDataSourceId = "_empty";
+        var dummyDataSource = new AzureMapsControl.Components.Data.DataSource(dummyDataSourceId);
+        await eventArgs.Map.AddSourceAsync(dummyDataSource);
+
         var dataSource = new AzureMapsControl.Components.Data.DataSource(_dataSourceId);
         await eventArgs.Map.AddSourceAsync(dataSource);
 
@@ -33,8 +37,13 @@
         await dataSource.AddAsync(new AzureMapsControl.Components.Atlas.Shape<AzureMapsControl.Components.Atlas.Polygon>(polygon));
     }
 
-    public async Task OnDatasourceAdded(MapEventArgs sourceEventArgs)
+    public async Task OnDatasourceAdded(MapSourceEventArgs sourceEventArgs)
     {
+        if (sourceEventArgs.Source.Id != _dataSourceId)
+        {
+            return;
+        }
+
         var layer = new AzureMapsControl.Components.Layers.PolygonLayer
         {
             EventActivationFlags = AzureMapsControl.Components.Layers.LayerEventActivationFlags.None().Enable(AzureMapsControl.Components.Layers.LayerEventType.Click),
