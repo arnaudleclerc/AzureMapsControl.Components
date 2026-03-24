@@ -7,9 +7,9 @@ using AzureMapsControl.Components.Logger;
 using AzureMapsControl.Components.Map;
 using AzureMapsControl.Components.Runtime;
 
-using AzureMap = AzureMapsControl.Components.Map.Map;
-
 using Microsoft.Extensions.Logging;
+
+using AzureMap = AzureMapsControl.Components.Map.Map;
 
 namespace AzureMapsControl.Components.Layers;
 public delegate void LayerMouseEvent(MapMouseEventArgs eventArgs);

@@ -7,10 +7,10 @@ using AzureMapsControl.Components.Map;
 using AzureMapsControl.Components.Popups;
 using AzureMapsControl.Components.Runtime;
 
-using AzureMap = AzureMapsControl.Components.Map.Map;
-
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
+
+using AzureMap = AzureMapsControl.Components.Map.Map;
 
 namespace AzureMapsControl.Components.Markers;
 internal delegate void HtmlMarkerPopupToggledEvent();

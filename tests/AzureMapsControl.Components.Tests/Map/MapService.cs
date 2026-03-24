@@ -2,9 +2,10 @@
 using System.Threading.Tasks;
 
 using AzureMapsControl.Components.Map;
-using AzureMap = AzureMapsControl.Components.Map.Map;
 
 using Xunit;
+
+using AzureMap = AzureMapsControl.Components.Map.Map;
 
 namespace AzureMapsControl.Components.Tests.Map;
 public class MapServiceTests

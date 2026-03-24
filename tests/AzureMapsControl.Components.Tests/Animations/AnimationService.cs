@@ -10,7 +10,6 @@ using AzureMapsControl.Components.Atlas;
 using AzureMapsControl.Components.Data;
 using AzureMapsControl.Components.Layers;
 using AzureMapsControl.Components.Map;
-using AzureMap = AzureMapsControl.Components.Map.Map;
 using AzureMapsControl.Components.Markers;
 using AzureMapsControl.Components.Runtime;
 
@@ -20,6 +19,8 @@ using Microsoft.JSInterop;
 using Moq;
 
 using Xunit;
+
+using AzureMap = AzureMapsControl.Components.Map.Map;
 
 namespace AzureMapsControl.Components.Tests.Animations;
 public class AnimationServiceTests

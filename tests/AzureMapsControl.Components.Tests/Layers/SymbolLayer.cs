@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using AzureMapsControl.Components.Atlas;
 using AzureMapsControl.Components.Layers;
 using AzureMapsControl.Components.Map;
-using AzureMap = AzureMapsControl.Components.Map.Map;
 
 using Xunit;
+
+using AzureMap = AzureMapsControl.Components.Map.Map;
 
 namespace AzureMapsControl.Components.Tests.Layers;
 public class SymbolLayerTests

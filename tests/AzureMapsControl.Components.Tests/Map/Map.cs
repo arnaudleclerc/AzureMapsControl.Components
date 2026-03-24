@@ -12,7 +12,6 @@ using AzureMapsControl.Components.Drawing;
 using AzureMapsControl.Components.Exceptions;
 using AzureMapsControl.Components.Layers;
 using AzureMapsControl.Components.Map;
-using AzureMap = AzureMapsControl.Components.Map.Map;
 using AzureMapsControl.Components.Markers;
 using AzureMapsControl.Components.Popups;
 using AzureMapsControl.Components.Runtime;
@@ -26,6 +25,8 @@ using Moq;
 using NuGet.Frameworks;
 
 using Xunit;
+
+using AzureMap = AzureMapsControl.Components.Map.Map;
 
 namespace AzureMapsControl.Components.Tests.Map;
 public class MapTests
