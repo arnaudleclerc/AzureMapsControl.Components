@@ -19,7 +19,7 @@
             _logger = logger;
         }
 
-        public async ValueTask<IndoorManager> CreateIndoorManagerAsync(IndoorManagerOptions options) => await CreateIndoorManagerAsync(options, null);
+        public async ValueTask<IndoorManager> CreateIndoorManagerAsync(IndoorManagerOptions options) => await CreateIndoorManagerAsync(options, null).ConfigureAwait(false);
 
         public async ValueTask<IndoorManager> CreateIndoorManagerAsync(IndoorManagerOptions options, IndoorManagerEventActivationFlags eventFlags)
         {
@@ -28,7 +28,7 @@
             _logger.LogAzureMapsControlDebug(AzureMapLogEvent.IndoorService_CreateIndoorManagerAsync, "EventFlags", eventFlags);
 
             var indoorManager = new IndoorManager(_jsRuntime, _logger);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Indoor.CreateIndoorManager.ToIndoorNamespace(), indoorManager.Id, options, eventFlags?.EnabledEvents, DotNetObjectReference.Create(indoorManager.EventHelper));
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Indoor.CreateIndoorManager.ToIndoorNamespace(), indoorManager.Id, options, eventFlags?.EnabledEvents, DotNetObjectReference.Create(indoorManager.EventHelper)).ConfigureAwait(false);
             return indoorManager;
         }
     }

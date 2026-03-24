@@ -53,72 +53,23 @@
         {
             switch (eventArgs.Type)
             {
-                case "click":
-                    OnClick?.Invoke(new MapMouseEventArgs(map, eventArgs));
-                    break;
-
-                case "contextmenu":
-                    OnContextMenu?.Invoke(new MapMouseEventArgs(map, eventArgs));
-                    break;
-
-                case "dblclick":
-                    OnDblClick?.Invoke(new MapMouseEventArgs(map, eventArgs));
-                    break;
-
-                case "layeradded":
-                    OnLayerAdded?.Invoke(new MapEventArgs(map, eventArgs.Type));
-                    break;
-
-                case "layerremoved":
-                    OnLayerRemoved?.Invoke(new MapEventArgs(map, eventArgs.Type));
-                    break;
-
-                case "mousedown":
-                    OnMouseDown?.Invoke(new MapMouseEventArgs(map, eventArgs));
-                    break;
-
-                case "mouseenter":
-                    OnMouseEnter?.Invoke(new MapMouseEventArgs(map, eventArgs));
-                    break;
-
-                case "mouseleave":
-                    OnMouseLeave?.Invoke(new MapMouseEventArgs(map, eventArgs));
-                    break;
-
-                case "mousemove":
-                    OnMouseMove?.Invoke(new MapMouseEventArgs(map, eventArgs));
-                    break;
-
-                case "mouseout":
-                    OnMouseOut?.Invoke(new MapMouseEventArgs(map, eventArgs));
-                    break;
-
-                case "mouseover":
-                    OnMouseOver?.Invoke(new MapMouseEventArgs(map, eventArgs));
-                    break;
-
-                case "mouseup":
-                    OnMouseUp?.Invoke(new MapMouseEventArgs(map, eventArgs));
-                    break;
-
-                case "touchcancel":
-                    OnTouchCancel?.Invoke(new MapTouchEventArgs(map, eventArgs));
-                    break;
-
-                case "touchend":
-                    OnTouchEnd?.Invoke(new MapTouchEventArgs(map, eventArgs));
-                    break;
-                case "touchmove":
-                    OnTouchMove?.Invoke(new MapTouchEventArgs(map, eventArgs));
-                    break;
-
-                case "touchstart":
-                    OnTouchStart?.Invoke(new MapTouchEventArgs(map, eventArgs));
-                    break;
-
-                case "wheel":
-                    OnWheel?.Invoke(new MapEventArgs(map, eventArgs.Type));
-                    break;
+                case "click": OnClick?.Invoke(new MapMouseEventArgs(map, eventArgs)); break;
+                case "contextmenu": OnContextMenu?.Invoke(new MapMouseEventArgs(map, eventArgs)); break;
+                case "dblclick": OnDblClick?.Invoke(new MapMouseEventArgs(map, eventArgs)); break;
+                case "layeradded": OnLayerAdded?.Invoke(new MapEventArgs(map, eventArgs.Type)); break;
+                case "layerremoved": OnLayerRemoved?.Invoke(new MapEventArgs(map, eventArgs.Type)); break;
+                case "mousedown": OnMouseDown?.Invoke(new MapMouseEventArgs(map, eventArgs)); break;
+                case "mouseenter": OnMouseEnter?.Invoke(new MapMouseEventArgs(map, eventArgs)); break;
+                case "mouseleave": OnMouseLeave?.Invoke(new MapMouseEventArgs(map, eventArgs)); break;
+                case "mousemove": OnMouseMove?.Invoke(new MapMouseEventArgs(map, eventArgs)); break;
+                case "mouseout": OnMouseOut?.Invoke(new MapMouseEventArgs(map, eventArgs)); break;
+                case "mouseover": OnMouseOver?.Invoke(new MapMouseEventArgs(map, eventArgs)); break;
+                case "mouseup": OnMouseUp?.Invoke(new MapMouseEventArgs(map, eventArgs)); break;
+                case "touchcancel": OnTouchCancel?.Invoke(new MapTouchEventArgs(map, eventArgs)); break;
+                case "touchend": OnTouchEnd?.Invoke(new MapTouchEventArgs(map, eventArgs)); break;
+                case "touchmove": OnTouchMove?.Invoke(new MapTouchEventArgs(map, eventArgs)); break;
+                case "touchstart": OnTouchStart?.Invoke(new MapTouchEventArgs(map, eventArgs)); break;
+                case "wheel": OnWheel?.Invoke(new MapEventArgs(map, eventArgs.Type)); break;
             }
         }
 
@@ -156,7 +107,7 @@
 
             update(Options);
 
-            await _mapJsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Layer.SetOptions.ToLayerNamespace(), Id, Options);
+            await _mapJsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Layer.SetOptions.ToLayerNamespace(), Id, Options).ConfigureAwait(false);
         }
 
         internal override LayerOptions GetLayerOptions() => Options;

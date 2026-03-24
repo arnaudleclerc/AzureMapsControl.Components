@@ -27,7 +27,7 @@
         {
             if (HasBeenToggled)
             {
-                await base.CloseAsync();
+                await base.CloseAsync().ConfigureAwait(false);
             }
         }
 
@@ -35,7 +35,7 @@
         {
             if (HasBeenToggled)
             {
-                await base.OpenAsync();
+                await base.OpenAsync().ConfigureAwait(false);
             }
         }
 
@@ -43,7 +43,7 @@
         {
             if (HasBeenToggled)
             {
-                await base.RemoveAsync();
+                await base.RemoveAsync().ConfigureAwait(false);
             }
         }
 
@@ -52,7 +52,7 @@
         {
             if (HasBeenToggled)
             {
-                await base.UpdateAsync(update);
+                await base.UpdateAsync(update).ConfigureAwait(false);
             }
         }
 
@@ -60,7 +60,7 @@
         {
             if (HasBeenToggled)
             {
-                await base.SetOptionsAsync(update);
+                await base.SetOptionsAsync(update).ConfigureAwait(false);
             }
         }
 

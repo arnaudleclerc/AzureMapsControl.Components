@@ -194,11 +194,11 @@
 
         private void WriteExpression(Utf8JsonWriter writer, Expression value, JsonSerializerOptions options)
         {
-            if(value.Json != null)
+            if(value.Json is not null)
             {
                 value.Json.WriteTo(writer);
             }
-            else if (value.Expressions != null)
+            else if (value.Expressions is not null)
             {
                 writer.WriteStartArray();
                 foreach (var expression in value.Expressions)

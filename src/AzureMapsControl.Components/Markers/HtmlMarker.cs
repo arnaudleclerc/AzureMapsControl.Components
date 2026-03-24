@@ -142,7 +142,7 @@
         /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
         public async ValueTask TogglePopupAsync()
         {
-            if (Options?.Popup != null)
+            if (Options?.Popup is not null)
             {
                 Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.HtmlMarker_TogglePopupAsync, "Calling TogglePopupAsync");
 
@@ -151,7 +151,7 @@
                     throw new Exceptions.ComponentNotAddedToMapException();
                 }
 
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.HtmlMarker.TogglePopup.ToHtmlMarkerNamespace(), Id, Options.Popup.Id, Options.Popup.EventActivationFlags.EnabledEvents, DotNetObjectReference.Create(PopupInvokeHelper));
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.HtmlMarker.TogglePopup.ToHtmlMarkerNamespace(), Id, Options.Popup.Id, Options.Popup.EventActivationFlags.EnabledEvents, DotNetObjectReference.Create(PopupInvokeHelper)).ConfigureAwait(false);
                 Options.Popup.HasBeenToggled = true;
                 Options.Popup.IsRemoved = false;
                 OnPopupToggled?.Invoke();
@@ -160,7 +160,7 @@
 
         internal void DispatchEvent(Map map, HtmlMarkerJsEventArgs eventArgs)
         {
-            if (eventArgs.Options != null)
+            if (eventArgs.Options is not null)
             {
                 var popupOptions = Options.Popup;
                 Options = eventArgs.Options;
@@ -169,69 +169,22 @@
 
             switch (eventArgs.Type)
             {
-                case "click":
-                    OnClick?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
-                    break;
-
-                case "contextmenu":
-                    OnContextMenu?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
-                    break;
-
-                case "dblclick":
-                    OnDblClick?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
-                    break;
-
-                case "drag":
-                    OnDrag?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
-                    break;
-
-                case "dragend":
-                    OnDragEnd?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
-                    break;
-
-                case "dragstart":
-                    OnDragStart?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
-                    break;
-
-                case "keydown":
-                    OnKeyDown?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
-                    break;
-
-                case "keypress":
-                    OnKeyPress?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
-                    break;
-
-                case "keyup":
-                    OnKeyUp?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
-                    break;
-
-                case "mousedown":
-                    OnMouseDown?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
-                    break;
-
-                case "mouseenter":
-                    OnMouseEnter?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
-                    break;
-
-                case "mouseleave":
-                    OnMouseLeave?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
-                    break;
-
-                case "mousemove":
-                    OnMouseMove?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
-                    break;
-
-                case "mouseout":
-                    OnMouseOut?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
-                    break;
-
-                case "mouseover":
-                    OnMouseOver?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
-                    break;
-
-                case "mouseup":
-                    OnMouseUp?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this));
-                    break;
+                case "click": OnClick?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this)); break;
+                case "contextmenu": OnContextMenu?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this)); break;
+                case "dblclick": OnDblClick?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this)); break;
+                case "drag": OnDrag?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this)); break;
+                case "dragend": OnDragEnd?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this)); break;
+                case "dragstart": OnDragStart?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this)); break;
+                case "keydown": OnKeyDown?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this)); break;
+                case "keypress": OnKeyPress?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this)); break;
+                case "keyup": OnKeyUp?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this)); break;
+                case "mousedown": OnMouseDown?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this)); break;
+                case "mouseenter": OnMouseEnter?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this)); break;
+                case "mouseleave": OnMouseLeave?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this)); break;
+                case "mousemove": OnMouseMove?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this)); break;
+                case "mouseout": OnMouseOut?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this)); break;
+                case "mouseover": OnMouseOver?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this)); break;
+                case "mouseup": OnMouseUp?.Invoke(new HtmlMarkerEventArgs(map, eventArgs.Type, this)); break;
             }
         }
 

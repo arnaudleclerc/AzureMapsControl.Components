@@ -29,7 +29,7 @@
         /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
         public async ValueTask AddShapesAsync(IEnumerable<Shape> shapes)
         {
-            if (shapes == null || !shapes.Any())
+            if (shapes is null || !shapes.Any())
             {
                 return;
             }
@@ -41,49 +41,49 @@
             if (lineStrings.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{lineStrings.Count()} linestrings will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), lineStrings);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), lineStrings).ConfigureAwait(false);
             }
 
             var multiLineStrings = shapes.OfType<Shape<MultiLineString>>();
             if (multiLineStrings.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{multiLineStrings.Count()} multilinestrings will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), multiLineStrings);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), multiLineStrings).ConfigureAwait(false);
             }
 
             var multiPoints = shapes.OfType<Shape<MultiPoint>>();
             if (multiPoints.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{multiPoints.Count()} multipoints will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), multiPoints);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), multiPoints).ConfigureAwait(false);
             }
 
             var multiPolygons = shapes.OfType<Shape<MultiPolygon>>();
             if (multiPolygons.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{multiPolygons.Count()} multipolygons will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), multiPolygons);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), multiPolygons).ConfigureAwait(false);
             }
 
             var points = shapes.OfType<Shape<Point>>();
             if (points.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{points.Count()} points will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), points);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), points).ConfigureAwait(false);
             }
 
             var polygons = shapes.OfType<Shape<Polygon>>();
             if (polygons.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{polygons.Count()} polygons will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), polygons);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), polygons).ConfigureAwait(false);
             }
 
             var routePoints = shapes.OfType<Shape<RoutePoint>>();
             if (routePoints.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{routePoints.Count()} route points will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), routePoints);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), routePoints).ConfigureAwait(false);
             }
         }
 
@@ -100,7 +100,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Clear.ToDrawingNamespace());
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Clear.ToDrawingNamespace()).ConfigureAwait(false);
         }
 
         /// <summary>

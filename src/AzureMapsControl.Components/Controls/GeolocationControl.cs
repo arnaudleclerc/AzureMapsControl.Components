@@ -58,7 +58,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            return await JsRuntime.InvokeAsync<Feature<Point>>(Constants.JsConstants.Methods.GeolocationControl.GetLastKnownPosition.ToGeolocationControlNamespace(), Id);
+            return await JsRuntime.InvokeAsync<Feature<Point>>(Constants.JsConstants.Methods.GeolocationControl.GetLastKnownPosition.ToGeolocationControlNamespace(), Id).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -75,7 +75,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.GeolocationControl.Dispose.ToGeolocationControlNamespace(), Id);
+            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.GeolocationControl.Dispose.ToGeolocationControlNamespace(), Id).ConfigureAwait(false);
             Disposed = true;
             OnDisposed?.Invoke();
         }
@@ -102,7 +102,7 @@
 
             update(Options);
 
-            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.GeolocationControl.SetOptions.ToGeolocationControlNamespace(), Id, Options);
+            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.GeolocationControl.SetOptions.ToGeolocationControlNamespace(), Id, Options).ConfigureAwait(false);
         }
 
         internal async ValueTask AddEventsAsync()
@@ -116,7 +116,7 @@
                 await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.GeolocationControl.AddEvents.ToGeolocationControlNamespace(),
                     Id,
                     _eventFlags.EnabledEvents,
-                    DotNetObjectReference.Create(_eventInvokeHelper));
+                    DotNetObjectReference.Create(_eventInvokeHelper)).ConfigureAwait(false);
             }
         }
 

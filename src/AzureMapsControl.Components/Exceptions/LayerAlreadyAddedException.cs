@@ -8,5 +8,6 @@
     public sealed class LayerAlreadyAddedException : Exception
     {
         internal LayerAlreadyAddedException(string layerId): base($"A layer with the same id {layerId} has already been added") { }
+        internal LayerAlreadyAddedException(string layerId, Exception innerException) : base($"A layer with the same id {layerId} has already been added", innerException) { }
     }
 }

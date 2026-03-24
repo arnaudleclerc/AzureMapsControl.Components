@@ -40,7 +40,7 @@
         {
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Source_AddAsync, "Adding shapes to data source");
 
-            await AddShapesAsync(shapes);
+            await AddShapesAsync(shapes).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -50,7 +50,7 @@
         /// <returns></returns>
         /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
         /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
-        public async ValueTask AddAsync(params Shape[] shapes) => await AddAsync(shapes as IEnumerable<Shape>);
+        public async ValueTask AddAsync(params Shape[] shapes) => await AddAsync(shapes as IEnumerable<Shape>).ConfigureAwait(false);
 
         /// <summary>
         /// Add features to the data source
@@ -63,7 +63,7 @@
         {
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Source_AddAsync, "Adding features to data source");
 
-            await AddFeaturesAsync(features);
+            await AddFeaturesAsync(features).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@
         /// <returns></returns>
         /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
         /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
-        public async ValueTask AddAsync(params Feature[] features) => await AddAsync(features as IEnumerable<Feature>);
+        public async ValueTask AddAsync(params Feature[] features) => await AddAsync(features as IEnumerable<Feature>).ConfigureAwait(false);
 
         /// <summary>
         /// Returns all shapes that are in the DataSource.
@@ -89,7 +89,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            return await JSRuntime.InvokeAsync<IEnumerable<Shape<Geometry>>>(Constants.JsConstants.Methods.Datasource.GetShapes.ToDatasourceNamespace(), Id);
+            return await JSRuntime.InvokeAsync<IEnumerable<Shape<Geometry>>>(Constants.JsConstants.Methods.Datasource.GetShapes.ToDatasourceNamespace(), Id).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -110,7 +110,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            return await JSRuntime.InvokeAsync<IEnumerable<Feature<Geometry>>>(Constants.JsConstants.Methods.Datasource.GetClusterLeaves.ToDatasourceNamespace(), Id, clusterId, limit, offset);
+            return await JSRuntime.InvokeAsync<IEnumerable<Feature<Geometry>>>(Constants.JsConstants.Methods.Datasource.GetClusterLeaves.ToDatasourceNamespace(), Id, clusterId, limit, offset).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -127,7 +127,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            return await JSRuntime.InvokeAsync<int>(Constants.JsConstants.Methods.Datasource.GetClusterExpansionZoom.ToDatasourceNamespace(), Id, clusterId);
+            return await JSRuntime.InvokeAsync<int>(Constants.JsConstants.Methods.Datasource.GetClusterExpansionZoom.ToDatasourceNamespace(), Id, clusterId).ConfigureAwait(false);
         }
 
         internal void DispatchEvent(DataSourceEventArgs eventArgs)

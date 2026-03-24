@@ -31,7 +31,7 @@
         {
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.OverviewMapControl_UpdateAsync, "OverviewMapControl - UpdateAsync");
 
-            await SetOptionsAsync(update);
+            await SetOptionsAsync(update).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -58,7 +58,7 @@
 
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.OverviewMapControl_UpdateAsync, $"Id: {Id}");
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.OverviewMapControl_UpdateAsync, $"Type: {Type}");
-            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.OverviewMapControl.SetOptions.ToOverviewMapControlNamespace(), Id, Options);
+            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.OverviewMapControl.SetOptions.ToOverviewMapControlNamespace(), Id, Options).ConfigureAwait(false);
         }
     }
 

@@ -26,7 +26,7 @@
         public TGeometry Geometry
         {
             get {
-                if (_geometry != null && _geometry.Id != Id)
+                if (_geometry is not null && _geometry.Id != Id)
                 {
                     _geometry.Id = Id;
                 }
@@ -34,7 +34,7 @@
             }
             set {
                 _geometry = value;
-                if (_geometry != null)
+                if (_geometry is not null)
                 {
                     _geometry.Id = Id;
                 }

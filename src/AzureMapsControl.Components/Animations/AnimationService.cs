@@ -46,7 +46,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "Options", options);
 
             var animation = new MoveAlongPathAnimation(Guid.NewGuid().ToString(), _jsRuntime);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), animation.Id, path.Id, pathSource.Id, pin.Id, pinSource.Id, options);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), animation.Id, path.Id, pathSource.Id, pin.Id, pinSource.Id, options).ConfigureAwait(false);
             animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
@@ -65,7 +65,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "Options", options);
 
             var animation = new MoveAlongPathAnimation(Guid.NewGuid().ToString(), _jsRuntime);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), animation.Id, path.Id, pathSource.Id, pin.Id, null, options);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), animation.Id, path.Id, pathSource.Id, pin.Id, null, options).ConfigureAwait(false);
             animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
@@ -84,7 +84,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "Options", options);
 
             var animation = new MoveAlongPathAnimation(Guid.NewGuid().ToString(), _jsRuntime);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), animation.Id, path, null, pin.Id, pinSource.Id, options);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), animation.Id, path, null, pin.Id, pinSource.Id, options).ConfigureAwait(false);
             animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
@@ -101,7 +101,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_MoveAlongPath, "Options", options);
 
             var animation = new MoveAlongPathAnimation(Guid.NewGuid().ToString(), _jsRuntime);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), animation.Id, path, null, pin.Id, null, options);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongPath.ToAnimationNamespace(), animation.Id, path, null, pin.Id, null, options).ConfigureAwait(false);
             animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
@@ -118,7 +118,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Snakeline, "Options", options);
 
             var animation = new SnakeLineAnimation(Guid.NewGuid().ToString(), _jsRuntime);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Snakeline.ToAnimationNamespace(), animation.Id, line.Id, source.Id, options);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Snakeline.ToAnimationNamespace(), animation.Id, line.Id, source.Id, options).ConfigureAwait(false);
             animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
@@ -133,7 +133,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_FlowingDashedLine, "Options", options);
 
             var animation = new FlowingDashedLineAnimation(Guid.NewGuid().ToString(), _jsRuntime);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.FlowingDashedLine.ToAnimationNamespace(), animation.Id, layer.Id, options);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.FlowingDashedLine.ToAnimationNamespace(), animation.Id, layer.Id, options).ConfigureAwait(false);
             return animation;
         }
 
@@ -150,7 +150,7 @@
 
             var parameters = _mapService.Map.GetHtmlMarkersCreationParameters(markers);
             var animation = new DropMarkersAnimation(Guid.NewGuid().ToString(), _jsRuntime);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.DropMarkers.ToAnimationNamespace(), animation.Id, parameters.MarkerOptions, height, options, parameters.InvokeHelper);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.DropMarkers.ToAnimationNamespace(), animation.Id, parameters.MarkerOptions, height, options, parameters.InvokeHelper).ConfigureAwait(false);
             animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
@@ -160,7 +160,7 @@
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_DropMarkers, "Calling DropMarkersAsync");
 
             Require.NotNull(marker, nameof(marker));
-            return await DropMarkersAsync(new[] { marker }, height, options);
+            return await DropMarkersAsync(new[] { marker }, height, options).ConfigureAwait(false);
         }
 
         public async ValueTask<IGroupAnimation> GroupAnimationAsync(IEnumerable<IAnimation> animations, GroupAnimationOptions options = default)
@@ -173,7 +173,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_GroupAnimations, "Options", options);
 
             var animation = new GroupAnimation(Guid.NewGuid().ToString(), _jsRuntime);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.GroupAnimations.ToAnimationNamespace(), animation.Id, animations.Select(a => a.Id), options);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.GroupAnimations.ToAnimationNamespace(), animation.Id, animations.Select(a => a.Id), options).ConfigureAwait(false);
             return animation;
         }
 
@@ -190,7 +190,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_Drop, "Options", options);
 
             var animation = new DropAnimation(Guid.NewGuid().ToString(), _jsRuntime);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Drop.ToAnimationNamespace(), animation.Id, points, source.Id, height, options);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Drop.ToAnimationNamespace(), animation.Id, points, source.Id, height, options).ConfigureAwait(false);
             animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
@@ -200,7 +200,7 @@
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.AnimationService_Drop, "Calling DropAsync");
 
             Require.NotNull(point, nameof(point));
-            return await DropAsync(new[] { point }, source, height, options);
+            return await DropAsync(new[] { point }, source, height, options).ConfigureAwait(false);
         }
 
         public async ValueTask<ISetCoordinatesAnimation> SetCoordinatesAsync<TPosition>(Geometry<TPosition> geometry, DataSource source, TPosition newCoordinates, SetCoordinatesAnimationOptions options = default)
@@ -217,7 +217,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_SetCoordinates, "Options", options);
 
             var animation = new SetCoordinatesAnimation(Guid.NewGuid().ToString(), _jsRuntime);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetCoordinates.ToAnimationNamespace(), animation.Id, geometry.Id, source.Id, newCoordinates, options);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetCoordinates.ToAnimationNamespace(), animation.Id, geometry.Id, source.Id, newCoordinates, options).ConfigureAwait(false);
             animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
@@ -234,7 +234,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_SetCoordinates, "Options", options);
 
             var animation = new SetCoordinatesAnimation(Guid.NewGuid().ToString(), _jsRuntime);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetCoordinates.ToAnimationNamespace(), animation.Id, marker.Id, null, newCoordinates, options);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetCoordinates.ToAnimationNamespace(), animation.Id, marker.Id, null, newCoordinates, options).ConfigureAwait(false);
             animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
@@ -254,7 +254,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_SetCoordinates, "Options", options);
 
             var animation = new MorphAnimation(Guid.NewGuid().ToString(), _jsRuntime);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Morph.ToAnimationNamespace(), animation.Id, geometry.Id, source.Id, newGeometry, options);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Morph.ToAnimationNamespace(), animation.Id, geometry.Id, source.Id, newGeometry, options).ConfigureAwait(false);
             animation.Disposed = options.DisposeOnComplete.GetValueOrDefault();
             return animation;
         }
@@ -273,7 +273,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_SetCoordinates, "Options", options);
 
             var animation = new MoveAlongRouteAnimation(Guid.NewGuid().ToString(), _jsRuntime);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongRoute.ToAnimationNamespace(), animation.Id, points, pinSource.Id, pin.Id, options);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongRoute.ToAnimationNamespace(), animation.Id, points, pinSource.Id, pin.Id, options).ConfigureAwait(false);
             return animation;
         }
 
@@ -289,7 +289,7 @@
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.AnimationService_SetCoordinates, "Options", options);
 
             var animation = new MoveAlongRouteAnimation(Guid.NewGuid().ToString(), _jsRuntime);
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongRoute.ToAnimationNamespace(), animation.Id, points, null, pin.Id, options);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.MoveAlongRoute.ToAnimationNamespace(), animation.Id, points, null, pin.Id, options).ConfigureAwait(false);
             return animation;
         }
     }

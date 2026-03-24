@@ -36,7 +36,7 @@
         /// <exception cref="JsonException">The given string is not a valid JSON</exception>
         /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
         /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
-        public async ValueTask AddAsync(string json) => await AddAsync(JsonDocument.Parse(json));
+        public async ValueTask AddAsync(string json) => await AddAsync(JsonDocument.Parse(json)).ConfigureAwait(false);
 
         /// <summary>
         /// Add a Json containing a Feature Collection to the source
@@ -53,7 +53,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatureCollection.ToSourceNamespace(), Id, json);
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatureCollection.ToSourceNamespace(), Id, json).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -68,13 +68,13 @@
             var shapeIdsToRemove = _shapes?.Where(shape => ids.Contains(shape.Id)).Select(shape => shape.Id);
             var featureIdsToRemove = _features?.Where(feature => ids.Contains(feature.Id)).Select(feature => feature.Id);
             var idsToRemove = new List<string>();
-            if (shapeIdsToRemove != null)
+            if (shapeIdsToRemove is not null)
             {
                 idsToRemove.AddRange(shapeIdsToRemove);
                 _shapes.RemoveAll(geometry => shapeIdsToRemove.Contains(geometry.Id));
             }
 
-            if (featureIdsToRemove != null)
+            if (featureIdsToRemove is not null)
             {
                 idsToRemove.AddRange(featureIdsToRemove);
                 _features.RemoveAll(feature => featureIdsToRemove.Contains(feature.Id));
@@ -87,7 +87,7 @@
 
                 Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Source_RemoveAsync, "Removing geometries from data source");
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_RemoveAsync, $"Id: {Id} | Ids: {string.Join('|', ids)}");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), Id, ids);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Remove.ToSourceNamespace(), Id, ids).ConfigureAwait(false);
             }
         }
 
@@ -98,7 +98,7 @@
         /// <returns></returns>
         /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
         /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
-        public async ValueTask RemoveAsync(params string[] ids) => await RemoveAsync(ids as IEnumerable<string>);
+        public async ValueTask RemoveAsync(params string[] ids) => await RemoveAsync(ids as IEnumerable<string>).ConfigureAwait(false);
 
         /// <summary>
         /// Remove shapes and features from the source
@@ -111,17 +111,17 @@
         public async ValueTask RemoveAsync(IEnumerable<Shape> shapes, IEnumerable<Feature> features)
         {
             var ids = new List<string>();
-            if (shapes != null)
+            if (shapes is not null)
             {
                 ids.AddRange(shapes.Select(shape => shape.Id));
             }
 
-            if (features != null)
+            if (features is not null)
             {
                 ids.AddRange(features.Select(feature => feature.Id));
             }
 
-            await RemoveAsync(ids);
+            await RemoveAsync(ids).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -131,7 +131,7 @@
         /// <returns></returns>
         /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
         /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
-        public async ValueTask RemoveAsync(IEnumerable<Shape> shapes) => await RemoveAsync(shapes, null);
+        public async ValueTask RemoveAsync(IEnumerable<Shape> shapes) => await RemoveAsync(shapes, null).ConfigureAwait(false);
 
         /// <summary>
         /// Remove shapes from the source
@@ -140,7 +140,7 @@
         /// <returns></returns>
         /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
         /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
-        public async ValueTask RemoveAsync(params Shape[] shapes) => await RemoveAsync(shapes, null);
+        public async ValueTask RemoveAsync(params Shape[] shapes) => await RemoveAsync(shapes, null).ConfigureAwait(false);
 
         /// <summary>
         /// Remove features from the source
@@ -149,7 +149,7 @@
         /// <returns></returns>
         /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
         /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
-        public async ValueTask RemoveAsync(IEnumerable<Feature> features) => await RemoveAsync(null, features);
+        public async ValueTask RemoveAsync(IEnumerable<Feature> features) => await RemoveAsync(null, features).ConfigureAwait(false);
 
         /// <summary>
         /// Remove features from the source
@@ -158,7 +158,7 @@
         /// <returns></returns>
         /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
         /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
-        public async ValueTask RemoveAsync(params Feature[] features) => await RemoveAsync(null, features);
+        public async ValueTask RemoveAsync(params Feature[] features) => await RemoveAsync(null, features).ConfigureAwait(false);
 
         /// <summary>
         /// Imports data from an URL into a source
@@ -177,7 +177,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.ImportDataFromUrl.ToSourceNamespace(), Id, url);
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.ImportDataFromUrl.ToSourceNamespace(), Id, url).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -196,7 +196,7 @@
 
             _shapes = null;
             _features = null;
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Clear.ToSourceNamespace(), Id);
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Clear.ToSourceNamespace(), Id).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -213,7 +213,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), Id);
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Dispose.ToSourceNamespace(), Id).ConfigureAwait(false);
             Disposed = true;
         }
 
@@ -231,7 +231,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            Options = await JSRuntime.InvokeAsync<TOptions>(Constants.JsConstants.Methods.Source.GetOptions.ToSourceNamespace(), Id);
+            Options = await JSRuntime.InvokeAsync<TOptions>(Constants.JsConstants.Methods.Source.GetOptions.ToSourceNamespace(), Id).ConfigureAwait(false);
             return Options;
         }
 
@@ -248,14 +248,14 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            if(Options == null)
+            if(Options is null)
             {
                 Options = new TOptions();
             }
 
             update(Options);
 
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.SetOptions.ToSourceNamespace(), Id, Options);
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.SetOptions.ToSourceNamespace(), Id, Options).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -267,7 +267,7 @@
         /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
         protected async ValueTask AddShapesAsync(IEnumerable<Shape> shapes)
         {
-            if (shapes == null || !shapes.Any())
+            if (shapes is null || !shapes.Any())
             {
                 return;
             }
@@ -275,7 +275,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            if (_shapes == null)
+            if (_shapes is null)
             {
                 _shapes = new List<Shape>();
             }
@@ -285,49 +285,49 @@
             if (lineStrings.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{lineStrings.Count()} linestrings will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, lineStrings);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, lineStrings).ConfigureAwait(false);
             }
 
             var multiLineStrings = shapes.OfType<Shape<MultiLineString>>();
             if (multiLineStrings.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{multiLineStrings.Count()} multilinestrings will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, multiLineStrings);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, multiLineStrings).ConfigureAwait(false);
             }
 
             var multiPoints = shapes.OfType<Shape<MultiPoint>>();
             if (multiPoints.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{multiPoints.Count()} multipoints will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, multiPoints);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, multiPoints).ConfigureAwait(false);
             }
 
             var multiPolygons = shapes.OfType<Shape<MultiPolygon>>();
             if (multiPolygons.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{multiPolygons.Count()} multipolygons will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, multiPolygons);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, multiPolygons).ConfigureAwait(false);
             }
 
             var points = shapes.OfType<Shape<Point>>();
             if (points.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{points.Count()} points will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, points);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, points).ConfigureAwait(false);
             }
 
             var polygons = shapes.OfType<Shape<Polygon>>();
             if (polygons.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{polygons.Count()} polygons will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, polygons);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, polygons).ConfigureAwait(false);
             }
 
             var routePoints = shapes.OfType<Shape<RoutePoint>>();
             if (routePoints.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{routePoints.Count()} route points will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, routePoints);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToSourceNamespace(), Id, routePoints).ConfigureAwait(false);
             }
 
             _shapes.AddRange(shapes);
@@ -342,7 +342,7 @@
         /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
         protected async ValueTask AddFeaturesAsync(IEnumerable<Feature> features)
         {
-            if (features == null || !features.Any())
+            if (features is null || !features.Any())
             {
                 return;
             }
@@ -350,7 +350,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            if (_features == null)
+            if (_features is null)
             {
                 _features = new List<Feature>();
             }
@@ -360,49 +360,49 @@
             if (lineStrings.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{lineStrings.Count()} linestrings will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, lineStrings);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, lineStrings).ConfigureAwait(false);
             }
 
             var multiLineStrings = features.OfType<Feature<MultiLineString>>();
             if (multiLineStrings.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{multiLineStrings.Count()} multilinestrings will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, multiLineStrings);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, multiLineStrings).ConfigureAwait(false);
             }
 
             var multiPoints = features.OfType<Feature<MultiPoint>>();
             if (multiPoints.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{multiPoints.Count()} multipoints will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, multiPoints);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, multiPoints).ConfigureAwait(false);
             }
 
             var multiPolygons = features.OfType<Feature<MultiPolygon>>();
             if (multiPolygons.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{multiPolygons.Count()} multipolygons will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, multiPolygons);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, multiPolygons).ConfigureAwait(false);
             }
 
             var points = features.OfType<Feature<Point>>();
             if (points.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{points.Count()} points will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, points);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, points).ConfigureAwait(false);
             }
 
             var polygons = features.OfType<Feature<Polygon>>();
             if (polygons.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{polygons.Count()} polygons will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, polygons);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, polygons).ConfigureAwait(false);
             }
 
             var routePoints = features.OfType<Feature<RoutePoint>>();
             if (routePoints.Any())
             {
                 Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{routePoints.Count()} route points will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, routePoints);
+                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddFeatures.ToSourceNamespace(), Id, routePoints).ConfigureAwait(false);
             }
 
             _features.AddRange(features);

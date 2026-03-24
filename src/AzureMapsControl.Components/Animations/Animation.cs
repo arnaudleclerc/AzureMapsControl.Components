@@ -27,7 +27,7 @@
         public virtual async ValueTask DisposeAsync()
         {
             EnsureNotDisposed();
-            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Dispose.ToAnimationNamespace(), Id);
+            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Dispose.ToAnimationNamespace(), Id).ConfigureAwait(false);
             Disposed = true;
         }
 
@@ -38,7 +38,7 @@
         public virtual async ValueTask PauseAsync()
         {
             EnsureNotDisposed();
-            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Pause.ToAnimationNamespace(), Id);
+            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Pause.ToAnimationNamespace(), Id).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -48,7 +48,7 @@
         public virtual async ValueTask PlayAsync()
         {
             EnsureNotDisposed();
-            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Play.ToAnimationNamespace(), Id);
+            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Play.ToAnimationNamespace(), Id).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -58,7 +58,7 @@
         public virtual async ValueTask ResetAsync()
         {
             EnsureNotDisposed();
-            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Reset.ToAnimationNamespace(), Id);
+            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Reset.ToAnimationNamespace(), Id).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -68,7 +68,7 @@
         public virtual async ValueTask StopAsync()
         {
             EnsureNotDisposed();
-            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Stop.ToAnimationNamespace(), Id);
+            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Stop.ToAnimationNamespace(), Id).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -79,7 +79,7 @@
         public virtual async ValueTask SeekAsync(decimal progress)
         {
             EnsureNotDisposed();
-            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Seek.ToAnimationNamespace(), Id, progress);
+            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.Seek.ToAnimationNamespace(), Id, progress).ConfigureAwait(false);
         }
 
         protected void EnsureNotDisposed()
@@ -106,7 +106,7 @@
         public virtual async ValueTask SetOptionsAsync(TOptions options)
         {
             EnsureNotDisposed();
-            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetOptions.ToAnimationNamespace(), Id, options);
+            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetOptions.ToAnimationNamespace(), Id, options).ConfigureAwait(false);
         }
     }
 }

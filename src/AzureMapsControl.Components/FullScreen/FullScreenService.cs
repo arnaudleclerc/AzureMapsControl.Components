@@ -21,7 +21,7 @@
         public async ValueTask<bool> IsSupportedAsync()
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.FullScreenService_IsFullScreenSupportedAsync, "FullScreenService - IsSupportedAsync");
-            return await _jsRuntime.InvokeAsync<bool>(Constants.JsConstants.Methods.FullScreenControl.IsFullScreenSupported.ToFullScreenControlNamespace());
+            return await _jsRuntime.InvokeAsync<bool>(Constants.JsConstants.Methods.FullScreenControl.IsFullScreenSupported.ToFullScreenControlNamespace()).ConfigureAwait(false);
         }
     }
 }

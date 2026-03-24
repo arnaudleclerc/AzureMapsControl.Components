@@ -27,7 +27,7 @@
 
         public U Enable(params T[] eventTypes)
         {
-            if (eventTypes != null)
+            if (eventTypes is not null)
             {
                 foreach (var eventType in eventTypes)
                 {
@@ -39,7 +39,7 @@
 
         public U Disable(params T[] eventTypes)
         {
-            if (eventTypes != null)
+            if (eventTypes is not null)
             {
                 foreach (var eventType in eventTypes)
                 {

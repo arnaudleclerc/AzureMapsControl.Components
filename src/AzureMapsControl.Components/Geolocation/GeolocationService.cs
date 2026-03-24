@@ -25,7 +25,7 @@
         public async ValueTask<bool> IsGeolocationSupportedAsync()
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.GeolocationService_IsGeolocationSupportedAsync, "GeolocationService - IsGeolocationSupportedAsync");
-            return await _mapJsRuntime.InvokeAsync<bool>(Constants.JsConstants.Methods.GeolocationControl.IsGeolocationSupported.ToGeolocationControlNamespace());
+            return await _mapJsRuntime.InvokeAsync<bool>(Constants.JsConstants.Methods.GeolocationControl.IsGeolocationSupported.ToGeolocationControlNamespace()).ConfigureAwait(false);
         }
     }
 }

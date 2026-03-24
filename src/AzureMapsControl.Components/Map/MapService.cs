@@ -7,7 +7,7 @@
 
     public delegate ValueTask MapReadyEvent();
 
-    internal class MapService : IMapAdderService
+    internal sealed class MapService : IMapAdderService
     {
         private readonly ILogger<MapService> _logger;
 
@@ -26,10 +26,10 @@
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.MapService_AddMapAsync, "Adding instance of map");
             Map = map;
 
-            if (OnMapReadyAsync != null)
+            if (OnMapReadyAsync is not null)
             {
                 _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.MapService_AddMapAsync, "Emitting OnMapReadyAsync");
-                await OnMapReadyAsync.Invoke();
+                await OnMapReadyAsync.Invoke().ConfigureAwait(false);
             }
         }
 

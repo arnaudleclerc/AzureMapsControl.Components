@@ -71,7 +71,7 @@
             EnsureJsRuntimeExists();
             EnsureNotRemoved();
 
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Open.ToPopupNamespace(), Id);
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Open.ToPopupNamespace(), Id).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@
             EnsureJsRuntimeExists();
             EnsureNotRemoved();
 
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Close.ToPopupNamespace(), Id);
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Close.ToPopupNamespace(), Id).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -105,7 +105,7 @@
             EnsureJsRuntimeExists();
             EnsureNotRemoved();
 
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Remove.ToPopupNamespace(), Id);
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.Remove.ToPopupNamespace(), Id).ConfigureAwait(false);
 
             OnRemoved?.Invoke();
             IsRemoved = true;
@@ -123,7 +123,7 @@
         {
             Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Popup_UpdateAsync, "Popup - UpdateAsync");
 
-            await SetOptionsAsync(update);
+            await SetOptionsAsync(update).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -147,7 +147,7 @@
 
             update.Invoke(Options);
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Popup_SetOptionsAsync, $"Id: {Id}");
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.SetOptions.ToPopupNamespace(), Id, Options);
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.SetOptions.ToPopupNamespace(), Id, Options).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -178,32 +178,18 @@
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Popup_ApplyTemplateAsync, $"Id: {Id}");
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Popup_ApplyTemplateAsync, $"Template: {template}");
             Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Popup_ApplyTemplateAsync, $"Properties: {string.Join('|', properties.Select(kvp => kvp.Key + " : " + kvp.Value))}");
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.ApplyTemplate.ToPopupNamespace(), Id, Options, properties, template);
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Popup.ApplyTemplate.ToPopupNamespace(), Id, Options, properties, template).ConfigureAwait(false);
         }
 
         internal void DispatchEvent(PopupEventArgs eventArgs)
         {
             switch (eventArgs.Type)
             {
-                case "close":
-                    OnClose?.Invoke(eventArgs);
-                    break;
-
-                case "drag":
-                    OnDrag?.Invoke(eventArgs);
-                    break;
-
-                case "dragend":
-                    OnDragEnd?.Invoke(eventArgs);
-                    break;
-
-                case "dragstart":
-                    OnDragStart?.Invoke(eventArgs);
-                    break;
-
-                case "open":
-                    OnOpen?.Invoke(eventArgs);
-                    break;
+                case "close": OnClose?.Invoke(eventArgs); break;
+                case "drag": OnDrag?.Invoke(eventArgs); break;
+                case "dragend": OnDragEnd?.Invoke(eventArgs); break;
+                case "dragstart": OnDragStart?.Invoke(eventArgs); break;
+                case "open": OnOpen?.Invoke(eventArgs); break;
             }
         }
 

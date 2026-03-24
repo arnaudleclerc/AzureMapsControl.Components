@@ -13,6 +13,6 @@
         public EventInvokeHelper(Func<T, ValueTask> callback) => _callback = callback;
 
         [JSInvokable]
-        public async ValueTask NotifyEventAsync(T arg) => await _callback.Invoke(arg);
+        public async ValueTask NotifyEventAsync(T arg) => await _callback.Invoke(arg).ConfigureAwait(false);
     }
 }

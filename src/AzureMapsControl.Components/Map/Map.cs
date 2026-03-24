@@ -1,4 +1,4 @@
-﻿namespace AzureMapsControl.Components.Map
+namespace AzureMapsControl.Components.Map
 {
     using System;
     using System.Collections.Generic;
@@ -173,7 +173,7 @@
         /// <param name="controls">Controls to add to the map</param>
         public async ValueTask AddControlsAsync(IEnumerable<Control> controls)
         {
-            if (controls == null || !controls.Any())
+            if (controls is null || !controls.Any())
             {
                 return;
             }
@@ -240,7 +240,7 @@
         /// <returns></returns>
         public async ValueTask AddSourceAsync<TSource>(TSource source) where TSource : Source
         {
-            if (source == null)
+            if (source is null)
             {
                 return;
             }
@@ -248,7 +248,7 @@
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddSourceAsync, "Adding source");
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_AddSourceAsync, $"Id: {source.Id} | Type: {source.SourceType}");
 
-            if (_sources == null)
+            if (_sources is null)
             {
                 _sources = new List<Source>();
             }
@@ -304,7 +304,7 @@
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_RemoveSourceAsync, "Removing data source");
             _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_RemoveSourceAsync, $"Id: {id}");
             var dataSource = _sources?.SingleOrDefault(ds => ds.Id == id);
-            if (dataSource != null)
+            if (dataSource is not null)
             {
                 await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Core.RemoveSource.ToCoreNamespace(), id);
                 _sources.Remove(dataSource);
@@ -333,7 +333,7 @@
         /// <returns></returns>
         public async ValueTask AddDrawingToolbarAsync(DrawingToolbarOptions drawingToolbarOptions)
         {
-            if (drawingToolbarOptions != null)
+            if (drawingToolbarOptions is not null)
             {
                 _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddDrawingToolbarAsync, "Adding drawing toolbar");
                 DrawingToolbarOptions = drawingToolbarOptions;
@@ -368,7 +368,7 @@
         /// <returns></returns>
         public async ValueTask UpdateDrawingToolbarAsync(DrawingToolbarUpdateOptions drawingToolbarUpdateOptions)
         {
-            if (drawingToolbarUpdateOptions != null)
+            if (drawingToolbarUpdateOptions is not null)
             {
                 _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_UpdateDrawingToolbarAsync, "Updating drawing toolbar");
                 DrawingToolbarOptions.Buttons = drawingToolbarUpdateOptions.Buttons;
@@ -396,7 +396,7 @@
         public async ValueTask RemoveDrawingToolbarAsync()
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_RemoveDrawingToolbarAsync, "Removing drawing toolbar");
-            if (DrawingToolbarOptions != null)
+            if (DrawingToolbarOptions is not null)
             {
                 await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Drawing.RemoveDrawingToolbar.ToDrawingNamespace());
                 DrawingToolbarOptions = null;
@@ -449,7 +449,7 @@
         /// <returns></returns>
         public async ValueTask AddHtmlMarkersAsync(IEnumerable<HtmlMarker> markers)
         {
-            if (markers != null)
+            if (markers is not null)
             {
                 _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_AddHtmlMarkersAsync, "Adding html markers");
                 HtmlMarkers = (HtmlMarkers ?? Array.Empty<HtmlMarker>()).Concat(markers).ToArray();
@@ -466,7 +466,7 @@
                     marker.Logger = _logger;
 
                     marker.OnPopupToggled += () => {
-                        if (_popups == null)
+                        if (_popups is null)
                         {
                             _popups = new List<Popup>();
                         }
@@ -477,7 +477,7 @@
                         }
                     };
 
-                    if (marker.Options?.Popup != null)
+                    if (marker.Options?.Popup is not null)
                     {
                         marker.Options.Popup.JSRuntime = _jsRuntime;
                         marker.Options.Popup.Logger = _logger;
@@ -498,7 +498,7 @@
                 Id = marker.Id,
                 Events = marker.EventActivationFlags?.EnabledEvents,
                 Options = marker.Options,
-                PopupOptions = marker.Options?.Popup != null ? new HtmlMarkerPopupCreationOptions {
+                PopupOptions = marker.Options?.Popup is not null ? new HtmlMarkerPopupCreationOptions {
                     Events = marker.Options.Popup.EventActivationFlags.EnabledEvents,
                     Id = marker.Options.Popup.Id,
                     Options = marker.Options.Popup.Options
@@ -521,7 +521,7 @@
         /// <returns></returns>
         public async ValueTask UpdateHtmlMarkersAsync(IEnumerable<HtmlMarkerUpdate> updates)
         {
-            if (updates != null)
+            if (updates is not null)
             {
                 _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_UpdateHtmlMarkersAsync, "Updating html markers");
                 _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_UpdateHtmlMarkersAsync, $"{updates.Count()} html markers will be updated");
@@ -531,66 +531,66 @@
                 updates.Select(update => new HtmlMarkerCreationOptions {
                     Id = update.Marker.Id,
                     Options = update.Options,
-                    PopupOptions = update.Options?.Popup != null ? new HtmlMarkerPopupCreationOptions {
+                    PopupOptions = update.Options?.Popup is not null ? new HtmlMarkerPopupCreationOptions {
                         Events = update.Options.Popup.EventActivationFlags.EnabledEvents,
                         Id = update.Options.Popup.Id,
                         Options = update.Options.Popup.Options
                     } : null
                 }));
 
-                foreach (var updateWithOptions in updates.Where(u => u.Options != null))
+                foreach (var updateWithOptions in updates.Where(u => u.Options is not null))
                 {
                     var targetMarker = HtmlMarkers.First(marker => marker.Id == updateWithOptions.Marker.Id);
 
-                    if (updateWithOptions.Options.Anchor.ToString() != null)
+                    if (updateWithOptions.Options.Anchor.ToString() is not null)
                     {
                         targetMarker.Options.Anchor = updateWithOptions.Options.Anchor;
                     }
-                    if (updateWithOptions.Options.Color != null)
+                    if (updateWithOptions.Options.Color is not null)
                     {
                         targetMarker.Options.Color = updateWithOptions.Options.Color;
                     }
-                    if (updateWithOptions.Options.Draggable != null)
+                    if (updateWithOptions.Options.Draggable is not null)
                     {
                         targetMarker.Options.Draggable = updateWithOptions.Options.Draggable;
                     }
-                    if (updateWithOptions.Options.HtmlContent != null)
+                    if (updateWithOptions.Options.HtmlContent is not null)
                     {
                         targetMarker.Options.HtmlContent = updateWithOptions.Options.HtmlContent;
                     }
-                    if (updateWithOptions.Options.Position != null)
+                    if (updateWithOptions.Options.Position is not null)
                     {
                         targetMarker.Options.Position = updateWithOptions.Options.Position;
                     }
-                    if (updateWithOptions.Options.PixelOffset != null)
+                    if (updateWithOptions.Options.PixelOffset is not null)
                     {
                         targetMarker.Options.PixelOffset = updateWithOptions.Options.PixelOffset;
                     }
-                    if (updateWithOptions.Options.SecondaryColor != null)
+                    if (updateWithOptions.Options.SecondaryColor is not null)
                     {
                         targetMarker.Options.SecondaryColor = updateWithOptions.Options.SecondaryColor;
                     }
-                    if (updateWithOptions.Options.Text != null)
+                    if (updateWithOptions.Options.Text is not null)
                     {
                         targetMarker.Options.Text = updateWithOptions.Options.Text;
                     }
-                    if (updateWithOptions.Options.Visible != null)
+                    if (updateWithOptions.Options.Visible is not null)
                     {
                         targetMarker.Options.Visible = updateWithOptions.Options.Visible;
                     }
                 }
 
-                foreach (var updateWithPopup in updates.Where(update => update.Options?.Popup != null))
+                foreach (var updateWithPopup in updates.Where(update => update.Options?.Popup is not null))
                 {
                     var marker = HtmlMarkers.First(marker => marker.Id == updateWithPopup.Marker.Id);
                     marker.Options.Popup = updateWithPopup.Options.Popup;
 
-                    if (marker.Options.Popup.JSRuntime == null)
+                    if (marker.Options.Popup.JSRuntime is null)
                     {
                         marker.Options.Popup.JSRuntime = _jsRuntime;
                         marker.Options.Popup.OnRemoved += () => RemovePopup(marker.Options.Popup.Id);
                     }
-                    if (marker.Options.Popup.Logger == null)
+                    if (marker.Options.Popup.Logger is null)
                     {
                         marker.Options.Popup.Logger = _logger;
                     }
@@ -613,9 +613,9 @@
         public async ValueTask RemoveHtmlMarkersAsync(IEnumerable<HtmlMarker> markers)
         {
             _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Map_RemoveHtmlMarkersAsync, "Removing html markers");
-            if (HtmlMarkers != null && markers != null)
+            if (HtmlMarkers is not null && markers is not null)
             {
-                HtmlMarkers = HtmlMarkers.Where(marker => !markers.Any(m => m != null && m.Id == marker.Id)).ToArray();
+                HtmlMarkers = HtmlMarkers.Where(marker => !markers.Any(m => m is not null && m.Id == marker.Id)).ToArray();
                 _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_RemoveHtmlMarkersAsync, $"{markers.Count()} html markers will be removed");
                 var ids = markers.Select(marker => marker.Id);
                 _logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Map_RemoveHtmlMarkersAsync, $"Ids: {string.Join('|', ids)}");
@@ -655,12 +655,12 @@
         /// <returns></returns>
         public async ValueTask AddLayerAsync<T>(T layer, string before) where T : Layer
         {
-            if (layer == null)
+            if (layer is null)
             {
                 return;
             }
 
-            if (_layers == null)
+            if (_layers is null)
             {
                 _layers = new List<Layer>();
             }
@@ -760,7 +760,7 @@
         /// <returns></returns>
         public async ValueTask SetCameraOptionsAsync(Action<CameraOptions> configure)
         {
-            if (CameraOptions == null)
+            if (CameraOptions is null)
             {
                 CameraOptions = new CameraOptions();
             }
@@ -839,7 +839,7 @@
         /// <returns></returns>
         public async ValueTask SetStyleOptionsAsync(Action<StyleOptions> configure)
         {
-            if (StyleOptions == null)
+            if (StyleOptions is null)
             {
                 StyleOptions = new StyleOptions();
             }
@@ -855,7 +855,7 @@
         /// <returns></returns>
         public async ValueTask SetUserInteractionAsync(Action<UserInteractionOptions> configure)
         {
-            if (UserInteractionOptions == null)
+            if (UserInteractionOptions is null)
             {
                 UserInteractionOptions = new UserInteractionOptions();
             }
@@ -871,7 +871,7 @@
         /// <returns></returns>
         public async ValueTask SetTrafficOptionsAsync(Action<TrafficOptions> configure)
         {
-            if (TrafficOptions == null)
+            if (TrafficOptions is null)
             {
                 TrafficOptions = new TrafficOptions();
             }
@@ -1037,7 +1037,7 @@
         {
             Require.NotNull(popup, nameof(popup));
 
-            if (_popups == null)
+            if (_popups is null)
             {
                 _popups = new List<Popup>();
             }
@@ -1075,7 +1075,7 @@
             Require.NotNull(template, nameof(template));
             Require.NotNull(properties, nameof(properties));
 
-            if (_popups == null)
+            if (_popups is null)
             {
                 _popups = new List<Popup>();
             }
@@ -1116,7 +1116,7 @@
         public async ValueTask RemovePopupAsync(string id)
         {
             var popup = _popups?.SingleOrDefault(p => p.Id == id);
-            if (popup != null)
+            if (popup is not null)
             {
                 await popup.RemoveAsync();
             }
@@ -1142,7 +1142,7 @@
 
         private void RemovePopup(string id)
         {
-            if (_popups != null)
+            if (_popups is not null)
             {
                 var popupIndex = _popups.FindIndex(popup => popup.Id == id);
                 _popups.RemoveAt(popupIndex);

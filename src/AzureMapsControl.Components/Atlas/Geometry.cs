@@ -95,7 +95,7 @@
                     }
                     else if (reader.CurrentDepth == startDepth + 2)
                     {
-                        if (result == null)
+                        if (result is null)
                         {
                             result = new List<Position>();
                         }
@@ -104,12 +104,12 @@
                     }
                     else if (reader.CurrentDepth == startDepth + 3)
                     {
-                        if (result == null)
+                        if (result is null)
                         {
                             result = new List<IEnumerable<Position>>();
                         }
 
-                        if (coordinates == null)
+                        if (coordinates is null)
                         {
                             coordinates = new List<Position>();
                         }
@@ -118,17 +118,17 @@
                     }
                     else if (reader.CurrentDepth == startDepth + 4)
                     {
-                        if (result == null)
+                        if (result is null)
                         {
                             result = new List<IEnumerable<IEnumerable<Position>>>();
                         }
 
-                        if (coordinates == null)
+                        if (coordinates is null)
                         {
                             coordinates = new List<IEnumerable<Position>>();
                         }
 
-                        if (positions == null)
+                        if (positions is null)
                         {
                             positions = new List<Position>();
                         }
@@ -141,7 +141,7 @@
                 {
                     if (reader.CurrentDepth == startDepth + 2)
                     {
-                        if (positions != null)
+                        if (positions is not null)
                         {
                             coordinates.Add(positions);
                             positions = null;
@@ -149,7 +149,7 @@
                     }
                     else if (reader.CurrentDepth == startDepth + 1)
                     {
-                        if (coordinates != null)
+                        if (coordinates is not null)
                         {
                             result.Add(coordinates);
                             coordinates = null;

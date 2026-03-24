@@ -47,7 +47,7 @@
 
             EnsureNotDisposed();
 
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Indoor.Initialize.ToIndoorNamespace(), Id);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Indoor.Initialize.ToIndoorNamespace(), Id).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@
 
             EnsureNotDisposed();
 
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Indoor.Dispose.ToIndoorNamespace(), Id);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Indoor.Dispose.ToIndoorNamespace(), Id).ConfigureAwait(false);
             Disposed = true;
         }
 
@@ -78,7 +78,7 @@
 
             EnsureNotDisposed();
 
-            var currentFacility = await _jsRuntime.InvokeAsync<IndoorFacility>(Constants.JsConstants.Methods.Indoor.GetCurrentFacility.ToIndoorNamespace(), Id);
+            var currentFacility = await _jsRuntime.InvokeAsync<IndoorFacility>(Constants.JsConstants.Methods.Indoor.GetCurrentFacility.ToIndoorNamespace(), Id).ConfigureAwait(false);
             return (currentFacility.FacilityId, currentFacility.LevelOrdinal);
         }
 
@@ -94,7 +94,7 @@
 
             EnsureNotDisposed();
 
-            return await _jsRuntime.InvokeAsync<IndoorManagerOptions>(Constants.JsConstants.Methods.Indoor.GetOptions.ToIndoorNamespace(), Id);
+            return await _jsRuntime.InvokeAsync<IndoorManagerOptions>(Constants.JsConstants.Methods.Indoor.GetOptions.ToIndoorNamespace(), Id).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@
 
             EnsureNotDisposed();
 
-            return await _jsRuntime.InvokeAsync<StyleDefinition>(Constants.JsConstants.Methods.Indoor.GetStyleDefinition.ToIndoorNamespace(), Id);
+            return await _jsRuntime.InvokeAsync<StyleDefinition>(Constants.JsConstants.Methods.Indoor.GetStyleDefinition.ToIndoorNamespace(), Id).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -128,7 +128,7 @@
 
             EnsureNotDisposed();
 
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Indoor.SetDynamicStyling.ToIndoorNamespace(), Id, enabled);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Indoor.SetDynamicStyling.ToIndoorNamespace(), Id, enabled).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -148,7 +148,7 @@
 
             EnsureNotDisposed();
 
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Indoor.SetFacility.ToIndoorNamespace(), Id, facilityId, levelOrdinal);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Indoor.SetFacility.ToIndoorNamespace(), Id, facilityId, levelOrdinal).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -163,7 +163,7 @@
 
             EnsureNotDisposed();
 
-            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Indoor.SetOptions.ToIndoorNamespace(), Id, options);
+            await _jsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Indoor.SetOptions.ToIndoorNamespace(), Id, options).ConfigureAwait(false);
         }
 
         private async ValueTask DispatchEventAsync(IndoorManagerJsEventArgs eventArgs)

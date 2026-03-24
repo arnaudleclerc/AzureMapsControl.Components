@@ -61,7 +61,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.Dispose.ToFullScreenControlNamespace(), Id);
+            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.Dispose.ToFullScreenControlNamespace(), Id).ConfigureAwait(false);
             Disposed = true;
             OnDisposed?.Invoke();
         }
@@ -88,7 +88,7 @@
 
             update(Options);
 
-            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.SetOptions.ToFullScreenControlNamespace(), Id, Options);
+            await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.SetOptions.ToFullScreenControlNamespace(), Id, Options).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -105,7 +105,7 @@
             EnsureJsRuntimeExists();
             EnsureNotDisposed();
 
-            return await JsRuntime.InvokeAsync<bool>(Constants.JsConstants.Methods.FullScreenControl.IsFullScreen.ToFullScreenControlNamespace(), Id);
+            return await JsRuntime.InvokeAsync<bool>(Constants.JsConstants.Methods.FullScreenControl.IsFullScreen.ToFullScreenControlNamespace(), Id).ConfigureAwait(false);
         }
 
         internal async ValueTask AddEventsAsync()
@@ -119,7 +119,7 @@
                 await JsRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.FullScreenControl.AddEvents.ToFullScreenControlNamespace(),
                     Id,
                     _eventFlags.EnabledEvents,
-                    DotNetObjectReference.Create(_eventInvokeHelper));
+                    DotNetObjectReference.Create(_eventInvokeHelper)).ConfigureAwait(false);
             }
         }
 
