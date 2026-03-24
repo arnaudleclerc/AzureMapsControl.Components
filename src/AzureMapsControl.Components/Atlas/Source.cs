@@ -1,13 +1,12 @@
-﻿namespace AzureMapsControl.Components.Atlas
-{
-    using System.Diagnostics.CodeAnalysis;
+﻿
+using System.Diagnostics.CodeAnalysis;
 
-    [ExcludeFromCodeCoverage]
-    public sealed class Source
-    {
-        /// <summary>
-        /// Id of the data source
-        /// </summary>
-        public string Id { get; set; }
-    }
+namespace AzureMapsControl.Components.Atlas;
+[ExcludeFromCodeCoverage]
+public sealed class Source
+{
+    /// <summary>
+    /// Id of the data source
+    /// </summary>
+    public string Id { get; set; }
 }

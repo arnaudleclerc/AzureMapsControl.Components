@@ -1,34 +1,33 @@
-﻿namespace AzureMapsControl.Components.Data
+﻿
+using System;
+
+namespace AzureMapsControl.Components.Data;
+public abstract class Source
 {
-    using System;
+    internal SourceType SourceType { get; }
 
-    public abstract class Source
+    /// <summary>
+    /// A unique id that the user assigns to the data source
+    /// </summary>
+    public string Id { get; }
+
+    internal Source(string id, SourceType type)
     {
-        internal SourceType SourceType { get; }
-
-        /// <summary>
-        /// A unique id that the user assigns to the data source
-        /// </summary>
-        public string Id { get; }
-
-        internal Source(string id, SourceType type)
-        {
-            Id = string.IsNullOrWhiteSpace(id) ? Guid.NewGuid().ToString() : id;
-            SourceType = type;
-        }
-
-        internal abstract SourceOptions GetSourceOptions();
+        Id = string.IsNullOrWhiteSpace(id) ? Guid.NewGuid().ToString() : id;
+        SourceType = type;
     }
 
-    public abstract class Source<TOptions>: Source where TOptions : SourceOptions
-    {
-        /// <summary>
-        /// Options of the source
-        /// </summary>
-        public TOptions Options { get; set; }
+    internal abstract SourceOptions GetSourceOptions();
+}
 
-        internal Source(string id, SourceType type): base(id, type) { }
+public abstract class Source<TOptions>: Source where TOptions : SourceOptions
+{
+    /// <summary>
+    /// Options of the source
+    /// </summary>
+    public TOptions Options { get; set; }
 
-        internal override SourceOptions GetSourceOptions() => Options;
-    }
+    internal Source(string id, SourceType type): base(id, type) { }
+
+    internal override SourceOptions GetSourceOptions() => Options;
 }

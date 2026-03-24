@@ -1,20 +1,19 @@
-﻿namespace AzureMapsControl.Components.Atlas
+﻿
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
+
+namespace AzureMapsControl.Components.Atlas;
+[ExcludeFromCodeCoverage]
+[JsonConverter(typeof(GeometryJsonConverter<Polygon>))]
+public sealed class Polygon : Geometry<IEnumerable<IEnumerable<Position>>>
 {
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Text.Json.Serialization;
+    internal const string InnerGeometryType = "Polygon";
+    public BoundingBox BBox { get; set; }
 
-    [ExcludeFromCodeCoverage]
-    [JsonConverter(typeof(GeometryJsonConverter<Polygon>))]
-    public sealed class Polygon : Geometry<IEnumerable<IEnumerable<Position>>>
-    {
-        internal const string InnerGeometryType = "Polygon";
-        public BoundingBox BBox { get; set; }
+    public Polygon() : base(InnerGeometryType) { }
 
-        public Polygon() : base(InnerGeometryType) { }
+    public Polygon(IEnumerable<IEnumerable<Position>> coordinates) : base(coordinates, InnerGeometryType) { }
 
-        public Polygon(IEnumerable<IEnumerable<Position>> coordinates) : base(coordinates, InnerGeometryType) { }
-
-        public Polygon(IEnumerable<IEnumerable<Position>> coordinates, BoundingBox bbox) : this(coordinates) => BBox = bbox;
-    }
+    public Polygon(IEnumerable<IEnumerable<Position>> coordinates, BoundingBox bbox) : this(coordinates) => BBox = bbox;
 }

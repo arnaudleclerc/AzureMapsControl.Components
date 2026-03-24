@@ -1,16 +1,15 @@
-﻿namespace AzureMapsControl.Components.Geolocation
-{
-    using System.Diagnostics.CodeAnalysis;
+﻿
+using System.Diagnostics.CodeAnalysis;
 
-    [ExcludeFromCodeCoverage]
-    public sealed class GeolocationErrorEventArgs
+namespace AzureMapsControl.Components.Geolocation;
+[ExcludeFromCodeCoverage]
+public sealed class GeolocationErrorEventArgs
+{
+    public int? Code { get; set; }
+    public string Message { get; set; }
+    internal GeolocationErrorEventArgs(GeolocationJsEventArgs eventArgs)
     {
-        public int? Code { get; set; }
-        public string Message { get; set; }
-        internal GeolocationErrorEventArgs(GeolocationJsEventArgs eventArgs)
-        {
-            Code = eventArgs.Code;
-            Message = eventArgs.Message;
-        }
+        Code = eventArgs.Code;
+        Message = eventArgs.Message;
     }
 }

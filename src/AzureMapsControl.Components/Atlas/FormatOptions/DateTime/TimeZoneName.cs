@@ -1,17 +1,16 @@
-﻿namespace AzureMapsControl.Components.Atlas.FormatOptions.DateTime
+﻿
+using System.Diagnostics.CodeAnalysis;
+
+namespace AzureMapsControl.Components.Atlas.FormatOptions.DateTime;
+[ExcludeFromCodeCoverage]
+public struct TimeZoneName
 {
-    using System.Diagnostics.CodeAnalysis;
+    private readonly string _type;
 
-    [ExcludeFromCodeCoverage]
-    public struct TimeZoneName
-    {
-        private readonly string _type;
+    public static readonly TimeZoneName Long = new TimeZoneName("long");
+    public static readonly TimeZoneName Short = new TimeZoneName("short");
 
-        public static readonly TimeZoneName Long = new TimeZoneName("long");
-        public static readonly TimeZoneName Short = new TimeZoneName("short");
+    private TimeZoneName(string type) => _type = type;
 
-        private TimeZoneName(string type) => _type = type;
-
-        public override string ToString() => _type;
-    }
+    public override string ToString() => _type;
 }

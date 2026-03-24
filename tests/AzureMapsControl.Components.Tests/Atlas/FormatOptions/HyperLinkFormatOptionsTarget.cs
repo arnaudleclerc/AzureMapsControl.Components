@@ -1,15 +1,14 @@
-﻿namespace AzureMapsControl.Components.Tests.Atlas.FormatOptions
+﻿
+using AzureMapsControl.Components.Atlas.FormatOptions;
+using AzureMapsControl.Components.Tests.Json;
+
+using Xunit;
+
+namespace AzureMapsControl.Components.Tests.Atlas.FormatOptions;
+public class HyperLinkFormatOptionsTargetJsonConverterTests : JsonConverterTests<HyperLinkFormatOptionsTarget>
 {
-    using AzureMapsControl.Components.Atlas.FormatOptions;
-    using AzureMapsControl.Components.Tests.Json;
+    public HyperLinkFormatOptionsTargetJsonConverterTests() : base(new HyperLinkFormatOptionsTargetJsonConverter()) { }
 
-    using Xunit;
-
-    public class HyperLinkFormatOptionsTargetJsonConverterTests : JsonConverterTests<HyperLinkFormatOptionsTarget>
-    {
-        public HyperLinkFormatOptionsTargetJsonConverterTests() : base(new HyperLinkFormatOptionsTargetJsonConverter()) { }
-
-        [Fact]
-        public void Should_Write() => TestAndAssertWrite(HyperLinkFormatOptionsTarget.Blank, "\"" + HyperLinkFormatOptionsTarget.Blank.ToString() + "\"");
-    }
+    [Fact]
+    public void Should_Write() => TestAndAssertWrite(HyperLinkFormatOptionsTarget.Blank, "\"" + HyperLinkFormatOptionsTarget.Blank.ToString() + "\"");
 }

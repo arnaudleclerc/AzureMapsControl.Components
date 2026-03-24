@@ -1,34 +1,33 @@
-﻿namespace AzureMapsControl.Components.Tests.FullScreen
+﻿
+using System.Threading.Tasks;
+
+using AzureMapsControl.Components.FullScreen;
+using AzureMapsControl.Components.Runtime;
+
+using Microsoft.Extensions.Logging;
+
+using Moq;
+
+using Xunit;
+
+namespace AzureMapsControl.Components.Tests.FullScreen;
+public class FullScreenServiceTests
 {
-    using System.Threading.Tasks;
+    private readonly Mock<ILogger<FullScreenService>> _loggerMock = new();
+    private readonly Mock<IMapJsRuntime> _jsRuntimeMock = new();
 
-    using AzureMapsControl.Components.FullScreen;
-    using AzureMapsControl.Components.Runtime;
-
-    using Microsoft.Extensions.Logging;
-
-    using Moq;
-
-    using Xunit;
-
-    public class FullScreenServiceTests
+    [Fact]
+    public async Task Should_CheckIsSupported_Async()
     {
-        private readonly Mock<ILogger<FullScreenService>> _loggerMock = new();
-        private readonly Mock<IMapJsRuntime> _jsRuntimeMock = new();
+        var isSupported = true;
+        _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<bool>(It.IsAny<string>(), It.IsAny<object[]>())).ReturnsAsync(isSupported);
 
-        [Fact]
-        public async Task Should_CheckIsSupported_Async()
-        {
-            var isSupported = true;
-            _jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<bool>(It.IsAny<string>(), It.IsAny<object[]>())).ReturnsAsync(isSupported);
+        var service = new FullScreenService(_jsRuntimeMock.Object, _loggerMock.Object);
 
-            var service = new FullScreenService(_jsRuntimeMock.Object, _loggerMock.Object);
+        var result = await service.IsSupportedAsync();
+        Assert.Equal(isSupported, result);
 
-            var result = await service.IsSupportedAsync();
-            Assert.Equal(isSupported, result);
-
-            _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<bool>(Constants.JsConstants.Methods.FullScreenControl.IsFullScreenSupported.ToFullScreenControlNamespace(), It.Is<object[]>(parameters => parameters.Length == 0)), Times.Once);
-            _jsRuntimeMock.VerifyNoOtherCalls();
-        }
+        _jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<bool>(Constants.JsConstants.Methods.FullScreenControl.IsFullScreenSupported.ToFullScreenControlNamespace(), It.Is<object[]>(parameters => parameters.Length == 0)), Times.Once);
+        _jsRuntimeMock.VerifyNoOtherCalls();
     }
 }

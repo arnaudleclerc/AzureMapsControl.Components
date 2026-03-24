@@ -1,9 +1,8 @@
-﻿namespace AzureMapsControl.Components.Animations.Options
+﻿namespace AzureMapsControl.Components.Animations.Options;
+
+/// <summary>
+/// Base animation options
+/// </summary>
+public interface IAnimationOptions
 {
-    /// <summary>
-    /// Base animation options
-    /// </summary>
-    public interface IAnimationOptions
-    {
-    }
 }

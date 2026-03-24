@@ -1,138 +1,136 @@
-﻿namespace AzureMapsControl.Components.Drawing
+﻿
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+using AzureMapsControl.Components.Atlas;
+using AzureMapsControl.Components.Logger;
+using AzureMapsControl.Components.Runtime;
+
+using Microsoft.Extensions.Logging;
+
+namespace AzureMapsControl.Components.Drawing;
+/// <summary>
+/// DrawingManager for the DrawingToolbar
+/// </summary>
+public sealed class DrawingManager
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-
-    using AzureMapsControl.Components.Atlas;
-    using AzureMapsControl.Components.Logger;
-    using AzureMapsControl.Components.Runtime;
-
-    using Microsoft.Extensions.Logging;
-
+    internal IMapJsRuntime JSRuntime { get; set; }
+    internal ILogger Logger { get; set; }
+    public bool Disposed { get; private set; }
 
     /// <summary>
-    /// DrawingManager for the DrawingToolbar
+    /// Add shapes to the drawing manager data source
     /// </summary>
-    public sealed class DrawingManager
+    /// <param name="shapes">Shapes to add</param>
+    /// <returns></returns>
+    /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+    /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
+    public async ValueTask AddShapesAsync(IEnumerable<Shape> shapes)
     {
-        internal IMapJsRuntime JSRuntime { get; set; }
-        internal ILogger Logger { get; set; }
-        public bool Disposed { get; private set; }
-
-        /// <summary>
-        /// Add shapes to the drawing manager data source
-        /// </summary>
-        /// <param name="shapes">Shapes to add</param>
-        /// <returns></returns>
-        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
-        /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
-        public async ValueTask AddShapesAsync(IEnumerable<Shape> shapes)
+        if (shapes is null || !shapes.Any())
         {
-            if (shapes is null || !shapes.Any())
-            {
-                return;
-            }
-
-            EnsureJsRuntimeExists();
-            EnsureNotDisposed();
-
-            var lineStrings = shapes.OfType<Shape<LineString>>();
-            if (lineStrings.Any())
-            {
-                Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{lineStrings.Count()} linestrings will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), lineStrings).ConfigureAwait(false);
-            }
-
-            var multiLineStrings = shapes.OfType<Shape<MultiLineString>>();
-            if (multiLineStrings.Any())
-            {
-                Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{multiLineStrings.Count()} multilinestrings will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), multiLineStrings).ConfigureAwait(false);
-            }
-
-            var multiPoints = shapes.OfType<Shape<MultiPoint>>();
-            if (multiPoints.Any())
-            {
-                Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{multiPoints.Count()} multipoints will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), multiPoints).ConfigureAwait(false);
-            }
-
-            var multiPolygons = shapes.OfType<Shape<MultiPolygon>>();
-            if (multiPolygons.Any())
-            {
-                Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{multiPolygons.Count()} multipolygons will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), multiPolygons).ConfigureAwait(false);
-            }
-
-            var points = shapes.OfType<Shape<Point>>();
-            if (points.Any())
-            {
-                Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{points.Count()} points will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), points).ConfigureAwait(false);
-            }
-
-            var polygons = shapes.OfType<Shape<Polygon>>();
-            if (polygons.Any())
-            {
-                Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{polygons.Count()} polygons will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), polygons).ConfigureAwait(false);
-            }
-
-            var routePoints = shapes.OfType<Shape<RoutePoint>>();
-            if (routePoints.Any())
-            {
-                Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{routePoints.Count()} route points will be added");
-                await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), routePoints).ConfigureAwait(false);
-            }
+            return;
         }
 
-        /// <summary>
-        /// Clear the drawing manager source
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
-        /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
-        public async ValueTask ClearAsync()
+        EnsureJsRuntimeExists();
+        EnsureNotDisposed();
+
+        var lineStrings = shapes.OfType<Shape<LineString>>();
+        if (lineStrings.Any())
         {
-            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Source_ClearAsync, "Clearing drawing manager source");
-
-            EnsureJsRuntimeExists();
-            EnsureNotDisposed();
-
-            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Clear.ToDrawingNamespace()).ConfigureAwait(false);
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{lineStrings.Count()} linestrings will be added");
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), lineStrings).ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Mark the control as disposed
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
-        /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
-        internal void Dispose()
+        var multiLineStrings = shapes.OfType<Shape<MultiLineString>>();
+        if (multiLineStrings.Any())
         {
-            Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Source_DisposeAsync, "DrawingManager - Dispose");
-
-            EnsureJsRuntimeExists();
-            EnsureNotDisposed();
-
-            Disposed = true;
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{multiLineStrings.Count()} multilinestrings will be added");
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), multiLineStrings).ConfigureAwait(false);
         }
 
-        private void EnsureJsRuntimeExists()
+        var multiPoints = shapes.OfType<Shape<MultiPoint>>();
+        if (multiPoints.Any())
         {
-            if (JSRuntime is null)
-            {
-                throw new Exceptions.ComponentNotAddedToMapException();
-            }
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{multiPoints.Count()} multipoints will be added");
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), multiPoints).ConfigureAwait(false);
         }
 
-        private void EnsureNotDisposed()
+        var multiPolygons = shapes.OfType<Shape<MultiPolygon>>();
+        if (multiPolygons.Any())
         {
-            if (Disposed)
-            {
-                throw new Exceptions.ComponentDisposedException();
-            }
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{multiPolygons.Count()} multipolygons will be added");
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), multiPolygons).ConfigureAwait(false);
+        }
+
+        var points = shapes.OfType<Shape<Point>>();
+        if (points.Any())
+        {
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{points.Count()} points will be added");
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), points).ConfigureAwait(false);
+        }
+
+        var polygons = shapes.OfType<Shape<Polygon>>();
+        if (polygons.Any())
+        {
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{polygons.Count()} polygons will be added");
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), polygons).ConfigureAwait(false);
+        }
+
+        var routePoints = shapes.OfType<Shape<RoutePoint>>();
+        if (routePoints.Any())
+        {
+            Logger?.LogAzureMapsControlDebug(AzureMapLogEvent.Source_AddAsync, $"{routePoints.Count()} route points will be added");
+            await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.AddShapes.ToDrawingNamespace(), routePoints).ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>
+    /// Clear the drawing manager source
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+    /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
+    public async ValueTask ClearAsync()
+    {
+        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Source_ClearAsync, "Clearing drawing manager source");
+
+        EnsureJsRuntimeExists();
+        EnsureNotDisposed();
+
+        await JSRuntime.InvokeVoidAsync(Constants.JsConstants.Methods.Source.Clear.ToDrawingNamespace()).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Mark the control as disposed
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="Exceptions.ComponentNotAddedToMapException">The control has not been added to the map</exception>
+    /// <exception cref="Exceptions.ComponentDisposedException">The control has already been disposed</exception>
+    internal void Dispose()
+    {
+        Logger?.LogAzureMapsControlInfo(AzureMapLogEvent.Source_DisposeAsync, "DrawingManager - Dispose");
+
+        EnsureJsRuntimeExists();
+        EnsureNotDisposed();
+
+        Disposed = true;
+    }
+
+    private void EnsureJsRuntimeExists()
+    {
+        if (JSRuntime is null)
+        {
+            throw new Exceptions.ComponentNotAddedToMapException();
+        }
+    }
+
+    private void EnsureNotDisposed()
+    {
+        if (Disposed)
+        {
+            throw new Exceptions.ComponentDisposedException();
         }
     }
 }

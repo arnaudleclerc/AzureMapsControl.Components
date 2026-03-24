@@ -1,14 +1,13 @@
-﻿namespace AzureMapsControl.Components.Drawing
+﻿
+using System.Diagnostics.CodeAnalysis;
+
+using AzureMapsControl.Components.Atlas;
+
+namespace AzureMapsControl.Components.Drawing;
+[ExcludeFromCodeCoverage]
+internal class DrawingToolbarJsEventArgs
 {
-    using System.Diagnostics.CodeAnalysis;
-
-    using AzureMapsControl.Components.Atlas;
-
-    [ExcludeFromCodeCoverage]
-    internal class DrawingToolbarJsEventArgs
-    {
-        public string Type { get; set; }
-        public string NewMode { get; set; }
-        public Feature<Geometry> Data { get; set; }
-    }
+    public string Type { get; set; }
+    public string NewMode { get; set; }
+    public Feature<Geometry> Data { get; set; }
 }

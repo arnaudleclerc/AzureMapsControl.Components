@@ -1,36 +1,35 @@
-﻿namespace AzureMapsControl.Components.Data
+﻿
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+using AzureMapsControl.Components.Data.Grid;
+
+namespace AzureMapsControl.Components.Data;
+[ExcludeFromCodeCoverage]
+[JsonConverter(typeof(SourceOptionsJsonConverter))]
+public abstract class SourceOptions
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Text.Json;
-    using System.Text.Json.Serialization;
+}
 
-    using AzureMapsControl.Components.Data.Grid;
+internal class SourceOptionsJsonConverter : JsonConverter<SourceOptions>
+{
+    public override SourceOptions Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotSupportedException();
 
-    [ExcludeFromCodeCoverage]
-    [JsonConverter(typeof(SourceOptionsJsonConverter))]
-    public abstract class SourceOptions
+    public override void Write(Utf8JsonWriter writer, SourceOptions value, JsonSerializerOptions options)
     {
-    }
-
-    internal class SourceOptionsJsonConverter : JsonConverter<SourceOptions>
-    {
-        public override SourceOptions Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotSupportedException();
-
-        public override void Write(Utf8JsonWriter writer, SourceOptions value, JsonSerializerOptions options)
+        if (value is DataSourceOptions datasourceOptions)
         {
-            if (value is DataSourceOptions datasourceOptions)
-            {
-                JsonSerializer.Serialize(writer, datasourceOptions, options);
-            }
-            else if (value is VectorTileSourceOptions vectorTileSourceOptions)
-            {
-                JsonSerializer.Serialize(writer, vectorTileSourceOptions, options);
-            }
-            else if (value is GriddedDataSourceOptions griddedDataSourceOptions)
-            {
-                JsonSerializer.Serialize(writer, griddedDataSourceOptions, options);
-            }
+            JsonSerializer.Serialize(writer, datasourceOptions, options);
+        }
+        else if (value is VectorTileSourceOptions vectorTileSourceOptions)
+        {
+            JsonSerializer.Serialize(writer, vectorTileSourceOptions, options);
+        }
+        else if (value is GriddedDataSourceOptions griddedDataSourceOptions)
+        {
+            JsonSerializer.Serialize(writer, griddedDataSourceOptions, options);
         }
     }
 }

@@ -1,17 +1,16 @@
-﻿namespace AzureMapsControl.Components.Drawing
+﻿
+using System.Diagnostics.CodeAnalysis;
+
+namespace AzureMapsControl.Components.Drawing;
+[ExcludeFromCodeCoverage]
+public sealed class DrawingToolbarStyle
 {
-    using System.Diagnostics.CodeAnalysis;
+    private readonly string _style;
 
-    [ExcludeFromCodeCoverage]
-    public sealed class DrawingToolbarStyle
-    {
-        private readonly string _style;
+    public static readonly DrawingToolbarStyle Dark = new DrawingToolbarStyle("dark");
+    public static readonly DrawingToolbarStyle Light = new DrawingToolbarStyle("light");
 
-        public static readonly DrawingToolbarStyle Dark = new DrawingToolbarStyle("dark");
-        public static readonly DrawingToolbarStyle Light = new DrawingToolbarStyle("light");
+    public DrawingToolbarStyle(string style) => _style = style;
 
-        public DrawingToolbarStyle(string style) => _style = style;
-
-        public override string ToString() => _style;
-    }
+    public override string ToString() => _style;
 }

@@ -1,50 +1,49 @@
-﻿namespace AzureMapsControl.Components.Tests.Animations
+﻿
+using System;
+using System.Threading.Tasks;
+
+using AzureMapsControl.Components.Animations;
+using AzureMapsControl.Components.Animations.Options;
+using AzureMapsControl.Components.Runtime;
+
+using Moq;
+
+using Xunit;
+
+namespace AzureMapsControl.Components.Tests.Animations;
+public class GroupAnimationTests
 {
-    using System;
-    using System.Threading.Tasks;
+    private readonly Mock<IMapJsRuntime> _jsRuntime = new Mock<IMapJsRuntime>();
 
-    using AzureMapsControl.Components.Animations;
-    using AzureMapsControl.Components.Animations.Options;
-    using AzureMapsControl.Components.Runtime;
-
-    using Moq;
-
-    using Xunit;
-
-    public class GroupAnimationTests
+    [Fact]
+    public async Task Should_ThrowException_SeekAsync()
     {
-        private readonly Mock<IMapJsRuntime> _jsRuntime = new Mock<IMapJsRuntime>();
+        var id = "id";
+        var animation = new GroupAnimation(id, _jsRuntime.Object);
+        await Assert.ThrowsAnyAsync<NotSupportedException>(async () => await animation.SeekAsync(1m));
 
-        [Fact]
-        public async Task Should_ThrowException_SeekAsync()
-        {
-            var id = "id";
-            var animation = new GroupAnimation(id, _jsRuntime.Object);
-            await Assert.ThrowsAnyAsync<NotSupportedException>(async () => await animation.SeekAsync(1m));
+        _jsRuntime.VerifyNoOtherCalls();
+    }
 
-            _jsRuntime.VerifyNoOtherCalls();
-        }
+    [Fact]
+    public async Task Should_ThrowException_PauseAsync()
+    {
+        var id = "id";
+        var animation = new GroupAnimation(id, _jsRuntime.Object);
+        await Assert.ThrowsAnyAsync<NotSupportedException>(async () => await animation.PauseAsync());
 
-        [Fact]
-        public async Task Should_ThrowException_PauseAsync()
-        {
-            var id = "id";
-            var animation = new GroupAnimation(id, _jsRuntime.Object);
-            await Assert.ThrowsAnyAsync<NotSupportedException>(async () => await animation.PauseAsync());
+        _jsRuntime.VerifyNoOtherCalls();
+    }
 
-            _jsRuntime.VerifyNoOtherCalls();
-        }
+    [Fact]
+    public async Task Should_SetOptionsAsync()
+    {
+        var id = "id";
+        var animation = new GroupAnimation(id, _jsRuntime.Object);
+        var options = new GroupAnimationOptions();
+        await animation.SetOptionsAsync(options);
 
-        [Fact]
-        public async Task Should_SetOptionsAsync()
-        {
-            var id = "id";
-            var animation = new GroupAnimation(id, _jsRuntime.Object);
-            var options = new GroupAnimationOptions();
-            await animation.SetOptionsAsync(options);
-
-            _jsRuntime.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetOptions.ToAnimationNamespace(), id, options), Times.Once);
-            _jsRuntime.VerifyNoOtherCalls();
-        }
+        _jsRuntime.Verify(runtime => runtime.InvokeVoidAsync(Constants.JsConstants.Methods.Animation.SetOptions.ToAnimationNamespace(), id, options), Times.Once);
+        _jsRuntime.VerifyNoOtherCalls();
     }
 }

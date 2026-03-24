@@ -1,12 +1,11 @@
-﻿namespace AzureMapsControl.Components.Markers
+﻿
+using System.Collections.Generic;
+
+using System.Diagnostics.CodeAnalysis;
+
+namespace AzureMapsControl.Components.Markers;
+[ExcludeFromCodeCoverage]
+internal class HtmlMarkerCreationOptions : HtmlMarkerUpdateOptions
 {
-    using System.Collections.Generic;
-
-    using System.Diagnostics.CodeAnalysis;
-
-    [ExcludeFromCodeCoverage]
-    internal class HtmlMarkerCreationOptions : HtmlMarkerUpdateOptions
-    {
-        public IEnumerable<string> Events { get; set; }
-    }
+    public IEnumerable<string> Events { get; set; }
 }

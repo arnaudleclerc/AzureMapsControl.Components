@@ -1,10 +1,9 @@
-﻿namespace AzureMapsControl.Components.Layers
-{
-    using System;
+﻿
+using System;
 
-    public sealed class BubbleLayer : Layer<BubbleLayerOptions>
-    {
-        public BubbleLayer() : this(Guid.NewGuid().ToString()) { }
-        public BubbleLayer(string id) : base(id, LayerType.BubbleLayer) { }
-    }
+namespace AzureMapsControl.Components.Layers;
+public sealed class BubbleLayer : Layer<BubbleLayerOptions>
+{
+    public BubbleLayer() : this(Guid.NewGuid().ToString()) { }
+    public BubbleLayer(string id) : base(id, LayerType.BubbleLayer) { }
 }

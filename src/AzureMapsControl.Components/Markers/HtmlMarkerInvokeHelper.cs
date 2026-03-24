@@ -1,14 +1,13 @@
-﻿namespace AzureMapsControl.Components.Markers
+﻿
+using System;
+using System.Threading.Tasks;
+
+using AzureMapsControl.Components.Events;
+
+namespace AzureMapsControl.Components.Markers;
+internal class HtmlMarkerInvokeHelper : EventInvokeHelper<HtmlMarkerJsEventArgs>
 {
-    using System;
-    using System.Threading.Tasks;
-
-    using AzureMapsControl.Components.Events;
-
-    internal class HtmlMarkerInvokeHelper : EventInvokeHelper<HtmlMarkerJsEventArgs>
+    public HtmlMarkerInvokeHelper(Func<HtmlMarkerJsEventArgs, ValueTask> callback) : base(callback)
     {
-        public HtmlMarkerInvokeHelper(Func<HtmlMarkerJsEventArgs, ValueTask> callback) : base(callback)
-        {
-        }
     }
 }

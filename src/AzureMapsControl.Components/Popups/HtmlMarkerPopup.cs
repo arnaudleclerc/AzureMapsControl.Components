@@ -1,68 +1,67 @@
-﻿namespace AzureMapsControl.Components.Popups
+﻿
+using System;
+using System.Threading.Tasks;
+
+namespace AzureMapsControl.Components.Popups;
+public sealed class HtmlMarkerPopup : Popup
 {
-    using System;
-    using System.Threading.Tasks;
+    internal bool HasBeenToggled { get; set; }
 
-    public sealed class HtmlMarkerPopup : Popup
+    public HtmlMarkerPopup(PopupOptions options) : base(options)
     {
-        internal bool HasBeenToggled { get; set; }
-
-        public HtmlMarkerPopup(PopupOptions options) : base(options)
-        {
-        }
-
-        public HtmlMarkerPopup(PopupOptions options, PopupEventActivationFlags eventActivationFlags) : base(options, eventActivationFlags)
-        {
-        }
-
-        public HtmlMarkerPopup(string id, PopupOptions options) : base(id, options)
-        {
-        }
-
-        public HtmlMarkerPopup(string id, PopupOptions options, PopupEventActivationFlags eventActivationFlags) : base(id, options, eventActivationFlags)
-        {
-        }
-
-        public override async ValueTask CloseAsync()
-        {
-            if (HasBeenToggled)
-            {
-                await base.CloseAsync().ConfigureAwait(false);
-            }
-        }
-
-        public override async ValueTask OpenAsync()
-        {
-            if (HasBeenToggled)
-            {
-                await base.OpenAsync().ConfigureAwait(false);
-            }
-        }
-
-        public override async ValueTask RemoveAsync()
-        {
-            if (HasBeenToggled)
-            {
-                await base.RemoveAsync().ConfigureAwait(false);
-            }
-        }
-
-        [Obsolete("Will be removed in a future versio. Use SetOptionsAsync instead")]
-        public override async ValueTask UpdateAsync(Action<PopupOptions> update)
-        {
-            if (HasBeenToggled)
-            {
-                await base.UpdateAsync(update).ConfigureAwait(false);
-            }
-        }
-
-        public override async ValueTask SetOptionsAsync(Action<PopupOptions> update)
-        {
-            if (HasBeenToggled)
-            {
-                await base.SetOptionsAsync(update).ConfigureAwait(false);
-            }
-        }
-
     }
+
+    public HtmlMarkerPopup(PopupOptions options, PopupEventActivationFlags eventActivationFlags) : base(options, eventActivationFlags)
+    {
+    }
+
+    public HtmlMarkerPopup(string id, PopupOptions options) : base(id, options)
+    {
+    }
+
+    public HtmlMarkerPopup(string id, PopupOptions options, PopupEventActivationFlags eventActivationFlags) : base(id, options, eventActivationFlags)
+    {
+    }
+
+    public override async ValueTask CloseAsync()
+    {
+        if (HasBeenToggled)
+        {
+            await base.CloseAsync().ConfigureAwait(false);
+        }
+    }
+
+    public override async ValueTask OpenAsync()
+    {
+        if (HasBeenToggled)
+        {
+            await base.OpenAsync().ConfigureAwait(false);
+        }
+    }
+
+    public override async ValueTask RemoveAsync()
+    {
+        if (HasBeenToggled)
+        {
+            await base.RemoveAsync().ConfigureAwait(false);
+        }
+    }
+
+    [Obsolete("Will be removed in a future versio. Use SetOptionsAsync instead")]
+    public override async ValueTask UpdateAsync(Action<PopupOptions> update)
+    {
+        if (HasBeenToggled)
+        {
+            await base.UpdateAsync(update).ConfigureAwait(false);
+        }
+    }
+
+    public override async ValueTask SetOptionsAsync(Action<PopupOptions> update)
+    {
+        if (HasBeenToggled)
+        {
+            await base.SetOptionsAsync(update).ConfigureAwait(false);
+        }
+    }
+
 }

@@ -1,26 +1,25 @@
-﻿namespace AzureMapsControl.Components.Map
+﻿
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+
+using AzureMapsControl.Components.Atlas;
+
+namespace AzureMapsControl.Components.Map;
+[ExcludeFromCodeCoverage]
+public sealed class MapMouseEventArgs : MapEventArgs
 {
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
+    public string LayerId { get; }
+    public IEnumerable<Shape<Geometry>> Shapes { get; }
+    public IEnumerable<Feature<Geometry>> Features { get; }
+    public Pixel Pixel { get; }
+    public Position Position { get; }
 
-    using AzureMapsControl.Components.Atlas;
-
-    [ExcludeFromCodeCoverage]
-    public sealed class MapMouseEventArgs : MapEventArgs
+    internal MapMouseEventArgs(Map map, MapJsEventArgs eventArgs) : base(map, eventArgs.Type)
     {
-        public string LayerId { get; }
-        public IEnumerable<Shape<Geometry>> Shapes { get; }
-        public IEnumerable<Feature<Geometry>> Features { get; }
-        public Pixel Pixel { get; }
-        public Position Position { get; }
-
-        internal MapMouseEventArgs(Map map, MapJsEventArgs eventArgs) : base(map, eventArgs.Type)
-        {
-            Features = eventArgs.Features;
-            LayerId = eventArgs.LayerId;
-            Pixel = eventArgs.Pixel;
-            Position = eventArgs.Position;
-            Shapes = eventArgs.Shapes;
-        }
+        Features = eventArgs.Features;
+        LayerId = eventArgs.LayerId;
+        Pixel = eventArgs.Pixel;
+        Position = eventArgs.Position;
+        Shapes = eventArgs.Shapes;
     }
 }

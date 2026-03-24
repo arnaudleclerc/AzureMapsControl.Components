@@ -1,50 +1,49 @@
-﻿namespace AzureMapsControl.Components.Map
+﻿
+using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace AzureMapsControl.Components.Map;
+/// <summary>
+/// Bearing of the map (rotation)
+/// </summary>
+[JsonConverter(typeof(BearingJsonConverter))]
+public struct Bearing
 {
-    using System;
-    using System.Text.Json;
-    using System.Text.Json.Serialization;
+    internal int Degrees { get; }
 
-    /// <summary>
-    /// Bearing of the map (rotation)
-    /// </summary>
-    [JsonConverter(typeof(BearingJsonConverter))]
-    public struct Bearing
+    public static readonly Bearing North = new Bearing(0);
+    public static readonly Bearing East = new Bearing(90);
+    public static readonly Bearing South = new Bearing(180);
+    public static readonly Bearing West = new Bearing(270);
+
+    private Bearing(int degrees) => Degrees = degrees;
+
+    public static Bearing FromDegrees(int degrees)
     {
-        internal int Degrees { get; }
-
-        public static readonly Bearing North = new Bearing(0);
-        public static readonly Bearing East = new Bearing(90);
-        public static readonly Bearing South = new Bearing(180);
-        public static readonly Bearing West = new Bearing(270);
-
-        private Bearing(int degrees) => Degrees = degrees;
-
-        public static Bearing FromDegrees(int degrees)
+        switch (degrees)
         {
-            switch (degrees)
-            {
 
-                case 0:
-                    return North;
+            case 0:
+                return North;
 
-                case 90:
-                    return East;
+            case 90:
+                return East;
 
-                case 180:
-                    return South;
+            case 180:
+                return South;
 
-                case 270:
-                    return West;
+            case 270:
+                return West;
 
-                default:
-                    return default;
-            }
+            default:
+                return default;
         }
     }
+}
 
-    internal sealed class BearingJsonConverter : JsonConverter<Bearing>
-    {
-        public override Bearing Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => Bearing.FromDegrees(reader.GetInt32());
-        public override void Write(Utf8JsonWriter writer, Bearing value, JsonSerializerOptions options) => writer.WriteNumberValue(value.Degrees);
-    }
+internal sealed class BearingJsonConverter : JsonConverter<Bearing>
+{
+    public override Bearing Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => Bearing.FromDegrees(reader.GetInt32());
+    public override void Write(Utf8JsonWriter writer, Bearing value, JsonSerializerOptions options) => writer.WriteNumberValue(value.Degrees);
 }

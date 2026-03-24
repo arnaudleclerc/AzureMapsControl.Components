@@ -1,74 +1,73 @@
-﻿namespace AzureMapsControl.Components.Data.Grid
+﻿
+using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace AzureMapsControl.Components.Data.Grid;
+/// <summary>
+/// Specifies how data is rendered within a grid system.
+/// </summary>
+[JsonConverter(typeof(GridTypeJsonConverter))]
+public struct GridType
 {
-    using System;
-    using System.Text.Json;
-    using System.Text.Json.Serialization;
+    private readonly string _gridType;
 
     /// <summary>
-    /// Specifies how data is rendered within a grid system.
+    /// Renders data within a square grid as circles.
     /// </summary>
-    [JsonConverter(typeof(GridTypeJsonConverter))]
-    public struct GridType
+    public static GridType Circle = new("circle");
+
+    /// <summary>
+    /// Renders data within a hexagons grid.
+    /// </summary>
+    public static GridType Hexagon = new("hexagon");
+
+    /// <summary>
+    /// Renders data within a hexagon grid as circles.
+    /// </summary>
+    public static GridType HexCircle = new("hexCircle");
+
+    /// <summary>
+    /// Renders data within a rotate hexagon grid. 
+    /// </summary>
+    public static GridType PointyHexagon = new("pointyHexagon");
+
+    /// <summary>
+    /// Renders data within a square grid.
+    /// </summary>
+    public static GridType Square = new("square");
+
+    /// <summary>
+    /// Renders data within a triangular grid.
+    /// </summary>
+    public static GridType Triangle = new("triangle");
+    
+
+    private GridType(string type) => _gridType = type;
+
+    public override string ToString() => _gridType;
+
+    /// <summary>
+    /// Return a GridType corresponding to the given value
+    /// </summary>
+    /// <param name="gridType">Value of the GridType</param>
+    /// <returns>GridType corresponding to the given value. If none was found, returns `default`</returns>
+    public static GridType FromString(string gridType)
     {
-        private readonly string _gridType;
-
-        /// <summary>
-        /// Renders data within a square grid as circles.
-        /// </summary>
-        public static GridType Circle = new("circle");
-
-        /// <summary>
-        /// Renders data within a hexagons grid.
-        /// </summary>
-        public static GridType Hexagon = new("hexagon");
-
-        /// <summary>
-        /// Renders data within a hexagon grid as circles.
-        /// </summary>
-        public static GridType HexCircle = new("hexCircle");
-
-        /// <summary>
-        /// Renders data within a rotate hexagon grid. 
-        /// </summary>
-        public static GridType PointyHexagon = new("pointyHexagon");
-
-        /// <summary>
-        /// Renders data within a square grid.
-        /// </summary>
-        public static GridType Square = new("square");
-
-        /// <summary>
-        /// Renders data within a triangular grid.
-        /// </summary>
-        public static GridType Triangle = new("triangle");
-        
-
-        private GridType(string type) => _gridType = type;
-
-        public override string ToString() => _gridType;
-
-        /// <summary>
-        /// Return a GridType corresponding to the given value
-        /// </summary>
-        /// <param name="gridType">Value of the GridType</param>
-        /// <returns>GridType corresponding to the given value. If none was found, returns `default`</returns>
-        public static GridType FromString(string gridType)
-        {
-            return gridType switch {
-                "circle" => Circle,
-                "hexagon" => Hexagon,
-                "hexCircle" => HexCircle,
-                "pointyHexagon" => PointyHexagon,
-                "square" => Square,
-                "triangle" => Triangle,
-                _ => default
-            };
-        }
+        return gridType switch {
+            "circle" => Circle,
+            "hexagon" => Hexagon,
+            "hexCircle" => HexCircle,
+            "pointyHexagon" => PointyHexagon,
+            "square" => Square,
+            "triangle" => Triangle,
+            _ => default
+        };
     }
+}
 
-    internal sealed class GridTypeJsonConverter : JsonConverter<GridType>
-    {
-        public override GridType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => GridType.FromString(reader.GetString());
-        public override void Write(Utf8JsonWriter writer, GridType value, JsonSerializerOptions options) => writer.WriteStringValue(value.ToString());
-    }
+internal sealed class GridTypeJsonConverter : JsonConverter<GridType>
+{
+    public override GridType Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => GridType.FromString(reader.GetString());
+    public override void Write(Utf8JsonWriter writer, GridType value, JsonSerializerOptions options) => writer.WriteStringValue(value.ToString());
 }

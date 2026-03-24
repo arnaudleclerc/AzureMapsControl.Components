@@ -1,33 +1,32 @@
-﻿namespace AzureMapsControl.Components.Tests.Markers
+﻿
+using AzureMapsControl.Components.Markers;
+
+using Xunit;
+
+namespace AzureMapsControl.Components.Tests.Markers;
+public class MarkerAnchorTests
 {
-    using AzureMapsControl.Components.Markers;
-
-    using Xunit;
-
-    public class MarkerAnchorTests
+    [Theory]
+    [InlineData("bottom")]
+    [InlineData("bottom-left")]
+    [InlineData("bottom-right")]
+    [InlineData("center")]
+    [InlineData("left")]
+    [InlineData("right")]
+    [InlineData("top")]
+    [InlineData("top-left")]
+    [InlineData("top-right")]
+    public static void Should_ReturnMarkerAnchorFromString(string markerAnchorType)
     {
-        [Theory]
-        [InlineData("bottom")]
-        [InlineData("bottom-left")]
-        [InlineData("bottom-right")]
-        [InlineData("center")]
-        [InlineData("left")]
-        [InlineData("right")]
-        [InlineData("top")]
-        [InlineData("top-left")]
-        [InlineData("top-right")]
-        public static void Should_ReturnMarkerAnchorFromString(string markerAnchorType)
-        {
-            var markerAnchor = MarkerAnchor.FromString(markerAnchorType);
-            Assert.Equal(markerAnchorType, markerAnchor.ToString());
-        }
+        var markerAnchor = MarkerAnchor.FromString(markerAnchorType);
+        Assert.Equal(markerAnchorType, markerAnchor.ToString());
+    }
 
-        [Fact]
-        public static void Should_ReturnDefaultMarkerAnchor_IfStringDoesNotMatch()
-        {
-            var markerAnchorType = "obviouslyNotAValidOne";
-            var markerAnchor = MarkerAnchor.FromString(markerAnchorType);
-            Assert.Equal(default, markerAnchor);
-        }
+    [Fact]
+    public static void Should_ReturnDefaultMarkerAnchor_IfStringDoesNotMatch()
+    {
+        var markerAnchorType = "obviouslyNotAValidOne";
+        var markerAnchor = MarkerAnchor.FromString(markerAnchorType);
+        Assert.Equal(default, markerAnchor);
     }
 }

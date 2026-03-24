@@ -1,14 +1,15 @@
-﻿namespace AzureMapsControl.Components.Drawing
+﻿
+using System.Diagnostics.CodeAnalysis;
+
+using AzureMapsControl.Components.Map;
+
+using AzureMap = AzureMapsControl.Components.Map.Map;
+
+namespace AzureMapsControl.Components.Drawing;
+[ExcludeFromCodeCoverage]
+public sealed class DrawingToolbarModeEventArgs : MapEventArgs
 {
-    using System.Diagnostics.CodeAnalysis;
+    public string NewMode { get; }
 
-    using AzureMapsControl.Components.Map;
-
-    [ExcludeFromCodeCoverage]
-    public sealed class DrawingToolbarModeEventArgs : MapEventArgs
-    {
-        public string NewMode { get; }
-
-        internal DrawingToolbarModeEventArgs(Map map, DrawingToolbarJsEventArgs eventArgs) : base(map, eventArgs.Type) => NewMode = eventArgs.NewMode;
-    }
+    internal DrawingToolbarModeEventArgs(AzureMap map, DrawingToolbarJsEventArgs eventArgs) : base(map, eventArgs.Type) => NewMode = eventArgs.NewMode;
 }

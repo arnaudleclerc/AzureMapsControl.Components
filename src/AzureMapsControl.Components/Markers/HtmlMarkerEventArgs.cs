@@ -1,13 +1,14 @@
-﻿namespace AzureMapsControl.Components.Markers
+﻿
+using System.Diagnostics.CodeAnalysis;
+
+using AzureMapsControl.Components.Map;
+
+using AzureMap = AzureMapsControl.Components.Map.Map;
+
+namespace AzureMapsControl.Components.Markers;
+[ExcludeFromCodeCoverage]
+public sealed class HtmlMarkerEventArgs : MapEventArgs
 {
-    using System.Diagnostics.CodeAnalysis;
-
-    using AzureMapsControl.Components.Map;
-
-    [ExcludeFromCodeCoverage]
-    public sealed class HtmlMarkerEventArgs : MapEventArgs
-    {
-        public HtmlMarker HtmlMarker { get; }
-        internal HtmlMarkerEventArgs(Map map, string type, HtmlMarker htmlMarker) : base(map, type) => HtmlMarker = htmlMarker;
-    }
+    public HtmlMarker HtmlMarker { get; }
+    internal HtmlMarkerEventArgs(AzureMap map, string type, HtmlMarker htmlMarker) : base(map, type) => HtmlMarker = htmlMarker;
 }

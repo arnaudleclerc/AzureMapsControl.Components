@@ -1,10 +1,9 @@
-﻿namespace AzureMapsControl.Components.Controls
+﻿
+using System;
+
+namespace AzureMapsControl.Components.Controls;
+[Obsolete("Will be removed in a future version")]
+public interface IControlOptions
 {
-    using System;
 
-    [Obsolete("Will be removed in a future version")]
-    public interface IControlOptions
-    {
-
-    }
 }

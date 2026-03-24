@@ -1,12 +1,11 @@
-﻿namespace AzureMapsControl.Components.Markers
-{
-    using System.Diagnostics.CodeAnalysis;
+﻿
+using System.Diagnostics.CodeAnalysis;
 
-    [ExcludeFromCodeCoverage]
-    internal class HtmlMarkerUpdateOptions
-    {
-        public string Id { get; set; }
-        public HtmlMarkerOptions Options { get; set; }
-        public HtmlMarkerPopupCreationOptions PopupOptions { get; set; }
-    }
+namespace AzureMapsControl.Components.Markers;
+[ExcludeFromCodeCoverage]
+internal class HtmlMarkerUpdateOptions
+{
+    public string Id { get; set; }
+    public HtmlMarkerOptions Options { get; set; }
+    public HtmlMarkerPopupCreationOptions PopupOptions { get; set; }
 }

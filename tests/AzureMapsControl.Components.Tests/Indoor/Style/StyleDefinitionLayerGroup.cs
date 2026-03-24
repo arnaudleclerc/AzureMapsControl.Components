@@ -1,25 +1,24 @@
-﻿namespace AzureMapsControl.Components.Tests.Indoor.Style
+﻿
+using AzureMapsControl.Components.Indoor.Style;
+using AzureMapsControl.Components.Tests.Json;
+
+using Xunit;
+
+namespace AzureMapsControl.Components.Tests.Indoor.Style;
+public class StyleDefinitionLayerGroupJsonConverterTests : JsonConverterTests<StyleDefinitionLayerGroup>
 {
-    using AzureMapsControl.Components.Indoor.Style;
-    using AzureMapsControl.Components.Tests.Json;
+    public StyleDefinitionLayerGroupJsonConverterTests() : base(new StyleDefinitionLayerGroupJsonConverter()) { }
 
-    using Xunit;
-
-    public class StyleDefinitionLayerGroupJsonConverterTests : JsonConverterTests<StyleDefinitionLayerGroup>
+    [Fact]
+    public void Should_Read()
     {
-        public StyleDefinitionLayerGroupJsonConverterTests() : base(new StyleDefinitionLayerGroupJsonConverter()) { }
+        var json = "{"
+            + "\"name\":\"name\""
+            + ",\"layerPath\":\"layerPath\""
+            + "}";
 
-        [Fact]
-        public void Should_Read()
-        {
-            var json = "{"
-                + "\"name\":\"name\""
-                + ",\"layerPath\":\"layerPath\""
-                + "}";
-
-            var result = Read(json);
-            Assert.Equal("name", result.Name);
-            Assert.Equal("layerPath", result.LayerPath);
-        }
+        var result = Read(json);
+        Assert.Equal("name", result.Name);
+        Assert.Equal("layerPath", result.LayerPath);
     }
 }

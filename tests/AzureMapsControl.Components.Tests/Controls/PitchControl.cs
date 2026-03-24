@@ -1,33 +1,32 @@
-﻿namespace AzureMapsControl.Components.Tests.Controls
+﻿
+using AzureMapsControl.Components.Controls;
+using AzureMapsControl.Components.Tests.Json;
+
+using Xunit;
+
+namespace AzureMapsControl.Components.Tests.Controls;
+public class PitchControlJsonConverterTests : JsonConverterTests<PitchControl>
 {
-    using AzureMapsControl.Components.Controls;
-    using AzureMapsControl.Components.Tests.Json;
+    public PitchControlJsonConverterTests() : base(new PitchControlJsonConverter()) { }
 
-    using Xunit;
-
-    public class PitchControlJsonConverterTests : JsonConverterTests<PitchControl>
+    [Fact]
+    public void Should_Write()
     {
-        public PitchControlJsonConverterTests() : base(new PitchControlJsonConverter()) { }
+        var control = new PitchControl(new PitchControlOptions{
+            PitchDegreesDelta = 1,
+            Style = ControlStyle.Auto
+        }, ControlPosition.BottomLeft);
 
-        [Fact]
-        public void Should_Write()
-        {
-            var control = new PitchControl(new PitchControlOptions{
-                PitchDegreesDelta = 1,
-                Style = ControlStyle.Auto
-            }, ControlPosition.BottomLeft);
+        var expectedJson = "{"
+            + "\"id\":\"" + control.Id + "\""
+            + ",\"type\":\"" + control.Type + "\""
+            + ",\"position\":\"" + control.Position.ToString() + "\""
+            + ",\"options\":{"
+            + "\"pitchDegreesDelta\":" + control.Options.PitchDegreesDelta.Value
+            + ",\"style\":\"" + control.Options.Style.ToString() + "\""
+            + "}"
+            + "}";
 
-            var expectedJson = "{"
-                + "\"id\":\"" + control.Id + "\""
-                + ",\"type\":\"" + control.Type + "\""
-                + ",\"position\":\"" + control.Position.ToString() + "\""
-                + ",\"options\":{"
-                + "\"pitchDegreesDelta\":" + control.Options.PitchDegreesDelta.Value
-                + ",\"style\":\"" + control.Options.Style.ToString() + "\""
-                + "}"
-                + "}";
-
-            TestAndAssertWrite(control, expectedJson);
-        }
+        TestAndAssertWrite(control, expectedJson);
     }
 }

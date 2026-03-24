@@ -1,11 +1,10 @@
-﻿namespace AzureMapsControl.Components.Popups
-{
-    using System.Diagnostics.CodeAnalysis;
+﻿
+using System.Diagnostics.CodeAnalysis;
 
-    [ExcludeFromCodeCoverage]
-    public sealed class PopupEventArgs
-    {
-        public string Id { get; set; }
-        public string Type { get; set; }
-    }
+namespace AzureMapsControl.Components.Popups;
+[ExcludeFromCodeCoverage]
+public sealed class PopupEventArgs
+{
+    public string Id { get; set; }
+    public string Type { get; set; }
 }

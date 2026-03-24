@@ -1,8 +1,7 @@
-﻿namespace AzureMapsControl.Components.Indoor.Style
+﻿namespace AzureMapsControl.Components.Indoor.Style;
+
+public enum StyleDefinitionStyleTheme
 {
-    public enum StyleDefinitionStyleTheme
-    {
-        Dark,
-        Light
-    }
+    Dark,
+    Light
 }

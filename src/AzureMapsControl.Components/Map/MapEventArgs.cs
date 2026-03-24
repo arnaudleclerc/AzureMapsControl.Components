@@ -1,17 +1,16 @@
-﻿namespace AzureMapsControl.Components.Map
+﻿
+using System.Diagnostics.CodeAnalysis;
+
+namespace AzureMapsControl.Components.Map;
+[ExcludeFromCodeCoverage]
+public class MapEventArgs
 {
-    using System.Diagnostics.CodeAnalysis;
+    public Map Map { get; }
+    public string Type { get; }
 
-    [ExcludeFromCodeCoverage]
-    public class MapEventArgs
+    internal MapEventArgs(Map map, string type)
     {
-        public Map Map { get; }
-        public string Type { get; }
-
-        internal MapEventArgs(Map map, string type)
-        {
-            Map = map;
-            Type = type;
-        }
+        Map = map;
+        Type = type;
     }
 }

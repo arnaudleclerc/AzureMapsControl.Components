@@ -1,21 +1,20 @@
-﻿namespace AzureMapsControl.Components.Atlas
+﻿
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
+
+namespace AzureMapsControl.Components.Atlas;
+[ExcludeFromCodeCoverage]
+[JsonConverter(typeof(GeometryJsonConverter<LineString>))]
+public sealed class LineString : Geometry<IEnumerable<Position>>
 {
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Text.Json.Serialization;
+    internal const string InnerGeometryType = "LineString";
 
-    [ExcludeFromCodeCoverage]
-    [JsonConverter(typeof(GeometryJsonConverter<LineString>))]
-    public sealed class LineString : Geometry<IEnumerable<Position>>
-    {
-        internal const string InnerGeometryType = "LineString";
+    public BoundingBox BBox { get; set; }
 
-        public BoundingBox BBox { get; set; }
+    public LineString() : base(InnerGeometryType) { }
 
-        public LineString() : base(InnerGeometryType) { }
+    public LineString(IEnumerable<Position> coordinates) : base(coordinates, InnerGeometryType) { }
 
-        public LineString(IEnumerable<Position> coordinates) : base(coordinates, InnerGeometryType) { }
-
-        public LineString(IEnumerable<Position> coordinates, BoundingBox bbox) : this(coordinates) => BBox = bbox;
-    }
+    public LineString(IEnumerable<Position> coordinates, BoundingBox bbox) : this(coordinates) => BBox = bbox;
 }

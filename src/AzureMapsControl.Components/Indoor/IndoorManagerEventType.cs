@@ -1,15 +1,14 @@
-﻿namespace AzureMapsControl.Components.Indoor
+﻿
+using System.Diagnostics.CodeAnalysis;
+
+using AzureMapsControl.Components.Events;
+
+namespace AzureMapsControl.Components.Indoor;
+[ExcludeFromCodeCoverage]
+public sealed class IndoorManagerEventType : AtlasEventType
 {
-    using System.Diagnostics.CodeAnalysis;
+    public static readonly IndoorManagerEventType FacilityChanged = new("facilitychanged");
+    public static readonly IndoorManagerEventType LevelChanged = new("levelchanged");
 
-    using AzureMapsControl.Components.Events;
-
-    [ExcludeFromCodeCoverage]
-    public sealed class IndoorManagerEventType : AtlasEventType
-    {
-        public static readonly IndoorManagerEventType FacilityChanged = new("facilitychanged");
-        public static readonly IndoorManagerEventType LevelChanged = new("levelchanged");
-
-        private IndoorManagerEventType(string atlasEvent) : base(atlasEvent) { }
-    }
+    private IndoorManagerEventType(string atlasEvent) : base(atlasEvent) { }
 }

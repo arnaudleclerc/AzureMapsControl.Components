@@ -1,15 +1,14 @@
-﻿namespace AzureMapsControl.Components.Layers
+﻿
+using System;
+using System.Threading.Tasks;
+
+using AzureMapsControl.Components.Events;
+using AzureMapsControl.Components.Map;
+
+namespace AzureMapsControl.Components.Layers;
+internal sealed class LayerEventInvokeHelper : EventInvokeHelper<MapJsEventArgs>
 {
-    using System;
-    using System.Threading.Tasks;
-
-    using AzureMapsControl.Components.Events;
-    using AzureMapsControl.Components.Map;
-
-    internal sealed class LayerEventInvokeHelper : EventInvokeHelper<MapJsEventArgs>
+    public LayerEventInvokeHelper(Func<MapJsEventArgs, ValueTask> callback) : base(callback)
     {
-        public LayerEventInvokeHelper(Func<MapJsEventArgs, ValueTask> callback) : base(callback)
-        {
-        }
     }
 }

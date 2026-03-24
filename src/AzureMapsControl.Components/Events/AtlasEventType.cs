@@ -1,14 +1,13 @@
-﻿namespace AzureMapsControl.Components.Events
+﻿
+using System.Diagnostics.CodeAnalysis;
+
+namespace AzureMapsControl.Components.Events;
+[ExcludeFromCodeCoverage]
+public abstract class AtlasEventType
 {
-    using System.Diagnostics.CodeAnalysis;
+    private readonly string _event;
 
-    [ExcludeFromCodeCoverage]
-    public abstract class AtlasEventType
-    {
-        private readonly string _event;
+    protected internal AtlasEventType(string atlasEvent) => _event = atlasEvent;
 
-        protected internal AtlasEventType(string atlasEvent) => _event = atlasEvent;
-
-        public override string ToString() => _event;
-    }
+    public override string ToString() => _event;
 }

@@ -1,9 +1,8 @@
-﻿namespace AzureMapsControl.Components.Map
-{
-    using System.Threading.Tasks;
+﻿
+using System.Threading.Tasks;
 
-    internal interface IMapAdderService : IMapService
-    {
-        ValueTask AddMapAsync(Map map);
-    }
+namespace AzureMapsControl.Components.Map;
+internal interface IMapAdderService : IMapService
+{
+    ValueTask AddMapAsync(Map map);
 }

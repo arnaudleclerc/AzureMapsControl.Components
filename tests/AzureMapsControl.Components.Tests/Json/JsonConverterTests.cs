@@ -1,61 +1,60 @@
-﻿namespace AzureMapsControl.Components.Tests.Json
+﻿
+using System;
+using System.Buffers;
+using System.IO;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+using Xunit;
+
+namespace AzureMapsControl.Components.Tests.Json;
+public abstract class JsonConverterTests<TValue>
 {
-    using System;
-    using System.Buffers;
-    using System.IO;
-    using System.Text;
-    using System.Text.Json;
-    using System.Text.Json.Serialization;
+    private readonly JsonConverter<TValue> _converter;
 
-    using Xunit;
+    public JsonConverterTests(JsonConverter<TValue> converter) => _converter = converter;
 
-    public abstract class JsonConverterTests<TValue>
+    protected void TestAndAssertWrite(TValue value, string expectedJson)
     {
-        private readonly JsonConverter<TValue> _converter;
+        var buffer = new ArrayBufferWriter<byte>();
+        using var writer = new Utf8JsonWriter(buffer);
 
-        public JsonConverterTests(JsonConverter<TValue> converter) => _converter = converter;
+        _converter.Write(writer, value, null);
 
-        protected void TestAndAssertWrite(TValue value, string expectedJson)
-        {
-            var buffer = new ArrayBufferWriter<byte>();
-            using var writer = new Utf8JsonWriter(buffer);
+        writer.Flush();
 
-            _converter.Write(writer, value, null);
+        var serializedBytes = buffer.WrittenSpan.ToArray();
 
-            writer.Flush();
+        var restored = Encoding.UTF8.GetString(serializedBytes);
+        var expectedBytes = Encoding.UTF8.GetBytes(expectedJson);
 
-            var serializedBytes = buffer.WrittenSpan.ToArray();
+        var expectedBytesSet = new System.Collections.Generic.HashSet<byte>(expectedBytes);
+        var writterSet = new System.Collections.Generic.HashSet<byte>(serializedBytes);
 
-            var restored = Encoding.UTF8.GetString(serializedBytes);
-            var expectedBytes = Encoding.UTF8.GetBytes(expectedJson);
+        var haveSameLength = expectedBytes.Length == buffer.WrittenCount;
+        Assert.True(haveSameLength, userMessage: $"Different length detected, expected:{Environment.NewLine}'{expectedJson}'{Environment.NewLine}Actual:{Environment.NewLine}'{restored}'");
+        Assert.Subset(expectedBytesSet, writterSet);
+    }
 
-            var expectedBytesSet = new System.Collections.Generic.HashSet<byte>(expectedBytes);
-            var writterSet = new System.Collections.Generic.HashSet<byte>(serializedBytes);
+    protected void TestAndAssertEmptyWrite(TValue value)
+    {
+        var buffer = new ArrayBufferWriter<byte>();
+        using var writer = new Utf8JsonWriter(buffer);
 
-            var haveSameLength = expectedBytes.Length == buffer.WrittenCount;
-            Assert.True(haveSameLength, userMessage: $"Different length detected, expected:{Environment.NewLine}'{expectedJson}'{Environment.NewLine}Actual:{Environment.NewLine}'{restored}'");
-            Assert.Subset(expectedBytesSet, writterSet);
-        }
+        _converter.Write(writer, value, null);
 
-        protected void TestAndAssertEmptyWrite(TValue value)
-        {
-            var buffer = new ArrayBufferWriter<byte>();
-            using var writer = new Utf8JsonWriter(buffer);
+        writer.Flush();
 
-            _converter.Write(writer, value, null);
+        Assert.Equal(0, buffer.WrittenCount);
+    }
 
-            writer.Flush();
+    protected TValue Read(string expectedJson)
+    {
+        var bytes = Encoding.UTF8.GetBytes(expectedJson);
+        var reader = new Utf8JsonReader(bytes);
 
-            Assert.Equal(0, buffer.WrittenCount);
-        }
-
-        protected TValue Read(string expectedJson)
-        {
-            var bytes = Encoding.UTF8.GetBytes(expectedJson);
-            var reader = new Utf8JsonReader(bytes);
-
-            var result = _converter.Read(ref reader, typeof(TValue), null);
-            return result;
-        }
+        var result = _converter.Read(ref reader, typeof(TValue), null);
+        return result;
     }
 }

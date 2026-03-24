@@ -1,82 +1,81 @@
-﻿namespace AzureMapsControl.Components.Configuration
+﻿
+using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace AzureMapsControl.Components.Configuration;
+/// <summary>
+/// Options for specifying how the map control should authenticate with the Azure Maps services.
+/// </summary>
+[JsonConverter(typeof(AzureMapsConfigurationJsonConverter))]
+public sealed class AzureMapsConfiguration
 {
-    using System;
-    using System.Text.Json;
-    using System.Text.Json.Serialization;
+    /// <summary>
+    /// The Azure AD registered app ID. This is the app ID of an app registered in your Azure AD tenant.
+    /// </summary>
+    public string AadAppId { get; set; }
 
     /// <summary>
-    /// Options for specifying how the map control should authenticate with the Azure Maps services.
+    /// The AAD tenant that owns the registered app specified by `aadAppId`.
     /// </summary>
-    [JsonConverter(typeof(AzureMapsConfigurationJsonConverter))]
-    public sealed class AzureMapsConfiguration
+    public string AadTenant { get; set; }
+
+    /// <summary>
+    /// The Azure Maps client ID, This is an unique identifier used to identify the maps account.
+    /// Must be specified for AAD and anonymous authentication types.
+    /// </summary>
+    public string ClientId { get; set; }
+
+    /// <summary>
+    /// Subscription key from your Azure Maps account.
+    /// Must be specified for subscription key authentication type.
+    /// </summary>
+    public string SubscriptionKey { get; set; }
+
+    internal bool Validate() => !string.IsNullOrWhiteSpace(AuthType);
+
+    internal string AuthType
     {
-        /// <summary>
-        /// The Azure AD registered app ID. This is the app ID of an app registered in your Azure AD tenant.
-        /// </summary>
-        public string AadAppId { get; set; }
-
-        /// <summary>
-        /// The AAD tenant that owns the registered app specified by `aadAppId`.
-        /// </summary>
-        public string AadTenant { get; set; }
-
-        /// <summary>
-        /// The Azure Maps client ID, This is an unique identifier used to identify the maps account.
-        /// Must be specified for AAD and anonymous authentication types.
-        /// </summary>
-        public string ClientId { get; set; }
-
-        /// <summary>
-        /// Subscription key from your Azure Maps account.
-        /// Must be specified for subscription key authentication type.
-        /// </summary>
-        public string SubscriptionKey { get; set; }
-
-        internal bool Validate() => !string.IsNullOrWhiteSpace(AuthType);
-
-        internal string AuthType
-        {
-            get {
-                if (!string.IsNullOrWhiteSpace(SubscriptionKey))
-                {
-                    return "subscriptionKey";
-                }
-
-                if (!string.IsNullOrWhiteSpace(ClientId))
-                {
-                    return !string.IsNullOrWhiteSpace(AadAppId)
-                    && !string.IsNullOrWhiteSpace(AadTenant)
-                    ? "aad"
-                    : "anonymous";
-                }
-
-                return null;
+        get {
+            if (!string.IsNullOrWhiteSpace(SubscriptionKey))
+            {
+                return "subscriptionKey";
             }
+
+            if (!string.IsNullOrWhiteSpace(ClientId))
+            {
+                return !string.IsNullOrWhiteSpace(AadAppId)
+                && !string.IsNullOrWhiteSpace(AadTenant)
+                ? "aad"
+                : "anonymous";
+            }
+
+            return null;
         }
     }
+}
 
-    internal sealed class AzureMapsConfigurationJsonConverter : JsonConverter<AzureMapsConfiguration>
+internal sealed class AzureMapsConfigurationJsonConverter : JsonConverter<AzureMapsConfiguration>
+{
+    public override AzureMapsConfiguration Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotSupportedException();
+    public override void Write(Utf8JsonWriter writer, AzureMapsConfiguration value, JsonSerializerOptions options)
     {
-        public override AzureMapsConfiguration Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotSupportedException();
-        public override void Write(Utf8JsonWriter writer, AzureMapsConfiguration value, JsonSerializerOptions options)
+        writer.WriteStartObject();
+        writer.WriteString("authType", value.AuthType);
+        if (value.AuthType == "subscriptionKey")
         {
-            writer.WriteStartObject();
-            writer.WriteString("authType", value.AuthType);
-            if (value.AuthType == "subscriptionKey")
-            {
-                writer.WriteString("subscriptionKey", value.SubscriptionKey);
-            }
-            else if (value.AuthType == "aad")
-            {
-                writer.WriteString("aadAppId", value.AadAppId);
-                writer.WriteString("aadTenant", value.AadTenant);
-                writer.WriteString("clientId", value.ClientId);
-            }
-            else if (value.AuthType == "anonymous")
-            {
-                writer.WriteString("clientId", value.ClientId);
-            }
-            writer.WriteEndObject();
+            writer.WriteString("subscriptionKey", value.SubscriptionKey);
         }
+        else if (value.AuthType == "aad")
+        {
+            writer.WriteString("aadAppId", value.AadAppId);
+            writer.WriteString("aadTenant", value.AadTenant);
+            writer.WriteString("clientId", value.ClientId);
+        }
+        else if (value.AuthType == "anonymous")
+        {
+            writer.WriteString("clientId", value.ClientId);
+        }
+        writer.WriteEndObject();
     }
 }

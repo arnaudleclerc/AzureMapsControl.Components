@@ -1,8 +1,7 @@
-﻿namespace AzureMapsControl.Components.Indoor
+﻿namespace AzureMapsControl.Components.Indoor;
+
+internal class IndoorFacility
 {
-    internal class IndoorFacility
-    {
-        public string FacilityId { get; set; }
-        public int LevelOrdinal { get; set; }
-    }
+    public string FacilityId { get; set; }
+    public int LevelOrdinal { get; set; }
 }

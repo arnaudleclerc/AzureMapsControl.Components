@@ -1,14 +1,13 @@
-﻿namespace AzureMapsControl.Components.Indoor
+﻿
+using System;
+using System.Threading.Tasks;
+
+using AzureMapsControl.Components.Events;
+
+namespace AzureMapsControl.Components.Indoor;
+internal class IndoorManagerEventHelper : EventInvokeHelper<IndoorManagerJsEventArgs>
 {
-    using System;
-    using System.Threading.Tasks;
-
-    using AzureMapsControl.Components.Events;
-
-    internal class IndoorManagerEventHelper : EventInvokeHelper<IndoorManagerJsEventArgs>
+    public IndoorManagerEventHelper(Func<IndoorManagerJsEventArgs, ValueTask> callback) : base(callback)
     {
-        public IndoorManagerEventHelper(Func<IndoorManagerJsEventArgs, ValueTask> callback) : base(callback)
-        {
-        }
     }
 }

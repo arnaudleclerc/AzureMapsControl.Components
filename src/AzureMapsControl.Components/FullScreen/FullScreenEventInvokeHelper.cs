@@ -1,14 +1,13 @@
-﻿namespace AzureMapsControl.Components.FullScreen
+﻿
+using System;
+using System.Threading.Tasks;
+
+using AzureMapsControl.Components.Events;
+
+namespace AzureMapsControl.Components.FullScreen;
+internal class FullScreenEventInvokeHelper : EventInvokeHelper<bool>
 {
-    using System;
-    using System.Threading.Tasks;
-
-    using AzureMapsControl.Components.Events;
-
-    internal class FullScreenEventInvokeHelper : EventInvokeHelper<bool>
+    public FullScreenEventInvokeHelper(Func<bool, ValueTask> callback) : base(callback)
     {
-        public FullScreenEventInvokeHelper(Func<bool, ValueTask> callback) : base(callback)
-        {
-        }
     }
 }

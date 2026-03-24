@@ -1,33 +1,32 @@
-﻿namespace AzureMapsControl.Components.Tests.Controls
+﻿
+using AzureMapsControl.Components.Controls;
+using AzureMapsControl.Components.Tests.Json;
+
+using Xunit;
+
+namespace AzureMapsControl.Components.Tests.Controls;
+public class ZoomControlJsonConverterTests : JsonConverterTests<ZoomControl>
 {
-    using AzureMapsControl.Components.Controls;
-    using AzureMapsControl.Components.Tests.Json;
+    public ZoomControlJsonConverterTests() : base(new ZoomControlJsonConverter()) { }
 
-    using Xunit;
-
-    public class ZoomControlJsonConverterTests : JsonConverterTests<ZoomControl>
+    [Fact]
+    public void Should_Write()
     {
-        public ZoomControlJsonConverterTests() : base(new ZoomControlJsonConverter()) { }
+        var control = new ZoomControl(new ZoomControlOptions {
+            Style = ControlStyle.Auto,
+            ZoomDelta = 1
+        }, ControlPosition.BottomLeft);
 
-        [Fact]
-        public void Should_Write()
-        {
-            var control = new ZoomControl(new ZoomControlOptions {
-                Style = ControlStyle.Auto,
-                ZoomDelta = 1
-            }, ControlPosition.BottomLeft);
+        var expectedJson = "{"
+            + "\"id\":\"" + control.Id + "\""
+            + ",\"type\":\"" + control.Type + "\""
+            + ",\"position\":\"" + control.Position.ToString() + "\""
+            + ",\"options\":{"
+            + "\"style\":\"" + control.Options.Style.ToString() + "\""
+            + ",\"zoomDelta\":" + control.Options.ZoomDelta.Value
+            + "}"
+            + "}";
 
-            var expectedJson = "{"
-                + "\"id\":\"" + control.Id + "\""
-                + ",\"type\":\"" + control.Type + "\""
-                + ",\"position\":\"" + control.Position.ToString() + "\""
-                + ",\"options\":{"
-                + "\"style\":\"" + control.Options.Style.ToString() + "\""
-                + ",\"zoomDelta\":" + control.Options.ZoomDelta.Value
-                + "}"
-                + "}";
-
-            TestAndAssertWrite(control, expectedJson);
-        }
+        TestAndAssertWrite(control, expectedJson);
     }
 }

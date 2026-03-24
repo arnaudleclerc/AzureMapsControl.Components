@@ -1,31 +1,30 @@
-﻿namespace AzureMapsControl.Components.Runtime
+﻿
+using System.Threading.Tasks;
+
+using Microsoft.Extensions.Logging;
+using Microsoft.JSInterop;
+
+namespace AzureMapsControl.Components.Runtime;
+internal sealed class MapJsRuntime : IMapJsRuntime
 {
-    using System.Threading.Tasks;
+    private readonly IJSRuntime _jsRuntime;
+    private readonly ILogger<MapJsRuntime> _logger;
 
-    using Microsoft.Extensions.Logging;
-    using Microsoft.JSInterop;
-
-    internal sealed class MapJsRuntime : IMapJsRuntime
+    public MapJsRuntime(IJSRuntime jsRuntime, ILogger<MapJsRuntime> logger)
     {
-        private readonly IJSRuntime _jsRuntime;
-        private readonly ILogger<MapJsRuntime> _logger;
+        _jsRuntime = jsRuntime;
+        _logger = logger;
+    }
 
-        public MapJsRuntime(IJSRuntime jsRuntime, ILogger<MapJsRuntime> logger)
-        {
-            _jsRuntime = jsRuntime;
-            _logger = logger;
-        }
+    public async ValueTask InvokeVoidAsync(string identifier, params object[] args)
+    {
+        _logger?.LogDebug($"MapJsRuntime - InvokeVoidAsync - {identifier}");
+        await _jsRuntime.InvokeVoidAsync(identifier, args).ConfigureAwait(false);
+    }
 
-        public async ValueTask InvokeVoidAsync(string identifier, params object[] args)
-        {
-            _logger?.LogDebug($"MapJsRuntime - InvokeVoidAsync - {identifier}");
-            await _jsRuntime.InvokeVoidAsync(identifier, args).ConfigureAwait(false);
-        }
-
-        public async ValueTask<TValue> InvokeAsync<TValue>(string identifier, params object[] args)
-        {
-            _logger?.LogDebug($"MapJsRuntime - InvokeAsync - {identifier}");
-            return await _jsRuntime.InvokeAsync<TValue>(identifier, args).ConfigureAwait(false);
-        }
+    public async ValueTask<TValue> InvokeAsync<TValue>(string identifier, params object[] args)
+    {
+        _logger?.LogDebug($"MapJsRuntime - InvokeAsync - {identifier}");
+        return await _jsRuntime.InvokeAsync<TValue>(identifier, args).ConfigureAwait(false);
     }
 }

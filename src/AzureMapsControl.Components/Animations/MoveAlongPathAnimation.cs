@@ -1,12 +1,11 @@
-﻿namespace AzureMapsControl.Components.Animations
-{
-    using AzureMapsControl.Components.Animations.Options;
-    using AzureMapsControl.Components.Runtime;
+﻿
+using AzureMapsControl.Components.Animations.Options;
+using AzureMapsControl.Components.Runtime;
 
-    internal sealed class MoveAlongPathAnimation : Animation<MoveAlongPathAnimationOptions>, IMoveAlongPathAnimation
+namespace AzureMapsControl.Components.Animations;
+internal sealed class MoveAlongPathAnimation : Animation<MoveAlongPathAnimationOptions>, IMoveAlongPathAnimation
+{
+    public MoveAlongPathAnimation(string id, IMapJsRuntime jsRuntime) : base(id, jsRuntime)
     {
-        public MoveAlongPathAnimation(string id, IMapJsRuntime jsRuntime) : base(id, jsRuntime)
-        {
-        }
     }
 }

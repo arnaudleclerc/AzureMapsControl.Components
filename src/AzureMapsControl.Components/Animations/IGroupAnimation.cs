@@ -1,40 +1,39 @@
-﻿namespace AzureMapsControl.Components.Animations
+﻿
+using System.Threading.Tasks;
+
+using AzureMapsControl.Components.Animations.Options;
+
+namespace AzureMapsControl.Components.Animations;
+public interface IGroupAnimation : IAnimation
 {
-    using System.Threading.Tasks;
+    /// <summary>
+    /// Disposes the animation
+    /// </summary>
+    /// <returns></returns>
+    ValueTask DisposeAsync();
 
-    using AzureMapsControl.Components.Animations.Options;
+    /// <summary>
+    /// Plays the animation.
+    /// </summary>
+    /// <returns></returns>
+    ValueTask PlayAsync();
 
-    public interface IGroupAnimation : IAnimation
-    {
-        /// <summary>
-        /// Disposes the animation
-        /// </summary>
-        /// <returns></returns>
-        ValueTask DisposeAsync();
+    /// <summary>
+    /// Stops the animation and jumps back to the beginning of the animation. 
+    /// </summary>
+    /// <returns></returns>
+    ValueTask ResetAsync();
 
-        /// <summary>
-        /// Plays the animation.
-        /// </summary>
-        /// <returns></returns>
-        ValueTask PlayAsync();
+    /// <summary>
+    /// Stops the animation and jumps back to the end of the animation. 
+    /// </summary>
+    /// <returns></returns>
+    ValueTask StopAsync();
 
-        /// <summary>
-        /// Stops the animation and jumps back to the beginning of the animation. 
-        /// </summary>
-        /// <returns></returns>
-        ValueTask ResetAsync();
-
-        /// <summary>
-        /// Stops the animation and jumps back to the end of the animation. 
-        /// </summary>
-        /// <returns></returns>
-        ValueTask StopAsync();
-
-        /// <summary>
-        /// Sets the options of the animation.
-        /// </summary>
-        /// <param name="options">Options to update the animation with</param>
-        /// <returns></returns>
-        ValueTask SetOptionsAsync(GroupAnimationOptions options);
-    }
+    /// <summary>
+    /// Sets the options of the animation.
+    /// </summary>
+    /// <param name="options">Options to update the animation with</param>
+    /// <returns></returns>
+    ValueTask SetOptionsAsync(GroupAnimationOptions options);
 }

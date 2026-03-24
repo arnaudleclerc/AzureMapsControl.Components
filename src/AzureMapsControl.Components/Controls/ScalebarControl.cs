@@ -1,47 +1,46 @@
-﻿namespace AzureMapsControl.Components.Controls
+﻿
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace AzureMapsControl.Components.Controls;
+[ExcludeFromCodeCoverage]
+public sealed class ScaleBarControl : Control<ScaleBarControlOptions>
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Text.Json;
-    using System.Text.Json.Serialization;
+    internal override string Type => "scalebar";
+    internal override int Order => 0;
+    public ScaleBarControl(ScaleBarControlOptions options = null, ControlPosition position = default) : base(options, position) { }
+}
 
-    [ExcludeFromCodeCoverage]
-    public sealed class ScaleBarControl : Control<ScaleBarControlOptions>
+internal class ScaleBarControlJsonConverter : JsonConverter<ScaleBarControl>
+{
+    public override ScaleBarControl Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotSupportedException();
+    public override void Write(Utf8JsonWriter writer, ScaleBarControl value, JsonSerializerOptions options) => Write(writer, value);
+
+    internal static void Write(Utf8JsonWriter writer, ScaleBarControl value)
     {
-        internal override string Type => "scalebar";
-        internal override int Order => 0;
-        public ScaleBarControl(ScaleBarControlOptions options = null, ControlPosition position = default) : base(options, position) { }
-    }
-
-    internal class ScaleBarControlJsonConverter : JsonConverter<ScaleBarControl>
-    {
-        public override ScaleBarControl Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) => throw new NotSupportedException();
-        public override void Write(Utf8JsonWriter writer, ScaleBarControl value, JsonSerializerOptions options) => Write(writer, value);
-
-        internal static void Write(Utf8JsonWriter writer, ScaleBarControl value)
+        writer.WriteStartObject();
+        writer.WriteString("id", value.Id);
+        writer.WriteString("type", value.Type);
+        if (value.Position.ToString() != default(ControlPosition).ToString())
         {
+            writer.WriteString("position", value.Position.ToString());
+        }
+        if (value.Options is not null)
+        {
+            writer.WritePropertyName("options");
             writer.WriteStartObject();
-            writer.WriteString("id", value.Id);
-            writer.WriteString("type", value.Type);
-            if (value.Position.ToString() != default(ControlPosition).ToString())
+            if (value.Options.MaxBarLength.HasValue)
             {
-                writer.WriteString("position", value.Position.ToString());
+                writer.WriteNumber("maxBarLength", value.Options.MaxBarLength.Value);
             }
-            if (value.Options is not null)
+            if (value.Options.Units.ToString() != default(ScaleBarControlUnits).ToString())
             {
-                writer.WritePropertyName("options");
-                writer.WriteStartObject();
-                if (value.Options.MaxBarLength.HasValue)
-                {
-                    writer.WriteNumber("maxBarLength", value.Options.MaxBarLength.Value);
-                }
-                if (value.Options.Units.ToString() != default(ScaleBarControlUnits).ToString())
-                {
-                    writer.WriteString("units", value.Options.Units.ToString());
-                }
-                writer.WriteEndObject();
+                writer.WriteString("units", value.Options.Units.ToString());
             }
             writer.WriteEndObject();
         }
+        writer.WriteEndObject();
     }
 }

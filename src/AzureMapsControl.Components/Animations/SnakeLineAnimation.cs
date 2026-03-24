@@ -1,12 +1,11 @@
-﻿namespace AzureMapsControl.Components.Animations
-{
-    using AzureMapsControl.Components.Animations.Options;
-    using AzureMapsControl.Components.Runtime;
+﻿
+using AzureMapsControl.Components.Animations.Options;
+using AzureMapsControl.Components.Runtime;
 
-    internal sealed class SnakeLineAnimation : Animation<SnakeLineAnimationOptions>, ISnakeLineAnimation
+namespace AzureMapsControl.Components.Animations;
+internal sealed class SnakeLineAnimation : Animation<SnakeLineAnimationOptions>, ISnakeLineAnimation
+{
+    internal SnakeLineAnimation(string id, IMapJsRuntime jsRuntime) : base(id, jsRuntime)
     {
-        internal SnakeLineAnimation(string id, IMapJsRuntime jsRuntime) : base(id, jsRuntime)
-        {
-        }
     }
 }

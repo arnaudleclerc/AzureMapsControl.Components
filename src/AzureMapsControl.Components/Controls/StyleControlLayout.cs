@@ -1,27 +1,26 @@
-﻿namespace AzureMapsControl.Components.Controls
+﻿
+using System.Diagnostics.CodeAnalysis;
+
+namespace AzureMapsControl.Components.Controls;
+/// <summary>
+/// The layout to display the styles in.
+/// </summary>
+[ExcludeFromCodeCoverage]
+public struct StyleControlLayout
 {
-    using System.Diagnostics.CodeAnalysis;
+    private readonly string _layout;
 
     /// <summary>
-    /// The layout to display the styles in.
+    /// A row of clickable icons for each style.
     /// </summary>
-    [ExcludeFromCodeCoverage]
-    public struct StyleControlLayout
-    {
-        private readonly string _layout;
+    public static readonly StyleControlLayout Icons = new StyleControlLayout("icons");
 
-        /// <summary>
-        /// A row of clickable icons for each style.
-        /// </summary>
-        public static readonly StyleControlLayout Icons = new StyleControlLayout("icons");
+    /// <summary>
+    /// A scrollable list with the icons and names for each style.
+    /// </summary>
+    public static readonly StyleControlLayout List = new StyleControlLayout("list");
 
-        /// <summary>
-        /// A scrollable list with the icons and names for each style.
-        /// </summary>
-        public static readonly StyleControlLayout List = new StyleControlLayout("list");
+    private StyleControlLayout(string layout) => _layout = layout;
 
-        private StyleControlLayout(string layout) => _layout = layout;
-
-        public override string ToString() => _layout;
-    }
+    public override string ToString() => _layout;
 }

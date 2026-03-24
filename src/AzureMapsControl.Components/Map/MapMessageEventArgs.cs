@@ -1,11 +1,10 @@
-﻿namespace AzureMapsControl.Components.Map
-{
-    using System.Diagnostics.CodeAnalysis;
+﻿
+using System.Diagnostics.CodeAnalysis;
 
-    [ExcludeFromCodeCoverage]
-    public sealed class MapMessageEventArgs : MapEventArgs
-    {
-        public string Message { get; }
-        internal MapMessageEventArgs(Map map, MapJsEventArgs eventArgs) : base(map, eventArgs.Type) => Message = eventArgs.Message;
-    }
+namespace AzureMapsControl.Components.Map;
+[ExcludeFromCodeCoverage]
+public sealed class MapMessageEventArgs : MapEventArgs
+{
+    public string Message { get; }
+    internal MapMessageEventArgs(Map map, MapJsEventArgs eventArgs) : base(map, eventArgs.Type) => Message = eventArgs.Message;
 }

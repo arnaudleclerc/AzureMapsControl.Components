@@ -1,30 +1,29 @@
-﻿namespace AzureMapsControl.Components.Markers
+﻿
+using System;
+using System.Diagnostics.CodeAnalysis;
+
+namespace AzureMapsControl.Components.Markers;
+/// <summary>
+/// Contains the update information of an HtmlMarker
+/// </summary>
+[ExcludeFromCodeCoverage]
+public sealed class HtmlMarkerUpdate
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
+    internal HtmlMarker Marker { get; }
+    internal HtmlMarkerOptions Options { get; }
 
     /// <summary>
-    /// Contains the update information of an HtmlMarker
+    /// Constructor
     /// </summary>
-    [ExcludeFromCodeCoverage]
-    public sealed class HtmlMarkerUpdate
+    /// <param name="marker">HtmlMarker to update.</param>
+    /// <param name="options">Options to update the HtmlMarker with</param>
+    public HtmlMarkerUpdate(HtmlMarker marker, HtmlMarkerOptions options)
     {
-        internal HtmlMarker Marker { get; }
-        internal HtmlMarkerOptions Options { get; }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="marker">HtmlMarker to update.</param>
-        /// <param name="options">Options to update the HtmlMarker with</param>
-        public HtmlMarkerUpdate(HtmlMarker marker, HtmlMarkerOptions options)
+        if(!Guid.TryParse(marker?.Id, out _))
         {
-            if(!Guid.TryParse(marker?.Id, out _))
-            {
-                throw new ArgumentException("Please provide a marker which has already been added to the map");
-            }
-            Marker = marker;
-            Options = options;
+            throw new ArgumentException("Please provide a marker which has already been added to the map");
         }
+        Marker = marker;
+        Options = options;
     }
 }

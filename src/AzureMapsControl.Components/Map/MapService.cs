@@ -1,37 +1,37 @@
-﻿namespace AzureMapsControl.Components.Map
+﻿
+using System.Threading.Tasks;
+
+using AzureMapsControl.Components.Logger;
+
+using Microsoft.Extensions.Logging;
+
+namespace AzureMapsControl.Components.Map;
+public delegate ValueTask MapReadyEvent();
+
+internal sealed class MapService : IMapAdderService
 {
-    using System.Threading.Tasks;
+    private readonly ILogger<MapService> _logger;
 
-    using AzureMapsControl.Components.Logger;
-    using Microsoft.Extensions.Logging;
-
-    public delegate ValueTask MapReadyEvent();
-
-    internal sealed class MapService : IMapAdderService
+    public Map Map
     {
-        private readonly ILogger<MapService> _logger;
-
-        public Map Map
-        {
-            get;
-            private set;
-        }
-
-        public MapService(ILogger<MapService> logger) => _logger = logger;
-
-        public event MapReadyEvent OnMapReadyAsync;
-
-        public async ValueTask AddMapAsync(Map map)
-        {
-            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.MapService_AddMapAsync, "Adding instance of map");
-            Map = map;
-
-            if (OnMapReadyAsync is not null)
-            {
-                _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.MapService_AddMapAsync, "Emitting OnMapReadyAsync");
-                await OnMapReadyAsync.Invoke().ConfigureAwait(false);
-            }
-        }
-
+        get;
+        private set;
     }
+
+    public MapService(ILogger<MapService> logger) => _logger = logger;
+
+    public event MapReadyEvent OnMapReadyAsync;
+
+    public async ValueTask AddMapAsync(Map map)
+    {
+        _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.MapService_AddMapAsync, "Adding instance of map");
+        Map = map;
+
+        if (OnMapReadyAsync is not null)
+        {
+            _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.MapService_AddMapAsync, "Emitting OnMapReadyAsync");
+            await OnMapReadyAsync.Invoke().ConfigureAwait(false);
+        }
+    }
+
 }
