@@ -7,24 +7,15 @@ using AzureMapsControl.Components.Runtime;
 using Microsoft.Extensions.Logging;
 
 namespace AzureMapsControl.Components.Geolocation;
-internal class GeolocationService : IGeolocationService
+internal sealed class GeolocationService(IMapJsRuntime mapJsRuntime, ILogger<GeolocationService> logger) : IGeolocationService
 {
-    private readonly IMapJsRuntime _mapJsRuntime;
-    private readonly ILogger<GeolocationService> _logger;
-
-    public GeolocationService(IMapJsRuntime mapJsRuntime, ILogger<GeolocationService> logger)
-    {
-        _mapJsRuntime = mapJsRuntime;
-        _logger = logger;
-    }
-
     /// <summary>
     /// Checks to see if the geolocation API is supported in the browser.
     /// </summary>
     /// <returns>True if the geolocation API is supported in the browser, otherwise false</returns>
     public async ValueTask<bool> IsGeolocationSupportedAsync()
     {
-        _logger?.LogAzureMapsControlInfo(AzureMapLogEvent.GeolocationService_IsGeolocationSupportedAsync, "GeolocationService - IsGeolocationSupportedAsync");
-        return await _mapJsRuntime.InvokeAsync<bool>(Constants.JsConstants.Methods.GeolocationControl.IsGeolocationSupported.ToGeolocationControlNamespace()).ConfigureAwait(false);
+        logger?.LogAzureMapsControlInfo(AzureMapLogEvent.GeolocationService_IsGeolocationSupportedAsync, "GeolocationService - IsGeolocationSupportedAsync");
+        return await mapJsRuntime.InvokeAsync<bool>(Constants.JsConstants.Methods.GeolocationControl.IsGeolocationSupported.ToGeolocationControlNamespace()).ConfigureAwait(false);
     }
 }

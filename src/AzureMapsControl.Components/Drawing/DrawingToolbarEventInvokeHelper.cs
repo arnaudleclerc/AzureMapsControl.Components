@@ -7,7 +7,4 @@ using AzureMapsControl.Components.Events;
 
 namespace AzureMapsControl.Components.Drawing;
 [ExcludeFromCodeCoverage]
-internal class DrawingToolbarEventInvokeHelper : EventInvokeHelper<DrawingToolbarJsEventArgs>
-{
-    public DrawingToolbarEventInvokeHelper(Func<DrawingToolbarJsEventArgs, ValueTask> callback) : base(callback) { }
-}
+internal sealed class DrawingToolbarEventInvokeHelper(Func<DrawingToolbarJsEventArgs, ValueTask> callback) : EventInvokeHelper<DrawingToolbarJsEventArgs>(callback);

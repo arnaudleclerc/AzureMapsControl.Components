@@ -3,11 +3,11 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace AzureMapsControl.Components.Indoor;
 [ExcludeFromCodeCoverage]
-internal class IndoorManagerJsEventArgs
+internal record IndoorManagerJsEventArgs
 {
-    public string Type { get; set; }
-    public string FacilityId { get; set; }
-    public int LevelNumber { get; set; }
-    public string PrevFacilityId { get; set; }
-    public int PrevLevelNumber { get; set; }
+    public string Type { get; init; }
+    public string FacilityId { get; init; }
+    public int LevelNumber { get; init; }
+    public string PrevFacilityId { get; init; }
+    public int PrevLevelNumber { get; init; }
 }

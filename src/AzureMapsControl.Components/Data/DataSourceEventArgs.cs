@@ -6,9 +6,9 @@ using AzureMapsControl.Components.Atlas;
 
 namespace AzureMapsControl.Components.Data;
 [ExcludeFromCodeCoverage]
-internal class DataSourceEventArgs
+internal record DataSourceEventArgs
 {
-    public string Id { get; set; }
-    public IEnumerable<Shape<Geometry>> Shapes { get; set; }
-    public string Type { get; set; }
+    public string Id { get; init; }
+    public IEnumerable<Shape<Geometry>> Shapes { get; init; }
+    public string Type { get; init; }
 }

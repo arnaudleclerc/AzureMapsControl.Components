@@ -5,9 +5,4 @@ using System.Threading.Tasks;
 using AzureMapsControl.Components.Events;
 
 namespace AzureMapsControl.Components.Markers;
-internal class HtmlMarkerInvokeHelper : EventInvokeHelper<HtmlMarkerJsEventArgs>
-{
-    public HtmlMarkerInvokeHelper(Func<HtmlMarkerJsEventArgs, ValueTask> callback) : base(callback)
-    {
-    }
-}
+internal sealed class HtmlMarkerInvokeHelper(Func<HtmlMarkerJsEventArgs, ValueTask> callback) : EventInvokeHelper<HtmlMarkerJsEventArgs>(callback);

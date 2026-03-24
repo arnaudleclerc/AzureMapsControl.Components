@@ -5,9 +5,9 @@ using AzureMapsControl.Components.Atlas;
 
 namespace AzureMapsControl.Components.Drawing;
 [ExcludeFromCodeCoverage]
-internal class DrawingToolbarJsEventArgs
+internal record DrawingToolbarJsEventArgs
 {
-    public string Type { get; set; }
-    public string NewMode { get; set; }
-    public Feature<Geometry> Data { get; set; }
+    public string Type { get; init; }
+    public string NewMode { get; init; }
+    public Feature<Geometry> Data { get; init; }
 }

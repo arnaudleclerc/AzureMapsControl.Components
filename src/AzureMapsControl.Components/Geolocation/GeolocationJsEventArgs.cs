@@ -5,10 +5,10 @@ using AzureMapsControl.Components.Atlas;
 
 namespace AzureMapsControl.Components.Geolocation;
 [ExcludeFromCodeCoverage]
-internal class GeolocationJsEventArgs
+internal record GeolocationJsEventArgs
 {
-    public int? Code { get; set; }
-    public string Message { get; set; }
-    public Feature<Point> Feature { get; set; }
-    public string Type { get; set; }
+    public int? Code { get; init; }
+    public string Message { get; init; }
+    public Feature<Point> Feature { get; init; }
+    public string Type { get; init; }
 }
