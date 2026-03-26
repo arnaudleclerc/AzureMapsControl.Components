@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/samples/">
+    <Project Path="samples/AzureMapsControl.Sample/AzureMapsControl.Sample.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/AzureMapsControl.Components/AzureMapsControl.Components.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AzureMapsControl.Components.Tests/AzureMapsControl.Components.Tests.csproj" />
+  </Folder>
+</Solution>
